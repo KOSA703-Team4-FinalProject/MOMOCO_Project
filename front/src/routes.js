@@ -9,20 +9,24 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+import Allboard from './pages/allboard';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
   const routes = useRoutes([
     {
-      path: '/dashboard',
+      path: '/Project',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { element: <Navigate to="/Project/dashboard" />, index: true },
+        { path: 'dashboard', element: <DashboardAppPage /> },
+        { path: 'allboard', element: <Allboard /> },
+        { path: 'kanban', element: <ProductsPage /> },
+        { path: 'cal', element: <BlogPage /> },
+        { path: 'document', element: <BlogPage /> },
+        { path: 'gitchart', element: <BlogPage /> },
+        { path: 'board', element: <BlogPage /> }
       ],
     },
     {
@@ -32,7 +36,7 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/Project/app" />, index: true },
         { path: '404', element: <Page404 /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
