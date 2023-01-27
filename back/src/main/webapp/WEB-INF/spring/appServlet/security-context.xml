@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xmlns:context="http://www.springframework.org/schema/context"
- xmlns:tx="http://www.springframework.org/schema/tx"
- xmlns:mvc="http://www.springframework.org/schema/mvc"
- xmlns:security="http://www.springframework.org/schema/security"
- xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
                      http://www.springframework.org/schema/beans/spring-beans.xsd
                      http://www.springframework.org/schema/context
 					http://www.springframework.org/schema/context/spring-context.xsd
@@ -17,33 +17,46 @@
   					 http://www.springframework.org/schema/tx/spring-tx.xsd
   					 ">
 
-<mvc:annotation-driven/>
-<security:http>
-	<security:csrf disabled="true"/>
-	<security:form-login login-page="/joinus/login.htm"
-						default-target-url="/index.htm"
-						authentication-failure-url="/joinus/login.htm?error" 
-						authentication-success-handler-ref=""
-						  />
-	<security:logout logout-success-url="/index.htm"/>
+	<mvc:annotation-driven />
 	
-	<!-- <security:intercept-url pattern="/notice/noticeDetail.htm" access="hasRole('ROLE_USER')"/> -->
-	<!-- <security:intercept-url pattern="/notice/noticeReg.htm" access="hasRole('ROLE_ADMIN')"/> -->
-     <security:access-denied-handler error-page="/login/accessDenied.do" />
-</security:http>
+	<security:http auto-config="true" use-expressions="true">
+		
+		<security:csrf disabled="true" />
+		
+		<!-- 정적 리소스 모두 접근 허용 -->
+		<security:intercept-url pattern="/resources/**" access="permitAll" />
+		
+		<!-- 로그인된 상태에서는 로그인이나 회원가입 화면에 접근하지 못하도록 방지 -->
+		<security:intercept-url pattern="/loginView" access="isAnonymous()" />
+		<security:intercept-url pattern="/registerUserView" access="isAnonymous()" />
+		
+		<!-- 관리자페이지는 관리자만 접근 가능 -->
+		<security:intercept-url pattern="/admin/**" access="hasRole('admin')" />
+		
+		<!-- 로그인 설정 -->
+		<security:form-login username-parameter="u_idx"
+							 password-parameter="password"
+							 login-processing-url="/loginAsk"
+							 login-page="/loginView"
+							 default-target-url="/"
+							 authentication-failure-url="/loginView" />
+							 
+		<!-- 로그아웃 설정 -->
+		<!-- 로그아웃 요청 URL, 로그아웃 완료시 보내줄 URL, 세션 삭제 여부, 쿠키 삭제 여부 -->
+		<security:logout logout-url="/logoutAsk" 
+						 logout-success-url="/"
+						 invalidate-session="true"
+						 delete-cookies="true" />
+		
+	</security:http>
 
-<security:authentication-manager>
-	<security:authentication-provider>
-		<security:jdbc-user-service data-source-ref="driverManagerDataSource"
-			users-by-username-query="select userid, pwd as password, 1 enabled from member where userid=?"
-			authorities-by-username-query="select m.userid, r.ROLE_NAME 
-											from member m join roll r
-											on m.userid = r.userid
-											where m.userid=?"
-		/>
-		<security:password-encoder ref="bCryptPasswordEncoder"/>
-	</security:authentication-provider>
-</security:authentication-manager>
+	<!-- DB 연동 설정 -->
+	<security:authentication-manager>
+		<!-- DB 데이터를 스프링에 전달해주는 클래스의 Bean 객체이름 -->
+		<security:authentication-provider user-service-ref="userLoginService">
+		
+		</security:authentication-provider>
+	</security:authentication-manager>
 
 
 </beans>
