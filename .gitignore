@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,react,java
 
 /back/src/main/resources/Wallet_U99OL7MHAD6QBUSS
+/back/src/main/webapp/WEB-INF/config
 
 ### Eclipse ###
 .metadata
