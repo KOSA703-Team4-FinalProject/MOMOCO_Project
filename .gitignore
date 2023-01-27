@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse,react,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,react,java
 
+/back/src/main/resources/Wallet_U99OL7MHAD6QBUSS
+
 ### Eclipse ###
 .metadata
 bin/
