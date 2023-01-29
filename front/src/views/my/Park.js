@@ -1,7 +1,7 @@
 const Park = () => {
   return (
     <>
-      <h1>haha</h1>
+      <h1>hahaha</h1>
     </>
   )
 }
