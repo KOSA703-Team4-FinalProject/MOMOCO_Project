@@ -1,15 +1,10 @@
 {
-  "short_name": "Minimal App",
-  "name": "React Material Minimal UI Kit",
+  "short_name": "CoreUI-React",
+  "name": "CoreUI-React sample",
   "icons": [
     {
-      "src": "favicon/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "favicon/android-chrome-512x512.png",
-      "sizes": "512x512",
+      "src": "./assets/img/favicon.png",
+      "sizes": "100x100",
       "type": "image/png"
     }
   ],
