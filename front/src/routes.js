@@ -1,4 +1,5 @@
 import React from 'react'
+import Boardlist from './views/board/Boardlist'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -53,6 +54,11 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 //park my
 const Park = React.lazy(() => import('./views/my/Park'))
 
+//boardlist
+const BoardlIST = React.lazy(()=> import('./views/board/Boardlist'))
+//boardcontent
+const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -99,6 +105,8 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
+  {path: '/boardlist',name :'boardlist',exact:true,element:Boardlist},
+  {path: '/boardcontent',name :'Boardcontent',exact:true,element:Boardcontent}
 ]
 
 export default routes
