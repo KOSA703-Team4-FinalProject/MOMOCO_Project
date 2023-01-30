@@ -1,6 +1,4 @@
 import React from 'react'
-import Boardlist from './views/board/BoardList'
-
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -56,7 +54,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
 
 //boardlist
-const BoardlIST = React.lazy(()=> import('./views/board/BoardList'))
+const Boardlist = React.lazy(()=> import('./views/board/Boardlist'))
 //boardcontent
 const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
 
@@ -109,8 +107,8 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  {path: '/boardlist',name :'boardlist',exact:true,element:Boardlist},
-  {path: '/boardcontent',name :'Boardcontent',exact:true,element:Boardcontent},
+  { path: '/boardlist', name :'boardlist', exact:true, element:Boardlist },
+  { path: '/boardcontent', name :'Boardcontent', exact:true,element:Boardcontent},
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
 ]
 
