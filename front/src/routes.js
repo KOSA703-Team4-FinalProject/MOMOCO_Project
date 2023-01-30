@@ -1,5 +1,5 @@
 import React from 'react'
-import Boardlist from './views/board/Boardlist'
+import Boardlist from './views/board/BoardList'
 
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
@@ -56,7 +56,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
 
 //boardlist
-const BoardlIST = React.lazy(()=> import('./views/board/Boardlist'))
+const BoardlIST = React.lazy(()=> import('./views/board/BoardList'))
 //boardcontent
 const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
 
