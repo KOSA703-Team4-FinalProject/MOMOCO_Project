@@ -1,6 +1,7 @@
 import React from 'react'
 import Boardlist from './views/board/Boardlist'
 
+
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -59,6 +60,9 @@ const BoardlIST = React.lazy(()=> import('./views/board/Boardlist'))
 //boardcontent
 const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
 
+// kanban 보드
+const Kanban = React.lazy(()=>import('./views/kanban/Kanban') )
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -107,6 +111,7 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   {path: '/boardlist',name :'boardlist',exact:true,element:Boardlist},
   {path: '/boardcontent',name :'Boardcontent',exact:true,element:Boardcontent}
+  { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
 ]
 
 export default routes

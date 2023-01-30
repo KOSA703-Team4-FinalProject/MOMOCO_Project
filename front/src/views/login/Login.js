@@ -12,12 +12,17 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CCardFooter
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import * as icon from '@coreui/icons';
+import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
 
 const Login = () => {
   return (
+    <>
+    <RegAndLoginHeader /> 
+    {/* 로그인 헤더 */}
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
@@ -26,17 +31,17 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Login</h1>
+                    <h1>로그인</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
-                        <CIcon icon={cilUser} />
+                        <CIcon icon={icon.cibGithub} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput placeholder="Email" autoComplete="username" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
-                        <CIcon icon={cilLockLocked} />
+                        <CIcon icon={icon.cilLockLocked} />
                       </CInputGroupText>
                       <CFormInput
                         type="password"
@@ -52,7 +57,7 @@ const Login = () => {
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
-                          Forgot password?
+                          비밀번호 찾기
                         </CButton>
                       </CCol>
                     </CRow>
@@ -69,7 +74,7 @@ const Login = () => {
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
+                        회원가입
                       </CButton>
                     </Link>
                   </div>
@@ -80,6 +85,7 @@ const Login = () => {
         </CRow>
       </CContainer>
     </div>
+    </>
   )
 }
 
