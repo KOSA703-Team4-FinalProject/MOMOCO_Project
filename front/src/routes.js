@@ -110,7 +110,7 @@ const routes = [
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
   {path: '/boardlist',name :'boardlist',exact:true,element:Boardlist},
-  {path: '/boardcontent',name :'Boardcontent',exact:true,element:Boardcontent}
+  {path: '/boardcontent',name :'Boardcontent',exact:true,element:Boardcontent},
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
 ]
 
