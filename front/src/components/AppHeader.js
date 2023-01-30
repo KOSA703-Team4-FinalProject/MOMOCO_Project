@@ -49,6 +49,7 @@ const AppHeader = () => {
         </CHeaderNav>
         <CHeaderNav>
           <CNavItem>
+            {/* 알림 이모티콘 */}
             <CNavLink href="#">
               <CIcon icon={cilBell} size="lg" />
             </CNavLink>
@@ -59,6 +60,7 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
+            {/* 채팅 이모티콘 */}
             <CNavLink href="#">
               <CIcon icon={cilCommentSquare} size="lg" />
             </CNavLink>
