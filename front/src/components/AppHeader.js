@@ -12,7 +12,7 @@ import {
   CNavItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
+import { cilBell, cilChatBubble, cilCommentBubble, cilCommentSquare, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -49,6 +49,7 @@ const AppHeader = () => {
         </CHeaderNav>
         <CHeaderNav>
           <CNavItem>
+            {/* 알림 이모티콘 */}
             <CNavLink href="#">
               <CIcon icon={cilBell} size="lg" />
             </CNavLink>
@@ -59,8 +60,9 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
+            {/* 채팅 이모티콘 */}
             <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
+              <CIcon icon={cilCommentSquare} size="lg" />
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
