@@ -1,17 +1,24 @@
-import { createStore } from 'redux'
+import { configureStore, createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
-  sidebarShow: true,
-}
+let state = createSlice({
+  name: 'sidebarShow',
+  initialState: true,
+  reducers: {
+    changeState(state, { type, ...rest }) {
+      switch (type) {
+        case 'set':
+          return { ...state, ...rest }
+        default:
+          return state
+      }
+    },
+  },
+})
 
-const changeState = (state = initialState, { type, ...rest }) => {
-  switch (type) {
-    case 'set':
-      return { ...state, ...rest }
-    default:
-      return state
-  }
-}
+export let { changeName } = state.actions //state 변경함수
 
-const store = createStore(changeState)
-export default store
+export default configureStore({
+  reducer: {
+    state: state.reducer,
+  },
+})
