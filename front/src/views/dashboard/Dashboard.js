@@ -53,6 +53,8 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import { Link, Route, Routes } from 'react-router-dom'
+import BoardList from '../board/Boardlist'
 
 const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
@@ -180,6 +182,7 @@ const Dashboard = () => {
 
   return (
     <>
+    
       <WidgetsDropdown />
       <CCard className="mb-4">
         <CCardBody>
@@ -454,6 +457,7 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
+    
     </>
   )
 }
