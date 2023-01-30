@@ -17,6 +17,7 @@ import { cilBell, cilChatBubble, cilCommentBubble, cilCommentSquare, cilEnvelope
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
+import { changechatView } from 'src/store'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -62,7 +63,7 @@ const AppHeader = () => {
           <CNavItem>
             {/* 채팅 이모티콘 */}
             <CNavLink href="#">
-              <CIcon icon={cilCommentSquare} size="lg" />
+              <CIcon icon={cilCommentSquare} size="lg" onClick={ ()=>{dispatch(changechatView())} } />
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

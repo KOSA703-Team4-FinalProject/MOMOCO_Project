@@ -23,8 +23,8 @@ let chatView = createSlice({
   name: 'chatView',
   initialState: false,
   reducers: {
-    changechatView(state){
-      return !state
+    changechatView(){
+      return !chatView
     }
   }
 })

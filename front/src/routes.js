@@ -61,6 +61,11 @@ const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
 // kanban 보드
 const Kanban = React.lazy(()=>import('./views/kanban/Kanban') )
 
+//채팅 룸
+const ChatRoom = React.lazy(()=>import('./components/ChatRoom') )
+//채팅
+const Chat = React.lazy(()=>import('./components/Chat') )
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -110,6 +115,8 @@ const routes = [
   { path: '/boardlist', name :'boardlist', exact:true, element:Boardlist },
   { path: '/boardcontent', name :'Boardcontent', exact:true,element:Boardcontent},
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
+  { path: '/chatRoom', name: 'ChatRoom', element: ChatRoom }, //채팅 룸 임시
+  { path: '/chat', name: 'Chat', element: Chat }, //채팅 임시
 ]
 
 export default routes
