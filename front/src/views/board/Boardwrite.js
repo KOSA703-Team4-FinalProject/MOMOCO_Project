@@ -1,6 +1,7 @@
 import { CAvatar, CBadge, CButton, CCard, CCardBody, CCol, CForm, CFormCheck, CFormInput, CFormSelect, CFormTextarea, CRow } from "@coreui/react";
 import { Editor } from "@tinymce/tinymce-react";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from 'styled-components'
 
 
@@ -138,7 +139,9 @@ const Boardwirte=()=>{
                                         />
                                         <br></br>
                                         <div align="right">
-                                        <CButton color="primary" variant="outline">글쓰기</CButton>
+                                        <Link to="/boardlist">
+                                          <CButton variant="outline" >글쓰기</CButton>
+                                        </Link>
                                         </div>
 
                                 </div>

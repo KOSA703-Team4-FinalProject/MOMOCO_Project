@@ -1,8 +1,14 @@
 import { cilPlus } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CAvatar, CButton, CCallout, CCard, CCardBody, CCardFooter, CCol, CForm, CFormInput, CFormLabel, CRow } from "@coreui/react"
-
-
+const styles = {
+    
+    fontSize: 40,
+    "border": "2px"
+  }
+  const profileimg= {
+    width:'250px', height:'250px'
+  }
 const Mypage = () => {
   return (
     <>
@@ -19,9 +25,9 @@ const Mypage = () => {
             <div className="row">
                 <div className="col-md-12">
                     <div className="row">
-                        <div className="col-md-3" align="cneter">
-                            <CAvatar size="50%"  src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"/><br></br>
-                            USERNAME
+                        <div className="col-md-3" align="center">
+                             <CAvatar style={profileimg} src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"/><br></br> 
+                             <div style={styles}>Mellow Yellow</div><br></br>
                         </div>
                         <div className="col-md-9">
                         <div className="row">
@@ -65,7 +71,6 @@ const Mypage = () => {
                         
                        <CCardBody align="center">
                         <div className="row">
-                           
                             <div className="col-md-12" align="left">
                                 <label>이메일*</label><br></br>
                                 <CForm>

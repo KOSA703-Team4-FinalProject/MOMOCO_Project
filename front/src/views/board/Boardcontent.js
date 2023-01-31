@@ -1,6 +1,20 @@
 import { CAvatar, CBadge, CButton, CCard, CCardBody, CCardFooter, CCol, CForm, CFormTextarea, CRow } from "@coreui/react"
 import WidgetsDropdown from "../widgets/WidgetsDropdown"
-
+const title ={
+  fontSize: 25,
+  "border": "2px"
+}
+const username ={
+  fontSize: 16,
+  "border": "2px"
+}
+const userimg ={
+  width:'45px', height:'45px'
+}
+const tag={
+  fontSize: 16,
+  "border": "2px"
+}
 const Boardcontent = () => {
   return (
     <>
@@ -20,7 +34,7 @@ const Boardcontent = () => {
             <div className="row">
               <div className="col-md-12">
                 <div className="row">
-                  <div className="col-md-9">
+                  <div className="col-md-9" style={title}>
                   <strong>글을 제목을 작성하시오</strong>
                   </div>
                   <div className="col-md-3">
@@ -29,11 +43,11 @@ const Boardcontent = () => {
                 <br></br>
                 <div className="row">
                   <div className="col-md-1">
-                  <CAvatar className='ms-4' src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"/>
+                  <CAvatar className='ms-4' src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize" style={userimg}/>
                   </div>
                   <div className="col-md-11">
                     <div className="row">
-                      <div className="col-md-12" align="left">
+                      <div className="col-md-12" align="left" style={username}>
                         이름
                       </div>
                     </div>
@@ -58,7 +72,7 @@ const Boardcontent = () => {
                       <CForm>
                         <CFormTextarea rows={10}>글내용글내용</CFormTextarea>
                       </CForm>
-                      <CBadge color="info" shape="rounded-pill">#tired</CBadge>
+                      <CBadge color="info" shape="rounded-pill"style={tag}>#tired</CBadge>
                       </div>
                   </div>
                 </CCard>
