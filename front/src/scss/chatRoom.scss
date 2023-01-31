@@ -14,7 +14,7 @@ body{
 	overflow:hidden;
 }
 aside{
-	width:300px;
+	width:460px;
 	height:500px;
 	display:inline-block;
 	font-size:15px;
@@ -22,7 +22,7 @@ aside{
 	border-radius: 5px;
 }
 main{
-	width:490px;
+	width:467px;
 	height:800px;
 	display:inline-block;
 	font-size:15px;
@@ -30,6 +30,13 @@ main{
 	background-color: #DDDDDD;
 }
 
+.main2{
+	width:467px;
+	display:inline-block;
+	font-size:15px;
+	vertical-align:top;
+	background-color: #DDDDDD;
+}
 aside header{
 	padding:30px 20px;
 }
@@ -240,3 +247,4 @@ main footer a{
 	margin-top:5px;
 	display:inline-block;
 }
+

@@ -11,25 +11,31 @@ import {
   cilXCircle,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CCard, CCardBody, CCol, CContainer } from '@coreui/react'
-import Cards from 'src/views/base/cards/Cards'
+import { CPopover } from '@coreui/react'
+import $ from 'jquery'
+
 import '../scss/chatRoom.scss'
 
 const Chat = () => {
+  //채팅 전송 버튼 클릭
+  $(document).on('click', '.sendbtn', function () {
+    $('.inputmessage').val('')
+  })
+
   return (
     <main>
       <header>
         <div className="row justify-content-between">
           <div className="col-md-8">
             <div className="row">
-              <CIcon icon={cilArrowLeft} size="3xl" className="pt-1"></CIcon>
+              <CIcon icon={cilArrowLeft} size="3xl" className="chatclosebtn pt-1"></CIcon>
               <h5 className="chat-room col pt-2 mt-2">
-                <strong>기본채팅방입니다안하세요</strong>
+                <strong>기본채팅방입니다하세요</strong>
               </h5>
             </div>
           </div>
           <div className="col-md-2 pt-2 mt-1">
-            <CIcon icon={cilStorage} size="xxl" />
+            <CIcon className="drawerbtn" icon={cilStorage} size="xxl" />
           </div>
         </div>
       </header>
@@ -60,12 +66,14 @@ const Chat = () => {
         </li>
       </ul>
       <footer>
-        <textarea placeholder="Type your message"></textarea>
+        <textarea className="inputmessage" placeholder="Type your message"></textarea>
         <div className="row">
-          <CIcon className='ms-2' icon={cilFolderOpen} size="3xl" />
-          <CIcon className='' icon={cilImagePlus} size="3xl" />
-          <CIcon className='' icon={cilLink} size="3xl" />
-          <a align="right" className='col mt-3' href="#">Send</a>
+          <CIcon className="filebtn ms-2" icon={cilFolderOpen} size="3xl" />
+          <CIcon className="imgbtn" icon={cilImagePlus} size="3xl" />
+          <CIcon className="linkbtn" icon={cilLink} size="3xl" />
+          <a align="right" className="sendbtn col mt-3" href="#">
+            Send
+          </a>
         </div>
       </footer>
     </main>
