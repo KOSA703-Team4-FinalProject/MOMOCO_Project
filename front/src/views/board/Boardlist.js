@@ -1,6 +1,6 @@
-import { cilCaretLeft } from "@coreui/icons"
+import { cilCaretLeft, cilCheck } from "@coreui/icons"
 import CIcon from "@coreui/icons-react"
-import { CAvatar, CButton, CButtonGroup, CButtonToolbar, CCard, CCardBody, CCardFooter, CCol, CContainer, CForm, CFormCheck, CFormInput, CFormSelect, CInputGroup, CInputGroupText, CPagination, CPaginationItem, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react"
+import { CAvatar, CBadge, CButton, CButtonGroup, CButtonToolbar, CCard, CCardBody, CCardFooter, CCol, CContainer, CForm, CFormCheck, CFormInput, CFormSelect, CInputGroup, CInputGroupText, CPagination, CPaginationItem, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react"
 import { useState } from "react"
 import WidgetsDropdown from "../widgets/WidgetsDropdown"
 
@@ -102,7 +102,7 @@ const Boardlist = () => {
                             <strong>글제목</strong>
                           </div>
                           <div className="col-md-4">
-                          
+                            <CIcon icon={cilCheck} size="xl"/>
                           </div>
                         </div>
                         <div className="row">
@@ -112,7 +112,7 @@ const Boardlist = () => {
                         </div>
                         <div className="row">
                           <div className="col-md-12">
-                            게시판종류
+                          <CBadge color="dark" shape="rounded-pill">계시판이름</CBadge>
                             
                           </div>
                         </div>
