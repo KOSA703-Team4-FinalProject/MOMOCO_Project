@@ -54,7 +54,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
 
 //boardlist
-const Boardlist = React.lazy(()=> import('./views/board/Boardlist'))
+const Boardlist = React.lazy(() => import('./views/board/Boardlist'))
 //boardcontent
 const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
 //boardwrite
@@ -63,8 +63,12 @@ const Boardwrite =React.lazy(()=>import('./views/board/Boardwrite'))
 const Boardedit =React.lazy(()=>import('./views/board/Boardedit'))
 //마이페이지
 const Mypage = React.lazy(()=>import('./views/mypage/Mypage'))
+
 // kanban 보드
-const Kanban = React.lazy(()=>import('./views/kanban/Kanban') )
+const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
+
+// unregister
+const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterCheck')) // 회원탈퇴
 
 //채팅 룸
 const ChatRoom = React.lazy(()=>import('./components/ChatRoom') )
@@ -125,6 +129,7 @@ const routes = [
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/chatRoom', name: 'ChatRoom', element: ChatRoom }, //채팅 룸 임시
   { path: '/chat', name: 'Chat', element: Chat }, //채팅 임시
+  { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
 ]
 
 export default routes
