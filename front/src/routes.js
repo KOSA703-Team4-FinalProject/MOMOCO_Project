@@ -54,12 +54,15 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
 
 //boardlist
-const Boardlist = React.lazy(()=> import('./views/board/Boardlist'))
+const Boardlist = React.lazy(() => import('./views/board/Boardlist'))
 //boardcontent
-const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
+const Boardcontent = React.lazy(() => import('./views/board/Boardcontent'))
 
 // kanban 보드
-const Kanban = React.lazy(()=>import('./views/kanban/Kanban') )
+const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
+
+// unregister
+const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterCheck')) // 회원탈퇴
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -107,9 +110,10 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: '/boardlist', name :'boardlist', exact:true, element:Boardlist },
-  { path: '/boardcontent', name :'Boardcontent', exact:true,element:Boardcontent},
+  { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist },
+  { path: '/boardcontent', name: 'Boardcontent', exact: true, element: Boardcontent },
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
+  { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
 ]
 
 export default routes
