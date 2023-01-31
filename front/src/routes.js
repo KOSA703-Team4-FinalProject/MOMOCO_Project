@@ -57,7 +57,12 @@ const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
 const Boardlist = React.lazy(()=> import('./views/board/Boardlist'))
 //boardcontent
 const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
-
+//boardwrite
+const Boardwrite =React.lazy(()=>import('./views/board/Boardwrite'))
+//boardedit
+const Boardedit =React.lazy(()=>import('./views/board/Boardedit'))
+//마이페이지
+const Mypage = React.lazy(()=>import('./views/mypage/Mypage'))
 // kanban 보드
 const Kanban = React.lazy(()=>import('./views/kanban/Kanban') )
 
@@ -109,7 +114,11 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: '/boardlist', name :'boardlist', exact:true, element:Boardlist },
   { path: '/boardcontent', name :'Boardcontent', exact:true,element:Boardcontent},
+  { path: '/boardwrite', name :'Boardwrite', exact:true,element:Boardwrite},
+  { path: '/boardedit', name :'Boardedit', exact:true,element:Boardedit},
+  { path: '/mypage', name :'Mypage', exact:true,element:Mypage},
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
+
 ]
 
 export default routes
