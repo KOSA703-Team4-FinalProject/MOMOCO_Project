@@ -1,8 +1,14 @@
 import { cilPlus } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CAvatar, CButton, CCallout, CCard, CCardBody, CCardFooter, CCol, CForm, CFormInput, CFormLabel, CRow } from "@coreui/react"
-
-
+const styles = {
+    
+    fontSize: 40,
+    "border": "2px"
+  }
+  const profileimg= {
+    width:'250px', height:'250px'
+  }
 const Mypage = () => {
   return (
     <>
@@ -19,9 +25,9 @@ const Mypage = () => {
             <div className="row">
                 <div className="col-md-12">
                     <div className="row">
-                        <div className="col-md-3" align="cneter">
-                            <CAvatar size="50%"  src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"/><br></br>
-                            USERNAME
+                        <div className="col-md-3" align="center">
+                             <CAvatar style={profileimg} src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"/><br></br> 
+                             <div style={styles}>Mellow Yellow</div><br></br>
                         </div>
                         <div className="col-md-9">
                         <div className="row">
@@ -57,17 +63,13 @@ const Mypage = () => {
                             <CIcon icon={cilPlus} size="xxl" onClick={""}/>
                             </div> */}
                         </div>
-                        <hr></hr>
-                        <div className="col-md-12" align="right">
-                        <CButton color="primary" variant="outline">수정</CButton> &nbsp;
-                        <CButton color="danger" variant="outline">완료</CButton>
-                        </div>
-                        
+                        <hr></hr>              
                        <CCardBody align="center">
                         <div className="row">
-                           
-                            <div className="col-md-12" align="left">
-                                <label>이메일*</label><br></br>
+                            <div className="col-md-3" align="left">
+                            </div>
+                            <div className="col-md-6" align="left">
+                                <label><strong>이메일</strong></label><br></br>
                                 <CForm>
                                     <CFormInput
                                         type="email"
@@ -76,11 +78,11 @@ const Mypage = () => {
                                         aria-describedby="exampleFormControlInputHelpInline"
                                     />
                                     </CForm>
-                                <label>생년월일*</label><br></br>
+                                <label><strong>생년월일</strong></label><br></br>
                                 <CFormInput type="text" placeholder="Default input" aria-label="1998.08.10"/>
-                                <label>소속*</label><br></br>
+                                <label><strong>소속</strong></label><br></br>
                                 <CFormInput type="text" placeholder="Default input" aria-label="소속"/>
-                                <label>비밀번호*</label><br></br>
+                                <label><strong>비밀번호</strong></label><br></br>
                                 <CCol xs="auto">
                                     <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
                                     Password
@@ -88,6 +90,12 @@ const Mypage = () => {
                                     <CFormInput type="password" id="inputPassword2" placeholder="Password" />
                                 </CCol>
                             </div>
+                            <div className="col-md-3" align="left">
+                            </div>
+                        </div><br></br>
+                        <div className="col-md-12" align="right">
+                        <CButton color="primary" variant="outline">수정</CButton> &nbsp;
+                        <CButton color="danger" variant="outline">완료</CButton>
                         </div>
                         </CCardBody>
                         </div>

@@ -63,7 +63,10 @@ const Boardwrite =React.lazy(()=>import('./views/board/Boardwrite'))
 const Boardedit =React.lazy(()=>import('./views/board/Boardedit'))
 //마이페이지
 const Mypage = React.lazy(()=>import('./views/mypage/Mypage'))
-
+//깃 타임라인
+const Gittimeline = React.lazy(()=>import('./views/git/Gittimeline'))
+//깃차트
+const Gitchart = React.lazy(()=>import('./views/git/Gitchart'))
 // kanban 보드
 const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
 
@@ -127,6 +130,8 @@ const routes = [
   { path: '/boardwrite', name :'Boardwrite', exact:true,element:Boardwrite},
   { path: '/boardedit', name :'Boardedit', exact:true,element:Boardedit},
   { path: '/mypage', name :'Mypage', exact:true,element:Mypage},
+  { path: '/gittimeline', name :'Gittimeline', exact:true,element:Gittimeline},//깃타임라인
+  { path: '/gitchart', name :'GitChart', exact:true,element:Gitchart},//깃차트
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/talkDrawer', name: 'TalkDrawer', element: TalkDrawer }, //톡서랍 임시
