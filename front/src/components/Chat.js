@@ -11,11 +11,10 @@ import {
   cilXCircle,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CCard, CCardBody, CCol, CContainer } from '@coreui/react'
-import Cards from 'src/views/base/cards/Cards'
 import '../scss/chatRoom.scss'
 
 const Chat = () => {
+
   return (
     <main>
       <header>
