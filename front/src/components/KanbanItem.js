@@ -17,7 +17,7 @@ import * as icon from '@coreui/icons'
 
 const KanbanItem = () => {
   return (
-    <CCard>
+    <CCard className="draggable" draggable="true">
       <CRow>
         <CCol xs="auto" className="me-auto">
           <CCardHeader>제목</CCardHeader>
