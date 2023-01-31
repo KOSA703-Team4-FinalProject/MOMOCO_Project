@@ -2,11 +2,8 @@ import { cilLibraryAdd, cilTrash } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CCol, CModal, CModalBody, CModalHeader, CModalTitle, CRow } from '@coreui/react'
 import $ from 'jquery';
-import { useState } from 'react'
 
 import '../scss/chatRoom.scss'
-import Chat from './Chat'
-
 
 const ChatRoom = () => {
 

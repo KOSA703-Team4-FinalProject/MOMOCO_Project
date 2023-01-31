@@ -70,10 +70,11 @@ const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
 // unregister
 const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterCheck')) // 회원탈퇴
 
-//채팅 룸
-const ChatRoom = React.lazy(()=>import('./components/ChatRoom') )
-//채팅
-const Chat = React.lazy(()=>import('./components/Chat') )
+//톡서랍 임시
+const TalkDrawer = React.lazy(() => import('./components/TalkDrawer'))
+//파일 톡서랍 임시
+const TalkDrawerDetail = React.lazy(() => import('./components/TalkDrawerDetail'))
+
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -127,9 +128,9 @@ const routes = [
   { path: '/boardedit', name :'Boardedit', exact:true,element:Boardedit},
   { path: '/mypage', name :'Mypage', exact:true,element:Mypage},
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
-  { path: '/chatRoom', name: 'ChatRoom', element: ChatRoom }, //채팅 룸 임시
-  { path: '/chat', name: 'Chat', element: Chat }, //채팅 임시
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
+  { path: '/talkDrawer', name: 'TalkDrawer', element: TalkDrawer }, //톡서랍 임시
+  { path: '/talkDrawerDetail', name: 'TalkDrawerDetail', element: TalkDrawerDetail} //톡서랍 세부사항 임시
 ]
 
 export default routes
