@@ -18,6 +18,7 @@ import { AppBreadcrumb, ChatRoom } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 import { changechatView } from 'src/store'
+import ChatAll from './ChatAll'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -58,7 +59,7 @@ const AppHeader = () => {
           <CNavItem>
             {/* 채팅 이모티콘 */}
             <CHeaderNav className="mt-1 ms-1 pt-1">
-              <ChatRoom />
+              <ChatAll />
             </CHeaderNav>
           </CNavItem>
         </CHeaderNav>
