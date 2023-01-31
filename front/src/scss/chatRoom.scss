@@ -2,7 +2,6 @@
 	box-sizing:border-box;
 }
 body{
-	background-color:#abd9e9;
 	font-family:Arial;
 }
 .container{
@@ -15,12 +14,13 @@ body{
 	overflow:hidden;
 }
 aside{
-	width:260px;
-	height:800px;
+	width:300px;
+	height:500px;
 	background-color:#3b3e49;
 	display:inline-block;
 	font-size:15px;
 	vertical-align:top;
+	border-radius: 5px;
 }
 main{
 	width:490px;
@@ -28,6 +28,7 @@ main{
 	display:inline-block;
 	font-size:15px;
 	vertical-align:top;
+	background-color: #DDDDDD;
 }
 
 aside header{
@@ -126,8 +127,8 @@ aside li h3{
 }
 
 main header{
-	height:110px;
-	padding:30px 20px 30px 40px;
+	height:90px;
+	padding:20px;
 }
 main header > *{
 	display:inline-block;
@@ -145,7 +146,6 @@ main header div{
 	margin-right:10px;
 }
 main header h2{
-	font-size:16px;
 	margin-bottom:5px;
 }
 main header h3{
@@ -238,7 +238,6 @@ main footer a{
 	font-weight:bold;
 	color:#6fbced;
 	vertical-align:top;
-	margin-left:400px;
 	margin-top:5px;
 	display:inline-block;
 }

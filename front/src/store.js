@@ -18,22 +18,8 @@ let state = createSlice({
 
 export let { changeName } = state.actions //state 변경함수
 
-//채팅 상태
-let chatView = createSlice({
-  name: 'chatView',
-  initialState: false,
-  reducers: {
-    changechatView(){
-      return !chatView
-    }
-  }
-})
-
-export let {changechatView} = chatView.actions
-
 export default configureStore({
   reducer: {
-    state: state.reducer,
-    chatView: chatView.reducer
+    state: state.reducer
   },
 })

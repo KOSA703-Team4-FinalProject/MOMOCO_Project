@@ -14,7 +14,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilChatBubble, cilCommentBubble, cilCommentSquare, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 
-import { AppBreadcrumb } from './index'
+import { AppBreadcrumb, ChatRoom } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 import { changechatView } from 'src/store'
@@ -56,15 +56,10 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
             {/* 채팅 이모티콘 */}
-            <CNavLink href="#">
-              <CIcon icon={cilCommentSquare} size="lg" onClick={ ()=>{dispatch(changechatView())} } />
-            </CNavLink>
+            <CHeaderNav className="mt-1 ms-1 pt-1">
+              <ChatRoom />
+            </CHeaderNav>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-3">
