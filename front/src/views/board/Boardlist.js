@@ -78,6 +78,12 @@ const Boardlist = () => {
                       button={{ color: 'primary', variant: 'outline' }}
                       id="btncheck2"
                       autoComplete="off"
+                      label="미확인 글"
+                    />
+                    <CFormCheck
+                      button={{ color: 'primary', variant: 'outline' }}
+                      id="btncheck2"
+                      autoComplete="off"
                       label="칸반보드"
                     />
                     <CFormCheck
@@ -118,17 +124,11 @@ const Boardlist = () => {
                       </div>
                       <div className="col-md-11">
                         <div className="row">
-                          <div className="col-md-12" style={writedate}>
-                            작성일자
+                          <div className="col-md-10" style={title}>
+                          <strong> 글제목</strong> 
+                          <CIcon icon={cilCheck} />
                           </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-md-8" style={title}>
-                          <strong> 글제목</strong>
-                          </div>
-                          <div className="col-md-4">
-                            <CIcon icon={cilCheck} style={check} />
-                          </div>
+                         
                         </div>
                         <div className="row">
                           <div className="col-md-12" style={context}>
@@ -148,7 +148,13 @@ const Boardlist = () => {
                               <CAvatar className='ms-3' src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"/>
                             
                           </div>
+                         
                         </div>
+                        
+                          <div className="col-md-12 ms-6 p-2" style={writedate} align="right">
+                            2023.01.31
+                          </div>
+                        
                       </div>
                     </div>
                   </div>

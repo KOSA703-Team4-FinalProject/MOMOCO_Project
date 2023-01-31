@@ -66,6 +66,11 @@ const Boardcontent = () => {
                   </div>
                 </div>
                 <hr></hr>
+                <div align="center">
+                <CButton color="primary" variant="outline">미리보기</CButton> &nbsp;
+                <CButton color="primary" variant="outline">다운로드</CButton>
+                </div>
+                <hr></hr><br></br>
                 <CCard>
                   <div className="row">
                     <div className="col-md-12">
@@ -80,13 +85,12 @@ const Boardcontent = () => {
                 <CCard>
                 <div className="row">
                   <div class="col-md-8">
-                    <div class="col-md-6 ps-4" >
-                    <strong>파일 이름</strong>
+                    <div class="col-md-6 ps-4" align="center">
+                    
                     </div>
                   </div>
                   <div class="col-md-4" align="center">
-                  <CButton color="primary" shape="rounded-pill">미리보기</CButton> &nbsp;
-                  <CButton color="primary" shape="rounded-pill">다운로드</CButton>
+                  
                   </div>
                   </div>
                 </CCard>

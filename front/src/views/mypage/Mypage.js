@@ -63,16 +63,13 @@ const Mypage = () => {
                             <CIcon icon={cilPlus} size="xxl" onClick={""}/>
                             </div> */}
                         </div>
-                        <hr></hr>
-                        <div className="col-md-12" align="right">
-                        <CButton color="primary" variant="outline">수정</CButton> &nbsp;
-                        <CButton color="danger" variant="outline">완료</CButton>
-                        </div>
-                        
+                        <hr></hr>              
                        <CCardBody align="center">
                         <div className="row">
-                            <div className="col-md-12" align="left">
-                                <label>이메일*</label><br></br>
+                            <div className="col-md-3" align="left">
+                            </div>
+                            <div className="col-md-6" align="left">
+                                <label><strong>이메일</strong></label><br></br>
                                 <CForm>
                                     <CFormInput
                                         type="email"
@@ -81,11 +78,11 @@ const Mypage = () => {
                                         aria-describedby="exampleFormControlInputHelpInline"
                                     />
                                     </CForm>
-                                <label>생년월일*</label><br></br>
+                                <label><strong>생년월일</strong></label><br></br>
                                 <CFormInput type="text" placeholder="Default input" aria-label="1998.08.10"/>
-                                <label>소속*</label><br></br>
+                                <label><strong>소속</strong></label><br></br>
                                 <CFormInput type="text" placeholder="Default input" aria-label="소속"/>
-                                <label>비밀번호*</label><br></br>
+                                <label><strong>비밀번호</strong></label><br></br>
                                 <CCol xs="auto">
                                     <CFormLabel htmlFor="inputPassword2" className="visually-hidden">
                                     Password
@@ -93,6 +90,12 @@ const Mypage = () => {
                                     <CFormInput type="password" id="inputPassword2" placeholder="Password" />
                                 </CCol>
                             </div>
+                            <div className="col-md-3" align="left">
+                            </div>
+                        </div><br></br>
+                        <div className="col-md-12" align="right">
+                        <CButton color="primary" variant="outline">수정</CButton> &nbsp;
+                        <CButton color="danger" variant="outline">완료</CButton>
                         </div>
                         </CCardBody>
                         </div>
