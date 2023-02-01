@@ -90,7 +90,7 @@ const Chat = () => {
   const ChatCss = {
     position: "absolute",
     top: "125px",
-    left: "1180px",
+    left: "74%",
     margin: "0 auto" 
   }
 

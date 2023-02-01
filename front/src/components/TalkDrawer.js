@@ -15,7 +15,7 @@ const TalkDrawer = () => {
   const drawerCss = {
     position: "absolute",
     top: "125px",
-    left: "1000px",
+    left: "49%",
     margin: "0 auto"
   }
 

@@ -17,7 +17,7 @@ const TalkDrawerDetail = (props) => {
   const drawerDetailCss = {
     position: 'absolute',
     top: '125px',
-    left: '1000px',
+    left: '49%',
     margin: '0 auto',
   }
 
