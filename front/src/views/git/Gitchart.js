@@ -63,9 +63,10 @@ const Gitchart = () => {
                         </div>
                         
                         <div className="col-md-6">
+                        <CCard className="p-3">
                             <div className="row">
                                 <div className="col-md-12" align="center">
-                                    <h1>차트2</h1>
+                                <h2><strong>차트2</strong></h2>
                                     <CCallout color="primary">
                                         차트설명
                                     </CCallout>
@@ -89,14 +90,16 @@ const Gitchart = () => {
                                  />
                                 </div>
                             </div>
+                        </CCard>
                         </div>
                     </div>
                     <br></br>
                     <div className="row">
                         <div className="col-md-6">
+                        <CCard className="p-3">
                             <div className="row">
                                 <div className="col-md-12" align="center">
-                                    <h1>차트3</h1>
+                                <h2><strong>차트3</strong></h2>
                                     <CCallout color="primary">
                                         차트설명
                                     </CCallout>
@@ -143,12 +146,14 @@ const Gitchart = () => {
                                     />
                                 </div>
                             </div>
+                        </CCard>
                         </div>
                         <br></br>
                         <div className="col-md-6">
+                        <CCard className="p-3">
                             <div className="row">
                                 <div className="col-md-12" align="center">
-                                <h1><strong>차트4</strong></h1>
+                                <h2><strong>차트4</strong></h2>
                                 <CCallout color="primary">
                                         차트설명
                                     </CCallout>
@@ -170,6 +175,7 @@ const Gitchart = () => {
                                     />
                                 </div>
                             </div>
+                        </CCard>
                         </div>
                     </div>
                 </div>

@@ -26,7 +26,7 @@ const Gittimeline = () => {
             </CCol>
           </CRow>
         <div className="col-md-12" align="center">
-        <Timeline position="right">
+        <Timeline position="alternate">
       <TimelineItem>
         <TimelineOppositeContent color="text.secondary">
           <p style={time}>09:30 am</p>
