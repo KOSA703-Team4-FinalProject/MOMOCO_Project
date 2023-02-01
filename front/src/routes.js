@@ -80,6 +80,8 @@ const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterChec
 const TalkDrawer = React.lazy(() => import('./components/TalkDrawer'))
 //파일 톡서랍 임시
 const TalkDrawerDetail = React.lazy(() => import('./components/TalkDrawerDetail'))
+//문서 저장소
+const docStorage = React.lazy(() => import('./views/docStorage/docStorage'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -139,6 +141,7 @@ const routes = [
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/talkDrawer', name: 'TalkDrawer', element: TalkDrawer }, //톡서랍 임시
   { path: '/talkDrawerDetail', name: 'TalkDrawerDetail', element: TalkDrawerDetail }, //톡서랍 세부사항 임시
+  { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소
 ]
 
 export default routes
