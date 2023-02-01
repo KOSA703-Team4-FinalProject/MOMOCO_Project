@@ -10,19 +10,25 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
+  CModal,
+  CModalBody,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilChatBubble, cilCommentBubble, cilCommentSquare, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
+import {
+  cilBell,
+  cilMenu,
+} from '@coreui/icons'
 
 import { AppBreadcrumb, ChatRoom } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
-import { changechatView } from 'src/store'
 import ChatAll from './ChatAll'
+
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  
 
   return (
     <CHeader position="sticky" className="mb-4">

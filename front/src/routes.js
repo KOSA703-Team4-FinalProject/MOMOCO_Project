@@ -73,11 +73,6 @@ const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
 // unregister
 const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterCheck')) // 회원탈퇴
 
-//톡서랍 임시
-const TalkDrawer = React.lazy(() => import('./components/TalkDrawer'))
-//파일 톡서랍 임시
-const TalkDrawerDetail = React.lazy(() => import('./components/TalkDrawerDetail'))
-
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -134,8 +129,6 @@ const routes = [
   { path: '/gitchart', name :'GitChart', exact:true,element:Gitchart},//깃차트
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
-  { path: '/talkDrawer', name: 'TalkDrawer', element: TalkDrawer }, //톡서랍 임시
-  { path: '/talkDrawerDetail', name: 'TalkDrawerDetail', element: TalkDrawerDetail} //톡서랍 세부사항 임시
 ]
 
 export default routes
