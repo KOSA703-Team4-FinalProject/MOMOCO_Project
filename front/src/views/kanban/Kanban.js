@@ -25,12 +25,9 @@ import { width } from '@mui/system'
 
 const Kanban = () => {
   const mainCard = {
-    width: '20000px',
+    display: 'flex',
   }
 
-  const subCard = {
-    width: '300px',
-  }
   useEffect(() => {
     let draggables = document.querySelectorAll('.draggable')
     let containers = document.querySelectorAll('.container1')
@@ -88,12 +85,12 @@ const Kanban = () => {
         </CCardBody>
       </CCard>
 
-      <CCard style={mainCard}>
+      <CCard style={{ width: '100%' }} className="">
         <HorizontalScroll>
           <CCardBody className="mx-2">
             <CRow>
               {/*  */}
-              <CCard className="col-3 bg-light py-3 container1">
+              <CCard style={{ width: '300px' }} className="bg-light py-3 container1">
                 <CRow>
                   <CCol xs="auto" className="me-auto bg-light">
                     To-Do
@@ -120,7 +117,7 @@ const Kanban = () => {
               </CCard>
               {/*  */}
 
-              <CCard style={subCard} className=" bg-light py-3 container1">
+              <CCard style={{ width: '300px' }} className="bg-light py-3 container1">
                 <CRow>
                   <CCol xs="auto" className="me-auto">
                     In Progress
@@ -149,7 +146,7 @@ const Kanban = () => {
                 <KanbanItem />
               </CCard>
 
-              <CCard style={subCard} className="col-3 bg-light py-3 container1">
+              <CCard style={{ width: '300px' }} className="bg-light py-3 container1">
                 <CRow>
                   <CCol xs="auto" className="me-auto">
                     Done
@@ -169,11 +166,16 @@ const Kanban = () => {
                     </CDropdown>
                   </CCol>
                 </CRow>
+
                 {/* 카드가 들어갈 곳 */}
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
                 <KanbanItem />
               </CCard>
 
-              <CCard style={subCard} className="bg-light py-3 container1">
+              <CCard style={{ width: '300px' }} className="bg-light py-3 container1">
                 <CRow>
                   <CCol xs="auto" className="me-auto">
                     Done
@@ -193,11 +195,16 @@ const Kanban = () => {
                     </CDropdown>
                   </CCol>
                 </CRow>
+
                 {/* 카드가 들어갈 곳 */}
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
                 <KanbanItem />
               </CCard>
 
-              <CCard style={subCard} className="bg-light py-3 container1">
+              <CCard style={{ width: '300px' }} className="bg-light py-3 container1">
                 <CRow>
                   <CCol xs="auto" className="me-auto">
                     Done
@@ -217,11 +224,45 @@ const Kanban = () => {
                     </CDropdown>
                   </CCol>
                 </CRow>
+
                 {/* 카드가 들어갈 곳 */}
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
                 <KanbanItem />
               </CCard>
 
-              <CCard style={subCard} className="bg-light py-3">
+              <CCard style={{ width: '300px' }} className="bg-light py-3 container1">
+                <CRow>
+                  <CCol xs="auto" className="me-auto">
+                    Done
+                  </CCol>
+                  <CCol xs="auto">
+                    {' '}
+                    <CDropdown alignment="end">
+                      <CDropdownToggle color="transparent" caret={false} className="p-0">
+                        <CIcon icon={icon.cilOptions} />
+                      </CDropdownToggle>
+                      <CDropdownMenu>
+                        <CDropdownItem>Action</CDropdownItem>
+                        <CDropdownItem>Another action</CDropdownItem>
+                        <CDropdownItem>Something else here...</CDropdownItem>
+                        <CDropdownItem disabled>Disabled action</CDropdownItem>
+                      </CDropdownMenu>
+                    </CDropdown>
+                  </CCol>
+                </CRow>
+
+                {/* 카드가 들어갈 곳 */}
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
+                <KanbanItem />
+              </CCard>
+
+              <CCard style={{ width: '300px' }} className="">
                 <CCardHeader>
                   <CIcon
                     icon={icon.cilPlus}
