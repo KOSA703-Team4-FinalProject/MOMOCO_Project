@@ -57,15 +57,15 @@ const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
 //boardlist
 const Boardlist = React.lazy(() => import('./views/board/Boardlist'))
 //boardcontent
-const Boardcontent = React.lazy(()=> import('./views/board/Boardcontent'))
+const Boardcontent = React.lazy(() => import('./views/board/Boardcontent'))
 //boardwrite
-const Boardwrite =React.lazy(()=>import('./views/board/Boardwrite'))
+const Boardwrite = React.lazy(() => import('./views/board/Boardwrite'))
 //boardedit
-const Boardedit =React.lazy(()=>import('./views/board/Boardedit'))
+const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
 //마이페이지
-const Mypage = React.lazy(()=>import('./views/mypage/Mypage'))
+const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
-const Gittimeline = React.lazy(()=>import('./views/git/Gittimeline'))
+const Gittimeline = React.lazy(() => import('./views/git/Gittimeline'))
 //깃차트
 const Gitchart = React.lazy(()=>import('./views/git/Gitchart'))
 //화상채팅
@@ -80,7 +80,6 @@ const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterChec
 const TalkDrawer = React.lazy(() => import('./components/TalkDrawer'))
 //파일 톡서랍 임시
 const TalkDrawerDetail = React.lazy(() => import('./components/TalkDrawerDetail'))
-
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -139,7 +138,7 @@ const routes = [
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/talkDrawer', name: 'TalkDrawer', element: TalkDrawer }, //톡서랍 임시
-  { path: '/talkDrawerDetail', name: 'TalkDrawerDetail', element: TalkDrawerDetail} //톡서랍 세부사항 임시
+  { path: '/talkDrawerDetail', name: 'TalkDrawerDetail', element: TalkDrawerDetail }, //톡서랍 세부사항 임시
 ]
 
 export default routes
