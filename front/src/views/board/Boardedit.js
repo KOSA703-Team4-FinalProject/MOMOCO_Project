@@ -1,34 +1,19 @@
 import { CAvatar, CBadge, CButton, CCard, CCardBody, CCol, CForm, CFormCheck, CFormInput, CFormSelect, CFormTextarea, CRow } from "@coreui/react";
 import { Editor } from "@tinymce/tinymce-react";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from 'styled-components'
 
 
 
 
 const Boardwirte=()=>{
-    const [tagItem, setTagItem] = useState('')
-  const [tagList, setTagList] = useState([])
+  
 
-  const onKeyPress = e => {
-    if (e.target.value.length !== 0 && e.key === 'Enter') {
-      submitTagItem()
-    }
+
+  const labelselect={
+    width:'300px'
   }
-
-  const submitTagItem = () => {
-    let updatedTagList = [...tagList]
-    updatedTagList.push(tagItem)
-    setTagList(updatedTagList)
-    setTagItem('')
-  }
-
-  const deleteTagItem = e => {
-    const deleteTagItem = e.target.parentElement.firstChild.innerText
-    const filteredTagList = tagList.filter(tagItem => tagItem !== deleteTagItem)
-    setTagList(filteredTagList)
-  }
-
 
     return (
         <>
@@ -48,10 +33,10 @@ const Boardwirte=()=>{
                     <div className="row">
                         <div className="col-md-12">
                             <div className="row">
-                                <div className="col-md-10">
-                                    <label>키워드*</label><br></br>
-                                    <CFormSelect 
-                                    aria-label="키워드를 선택해주센요"
+                                <div className="col-md-3">
+                                    <label><strong>라벨</strong></label><br></br>
+                                    <CFormSelect style={labelselect}
+                                    aria-label="라벨"
                                     options={[
                                         'Open this select menu',
                                         { label: 'One', value: '1' },
@@ -60,18 +45,15 @@ const Boardwirte=()=>{
                                     ]}
                                     />
                                 </div>
-                                <div className="col-md-2"></div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <label>제목*</label><br></br>
+                                <div className="col-md-9" align="left">
+                                <label><strong>제목</strong></label><br></br>
                                     <CFormInput type="text" placeholder="제목을 입력하세요" aria-label="default input example"/>
                                 </div>
-                               
                             </div>
+                              <br></br>
                             <div className="row">
                                 <div className="col-md-12">
-                                    <label>파일*</label><br></br>
+                                    <label><strong>파일</strong></label><br></br>
                                     <div className="mb-3">
                                         <CFormInput type="file" id="formFile"  />
                                     </div>
@@ -80,7 +62,7 @@ const Boardwirte=()=>{
                             </div>
                             <div className="row">
                                 <div className="col-md-4">
-                                   <label>알림*</label> <br></br>&nbsp;
+                                   <label><strong>알림</strong></label> <br></br>&nbsp;
                                     <CFormCheck inline id="inlineCheckbox1" value="option1" label="전체보내기"/> 
                                     <CFormCheck inline id="inlineCheckbox2" value="option2"/><CAvatar className='ms-2' src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"/> 메타몽 &nbsp;
                                     <CFormCheck inline id="inlineCheckbox3" value="option3" label="오리" disabled/>
@@ -90,34 +72,10 @@ const Boardwirte=()=>{
                                 <div className="col-md-4">
                                 </div>
                             </div>
-                            <div calssName="row">
-                                <div className="col-md-12">
-                                   <label>태그*</label>
-                                   <TagBox>
-                                    {tagList.map((tagItem, index) => {
-                                    return (
-                                        <tagItem key={index}>
-                                        <Text>{tagItem}</Text>
-                                        <Button onClick={deleteTagItem}>X</Button>
-                                        </tagItem>
-                                    )
-                                    })}
-                                    <TagInput
-                                    type='text'
-                                    //placeholder='Press enter to add tags'
-                                    tabIndex={2}
-                                    onChange={e => setTagItem(e.target.value)}
-                                    value={tagItem}
-                                    onKeyPress={onKeyPress}
-                                    />
-                                </TagBox>
-                                </div>
-
-                            </div>
+                         
                             <br></br>
                             <div className="row">
                                 <div className="col-md-12">
-                                    <label>글내용*</label><br></br>
                                         <Editor
                                         onInit={(evt, editor) => editorRef.current = editor}
                                         initialValue="<p>This is the initial content of the editor.</p>"
@@ -138,7 +96,9 @@ const Boardwirte=()=>{
                                         />
                                         <br></br>
                                         <div align="right">
-                                        <CButton color="primary" variant="outline">수정</CButton>
+                                        
+                                          <CButton variant="outline">수정하기</CButton>
+                                        
                                         </div>
 
                                 </div>

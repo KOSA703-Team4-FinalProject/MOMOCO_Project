@@ -8,28 +8,10 @@ import styled from 'styled-components'
 
 
 const Boardwirte=()=>{
-    const [tagItem, setTagItem] = useState('')
-  const [tagList, setTagList] = useState([])
-
-  const onKeyPress = e => {
-    if (e.target.value.length !== 0 && e.key === 'Enter') {
-      submitTagItem()
-    }
+ 
+  const labelselect={
+    width:'300px'
   }
-
-  const submitTagItem = () => {
-    let updatedTagList = [...tagList]
-    updatedTagList.push(tagItem)
-    setTagList(updatedTagList)
-    setTagItem('')
-  }
-
-  const deleteTagItem = e => {
-    const deleteTagItem = e.target.parentElement.firstChild.innerText
-    const filteredTagList = tagList.filter(tagItem => tagItem !== deleteTagItem)
-    setTagList(filteredTagList)
-  }
-
 
     return (
         <>
@@ -49,10 +31,10 @@ const Boardwirte=()=>{
                     <div className="row">
                         <div className="col-md-12">
                             <div className="row">
-                                <div className="col-md-6">
-                                    <label><strong>키워드</strong></label><br></br>
-                                    <CFormSelect 
-                                    aria-label="키워드를 선택해주센요"
+                                <div className="col-md-3">
+                                    <label><strong>라벨</strong></label><br></br>
+                                    <CFormSelect style={labelselect}
+                                    aria-label="라벨"
                                     options={[
                                         'Open this select menu',
                                         { label: 'One', value: '1' },
@@ -61,17 +43,12 @@ const Boardwirte=()=>{
                                     ]}
                                     />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-9" align="left">
                                 <label><strong>제목</strong></label><br></br>
                                     <CFormInput type="text" placeholder="제목을 입력하세요" aria-label="default input example"/>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-12">
-                                    
-                                </div>
-                               
-                            </div>
+                              <br></br>
                             <div className="row">
                                 <div className="col-md-12">
                                     <label><strong>파일</strong></label><br></br>
@@ -93,30 +70,7 @@ const Boardwirte=()=>{
                                 <div className="col-md-4">
                                 </div>
                             </div>
-                            <div calssName="row">
-                                <div className="col-md-12">
-                                   <label><strong>태그</strong></label>
-                                   <TagBox>
-                                    {tagList.map((tagItem, index) => {
-                                    return (
-                                        <tagItem key={index}>
-                                        <Text>{tagItem}</Text>
-                                        <Button onClick={deleteTagItem}>X</Button>
-                                        </tagItem>
-                                    )
-                                    })}
-                                    <TagInput
-                                    type='text'
-                                    //placeholder='Press enter to add tags'
-                                    tabIndex={2}
-                                    onChange={e => setTagItem(e.target.value)}
-                                    value={tagItem}
-                                    onKeyPress={onKeyPress}
-                                    />
-                                </TagBox>
-                                </div>
-
-                            </div>
+                            
                             <br></br>
                             <div className="row">
                                 <div className="col-md-12">

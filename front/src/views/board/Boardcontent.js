@@ -12,8 +12,9 @@ const userimg ={
   width:'45px', height:'45px'
 }
 const tag={
-  fontSize: 16,
-  "border": "2px"
+  fontSize: 15,
+  "border": "2px",
+  
 }
 const Boardcontent = () => {
   return (
@@ -35,7 +36,9 @@ const Boardcontent = () => {
               <div className="col-md-12">
                 <div className="row">
                   <div className="col-md-9" style={title}>
-                  <strong>글을 제목을 작성하시오</strong>
+                    
+                  <strong className="pt-3">글을 제목을 작성하시오</strong>&nbsp;
+                  <CBadge color="info" shape="rounded-pill"style={tag} >#tired</CBadge>
                   </div>
                   <div className="col-md-3">
                   </div>
@@ -77,7 +80,7 @@ const Boardcontent = () => {
                       <CForm>
                         <CFormTextarea rows={10}>글내용글내용</CFormTextarea>
                       </CForm>
-                      <CBadge color="info" shape="rounded-pill"style={tag}>#tired</CBadge>
+                     
                       </div>
                   </div>
                 </CCard>
