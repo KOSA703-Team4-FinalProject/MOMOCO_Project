@@ -5,6 +5,7 @@
 /back/src/main/webapp/WEB-INF/config
 
 application-oauth.properties
+/front/oauth.js
 
 ### Eclipse ###
 .metadata
