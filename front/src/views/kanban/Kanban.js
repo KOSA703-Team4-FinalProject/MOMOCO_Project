@@ -27,6 +27,7 @@ import {
   CForm,
   CFormTextarea,
   CFormLabel,
+  CFormSelect,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -107,27 +108,33 @@ const Kanban = () => {
             </div>
 
             <hr />
-            {/* 여기 수정해야됩니다~~ */}
-            <div className="mb-3">
-              <CFormLabel htmlFor="exampleFormControlInput1">Email address</CFormLabel>
-              <CFormInput
-                type="email"
-                id="exampleFormControlInput1"
-                placeholder="name@example.com"
-              />
-            </div>
 
+            <CFormSelect
+              aria-label="상태 입력"
+              options={[
+                '상태 입력',
+                { label: '상태1', value: '1' },
+                { label: '상태2', value: '2' },
+                { label: '상태3', value: '3' },
+              ]}
+            />
+            <br />
             <div className="mb-3">
-              <CFormLabel htmlFor="exampleFormControlTextarea1">Example textarea</CFormLabel>
-              <CFormTextarea id="exampleFormControlTextarea1" rows={4}></CFormTextarea>
+              <CFormLabel htmlFor="exampleFormControlTextarea1">내용</CFormLabel>
+              <CFormTextarea
+                id="exampleFormControlTextarea1"
+                rows={4}
+                placeholder="내용을 입력해주세요"
+              ></CFormTextarea>
             </div>
           </CForm>
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            Close
+            취소
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          <CButton color="primary">등록</CButton>
+          {/* 등록 시 알림 sweetalert2 */}
         </CModalFooter>
       </CModal>
 

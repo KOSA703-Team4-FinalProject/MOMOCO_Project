@@ -66,14 +66,14 @@ const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
 const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
 const Gittimeline = React.lazy(() => import('./views/git/Gittimeline'))
-const Gittime =React.lazy(() => import('./views/git/Gittime'))
+const Gittime = React.lazy(() => import('./views/git/Gittime'))
 //깃차트
 const Gitchart = React.lazy(() => import('./views/git/Gitchart'))
 //화상채팅
 const videochat = React.lazy(() => import('./views/viewchat/Viewchat'))
 // kanban 보드
 const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
-const KanbanDetail = React.lazy(() => import('./views/kanban/KanbanDetail'))
+const KanbanDetail = React.lazy(() => import('./views/kanban/KanbanDetail.js'))
 
 // unregister
 const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterCheck')) // 회원탈퇴
@@ -135,7 +135,7 @@ const routes = [
   { path: '/viewchat', name: 'Viewchat', exact: true, element: Viewchat },
   { path: '/gittimeline', name: 'Gittimeline', exact: true, element: Gittimeline }, //깃타임라인
   { path: '/gitchart', name: 'GitChart', exact: true, element: Gitchart }, //깃차트
-  { path: '/gittime', name :'Gittime', exact:true,element:Gittime},//깃타임라인임시
+  { path: '/gittime', name: 'Gittime', exact: true, element: Gittime }, //깃타임라인임시
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소

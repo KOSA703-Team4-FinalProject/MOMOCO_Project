@@ -19,6 +19,7 @@ import React, { useState } from 'react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
 import { Link } from 'react-router-dom'
+import KanbanDetail from 'src/views/kanban/KanbanDetail'
 
 const KanbanItem = () => {
   const [visibleXL, setVisibleXL] = useState(false)
@@ -55,10 +56,9 @@ const KanbanItem = () => {
         </CCardTitle>
       </CCardBody>
       <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
-        <CModalHeader>
-          <CModalTitle>제목</CModalTitle>
-        </CModalHeader>
-        <CModalBody>...</CModalBody>
+        <CModalBody>
+          <KanbanDetail />
+        </CModalBody>
       </CModal>
     </CCard>
   )
