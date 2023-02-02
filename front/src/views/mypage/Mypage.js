@@ -126,53 +126,70 @@ const Mypage = () => {
                     </div>
                   </div>
                   <hr></hr>
-                  <div align="center">
-                    <div className="row">
-                      <div className="col-md-3" align="left"></div>
-                      <CCard className="col-md-6 ms-6" align="left">
-                      <div className='mt-3 me-3'>
-                      <CForm>
-                        <CRow className="mb-3">
-                          <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label"><strong>이메일:</strong></CFormLabel>
-                          <CCol sm={8} >
-                            <CFormInput type="email" id="inputEmail3"/>
-                          </CCol>
-                        </CRow>
-                        <CRow className="mb-3">
-                          <CFormLabel htmlFor="inputPassword3" className="col-sm-2 col-form-label"><strong>생년월일:</strong></CFormLabel>
-                          <CCol sm={8} >
-                            <CFormInput type="password" id="inputPassword3"/>
-                          </CCol>
-                        </CRow>
-                        <CRow className="mb-3">
-                          <CFormLabel htmlFor="inputPassword3" className="col-sm-2 col-form-label"><strong>소속:</strong></CFormLabel>
-                          <CCol sm={8} >
-                            <CFormInput type="password" id="inputPassword3"/>
-                          </CCol>
-                        </CRow>
-                        <CRow className="mb-3">
-                          <CFormLabel htmlFor="inputPassword3" className="col-sm-2 col-form-label"><strong>비밀번호:</strong></CFormLabel>
-                          <CCol sm={8} >
-                            <CFormInput type="password" id="inputPassword3"/>
-                          </CCol>
-                        </CRow>
-                      </CForm>
-                      <div className="mb-3" align="right">
-                        <CButton color="primary" variant="outline">
-                          수정
-                        </CButton>{' '}
-                        &nbsp;
-                        <CButton color="danger" variant="outline">
-                          완료
-                        </CButton>
-                        </div> 
+                  <div className="container-fluid">
+                    <div className="row" align="center">
+                      <div className="col-md-3" ></div>
+                      <CCard className="col-md-6">
+                        <div className="mt-3" align="left">
+                          <CForm>
+                            <CRow className="mb-3">
+                              <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
+                                <strong>이메일:</strong>
+                              </CFormLabel>
+                              <CCol sm={10}>
+                                <CFormInput type="email" id="inputEmail3" />
+                              </CCol>
+                            </CRow>
+                            <CRow className="mb-3">
+                              <CFormLabel
+                                htmlFor="inputPassword3"
+                                className="col-sm-2 col-form-label"
+                              >
+                                <strong>생년월일:</strong>
+                              </CFormLabel>
+                              <CCol sm={10}>
+                                <CFormInput type="password" id="inputPassword3" />
+                              </CCol>
+                            </CRow>
+                            <CRow className="mb-3">
+                              <CFormLabel
+                                htmlFor="inputPassword3"
+                                className="col-sm-2 col-form-label"
+                              >
+                                <strong>소속:</strong>
+                              </CFormLabel>
+                              <CCol sm={10}>
+                                <CFormInput type="password" id="inputPassword3" />
+                              </CCol>
+                            </CRow>
+                            <CRow className="mb-3">
+                              <CFormLabel
+                                htmlFor="inputPassword3"
+                                className="col-sm-2 col-form-label"
+                              >
+                                <strong>비밀번호:</strong>
+                              </CFormLabel>
+                              <CCol sm={10}>
+                                <CFormInput type="password" id="inputPassword3" />
+                              </CCol>
+                            </CRow>
+                          </CForm>
+                          <div className="mb-3 col-md-6" align="right">
+                            <CButton color="primary" variant="outline">
+                              수정
+                            </CButton>{' '}
+                            &nbsp;
+                            <CButton color="danger" variant="outline">
+                              완료
+                            </CButton>
+                          </div>
                         </div>
                       </CCard>
-                     
+
                       <div className="col-md-3" align="left"></div>
                     </div>
                     <br></br>
-                    <div className="col-md-12" align="right"></div>
+                   
                   </div>
                 </div>
               </div>

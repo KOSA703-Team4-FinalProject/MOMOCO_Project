@@ -66,6 +66,7 @@ const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
 const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
 const Gittimeline = React.lazy(() => import('./views/git/Gittimeline'))
+const Gittime =React.lazy(() => import('./views/git/Gittime'))
 //깃차트
 const Gitchart = React.lazy(()=>import('./views/git/Gitchart'))
 //화상채팅
@@ -132,6 +133,7 @@ const routes = [
   { path: '/mypage', name :'Mypage', exact:true,element:Mypage},
   {path:'/viewchat',name:'Viewchat',exact:true,element:Viewchat},
   { path: '/gittimeline', name :'Gittimeline', exact:true,element:Gittimeline},//깃타임라인
+  { path: '/gittime', name :'Gittime', exact:true,element:Gittime},//깃타임라인임시
   { path: '/gitchart', name :'GitChart', exact:true,element:Gitchart},//깃차트
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
