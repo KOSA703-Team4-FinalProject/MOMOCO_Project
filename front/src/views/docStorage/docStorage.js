@@ -51,26 +51,26 @@ const docStorage = () => {
             <CAccordionItem itemKey={1}>
               <CAccordionHeader>
                 <CRow className="col-12">
-                  <div className="col-2 px-2">
+                  <CCol className="col-2 px-2">
                     <strong>
                       <CIcon icon={cilCheck} /> #12-1
                     </strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>유스케이스</strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>UseCase_명세서2.word</strong>
-                  </div>
-                  <div className="col-2 px-1">
+                  </CCol>
+                  <CCol className="col-2 px-1">
                     <strong>USERNICK</strong>
                     <p></p>
                     <strong>2023.01.01 12:20</strong>
-                  </div>
+                  </CCol>
                 </CRow>
               </CAccordionHeader>
               <CAccordionBody>
-                <CFormTextarea rows={5}>로고이미지 입니다.</CFormTextarea>
+                <CFormTextarea defaultValue="로고이미지입니다" rows={5} />
                 <CRow>
                   <CCol align="end">
                     <CButton className="my-3 mx-1" color="dark" shape="rounded-pill">
@@ -86,26 +86,26 @@ const docStorage = () => {
             <CAccordionItem itemKey={2}>
               <CAccordionHeader>
                 <CRow className="col-12">
-                  <div className="col-2 px-2">
+                  <CCol className="col-2 px-2">
                     <strong>
                       <CIcon icon={cilCheck} /> #18
                     </strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>DB exerd 이미지</strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>DB설계도.jpg</strong>
-                  </div>
-                  <div className="col-2 px-1">
+                  </CCol>
+                  <CCol className="col-2 px-1">
                     <strong>USERNICK</strong>
                     <p></p>
                     <strong>2023.01.01 12:20</strong>
-                  </div>
+                  </CCol>
                 </CRow>
               </CAccordionHeader>
               <CAccordionBody>
-                <CFormTextarea rows={5}>로고이미지 입니다.</CFormTextarea>
+                <CFormTextarea defaultValue="로고이미지입니다" rows={5} />
                 <CRow>
                   <CCol align="end">
                     <CButton className="my-3 mx-1" color="dark" shape="rounded-pill">
@@ -121,29 +121,29 @@ const docStorage = () => {
             <CAccordionItem itemKey={3}>
               <CAccordionHeader>
                 <CRow className="col-12">
-                  <div className="col-2 px-2">
+                  <CCol className="col-2 px-2">
                     <strong>
                       <CIcon icon={cilCheck} /> #24
                     </strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>아이콘 이미지들</strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>파비콘.jpg</strong>
                     <p></p>
                     <strong>로고.png</strong>
-                  </div>
-                  <div className="col-2 px-1">
+                  </CCol>
+                  <CCol className="col-2 px-1">
                     <strong>USERNICK</strong>
                     <p></p>
                     <strong>2023.01.01 12:20</strong>
-                  </div>
+                  </CCol>
                 </CRow>
               </CAccordionHeader>
               <CAccordionBody>
                 <CForm>
-                  <CFormTextarea rows={5}>로고이미지 입니다.</CFormTextarea>
+                  <CFormTextarea defaultValue="로고이미지입니다" rows={5} />
                   <CRow>
                     <CCol align="end">
                       <CButton className="my-3 mx-1" color="dark" shape="rounded-pill">
@@ -160,26 +160,26 @@ const docStorage = () => {
             <CAccordionItem itemKey={4}>
               <CAccordionHeader>
                 <CRow className="col-12">
-                  <div className="col-2 px-2">
+                  <CCol className="col-2 px-2">
                     <strong>
                       <CIcon icon={cilCheck} /> #28
                     </strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>회의록 구글docs</strong>
-                  </div>
-                  <div className="col-4 px-2">
+                  </CCol>
+                  <CCol className="col-4 px-2">
                     <strong>구글문서.link</strong>
-                  </div>
-                  <div className="col-2 px-1">
+                  </CCol>
+                  <CCol className="col-2 px-1">
                     <strong>USERNICK</strong>
                     <p></p>
                     <strong>2023.01.01 12:20</strong>
-                  </div>
+                  </CCol>
                 </CRow>
               </CAccordionHeader>
               <CAccordionBody>
-                <CFormTextarea rows={5}>로고이미지 입니다.</CFormTextarea>
+                <CFormTextarea defaultValue="로고이미지입니다" rows={5} />
                 <CRow>
                   <CCol align="end">
                     <CButton className="my-3 mx-1" color="dark" shape="rounded-pill">

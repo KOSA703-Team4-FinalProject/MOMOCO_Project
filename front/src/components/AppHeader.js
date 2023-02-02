@@ -25,6 +25,7 @@ import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 import ChatAll from './ChatAll'
 import Notifications from './Notifications'
+import { width } from '@mui/system'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -59,13 +60,12 @@ const AppHeader = () => {
           <CNavItem>
             {/* 알림 이모티콘 */}
             <CDropdown>
-              <CDropdownToggle color="" variant="ghost">
+              <CDropdownToggle color="ghost">
+                {' '}
                 <CIcon icon={cilBell} size="lg" />
               </CDropdownToggle>
               <CDropdownMenu>
-                <CDropdownItem component="button">
-                  <Notifications />
-                </CDropdownItem>
+                <Notifications />
               </CDropdownMenu>
             </CDropdown>
           </CNavItem>
