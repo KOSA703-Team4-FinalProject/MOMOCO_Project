@@ -74,7 +74,7 @@ const Boardwirte=()=>{
                             <br></br>
                             <div className="row">
                                 <div className="col-md-12">
-                                        <Editor
+                                        <Editor apiKey='7bad8213d57fcb923ce5104810d085c48a73eff3f0d4d98f4fd97051271bdce7' 
                                         onInit={(evt, editor) => editorRef.current = editor}
                                         initialValue="<p>This is the initial content of the editor.</p>"
                                         init={{
