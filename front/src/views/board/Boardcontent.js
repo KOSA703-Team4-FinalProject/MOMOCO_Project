@@ -1,4 +1,6 @@
 import { CAvatar, CBadge, CButton, CCard, CCardBody, CCardFooter, CCol, CForm, CFormTextarea, CRow } from "@coreui/react"
+import Comments from "src/components/Comments"
+import Commentwrite from "src/components/Commentwrite"
 import WidgetsDropdown from "../widgets/WidgetsDropdown"
 const title ={
   fontSize: 25,
@@ -78,7 +80,7 @@ const Boardcontent = () => {
                   <div className="row">
                     <div className="col-md-12">
                       <CForm>
-                        <CFormTextarea rows={10}>글내용글내용</CFormTextarea>
+                        <CFormTextarea rows={8}>글내용글내용</CFormTextarea>
                       </CForm>
                      
                       </div>
@@ -103,12 +105,21 @@ const Boardcontent = () => {
           </div>
         </CCardBody>
         <div align="right" className="me-4">
-          <CButton color="primary" variant="outline">수정하기</CButton> &nbsp;
-          <CButton color="danger" variant="outline">삭제하기</CButton>
+          <CButton color="primary" variant="outline">수정</CButton> &nbsp;
+          <CButton color="danger" variant="outline">삭제</CButton>
         </div>
           <br></br>
+          
+          <div  className="p-4">
+            <div className="ms-5 me-5"><Comments/></div>
+            <br></br>
+            <div className="ms-5 me-5"><Commentwrite/></div>
+            
+              
+          </div>
+            
       </CCard>
-      
+    
     </>
   )
 }
