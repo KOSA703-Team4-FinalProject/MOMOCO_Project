@@ -12,23 +12,23 @@ import {
   CNavItem,
   CModal,
   CModalBody,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import {
-  cilBell,
-  cilMenu,
-} from '@coreui/icons'
+import { cilBell, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb, ChatRoom } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 import ChatAll from './ChatAll'
-
+import Notifications from './Notifications'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-  
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -58,9 +58,16 @@ const AppHeader = () => {
         <CHeaderNav>
           <CNavItem>
             {/* 알림 이모티콘 */}
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
+            <CDropdown>
+              <CDropdownToggle color="" variant="ghost">
+                <CIcon icon={cilBell} size="lg" />
+              </CDropdownToggle>
+              <CDropdownMenu>
+                <CDropdownItem component="button">
+                  <Notifications />
+                </CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
           </CNavItem>
           <CNavItem>
             {/* 채팅 이모티콘 */}

@@ -9,14 +9,22 @@ import {
   CCardFooter,
   CCol,
   CContainer,
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalTitle,
   CRow,
 } from '@coreui/react'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import CIcon from '@coreui/icons-react'
 import { cilCheck } from '@coreui/icons'
 import { CForm, CFormTextarea } from '@coreui/react'
+import { useState } from 'react'
+import WriteDocStorage from '../../components/WriteDocStorage'
 
 const docStorage = () => {
+  const [visibleXL, setVisibleXL] = useState(false)
+
   return (
     <>
       <CCard className="mb-4">
@@ -27,7 +35,17 @@ const docStorage = () => {
                 문서저장소
               </h4>
             </CCol>
-            <CCol sm={7} className="d-none d-md-block"></CCol>
+            <CCol sm={7} align="end" className="d-none d-md-block">
+              <CButton onClick={() => setVisibleXL(!visibleXL)}>등록</CButton>
+              <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
+                <CModalHeader>
+                  <CModalTitle>문서저장소 등록</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                  <WriteDocStorage />
+                </CModalBody>
+              </CModal>
+            </CCol>
           </CRow>
           <CAccordion alwaysOpen>
             <CAccordionItem itemKey={1}>
