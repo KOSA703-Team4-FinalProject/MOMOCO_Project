@@ -3,6 +3,7 @@
   "version": "4.4.0",
   "description": "CoreUI Free React Admin Template",
   "homepage": ".",
+  "proxy": "http://localhost:8090",
   "bugs": {
     "url": "https://github.com/coreui/coreui-free-react-admin-template/issues"
   },

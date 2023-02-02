@@ -53,8 +53,15 @@
 	<!-- DB 연동 설정 -->
 	<security:authentication-manager>
 		<!-- DB 데이터를 스프링에 전달해주는 클래스의 Bean 객체이름 -->
-		<security:authentication-provider user-service-ref="userLoginService">
-		
+		<security:authentication-provider>
+			<security:jdbc-user-service 
+				data-source-ref="dataSource"
+				authorities-by-username-query="select m.u_idx, r.role 
+												from member m join workspace_user r
+												on m.u_idx = r.u_idx
+												where m.u_idx=?"					
+			/>
+			<security:password-encoder ref="bCryptPasswordEncoder"/>
 		</security:authentication-provider>
 	</security:authentication-manager>
 
