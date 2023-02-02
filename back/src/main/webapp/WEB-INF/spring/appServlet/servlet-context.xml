@@ -16,6 +16,7 @@
 	<mvc:annotation-driven />
 	<context:annotation-config />
 	<context:component-scan base-package="kr.or.controller"  />
+	<context:component-scan base-package="kr.or.service"  />
 	<context:component-scan base-package="kr.or.dao"  />
 	<context:component-scan base-package="kr.or.vo"  />
 	<context:component-scan base-package="kr.or.utils"  />

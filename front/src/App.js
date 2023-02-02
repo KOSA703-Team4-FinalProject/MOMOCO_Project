@@ -24,9 +24,9 @@ class App extends Component {
       <>
         <Suspense fallback={loading}>
           <Routes>
-            <Route exact path="/login" name="Login Page" element={<Login />} />
+            <Route exact path="/gitlogin" name="Login Page" element={<Login />} />
             <Route exact path="/workSpace" name="workSpace Page" element={<WorkSpace />} />
-            <Route exact path="/register" name="Register Page" element={<Register />} />
+            <Route exact path="/gitregister" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route path="*" name="Home" element={<DefaultLayout />} />

@@ -27,10 +27,10 @@ import {
 const Login = () => {
 
   // 로그인
+  const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`;
+
   const loginfunc = () => {
-    const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`;
-    
-    window.location.ass
+    window.location.assign(AUTHORIZATION_CODE_URL);
   }
 
   return (
