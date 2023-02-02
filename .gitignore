@@ -4,6 +4,8 @@
 /back/src/main/resources/Wallet_U99OL7MHAD6QBUSS
 /back/src/main/webapp/WEB-INF/config
 
+application-oauth.properties
+
 ### Eclipse ###
 .metadata
 bin/
