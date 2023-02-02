@@ -16,9 +16,23 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
+
 import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
+import {
+  CALLBACK_URL,
+  CLIENT_ID,
+  GITHUB_AUTH_CODE_SERVER,
+} from "../../oauth.js";
 
 const Login = () => {
+
+  // 로그인
+  const loginfunc = () => {
+    const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`;
+    
+    window.location.ass
+  }
+
   return (
     <>
       <RegAndLoginHeader />
@@ -50,7 +64,8 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        {/* 로그인 버튼 */}
+                        <CButton color="primary" className="px-4" onClick={loginfunc}>
                           Login
                         </CButton>
                       </CCol>
