@@ -13,20 +13,32 @@ import {
   CCardHeader,
   CCardTitle,
   CCardText,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
+  CTooltip,
+  CLink,
+  CPopover,
+  CInputGroup,
+  CInputGroupText,
+  CFormInput,
+  CForm,
+  CFormTextarea,
+  CFormLabel,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
 
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import KanbanItem from '../../components/KanbanItem'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import HorizontalScroll from 'react-horizontal-scrolling'
 import { width } from '@mui/system'
 
 const Kanban = () => {
-  const mainCard = {
-    display: 'flex',
-  }
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     let draggables = document.querySelectorAll('.draggable')
@@ -76,14 +88,48 @@ const Kanban = () => {
   return (
     <>
       <CCard className="col-md-12 my-3">
-        <CCardBody
-          onClick={() => {
-            alert('플러스 클릭')
-          }}
-        >
+        <CCardBody onClick={() => setVisible(!visible)}>
           <CIcon icon={icon.cilMedicalCross} /> Add Item
         </CCardBody>
       </CCard>
+
+      <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
+        <CModalBody>
+          <CForm>
+            <div className="mb-3">
+              <CIcon icon={icon.cibGithub} className="me-2" />
+              <CFormLabel htmlFor="exampleFormControlInput1">Add Item</CFormLabel>
+              <CFormInput
+                type="email"
+                id="exampleFormControlInput1"
+                placeholder="제목을 입력해주세요"
+              />
+            </div>
+
+            <hr />
+            {/* 여기 수정해야됩니다~~ */}
+            <div className="mb-3">
+              <CFormLabel htmlFor="exampleFormControlInput1">Email address</CFormLabel>
+              <CFormInput
+                type="email"
+                id="exampleFormControlInput1"
+                placeholder="name@example.com"
+              />
+            </div>
+
+            <div className="mb-3">
+              <CFormLabel htmlFor="exampleFormControlTextarea1">Example textarea</CFormLabel>
+              <CFormTextarea id="exampleFormControlTextarea1" rows={4}></CFormTextarea>
+            </div>
+          </CForm>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisible(false)}>
+            Close
+          </CButton>
+          <CButton color="primary">Save changes</CButton>
+        </CModalFooter>
+      </CModal>
 
       <CCard style={{ width: '100%' }} className="">
         <HorizontalScroll>

@@ -9,18 +9,28 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalTitle,
   CRow,
 } from '@coreui/react'
-import React from 'react'
+import React, { useState } from 'react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
+import { Link } from 'react-router-dom'
 
 const KanbanItem = () => {
+  const [visibleXL, setVisibleXL] = useState(false)
+
+  let font = {
+    fontSize: '1rem',
+  }
   return (
     <CCard className="draggable" draggable="true">
       <CRow>
         <CCol xs="auto" className="me-auto">
-          <CCardHeader>제목</CCardHeader>
+          <CCardHeader>글번호</CCardHeader>
         </CCol>
         <CCol xs="auto">
           {' '}
@@ -38,8 +48,18 @@ const KanbanItem = () => {
         </CCol>
       </CRow>
       <CCardBody>
-        <CCardTitle>내용(클릭하면 상세보기)</CCardTitle>
+        <CCardTitle>
+          <a onClick={() => setVisibleXL(!visibleXL)} style={font}>
+            제목
+          </a>
+        </CCardTitle>
       </CCardBody>
+      <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
+        <CModalHeader>
+          <CModalTitle>제목</CModalTitle>
+        </CModalHeader>
+        <CModalBody>...</CModalBody>
+      </CModal>
     </CCard>
   )
 }

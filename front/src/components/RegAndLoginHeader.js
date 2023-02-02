@@ -22,7 +22,7 @@ import { logo } from 'src/assets/brand/logo'
 const RegAndLoginHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-// 로그인, 회원가입 전용 헤더(토글 삭제 및 필요없는 아이콘삭제 > 로그인 전 화면에만 적용)
+  // 로그인, 회원가입 전용 헤더(토글 삭제 및 필요없는 아이콘삭제 > 로그인 전 화면에만 적용)
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -30,9 +30,9 @@ const RegAndLoginHeader = () => {
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
-        <CNavItem>
+          <CNavItem>
             <CNavLink href="#">
-            <img src={momocologo}width='20%' />
+              <img src={momocologo} width="20%" />
               {/* 여기에 모모코 로고 들어감 */}
             </CNavLink>
           </CNavItem>
@@ -48,14 +48,11 @@ const RegAndLoginHeader = () => {
             <CNavLink href="#">Settings</CNavLink>
           </CNavItem>
         </CHeaderNav>
-        <CHeaderNav>
-        </CHeaderNav>
+        <CHeaderNav></CHeaderNav>
       </CContainer>
       <CHeaderDivider />
-      
     </CHeader>
   )
 }
 
 export default RegAndLoginHeader
-
