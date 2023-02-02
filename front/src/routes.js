@@ -67,9 +67,9 @@ const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
 const Gittimeline = React.lazy(() => import('./views/git/Gittimeline'))
 //깃차트
-const Gitchart = React.lazy(()=>import('./views/git/Gitchart'))
+const Gitchart = React.lazy(() => import('./views/git/Gitchart'))
 //화상채팅
-const videochat =React.lazy(()=>import('./views/viewchat/Viewchat'))
+const videochat = React.lazy(() => import('./views/viewchat/Viewchat'))
 // kanban 보드
 const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
 
@@ -125,14 +125,14 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: '/boardlist', name :'boardlist', exact:true, element:Boardlist },
-  { path: '/boardcontent', name :'Boardcontent', exact:true,element:Boardcontent},
-  { path: '/boardwrite', name :'Boardwrite', exact:true,element:Boardwrite},
-  { path: '/boardedit', name :'Boardedit', exact:true,element:Boardedit},
-  { path: '/mypage', name :'Mypage', exact:true,element:Mypage},
-  {path:'/viewchat',name:'Viewchat',exact:true,element:Viewchat},
-  { path: '/gittimeline', name :'Gittimeline', exact:true,element:Gittimeline},//깃타임라인
-  { path: '/gitchart', name :'GitChart', exact:true,element:Gitchart},//깃차트
+  { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist },
+  { path: '/boardcontent', name: 'Boardcontent', exact: true, element: Boardcontent },
+  { path: '/boardwrite', name: 'Boardwrite', exact: true, element: Boardwrite },
+  { path: '/boardedit', name: 'Boardedit', exact: true, element: Boardedit },
+  { path: '/mypage', name: 'Mypage', exact: true, element: Mypage },
+  { path: '/viewchat', name: 'Viewchat', exact: true, element: Viewchat },
+  { path: '/gittimeline', name: 'Gittimeline', exact: true, element: Gittimeline }, //깃타임라인
+  { path: '/gitchart', name: 'GitChart', exact: true, element: Gitchart }, //깃차트
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소

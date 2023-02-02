@@ -31,10 +31,10 @@ const workSpace = () => {
                 <CCardBody>
                   <CForm>
                     <h2>워크스페이스 만들기</h2>
-                    <p className="text-medium-emphasis">
+                    <p className="text-medium-emphasis my-1">
                       깃허브의 프로젝트와 연동된 워크스페이스를 만드세요.
                     </p>
-                    <CInputGroup className="mb-3">
+                    <CInputGroup className="mb-4 my-5">
                       <CInputGroupText>
                         <CIcon icon={icon.cibGithub} />
                       </CInputGroupText>
@@ -46,14 +46,34 @@ const workSpace = () => {
                       </CInputGroupText>
                       <CFormInput type="text" placeholder="momoco.kr/워크스페이스 주소" />
                     </CInputGroup>
-                    <CRow></CRow>
+                    <CInputGroup className="mb-4">
+                      <CInputGroupText>
+                        <CIcon icon={icon.cibGithub} />
+                      </CInputGroupText>
+                      <CFormInput
+                        type="text"
+                        placeholder="불러온 github 레파지토리 이름"
+                        readOnly
+                      />
+                    </CInputGroup>
+                    <CRow>
+                      <CCol align="end">
+                        <CButton className="mx-1" color="primary" shape="rounded-pill">
+                          만들기
+                        </CButton>
+                        <CButton className="mx-1" color="dark" shape="rounded-pill">
+                          레파지토리 변경
+                        </CButton>
+                      </CCol>
+                    </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '30%' }}>
+              <CCard className="text-white bg-dark py-5" style={{ width: '30%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
+                    <p></p>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                       tempor incididunt ut labore et dolore magna aliqua.
