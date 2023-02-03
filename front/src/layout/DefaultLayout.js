@@ -1,4 +1,5 @@
 import React from 'react'
+import ChatAll from 'src/components/ChatAll'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 
 const DefaultLayout = () => {
