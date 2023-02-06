@@ -21,6 +21,7 @@ import { cilCheck } from '@coreui/icons'
 import { CForm, CFormTextarea } from '@coreui/react'
 import { useState } from 'react'
 import WriteDocStorage from '../../components/WriteDocStorage'
+import Comments from '../../components/Comments'
 
 const docStorage = () => {
   const [visibleXL, setVisibleXL] = useState(false)
@@ -80,6 +81,9 @@ const docStorage = () => {
                       삭제
                     </CButton>
                   </CCol>
+                </CRow>
+                <CRow>
+                  <Comments />
                 </CRow>
               </CAccordionBody>
             </CAccordionItem>
