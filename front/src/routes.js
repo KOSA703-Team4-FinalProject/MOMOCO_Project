@@ -53,7 +53,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 //calendar
 const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
-
+//게시판
 //boardlist
 const Boardlist = React.lazy(() => import('./views/board/Boardlist'))
 //boardcontent
@@ -85,6 +85,10 @@ const docStorage = React.lazy(() => import('./views/docStorage/docStorage'))
 const Callback = React.lazy(() => import('./views/login/Callback'))
 //임시
 const Profile = React.lazy(() => import('./views/login/Profile'))
+//프로젝트 관리메인
+const Projectmain =  React.lazy(() => import('./views/project/Projectmain'))
+//프로젝트 상세페이지
+const Projectcontent =  React.lazy(() => import('./views/project/Projectcontent'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -147,6 +151,8 @@ const routes = [
   { path: '/kanbandetail', name: 'KanbanDetail', element: KanbanDetail }, // 칸반 아이템 상세보기
   { path: '/oauth/callback', name: 'Callback', exact: true, element: Callback}, //로그인 callback
   { path: '/profile', name: 'Profile', exact: true, element: Profile}, //토큰을 서버로 보낼곳
+  { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain}, //프로젝트관리 메인
+  {path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent}, //프로젝트관리 메인
 ]
 
 export default routes

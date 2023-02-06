@@ -2,10 +2,7 @@ import { CAvatar, CButton, CCard, CForm, CFormTextarea } from "@coreui/react"
 const boxsize ={
   height:'130px'
 }
-// const round ={
-//     border: '1px solid black',
-//     borderRadius: '10%'
-// }
+
 
 const Commentwrite = () => {
   return (
@@ -28,7 +25,7 @@ const Commentwrite = () => {
             </div>
               <div className="col-md-12 mt-2 mb-4" align="end">
               <CButton color="primary" variant="outline">수정</CButton> &nbsp;
-              <CButton color="primary" variant="outline">대댓글작성</CButton>
+              <CButton color="primary" variant="outline">대댓글작성</CButton> &nbsp;
               <CButton color="danger" variant="outline">삭제</CButton>
               </div>
             
