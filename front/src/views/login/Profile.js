@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 
 import { GITHUB_API_SERVER } from '../../oauth'
-import { getCookieToken } from './Cookie'
+import { getCookieToken } from './cookie'
 import { loginaxios } from './backlogin'
 
 

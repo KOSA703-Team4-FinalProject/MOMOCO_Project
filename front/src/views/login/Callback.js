@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { CLIENT_ID, CLIENT_SECRETS, GITHUB_AUTH_TOKEN_SERVER } from '../../oauth'
-import { setRefreshToken } from './Cookie'
+import { setRefreshToken } from './cookie'
 
 
 const Callback = () => {
