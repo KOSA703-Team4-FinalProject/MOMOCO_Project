@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -16,6 +16,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
+import axios from 'axios'
 
 import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
 import {
@@ -24,14 +25,12 @@ import {
   GITHUB_AUTH_CODE_SERVER,
 } from "../../oauth.js";
 
+
 const Login = () => {
+  const navigate = useNavigate(); 
 
   // 로그인
   const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`;
-
-  const loginfunc = () => {
-    window.location.assign(AUTHORIZATION_CODE_URL);
-  }
 
   return (
     <>
@@ -65,9 +64,9 @@ const Login = () => {
                     <CRow>
                       <CCol xs={6}>
                         {/* 로그인 버튼 */}
-                        <CButton color="primary" className="px-4" onClick={loginfunc}>
+                        <a color="primary" className="px-4" href={AUTHORIZATION_CODE_URL}>
                           Login
-                        </CButton>
+                        </a>
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">

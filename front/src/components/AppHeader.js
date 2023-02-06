@@ -16,9 +16,10 @@ import {
   CDropdownToggle,
   CDropdownMenu,
   CDropdownItem,
+  CDropdownItemPlain,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilMenu } from '@coreui/icons'
+import { cilBell, cilCommentSquare, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb, ChatRoom } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -26,10 +27,12 @@ import { logo } from 'src/assets/brand/logo'
 import ChatAll from './ChatAll'
 import Notifications from './Notifications'
 import { width } from '@mui/system'
+import { changeChatState } from 'src/store'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const chatView = useSelector((state)=>state.chatState)
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -71,9 +74,25 @@ const AppHeader = () => {
           </CNavItem>
           <CNavItem>
             {/* 채팅 이모티콘 */}
-            <CHeaderNav className="mt-1 ms-1 pt-1">
-              <ChatAll />
-            </CHeaderNav>
+            <CDropdown autoClose={false}>
+              <CDropdownToggle color="ghost">
+                {' '}
+                <CIcon
+                  icon={cilCommentSquare}
+                  size="lg"
+                  onClick={() => {
+                    if(chatView === 'none'){
+                      dispatch(changeChatState('chatroom'))
+                    }else{
+                      dispatch(changeChatState('none'))
+                    }
+                  }}
+                />
+              </CDropdownToggle>
+              <CDropdownMenu>
+                <ChatAll />
+              </CDropdownMenu>
+            </CDropdown>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-3">

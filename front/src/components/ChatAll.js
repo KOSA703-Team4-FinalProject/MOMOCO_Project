@@ -4,28 +4,34 @@ import $ from 'jquery'
 
 import '../scss/chatRoom.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeChatView, changeRoomView } from 'src/store'
+import ChatRoom from './ChatRoom'
+import Chat from './Chat'
+import TalkDrawer from './TalkDrawer'
+import TalkDrawerDetail from './TalkDrawerDetail'
 
 const ChatAll = () => {
-  const dispatch = useDispatch()
-  let room = useSelector((state) => state.roomView)
-
-  //채팅 입장
-  $(document).on('click', '.enterroombtn', function () {
-    dispatch( changeChatView(true) )
-    dispatch( changeRoomView(false) )
-  })
+  let chatstate = useSelector((state) => state.chatState)
 
   return (
-    <div>
-      <CIcon
-        icon={cilCommentSquare}
-        size="lg"
-        onClick={() => {
-          dispatch(changeRoomView(!room))
-        }}
-      />
-    </div>
+    <>
+      {
+        chatstate === 'none'
+        ? <div></div>
+        : (
+          chatstate === 'chatroom'
+          ? <ChatRoom />
+          : (
+            chatstate === 'chat'
+            ? <Chat />
+            : (
+              chatstate === 'chat_drawer'
+              ? <div><TalkDrawer /></div>
+              : <div><TalkDrawerDetail /></div>
+            )
+          )
+        )
+      }
+    </>
   )
 }
 

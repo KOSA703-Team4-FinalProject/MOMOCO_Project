@@ -3,45 +3,17 @@ import CIcon from '@coreui/icons-react'
 import { CAvatar, CCard, CCloseButton, CCol, CPopover, CRow } from '@coreui/react'
 import { BsPlusCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeDrawerDetailType, changeTalkDrawer, changeUserProfile } from 'src/store'
 import $ from 'jquery'
 
 import '../scss/chatRoom.scss'
+import { changeChatState } from 'src/store'
 
 const TalkDrawer = () => {
 
   const dispatch = useDispatch()
 
-  const drawerCss = {
-    position: "absolute",
-    top: "125px",
-    left: "49%",
-    margin: "0 auto"
-  }
-
-  //채팅방 서랍 닫기
-  $(document).on('click', '.talkdrawerclosebtn', function () {
-    dispatch( changeTalkDrawer(false) )
-  })
-
-  //채팅방 서랍의 파일 모아보기 버튼 클릭
-  $(document).on('click', '.fildrawerebtn', function () {
-    dispatch( changeDrawerDetailType(['파일', true]) )
-    dispatch( changeTalkDrawer(false) )
-  })
-  //채팅방 서랍의 이미지 모아보기 버튼 클릭
-  $(document).on('click', '.imgdrawerebtn', function () {
-    dispatch( changeDrawerDetailType(['이미지', true]) )
-    dispatch( changeTalkDrawer(false) )
-  })
-  //채팅방 서랍의 링크 모아보기 버튼 클릭
-  $(document).on('click', '.linkdrawerebtn', function () {
-    dispatch( changeDrawerDetailType(['링크', true]) )
-    dispatch( changeTalkDrawer(false) )
-  })
-
   return (
-    <div style={drawerCss}>
+    <div>
       <div className='main2'>
         <CCard>
           <header className="pt-2 m-2 px-4">
@@ -59,26 +31,26 @@ const TalkDrawer = () => {
                 </div>
               </CCol>
               <CCol xs="auto" className="pt-1 me-3">
-                <CCloseButton className='talkdrawerclosebtn' />
+                <CCloseButton onClick={()=>{dispatch(changeChatState('chat'))}} />
               </CCol>
             </CRow>
           </header>
         </CCard>
         <CCard>
           <div className="row pt-1" align="center">
-            <div className="fildrawerebtn m-4 col">
+            <div className="m-4 col" onClick={()=>{dispatch(changeChatState('chat_detail'))}}>
               <CIcon className="ms-2" icon={cilFolderOpen} size="xl" />
               <h5 className="col">
                 <strong>파일</strong>
               </h5>
             </div>
-            <div className="imgdrawerebtn m-4 col">
+            <div className="m-4 col" onClick={()=>{dispatch(changeChatState('chat_detail'))}}>
               <CIcon className="ms-2" icon={cilImagePlus} size="xl" />
               <h5 className="col">
                 <strong>이미지</strong>
               </h5>
             </div>
-            <div className="linkdrawerebtn m-4 col">
+            <div className="m-4 col" onClick={()=>{dispatch(changeChatState('chat_detail'))}}>
               <CIcon className="ms-2" icon={cilLink} size="xl" />
               <h5 className="col">
                 <strong>링크</strong>
@@ -92,7 +64,7 @@ const TalkDrawer = () => {
               <strong>대화 상대</strong>
             </h4>
             <hr />
-            <div className="profilebtn row pt-2 ps-2" onClick={()=>{ dispatch( changeUserProfile(true) ) }}>
+            <div className="profilebtn row pt-2 ps-2">
               <CAvatar color="secondary">CUI</CAvatar>
               <h5 className="col pt-2">
                 <strong>메타몽</strong>
