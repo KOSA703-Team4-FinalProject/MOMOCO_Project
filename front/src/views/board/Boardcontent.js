@@ -1,4 +1,5 @@
 import { CAvatar, CBadge, CButton, CCard, CCardBody, CCardFooter, CCol, CForm, CFormTextarea, CRow } from "@coreui/react"
+import { useEffect } from "react"
 import Commentreply from "src/components/Commentreply"
 
 
@@ -22,7 +23,9 @@ const tag={
   
 }
 const Boardcontent = () => {
+ 
   return (
+  
     <>
       <CCard className="mb-4">
         <CCardBody>
