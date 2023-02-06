@@ -47,11 +47,6 @@
 		transaction-manager="transactionManager" proxy-target-class="true" />
 	<!-- transaction end -->
 
-	<bean id="bCryptPasswordEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
-		<!-- <constructor-arg name="strength" value="20"></constructor-arg> -->
-	</bean>
-
 	<!-- 공통 UI -->
 	<!-- 나중에 추가 형태 -->
 	<bean id="internalResourceViewResolver"

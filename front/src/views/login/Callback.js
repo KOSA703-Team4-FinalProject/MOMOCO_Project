@@ -1,14 +1,16 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import { CLIENT_ID, CLIENT_SECRETS, GITHUB_AUTH_TOKEN_SERVER } from '../../oauth'
+import { setRefreshToken } from './Cookie'
+
 
 const Callback = () => {
-
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchAccessToken = async () => {
+    const axiosAccessToken = async () => {
       // 쿼리스트링에서 Authorization Code를 가져옵니다.
       const location = new URL(window.location.href)
       const code = location.searchParams.get('code')
@@ -24,10 +26,11 @@ const Callback = () => {
       })
     }
 
-    fetchAccessToken()
+    axiosAccessToken()
       .then((data) => {
-        
-        navigate("/profile", {state: data.data.access_token});
+        //쿠키에 access token 저장
+        setRefreshToken(data.data.access_token)
+        navigate('/profile', { state: data.data.access_token })
       })
       .catch((err) => console.log(err))
   })
