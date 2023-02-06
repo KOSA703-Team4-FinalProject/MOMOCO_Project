@@ -51,4 +51,12 @@
 		<property name="defaultEncoding"  value="UTF-8"></property>
 	</bean>	
 	
+	<!-- 인터셉터 적용 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean id="loginInterceptor" class="kr.or.utils.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
 </beans>
