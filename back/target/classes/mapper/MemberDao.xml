@@ -7,7 +7,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 해당 회원이 존재한는지 여부 확인 -->
 	<!-- public int isMember(int u_idx) -->
 	<select id="isMember" resultType="int" parameterType="int">
-		select count(u_idx) from member where u_idx = ?
+		select count(*) from member where u_idx = #{u_idx}
 	</select>
+	
+	<!-- 신규 유저 추가 -->
+	<!-- public int addMember(Member member, UserDetail userDetail) -->
+	<insert id="addMember" parameterType="kr.or.vo.Member">
+		insert into member (u_idx, nickname, github_url, profilephoto)
+			values (#{u_idx}, #{nickname}, #{github_url}, #{profilephoto})
+	</insert>
+	
+	<!-- 신규 유저 세부 정보 추가 -->
+	<insert id="addUserDetail" parameterType="kr.or.vo.UserDetail">
+		insert into user_detail (u_idx, company, bio, email, location, blog)
+		values (#{u_idx}, #{company}, #{bio}, #{email}, #{location}, #{blog})
+	</insert>
+	
+	<!-- 기존 유저 정보 수정 -->
+	<!-- public int updateMember(HashMap<String, Object> map) -->
+	<update id="updateMember" parameterType="kr.or.vo.Member">
+		update member
+		set nickname = #{nickname}, github_url = #{github_url}, profilephoto=#{profilephoto}
+		where u_idx = #{u_idx}
+	</update>
+	
+	<!-- 기존 유저 세부 정보 수정 -->
+	<!-- public int updateUserDetail(UserDetail userDetail) -->
+	<update id="updateUserDetail" parameterType="kr.or.vo.UserDetail">
+		update user_detail
+		set company = #{company}, bio = #{bio}, email = #{email}, location = #{location}, blog = #{blog}
+		where u_idx = #{u_idx}
+	</update>
 
 </mapper>

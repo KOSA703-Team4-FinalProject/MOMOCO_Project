@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import { Cookies } from 'react-cookie';
+import axios from 'axios';
 
 import { GITHUB_API_SERVER } from '../../oauth'
 import { getCookieToken } from './Cookie'
+import { loginaxios } from './backlogin'
+
 
 const Profile = () => {
   const [userName, setUserName] = useState()
@@ -13,7 +13,7 @@ const Profile = () => {
     const fetchGithubUser = () => {
       const accessToken = getCookieToken(); //cookie에서 토큰 불러오기
 
-      return fetch(GITHUB_API_SERVER, {
+      return axios(GITHUB_API_SERVER, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -23,8 +23,10 @@ const Profile = () => {
     }
 
     fetchGithubUser()
-      .then((response) => response.json())
-      .then(({ login }) => setUserName(login))
+      .then((response) => {
+        loginaxios(response.data) //백서버에 회원 정보 전달
+        setUserName(response.data.login)
+      })
       .catch((err) => console.log(err))
   })
 

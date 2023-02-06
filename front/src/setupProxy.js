@@ -13,4 +13,10 @@ module.exports = function (app) {
         changeOrigin: true,
       })
     );
+    app.use(
+      createProxyMiddleware("/backlogin", {
+        target: "http://localhost:8090/controller",
+        changeOrigin: true,
+      })
+    );
   };
