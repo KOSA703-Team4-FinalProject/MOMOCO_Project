@@ -1,4 +1,6 @@
 import { CAvatar, CBadge, CButton, CCard, CCardBody, CCardFooter, CCol, CForm, CFormTextarea, CRow } from "@coreui/react"
+import { useEffect } from "react"
+import Commentreply from "src/components/Commentreply"
 
 
 import Comments from "src/components/Comments"
@@ -21,7 +23,9 @@ const tag={
   
 }
 const Boardcontent = () => {
+ 
   return (
+  
     <>
       <CCard className="mb-4">
         <CCardBody>
@@ -116,7 +120,9 @@ const Boardcontent = () => {
             <div className="ms-5 me-5"><Comments/></div>
             <br></br>
             <div className="ms-5 me-5"><Commentwrite/></div>
+            <br></br>
             
+            <div className="ms-5 me-5"><Commentreply/></div>
               
           </div>
             

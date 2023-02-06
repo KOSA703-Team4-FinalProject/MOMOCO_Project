@@ -1,19 +1,32 @@
 import { CAvatar, CBadge, CButton, CCard, CCardBody, CCol, CForm, CFormCheck, CFormInput, CFormSelect, CFormTextarea, CRow } from "@coreui/react";
 import { Editor } from "@tinymce/tinymce-react";
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
+import { Mention, MentionsInput } from "react-mentions";
 import { Link } from "react-router-dom";
+
+
 import styled from 'styled-components'
+import Issue from "./Issue";
 
 
 
+  
 
 const Boardwirte=()=>{
  
   const labelselect={
     width:'300px'
   }
-
+ const onKeyUP = (e)=>{
+  if(
+    (e.keyCode === 51 || e.keyCode === 50) &&
+    e.target.value
+  )
+  console.log("눌러줌눌러줌눌러줌");
+ }
+ 
     return (
+      
         <>
           <CCard className="mb-4">
             <CCardBody>
@@ -26,7 +39,7 @@ const Boardwirte=()=>{
                 </CCol>
                 
               </CRow>
-              <div>
+              <CCol>
               <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-12">
@@ -45,7 +58,7 @@ const Boardwirte=()=>{
                                 </div>
                                 <div className="col-md-9" align="left">
                                 <label><strong>제목</strong></label><br></br>
-                                    <CFormInput type="text" placeholder="제목을 입력하세요" aria-label="default input example"/>
+                                    <CFormInput type="text" placeholder="제목을 입력하세요" aria-label="default input example" onKeyUp={onKeyUP} />
                                 </div>
                             </div>
                               <br></br>
@@ -76,7 +89,7 @@ const Boardwirte=()=>{
                                 <div className="col-md-12">
                                         <Editor apiKey='7bad8213d57fcb923ce5104810d085c48a73eff3f0d4d98f4fd97051271bdce7' 
                                         onInit={(evt, editor) => editorRef.current = editor}
-                                        initialValue="<p>This is the initial content of the editor.</p>"
+                                        initialValue="<p></p>"
                                         init={{
                                         height: 500,
                                         menubar: false,
@@ -91,7 +104,9 @@ const Boardwirte=()=>{
                                         'removeformat | help',
                                         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                                         }}
+                                        
                                         />
+                                       
                                         <br></br>
                                         <div align="right">
                                         <Link to="/boardlist">
@@ -108,7 +123,10 @@ const Boardwirte=()=>{
                         </div>
                     </div>
                 </div>
-              </div>
+                <div><Issue/></div>
+              </CCol>
+            
+           
             </CCardBody>
            
             
@@ -117,56 +135,4 @@ const Boardwirte=()=>{
         </>
       )
 }
-
-
-const TagBox = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  min-height: 50px;
-  margin: 10px;
-  padding: 0 10px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-
-  &:focus-within {
-    border-color: tomato;
-  }
-`
-
-const TagItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 5px;
-  padding: 5px;
-  background-color: tomato;
-  border-radius: 6px;
-  color: white;
-  font-size: 13px;
-`
-//버튼
-const Button = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 15px;
-  height: 15px;
-  margin-left: 5px;
-  background-color: white;
-  border-radius: 50%;
-  color: tomato;
-`
-const Text = styled.span``
-
-
-
-const TagInput = styled.input`
-  display: inline-flex;
-  min-width: 150px;
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: text;
-`
 export default Boardwirte;
