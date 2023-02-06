@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.WorkSpaceDao">
+
+	<!-- 워크스페이스 생성시 도메인 중복 체크 : public int isDomain(String url) -->
+	<select id="isDomain" resultType="int" parameterType="String">
+		select count(*)
+		FROM workspace WHERE url LIKE '#{url}'
+	</select>
+   
+	<!-- 워크스페이스 생성 : public int makeWorkSpace(WorkSpace workspace) -->
+	<insert id="makeWorkSpace" parameterType="kr.or.vo.WorkSpace">
+		insert into workspace (url, space_name, start_date, end_date, linked_repo, admin)
+		values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
+	</insert>
+   
+</mapper>
