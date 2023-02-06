@@ -5,9 +5,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="kr.or.dao.WorkSpaceDao">
 
 	<!-- 워크스페이스 생성시 도메인 중복 체크 : public int isDomain(String url) -->
-	<select id="isDomain" resultType="int" parameterType="String">
+	<select id="isDomain" resultType="int">
 		select count(*)
-		FROM workspace WHERE url LIKE '#{url}'
+		FROM workspace WHERE url = #{url}	
 	</select>
    
 	<!-- 워크스페이스 생성 : public int makeWorkSpace(WorkSpace workspace) -->
