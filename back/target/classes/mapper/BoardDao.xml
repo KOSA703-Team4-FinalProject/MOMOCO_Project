@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.BoardDao">
+
+	<!-- 전체 글 확인 public List<Board> getBoard() -->
+	<select id="getBoard" resultType="kr.or.vo.Board">
+		select idx, nickname, title, content, w_date, b_code, label, u_idx from board
+	</select>
+	
+	<!-- 특정 글 확인 public Board getBoardByIdx() -->
+	<select id="getBoardByIdx" parameterType="int" resultType="kr.or.vo.Board">
+		select idx, nickname, title, content, w_date, b_code, label, u_idx
+		from board
+		where idx = #{idx}	
+	</select>
+	
+	<!-- 글 추가 public int addBoard(Board board) -->
+	<insert id="addBoard" parameterType="kr.or.vo.Board">
+		insert into board (idx, nickname, title, content, b_code, label, u_idx)
+			values (BOARD_IDX_SEQ.nextval, #{nickname}, #{title}, #{content}, #{b_code}, #{label}, #{u_idx})
+	</insert>
+	
+	<!-- 글 수정 public int updateBoard(Board board) -->
+	<update id="updateBoard" parameterType="kr.or.vo.Board">
+		update board 
+		set title = #{title}, content = #{content}, label = #{label}
+		where idx = #{idx}
+	</update>
+	
+	<!-- 글 삭제public int deleteBoard(int idx) -->
+	<delete id="deleteBoard" parameterType="int">
+		delete from board where idx = #{idx}
+	</delete>
+
+</mapper>

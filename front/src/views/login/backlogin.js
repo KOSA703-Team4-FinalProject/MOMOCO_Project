@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 export const loginaxios = (res) => {
+
   console.log(res)
   const req = {
     u_idx: res.id,
@@ -13,7 +14,7 @@ export const loginaxios = (res) => {
     location: res.location === null ? '' : res.location,
     blog: res.blog === null ? '' : res.blog,
   }
-
+  
   console.log(req)
 
   axios.post('/backlogin/login', req).then((res) => {

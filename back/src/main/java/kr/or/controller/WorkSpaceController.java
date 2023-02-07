@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.service.WorkSpaceService;
 import kr.or.vo.WorkSpace;
 
@@ -32,12 +34,12 @@ public class WorkSpaceController {
 	}
 	
 	@RequestMapping(value = "/isDomain", method=RequestMethod.POST)
-	public int isDomain(@RequestBody String url) {
+	public int isDomain(@RequestBody WorkSpace workspace) {
 		
 		System.out.println("===========워크스페이스 중복조회===========");
-		System.out.println(url);
+		System.out.println(workspace.getUrl());
 			
-		int result = workspaceservice.isDomain(url);
+		int result = workspaceservice.isDomain(workspace.getUrl());
 		System.out.println(result);
 		return result;
 	}
