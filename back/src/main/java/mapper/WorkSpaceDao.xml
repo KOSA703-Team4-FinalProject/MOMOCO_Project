@@ -15,5 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into workspace (url, space_name, start_date, end_date, linked_repo, admin)
 		values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
 	</insert>
+	
+	<select id="createTable" statementType="CALLABLE" parameterType="String"> 
+		{ CALL CREATE_TABLE( 
+		      #{url, mode=IN, jdbcType=VARCHAR2, javaType=String}, 
+		} 
+	</select>
    
 </mapper>

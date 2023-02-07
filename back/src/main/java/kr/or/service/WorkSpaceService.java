@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.dao.WorkSpaceDao;
 import kr.or.vo.WorkSpace;
@@ -35,11 +36,13 @@ public class WorkSpaceService {
 	}
 	
 	// 워크스페이스 생성
+		@Transactional
 		public int makeWorkSpace(WorkSpace workspace) {
 			int result = 0;
 			try {
 				WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
 				result = workspacedao.makeWorkSpace(workspace);
+				workspacedao.createTable(workspace.getUrl());
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {

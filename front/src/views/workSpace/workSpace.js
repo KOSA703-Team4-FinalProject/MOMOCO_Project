@@ -19,6 +19,7 @@ import * as icon from '@coreui/icons'
 import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
 import axios from 'axios'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const workSpace = () => {
   const [space_Name, SetSpace_Name] = useState('')
@@ -54,6 +55,10 @@ const workSpace = () => {
     SetEnd_Date(e.target.value)
   }
 
+  const login = JSON.parse(localStorage.getItem('login'))
+  const idx = login.u_idx
+  const navigate = useNavigate()
+
   const Check = (e) => {
     let send = {
       url: url,
@@ -77,14 +82,14 @@ const workSpace = () => {
       linked_repo: linked_Repo,
       start_date: start_Date,
       end_date: end_Date,
-      admin: admin,
-      del_date: '1900-01-01',
+      admin: idx,
     }
     console.log(makeWorkSpace)
 
     axios.post('api/makeWorkSpace', makeWorkSpace).then((data) => {
       if ((data = 1)) {
         alert('워크스페이스가 생성되었습니다')
+        navigate('/' + url)
       }
       if (data != 1) {
         alert('워크스페이스 생성 실패')

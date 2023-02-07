@@ -23,6 +23,17 @@
 	
 	<context:component-scan base-package="kr.or.controller" />
 	
+	<!-- 
+	트랜잭션 처리하기 root에 처리하면 자식인 servlet-context를 참조하지 못하는데, @transaction이 service에 있음. 
+	-->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" /> <!-- root 컨테이너 참조 driverManagerDataSource -->
+	</bean>
+	<!-- @Transaction이 처리되기 위한 설정 tx:annotation-driven -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	
 	<websocket:message-broker application-destination-prefix="/pub" >
         <websocket:stomp-endpoint path="/chat" allowed-origins="192.168.0.30:8090/momoco/chat"> <!-- 웹소켓 핸드셰이크 커넥션을 생성할 경로 -->
             <websocket:sockjs websocket-enabled="true" />
