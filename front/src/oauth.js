@@ -1,4 +1,7 @@
 
+//토큰 압호화 키 32자리 키
+export const PRIMARY_KEY = 'xcvsdfwerasdqwewerbn123244559876'
+
 export const CLIENT_ID = "31c68970a72ad9048531";
 export const CLIENT_SECRETS = "1d0cbe1b89e30af7733549c5562296d74031c310";
 export const CALLBACK_URL = "http://localhost:3000/oauth/callback";

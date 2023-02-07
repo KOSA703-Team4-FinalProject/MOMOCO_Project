@@ -20,12 +20,20 @@ import bootstrap5 from '@fullcalendar/bootstrap5'
 import CIcon from '@coreui/icons-react'
 import { cilClipboard } from '@coreui/icons'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 const Calendar = () => {
   let [addView, setAddView] = useState('d-none')
   let [modifyView, setModifyView] = useState('d-none')
   let [readView, setReadView] = useState('d-none')
   let [attend, setAttend] = useState(false)
+
+  let member = useSelector((state) => state.member)
+
+  const addCalendar = ()=>{
+    const login = JSON.parse(localStorage.getItem("login"))
+    console.log(login.u_idx + " " + login.nickname)
+  }
 
   return (
     <>
@@ -35,7 +43,6 @@ const Calendar = () => {
             {/* 캘린더 API로 캘린더 그려질 곳 */}
             <CCol className="calendar">
               <FullCalendar
-                defaultView="dayGridMonth"
                 plugins={[dayGridPlugin, interactionPlugin]}
                 themeSystem={bootstrap5}
                 headerToolbar={{
@@ -117,7 +124,7 @@ const Calendar = () => {
                         ></CFormTextarea>
                       </CCol>
                       <CCol className="text-center">
-                        <CButton color="primary" variant="outline" className="add_btn m-2">
+                        <CButton color="primary" variant="outline" className="add_btn m-2" onClick={()=>{addCalendar()}}>
                           확인
                         </CButton>
                         <CButton

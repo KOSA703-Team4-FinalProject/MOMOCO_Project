@@ -29,8 +29,6 @@ public class LoginController {
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public int isMember(@RequestBody  MemberAll memberAll) {
 		
-		System.out.println(memberAll.toString());
-		
 		Member member = new Member();
 		member.setU_idx(memberAll.getU_idx());
 		member.setNickname(memberAll.getNickname());

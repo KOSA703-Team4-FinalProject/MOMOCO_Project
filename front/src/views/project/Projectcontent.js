@@ -26,7 +26,7 @@ const box2 = {
   color: 'red',
 }
 const CARDSTYLE = {
-  'overflow-y': 'scroll',
+  overflowY: 'scroll',
   height: '450px',
 }
 const Projectcontent = () => {
