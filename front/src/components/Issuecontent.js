@@ -7,8 +7,8 @@ const box = {
 }
 const Issuecontent = (props) => {
   //클릭한값을 링크로 변환
-  const makeLink = (params, e) => {
-    console.log(params)
+  const makeLink = (e) => {
+    console.log(e)
     console.log(e.preventDefault())
   }
   let issue = props.issuelist
@@ -19,8 +19,8 @@ const Issuecontent = (props) => {
           <CCard style={box}>
             <CCardHeader>
               <CButton
-                onclick={(e) => {
-                  makeLink(params, e)
+                onclick={() => {
+                  this.makeLink(Item.idx)
                 }}
               >
                 {Item.idx}
