@@ -15,13 +15,13 @@ import {
 import { Editor } from '@tinymce/tinymce-react'
 import React, { Component, useRef, useState } from 'react'
 
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateIssueModal } from 'src/store'
 
-const Boardwirte = () => {
+const Boardwirte = (props) => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
 
@@ -43,12 +43,18 @@ const Boardwirte = () => {
           e.target.value === '#' + issuelist[i].idx ||
           e.target.value === '@' + issuelist[i].idx
         ) {
+          //dispatch(updateIssueModal(!issueModal))
           console.log(issuelist[i].title)
         }
       })
     }
   }
+  const [inputMakeLink, setinputMakeLink] = useState('')
+  const makeLink = (num) => {
+    console.log('링크값 받아오기')
 
+    return <NavLink>num</NavLink>
+  }
   return (
     <>
       <CCard className="mb-4">
@@ -88,6 +94,7 @@ const Boardwirte = () => {
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
                         onKeyUp={onKeyUP}
+                        onChange={makeLink}
                       />
                     </CCol>
                   </CCol>

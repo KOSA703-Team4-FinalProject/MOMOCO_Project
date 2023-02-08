@@ -21,13 +21,13 @@ export let { changeName } = state.actions //state 변경함수
 //채팅 상태 관리
 let chatState = createSlice({
   name: 'chatState',
-  initialState: 'none',   //none, chatroom, chat, chat_drawer, chat_detail 
+  initialState: 'none', //none, chatroom, chat, chat_drawer, chat_detail
   reducers: {
-    changeChatState(state, action){
+    changeChatState(state, action) {
       state = action.payload
       return state
-    }
-  }
+    },
+  },
 })
 
 export let { changeChatState } = chatState.actions
@@ -37,40 +37,39 @@ let userProfile = createSlice({
   name: 'userProfile',
   initialState: false,
   reducers: {
-    changeUserProfile(state, action){
+    changeUserProfile(state, action) {
       state = action.payload
       return state
-    }
-  }
+    },
+  },
 })
 
 export let { changeUserProfile } = userProfile.actions
 
 //accessToken 관리
 let gitToken = createSlice({
-  name: "gitToken",
-  initialState: "",
+  name: 'gitToken',
+  initialState: '',
   reducers: {
-    updateGitToken(state, action){
+    updateGitToken(state, action) {
       state = action.payload
       return state
-    }
-  }
+    },
+  },
 })
 
 export let { updateGitToken } = gitToken.actions
 
-
 //이슈번호 상태값
 let issueModal = createSlice({
-  name: "issueModal",
+  name: 'issueModal',
   initialState: false,
   reducers: {
-    updateIssueModal(state, action){
+    updateIssueModal(state, action) {
       state = action.payload
       return state
-    }
-  }
+    },
+  },
 })
 
 export let { updateIssueModal } = issueModal.actions
