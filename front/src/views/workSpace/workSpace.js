@@ -20,6 +20,8 @@ import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { BsFillCheckCircleFill } from 'react-icons/bs'
+import momocologo from 'src/assets/images/momocologo.png'
 
 const workSpace = () => {
   const [space_Name, SetSpace_Name] = useState('')
@@ -27,7 +29,6 @@ const workSpace = () => {
   const [linked_Repo, SetLinked_Repo] = useState('')
   const [start_Date, SetStart_Date] = useState('')
   const [end_Date, SetEnd_Date] = useState('')
-  const admin = 80095068
   const [check, SetCheck] = useState('')
 
   const spaceNameHandler = (e) => {
@@ -38,6 +39,8 @@ const workSpace = () => {
   const URLHandler = (e) => {
     e.preventDefault()
     SetUrl(e.target.value)
+    SetCheck('')
+    console.log({ check })
   }
 
   const REPOHandler = (e) => {
@@ -56,23 +59,28 @@ const workSpace = () => {
   }
 
   const login = JSON.parse(localStorage.getItem('login'))
-  const idx = login.u_idx
+  const admin = login.u_idx
   const Navigate = useNavigate()
-  console.log(idx)
 
   const Check = (e) => {
+    e.preventDefault()
     let send = {
       url: url,
     }
-    axios.post('api/isDomain', send).then((data) => {
-      console.log(data.data)
-      if (data.data == 1) {
-        SetCheck('사용 불가')
-      }
-      if (data.data != 1) {
-        SetCheck('사용 가능')
-      }
-    })
+
+    if (url != '') {
+      axios.post('api/isDomain', send).then((data) => {
+        if (data.data == 1) {
+          SetCheck('사용 불가')
+          alert('이미 사용 중인 주소입니다')
+        } else {
+          SetCheck('사용 가능')
+          alert('사용 가능한 주소입니다')
+        }
+      })
+    } else {
+      alert('주소를 입력하세요')
+    }
   }
 
   const SubmitHandler = (e) => {
@@ -84,19 +92,25 @@ const workSpace = () => {
       linked_repo: linked_Repo,
       start_date: start_Date,
       end_date: end_Date,
-      admin: idx,
+      admin: admin,
     }
     console.log(makeWorkSpace)
 
-    axios.post('api/makeWorkSpace', makeWorkSpace).then((data) => {
-      if ((data = 1)) {
-        alert('워크스페이스가 생성되었습니다')
-        navigate('/' + url)
-      }
-      if (data != 1) {
-        alert('워크스페이스 생성 실패')
-      }
-    })
+    if (check === '사용 가능') {
+      axios.post('api/makeWorkSpace', makeWorkSpace).then((data) => {
+        if (data == 1) {
+          alert('워크스페이스가 생성되었습니다')
+          Navigate('/' + url)
+        }
+        if (data != 1) {
+          alert('워크스페이스 생성 실패')
+        }
+      })
+    } else if (start_Date > end_Date) {
+      alert('프로젝트 날짜가 잘못되었습니다')
+    } else {
+      alert('중복확인을 해주세요')
+    }
   }
 
   return (
@@ -122,6 +136,7 @@ const workSpace = () => {
                         value={space_Name}
                         onChange={spaceNameHandler}
                         placeholder="워크스페이스 이름"
+                        required
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -133,17 +148,29 @@ const workSpace = () => {
                         onChange={URLHandler}
                         type="text"
                         placeholder="momoco.kr/워크스페이스 주소"
+                        required
                       />
-                      <CButton
-                        type="button"
-                        className="mx-1"
-                        color="warning"
-                        shape="rounded-pill"
-                        onClick={Check}
-                      >
-                        중복확인
-                      </CButton>
-                      {check}
+                      {check !== '사용 가능' ? (
+                        <CButton
+                          type="button"
+                          className="mx-1"
+                          color="warning"
+                          shape="rounded-pill"
+                          onClick={Check}
+                        >
+                          중복 확인
+                        </CButton>
+                      ) : (
+                        <CButton
+                          type="button"
+                          className="mx-1"
+                          color="primary"
+                          shape="rounded-pill"
+                          disabled
+                        >
+                          <BsFillCheckCircleFill />
+                        </CButton>
+                      )}
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -154,6 +181,7 @@ const workSpace = () => {
                         onChange={REPOHandler}
                         type="text"
                         placeholder="불러온 github 레파지토리 이름"
+                        required
                       />
                     </CInputGroup>
                     <CRow>
@@ -164,6 +192,7 @@ const workSpace = () => {
                           type="date"
                           id="startdate"
                           floatingLabel="프로젝트 시작일"
+                          required
                         />
                       </CCol>
                       <CCol md={6}>
@@ -173,19 +202,32 @@ const workSpace = () => {
                           type="date"
                           id="enddate"
                           floatingLabel="프로젝트 종료일"
+                          required
                         />
                       </CCol>
                     </CRow>
                     <CRow>
                       <CCol align="end" className="pt-4">
-                        <CButton
-                          type="submit"
-                          className="mx-1"
-                          color="primary"
-                          shape="rounded-pill"
-                        >
-                          만들기
-                        </CButton>
+                        {check === '사용 가능' ? (
+                          <CButton
+                            type="submit"
+                            className="mx-1"
+                            color="primary"
+                            shape="rounded-pill"
+                          >
+                            만들기
+                          </CButton>
+                        ) : (
+                          <CButton
+                            type="submit"
+                            className="mx-1"
+                            color="primary"
+                            shape="rounded-pill"
+                            disabled
+                          >
+                            만들기
+                          </CButton>
+                        )}
                         <CButton className="mx-1" color="dark" shape="rounded-pill">
                           레파지토리 변경
                         </CButton>
@@ -194,7 +236,7 @@ const workSpace = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-dark py-5" style={{ width: '30%' }}>
+              <CCard className="text-black bg-light py-5" style={{ width: '30%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>모두 모여 코딩!</h2>
@@ -203,11 +245,7 @@ const workSpace = () => {
                     <p></p>
 
                     <p>모모코를 통해 팀프로젝트를 쉽게 관리해보세요</p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        회원가입
-                      </CButton>
-                    </Link>
+                    <img src={momocologo} />
                   </div>
                 </CCardBody>
               </CCard>
