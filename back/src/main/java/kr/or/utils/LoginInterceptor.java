@@ -7,25 +7,30 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 public class LoginInterceptor implements HandlerInterceptor {
-	
-	
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
-		System.out.println("preHandler ì‹¤í–‰í•´ì„œ ë¡œê·¸ì¸ ìœ ë¬´ í™•ì¸í•  ê±°ì„");
-		boolean result = false;
-		
-		Cookie[] cookies = request.getCookies();
-		
-		for(Cookie c : cookies) {
-			System.out.println(c.getName());
-			System.out.println(c.getValue());
-			if(c.getName() == "githubToken") {
-				result = true;
-			}
-		}
-		
-		return result;
-	}
+
+   @Override
+   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+         throws Exception {
+      System.out.println("preHandler ½ÇÇàÇØ¼­ ·Î±×ÀÎ À¯¹« È®ÀÎÇÒ °ÅÀÓ");
+      boolean result = false;
+
+      Cookie[] cookies = request.getCookies();
+
+      for (Cookie c : cookies) {
+         if (c.getName().equals("githubToken")) {
+            result = true;
+         }
+      }
+
+      System.out.println(request.getRequestURI());
+      
+      if(request.getRequestURI().equals("/controller/backlogin/login")) {
+         result = true;
+      }
+      
+      System.out.println("result : " + result);
+
+      return result;
+   }
 
 }

@@ -6,6 +6,7 @@ import Commentreply from "src/components/Commentreply"
 import Comments from "src/components/Comments"
 import Commentwrite from "src/components/Commentwrite"
 import WidgetsDropdown from "../widgets/WidgetsDropdown"
+import Issues from "./Issues"
 const title ={
   fontSize: 25,
   "border": "2px"
@@ -22,6 +23,10 @@ const tag={
   "border": "2px",
   
 }
+
+
+  
+   
 const Boardcontent = () => {
  
   return (
@@ -45,7 +50,7 @@ const Boardcontent = () => {
                 <div className="row">
                   <div className="col-md-9" style={title}>
                     
-                  <strong className="pt-3">글을 제목을 작성하시오</strong>&nbsp;
+                  <strong className="pt-3">글제목 </strong>&nbsp;
                   <CBadge color="info" shape="rounded-pill"style={tag} >#tired</CBadge>
                   </div>
                   <div className="col-md-3">
@@ -125,7 +130,8 @@ const Boardcontent = () => {
             <div className="ms-5 me-5"><Commentreply/></div>
               
           </div>
-            
+
+           
       </CCard>
     
     </>

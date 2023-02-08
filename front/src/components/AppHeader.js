@@ -17,6 +17,7 @@ import {
   CDropdownMenu,
   CDropdownItem,
   CDropdownItemPlain,
+  CCol,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilCommentSquare, cilMenu } from '@coreui/icons'
@@ -29,10 +30,13 @@ import Notifications from './Notifications'
 import { width } from '@mui/system'
 import { changeChatState } from 'src/store'
 
+import issuelist from '../views/board/issuelist'
+import Issues from 'src/views/board/Issues'
+
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-  const chatView = useSelector((state)=>state.chatState)
+  const chatView = useSelector((state) => state.chatState)
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -81,9 +85,9 @@ const AppHeader = () => {
                   icon={cilCommentSquare}
                   size="lg"
                   onClick={() => {
-                    if(chatView === 'none'){
+                    if (chatView === 'none') {
                       dispatch(changeChatState('chatroom'))
-                    }else{
+                    } else {
                       dispatch(changeChatState('none'))
                     }
                   }}
@@ -103,6 +107,7 @@ const AppHeader = () => {
       <CContainer fluid>
         <AppBreadcrumb />
       </CContainer>
+      <Issues issuelist={issuelist} />
     </CHeader>
   )
 }
