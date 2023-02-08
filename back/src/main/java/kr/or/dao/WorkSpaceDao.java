@@ -13,5 +13,5 @@ public interface WorkSpaceDao {
    public int isDomain(String url) throws ClassNotFoundException, SQLException;
    
    //워크스페이스 생성시 테이블 create 프로시저 호출
-   public void createTable(String url) throws ClassNotFoundException, SQLException;
+   public void createTable(String URL) throws ClassNotFoundException, SQLException;
 }
