@@ -17,43 +17,38 @@ import React, { Component, useRef, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
-
 import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateIssueModal } from 'src/store'
 
 const Boardwirte = () => {
-
   const dispatch = useDispatch()
-  const issueModal = useSelector((state)=> state.issueModal)
+  const issueModal = useSelector((state) => state.issueModal)
 
   const labelselect = {
     width: '300px',
   }
-  // issue.js에 값을 보낼때 
-  let[issue,setIssue] =useState(issuelist);
-  
+  // issue.js에 값을 보낼때
+  let [issue, setIssue] = useState(issuelist)
+
   //이슈번호 입력했을 때
   const onKeyUP = (e) => {
-    
-    if ((e.keyCode === 51 || e.keyCode === 50) ) {
-
-      dispatch( updateIssueModal(!issueModal) )
+    if (e.keyCode === 51 || e.keyCode === 50) {
+      dispatch(updateIssueModal(!issueModal))
 
       console.log('눌러줌눌러줌눌러줌')
-      console.log( '원래값' +e.target.value)
-      issuelist.map((item,i)=>{
-        if((e.target.value === '#'+ issuelist[i].idx|| e.target.value === '@'+issuelist[i].idx)){
-          
-          console.log( issuelist[i].title)
-          
+      console.log('원래값' + e.target.value)
+      issuelist.map((item, i) => {
+        if (
+          e.target.value === '#' + issuelist[i].idx ||
+          e.target.value === '@' + issuelist[i].idx
+        ) {
+          console.log(issuelist[i].title)
         }
       })
-      
-    } 
-    
+    }
   }
-  
+
   return (
     <>
       <CCard className="mb-4">
@@ -92,7 +87,7 @@ const Boardwirte = () => {
                         type="text"
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
-                        onKeyUp={onKeyUP} 
+                        onKeyUp={onKeyUP}
                       />
                     </CCol>
                   </CCol>
@@ -136,7 +131,8 @@ const Boardwirte = () => {
                   <br></br>
                   <CCol className="row">
                     <CCol className="col-md-12">
-                    <Editor apiKey='avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp' 
+                      <Editor
+                        apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
                         init={{
                           height: 500,
                           menubar: false,
@@ -170,8 +166,6 @@ const Boardwirte = () => {
               </CRow>
             </CCol>
           </CCol>
-  
-          
         </CCardBody>
       </CCard>
     </>
