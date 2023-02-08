@@ -57,18 +57,19 @@ const workSpace = () => {
 
   const login = JSON.parse(localStorage.getItem('login'))
   const idx = login.u_idx
-
-  const navigate = useNavigate()
+  const Navigate = useNavigate()
+  console.log(idx)
 
   const Check = (e) => {
     let send = {
       url: url,
     }
     axios.post('api/isDomain', send).then((data) => {
-      if ((data = 1)) {
+      console.log(data.data)
+      if (data.data == 1) {
         SetCheck('사용 불가')
       }
-      if (data != 1) {
+      if (data.data != 1) {
         SetCheck('사용 가능')
       }
     })

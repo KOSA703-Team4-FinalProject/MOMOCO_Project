@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="createTable" statementType="CALLABLE"> 
 		{ CALL CREATE_TABLE( 
-		      #{URL} 
+		      #{URL} )
 		} 
 	</select>
    
