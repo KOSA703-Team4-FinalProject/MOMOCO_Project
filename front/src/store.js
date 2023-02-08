@@ -61,11 +61,26 @@ let gitToken = createSlice({
 export let { updateGitToken } = gitToken.actions
 
 
+//이슈번호 상태값
+let issueModal = createSlice({
+  name: "issueModal",
+  initialState: false,
+  reducers: {
+    updateIssueModal(state, action){
+      state = action.payload
+      return state
+    }
+  }
+})
+
+export let { updateIssueModal } = issueModal.actions
+
 export default configureStore({
   reducer: {
     state: state.reducer,
     chatState: chatState.reducer,
     userProfile: userProfile.reducer,
     gitToken: gitToken.reducer,
+    issueModal: issueModal.reducer,
   },
 })
