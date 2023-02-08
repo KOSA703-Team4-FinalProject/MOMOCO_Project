@@ -13,9 +13,9 @@ function Issues(props) {
   let issue = props.issuelist
   const issueModal = useSelector((state) => state.issueModal) //issueModal 값가져옴
   const dispatch = useDispatch() //issueModal함수를 쓰기위해 선언
-  const [makeLink, setmakeLink] = useState('')
+
   const getMakeLink = (num) => {
-    setmakeLink(num)
+    console.log('이거 잘되는 건가' + num)
   }
   return (
     <>
@@ -32,7 +32,7 @@ function Issues(props) {
         </CModalHeader>
 
         <div>
-          <Issuecontent issuelist={issue} makeLink={makeLink} />
+          <Issuecontent issuelist={issue} getMakeLink={getMakeLink} value={getMakeLink} />
         </div>
       </CModal>
     </>

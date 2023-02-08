@@ -5,20 +5,22 @@ const box = {
   width: '600px',
   height: '125px',
 }
-let issue = props.issuelist
-const Issuecontent = (props) => {
-  //클릭한값을 링크로 변환
-  const makeLink = () => {
-    props.getMakeLink(Item.idx)
-  }
 
+const Issuecontent = (props) => {
+  const makeLink = (e) => {
+    console.log(e.target.value)
+    props.getMakeLink(e.target.value)
+  }
+  let issue = props.issuelist
   return (
     <>
       {issue.map((Item, i) => (
         <div key={i}>
           <CCard style={box}>
             <CCardHeader>
-              <CButton onclick={makeLink}>{Item.idx}</CButton>
+              <CButton onClick={makeLink} value={Item.idx}>
+                {Item.idx}
+              </CButton>
             </CCardHeader>
             <CCardBody>
               <CCardTitle>이슈내용 :{Item.title}</CCardTitle>
