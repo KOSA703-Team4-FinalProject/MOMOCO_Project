@@ -12,8 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    
 	<!-- 워크스페이스 생성 : public int makeWorkSpace(WorkSpace workspace) -->
 	<insert id="makeWorkSpace" parameterType="kr.or.vo.WorkSpace">
-		insert into workspace (url, space_name, start_date, end_date, linked_repo, admin)
-		values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
+		insert all
+			into workspace (url, space_name, start_date, end_date, linked_repo, admin)
+				values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
+			into workspace_user (url, u_idx, role)
+				values (#{url}, #{admin}, 'admin')
 	</insert>
 	
 	<resultMap id="createTable" type="hashmap"></resultMap>
