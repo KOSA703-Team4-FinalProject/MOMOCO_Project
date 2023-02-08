@@ -57,6 +57,7 @@ const workSpace = () => {
 
   const login = JSON.parse(localStorage.getItem('login'))
   const idx = login.u_idx
+
   const navigate = useNavigate()
 
   const Check = (e) => {

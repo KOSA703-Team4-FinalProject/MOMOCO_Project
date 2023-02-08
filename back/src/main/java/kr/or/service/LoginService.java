@@ -45,7 +45,12 @@ public class LoginService {
 			
 			MemberDao memberdao = sqlsession.getMapper(MemberDao.class);
 			result = memberdao.addMember(member);
+			
+			System.out.println("result: " + result);
+			
 			result = memberdao.addUserDetail(userDetail);
+			
+			System.out.println("result: " + result);
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

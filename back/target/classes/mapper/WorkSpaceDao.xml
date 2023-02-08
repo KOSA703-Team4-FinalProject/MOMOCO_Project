@@ -16,9 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
 	</insert>
 	
-	<select id="createTable" statementType="CALLABLE" parameterType="String"> 
+	<resultMap id="createTable" type="hashmap"></resultMap>
+	
+	<select id="createTable" statementType="CALLABLE"> 
 		{ CALL CREATE_TABLE( 
-		      #{url, mode=IN, jdbcType=VARCHAR2, javaType=String}, 
+		      #{URL} 
 		} 
 	</select>
    
