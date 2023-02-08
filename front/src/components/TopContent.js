@@ -3,9 +3,9 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
-import routes from '../routes'
+import routes from '../toproutes'
 
-const AppContent = () => {
+const TopContent = () => {
 
   return (
     <CContainer lg>
@@ -31,4 +31,4 @@ const AppContent = () => {
   )
 }
 
-export default React.memo(AppContent)
+export default React.memo(TopContent)
