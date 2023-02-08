@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.CalendarDao">
+
+	<!-- 전체 일정 조회 public List<Calendar> getCalendar() -->
+	<select id="getCalendar" resultType="kr.or.vo.Calendar">
+		select b_idx, start_date, end_date, idx, s_idx from calendar
+	</select>
+	
+	<!-- 특정 일정 조회 public Calendar getCalendarByB_idx(int b_idx) -->
+	<select id="getCalendarByB_idx" parameterType="int" resultType="kr.or.vo.Calendar">
+		select b_idx, start_date, end_date, idx, s_idx 
+		from calendar
+		where b_idx = #{b_idx}	
+	</select>
+	
+	<!-- 일정 추가 public int addCalendar(Map map) -->
+	<insert id="addCalendar" parameterType="hashMap">
+		insert all
+			into board (idx, nickname, title, content, b_code, label, u_idx)
+				values (BOARD_IDX_SEQ.nextval, #{board.nickname}, #{board.title}, #{board.content}, #{board.b_code}, #{board.label}, #{board.u_idx})
+			into calendar (b_idx, start_date, end_date, idx, s_idx)
+				values (CALENDAR_B_IDX_SEQ.nextval, to_date(#{calendar.start_date}, 'YYYY/MM/DD'), to_date(#{calendar.end_date}, 'YYYY/MM/DD'), BOARD_IDX_SEQ.CURRVAL, #{calendar.s_idx})
+	</insert>
+	
+	<!-- 일정 수정 public int updateCalendar(Calendar calendar) -->
+	<update id="updateCalendar" parameterType="kr.or.vo.Calendar">
+		update calendar 
+		set start_date = to_date(#{start_date}, 'YYYY/MM/DD'),
+			end_date = to_date(#{end_date}, 'YYYY/MM/DD'),
+			s_idx = #{s_idx}
+		where b_idx = #{b_idx}	
+	</update>
+	
+	<!-- 일정 삭제 public int deleteCalendar(int b_idx) -->
+	<delete id="deleteCalendar" parameterType="int">
+		delete from calendar where b_idx = #{b_idx}
+	</delete>
+
+</mapper>
