@@ -7,6 +7,7 @@ import {
   CFormCheck,
   CFormInput,
   CFormSelect,
+  CFormTextarea,
   CRow,
 } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
@@ -25,8 +26,6 @@ const Boardwirte = (props) => {
   const labelselect = {
     width: '300px',
   }
-  // issue.js에 값을 보낼때
-  let [issue, setIssue] = useState(issuelist)
 
   //이슈번호 입력했을 때
   const onKeyUP = (e) => {
@@ -42,7 +41,13 @@ const Boardwirte = (props) => {
       })
     }
   }
+  //제목란에 클릭한 이슈번호 넣기
+  const [inputs, setInputs] = useState('')
+  const change = (e) => {
+    setInputs(e.target.value)
+  }
 
+  //워크스페이스 주소값
   const params = useParams()
   console.log(params.url)
   return (
@@ -76,7 +81,7 @@ const Boardwirte = (props) => {
                     </CCol>
                     <CCol className="col-md-9" align="left">
                       <label>
-                        <strong>제목{issueNumber}</strong>
+                        <strong>제목</strong> <strong>이슈번호:{issueNumber}</strong>
                       </label>
                       <br></br>
                       <CFormInput
@@ -84,6 +89,7 @@ const Boardwirte = (props) => {
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
                         onKeyUp={onKeyUP}
+                        onChange={change}
                       />
                     </CCol>
                   </CCol>
