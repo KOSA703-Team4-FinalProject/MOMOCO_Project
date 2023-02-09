@@ -29,13 +29,13 @@ const Callback = () => {
     axiosAccessToken()
       .then((data) => {
         //로컬스토리지에 access toeken 저장
-        localStorage.clear()
+        window.localStorage.clear();
         const mydata = {
           token: data.data.access_token
         }
         // AES알고리즘 사용 암호화
         const encrypted = CryptoJS.AES.encrypt(JSON.stringify(mydata), PRIMARY_KEY).toString();
-        localStorage.setItem('token', encrypted)
+        window.localStorage.setItem('token', encrypted)
 
         navigate('/profile')
       })

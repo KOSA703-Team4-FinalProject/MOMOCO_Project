@@ -1,22 +1,18 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 
 //side bar 상태
-let state = createSlice({
+let sidebarShow = createSlice({
   name: 'sidebarShow',
   initialState: true,
   reducers: {
-    changeState(state, { type, ...rest }) {
-      switch (type) {
-        case 'set':
-          return { ...state, ...rest }
-        default:
-          return state
-      }
+    changeState(state, action) {
+      state = action.payload
+      return state
     },
   },
 })
 
-export let { changeName } = state.actions //state 변경함수
+export let { changeState } = sidebarShow.actions //state 변경함수
 
 //채팅 상태 관리
 let chatState = createSlice({
@@ -91,7 +87,7 @@ export let { updateissueNumber } = issueNumber.actions
 
 export default configureStore({
   reducer: {
-    state: state.reducer,
+    sidebarShow: sidebarShow.reducer,
     chatState: chatState.reducer,
     userProfile: userProfile.reducer,
     gitToken: gitToken.reducer,

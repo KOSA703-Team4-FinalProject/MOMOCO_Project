@@ -28,14 +28,14 @@ import { logo } from 'src/assets/brand/logo'
 import ChatAll from './ChatAll'
 import Notifications from './Notifications'
 import { width } from '@mui/system'
-import { changeChatState } from 'src/store'
+import { changeChatState, changeState } from 'src/store'
 
 import issuelist from '../views/board/issuelist'
 import Issues from 'src/views/board/Issues'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+  let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
 
   return (
@@ -43,7 +43,7 @@ const AppHeader = () => {
       <CContainer fluid>
         <CHeaderToggler
           className="ps-1"
-          onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
+          onClick={() => {dispatch(changeState(!sidebarShow))}}
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
