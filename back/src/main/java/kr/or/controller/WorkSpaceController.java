@@ -1,14 +1,15 @@
 package kr.or.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kr.or.service.WorkSpaceService;
+import kr.or.vo.Member;
 import kr.or.vo.WorkSpace;
 
 @RestController
@@ -22,29 +23,34 @@ public class WorkSpaceController {
 		this.workspaceservice = workspaceservice;
 	}
 	
+	//워크스페이스 생성
 	@RequestMapping(value = "/makeWorkSpace", method=RequestMethod.POST)
 	public int makeWorkSpace(@RequestBody WorkSpace workspace) {
-		
-		System.out.println("===========워크스페이스 생성===========");
-		System.out.println(workspace.toString());
 			
 		int result = workspaceservice.makeWorkSpace(workspace);
 		
 		return result;
 	}
 	
+	//워크스페이스 중복 조회
 	@RequestMapping(value = "/isDomain", method=RequestMethod.POST)
 	public int isDomain(@RequestBody WorkSpace workspace) {
-		
-		System.out.println("===========워크스페이스 중복조회===========");
-		System.out.println(workspace.getUrl());
 			
 		int result = workspaceservice.isDomain(workspace.getUrl());
 		System.out.println(result);
+		
 		return result;
 	}
 	
-	
-	
+	//해당 유저가 소속된 워크스페이스 전체 조회
+	@RequestMapping(value="/getWorkSpace", method=RequestMethod.POST)
+	public List<WorkSpace> getWorkSpace(@RequestBody Member member) {
+		
+		System.out.println(member.toString());
+		
+		List<WorkSpace> workspacelist = workspaceservice.getWorkSpace(member.getU_idx());
+		
+		return workspacelist;
+	}
 	
 }

@@ -24,7 +24,7 @@ const AppContent = () => {
               )
             )
           })}
-          <Route path="/" element={<Navigate to="/gitlogin" replace />} />
+          <Route path="/ws/:url/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Suspense>
     </CContainer>

@@ -27,7 +27,7 @@ class App extends Component {
         <Suspense fallback={loading}>
           <Routes>
             <Route path="*" element={<TopLayout />} />
-            <Route path="/workspace/*" name="Home" element={<DefaultLayout />} />
+            <Route path="/ws/:url/*" name="Home" element={<DefaultLayout />} />
           </Routes>
         </Suspense>
       </>

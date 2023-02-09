@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
 			into workspace_user (url, u_idx, role)
 				values (#{url}, #{admin}, 'admin')
+		select * from dual
 	</insert>
 	
 	<resultMap id="createTable" type="hashmap"></resultMap>
@@ -26,5 +27,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		      #{URL} )
 		} 
 	</select>
+	
+	<!-- 워크스페이스 전체 조회 public List<WorkSpace> getWorkSpace() -->
+   	<select id="getWorkSpace" parameterType="int" resultType="kr.or.vo.WorkSpace">
+   		select url, space_name, to_char(start_date, 'YYYY-MM-DD'), to_char(end_date, 'YYYY-MM-DD'), linked_repo 
+   		from workspace 
+		where url in (select url from workspace_user where u_idx = #{u_idx} )
+   	</select>
    
 </mapper>
