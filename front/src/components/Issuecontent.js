@@ -10,6 +10,7 @@ const Issuecontent = (props) => {
   const makeLink = (e) => {
     console.log(e.target.value)
     props.getMakeLink(e.target.value)
+    dispatch(updateissueNumber(e.target.value))
   }
   let issue = props.issuelist
   return (

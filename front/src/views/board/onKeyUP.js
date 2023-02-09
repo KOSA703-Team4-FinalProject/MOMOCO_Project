@@ -1,4 +1,8 @@
+import { useDispatch, useSelector } from 'react-redux'
+
 export const onKeyUp = (e) => {
+  const dispatch = useDispatch()
+  const issueModal = useSelector((state) => state.issueModal)
   if (e.keyCode === 51 || e.keyCode === 50) {
     dispatch(updateIssueModal(!issueModal))
 
