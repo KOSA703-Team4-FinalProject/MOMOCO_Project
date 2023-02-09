@@ -81,10 +81,6 @@ const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterChec
 //문서 저장소
 const docStorage = React.lazy(() => import('./views/docStorage/docStorage'))
 
-//로그인 callback
-const Callback = React.lazy(() => import('./views/login/Callback'))
-//임시
-const Profile = React.lazy(() => import('./views/login/Profile'))
 //프로젝트 관리메인
 const Projectmain =  React.lazy(() => import('./views/project/Projectmain'))
 //프로젝트 상세페이지
@@ -149,8 +145,6 @@ const routes = [
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소
   { path: '/kanbandetail', name: 'KanbanDetail', element: KanbanDetail }, // 칸반 아이템 상세보기
-  { path: '/oauth/callback', name: 'Callback', exact: true, element: Callback}, //로그인 callback
-  { path: '/profile', name: 'Profile', exact: true, element: Profile}, //토큰을 서버로 보낼곳
   { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain}, //프로젝트관리 메인
   {path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent}, //프로젝트관리 메인
 ]

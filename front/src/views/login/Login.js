@@ -27,15 +27,13 @@ import {
 
 
 const Login = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   // 로그인
   const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`;
 
   return (
     <>
-      <RegAndLoginHeader />
-      {/* 로그인 헤더 */}
       <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -69,7 +67,7 @@ const Login = () => {
                         </a>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
+                        <CButton color="link" className="px-0" onClick={()=>{navigate('/workSpaceList')}}>
                           비밀번호 찾기
                         </CButton>
                       </CCol>
@@ -85,11 +83,9 @@ const Login = () => {
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                       tempor incididunt ut labore et dolore magna aliqua.
                     </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        회원가입
-                      </CButton>
-                    </Link>
+                    <CButton color="primary" className="mt-3" active tabIndex={-1} >
+                      회원가입
+                    </CButton>
                   </div>
                 </CCardBody>
               </CCard>

@@ -40,7 +40,7 @@ const Profile = () => {
         localStorage.setItem("login", JSON.stringify(data)) //로컬 스토리지에 저장
         loginaxios(response.data) //백서버에 회원 정보 전달
       })
-      .then(()=>{ navigate('/') })
+      .then(()=>{ navigate('/workSpaceList') })
       .catch((err) => console.log(err))
   })
 

@@ -23,95 +23,7 @@ import { useNavigate } from 'react-router-dom'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import momocologo from 'src/assets/images/momocologo.png'
 
-const workSpace = () => {
-  const [space_Name, SetSpace_Name] = useState('')
-  const [url, SetUrl] = useState('')
-  const [linked_Repo, SetLinked_Repo] = useState('')
-  const [start_Date, SetStart_Date] = useState('')
-  const [end_Date, SetEnd_Date] = useState('')
-  const [check, SetCheck] = useState('')
-
-  const spaceNameHandler = (e) => {
-    e.preventDefault()
-    SetSpace_Name(e.target.value)
-  }
-
-  const URLHandler = (e) => {
-    e.preventDefault()
-    SetUrl(e.target.value)
-    SetCheck('')
-    console.log({ check })
-  }
-
-  const REPOHandler = (e) => {
-    e.preventDefault()
-    SetLinked_Repo(e.target.value)
-  }
-
-  const StartDateHandler = (e) => {
-    e.preventDefault()
-    SetStart_Date(e.target.value)
-  }
-
-  const EndDateHandler = (e) => {
-    e.preventDefault()
-    SetEnd_Date(e.target.value)
-  }
-
-  const login = JSON.parse(localStorage.getItem('login'))
-  const admin = login.u_idx
-  const Navigate = useNavigate()
-
-  const Check = (e) => {
-    e.preventDefault()
-    let send = {
-      url: url,
-    }
-
-    if (url != '') {
-      axios.post('api/isDomain', send).then((data) => {
-        if (data.data == 1) {
-          SetCheck('사용 불가')
-          alert('이미 사용 중인 주소입니다')
-        } else {
-          SetCheck('사용 가능')
-          alert('사용 가능한 주소입니다')
-        }
-      })
-    } else {
-      alert('주소를 입력하세요')
-    }
-  }
-
-  const SubmitHandler = (e) => {
-    e.preventDefault()
-
-    let makeWorkSpace = {
-      url: url,
-      space_name: space_Name,
-      linked_repo: linked_Repo,
-      start_date: start_Date,
-      end_date: end_Date,
-      admin: admin,
-    }
-    console.log(makeWorkSpace)
-
-    if (check === '사용 가능') {
-      axios.post('api/makeWorkSpace', makeWorkSpace).then((data) => {
-        if (data == 1) {
-          alert('워크스페이스가 생성되었습니다')
-          Navigate('/' + url)
-        }
-        if (data != 1) {
-          alert('워크스페이스 생성 실패')
-        }
-      })
-    } else if (start_Date > end_Date) {
-      alert('프로젝트 날짜가 잘못되었습니다')
-    } else {
-      alert('중복확인을 해주세요')
-    }
-  }
+const workSpaceList = () => {
 
   return (
     <>
@@ -122,10 +34,10 @@ const workSpace = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm onSubmit={SubmitHandler}>
-                    <h2>워크스페이스 만들기</h2>
+                  <CForm>
+                    <h2><strong>WorkSpace List</strong></h2>
                     <p className="text-medium-emphasis my-1">
-                      깃허브의 레파지토리와 연동된 모모코의 워크스페이스를 만드세요.
+                      깃허브의 레파지토리와 연동된 모모코의 워크스페이스입니다.
                     </p>
                     <CInputGroup className="mb-4 my-5">
                       <CInputGroupText>
@@ -133,7 +45,6 @@ const workSpace = () => {
                       </CInputGroupText>
                       <CFormInput
                         value={space_Name}
-                        onChange={spaceNameHandler}
                         placeholder="워크스페이스 이름"
                         required
                       />
@@ -235,19 +146,7 @@ const workSpace = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-black bg-light py-5" style={{ width: '30%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>모두 모여 코딩!</h2>
-
-                    <p></p>
-                    <p></p>
-
-                    <p>모모코를 통해 팀프로젝트를 쉽게 관리해보세요</p>
-                    <img src={momocologo} />
-                  </div>
-                </CCardBody>
-              </CCard>
+              
             </CCardGroup>
           </CCol>
         </CRow>
@@ -256,4 +155,4 @@ const workSpace = () => {
   )
 }
 
-export default workSpace
+export default workSpaceList
