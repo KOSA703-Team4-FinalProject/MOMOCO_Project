@@ -82,7 +82,6 @@ let issueNumber = createSlice({
   reducers: {
     updateissueNumber(state, action) {
       state = action.payload
-
       return state
     },
   },
@@ -97,5 +96,6 @@ export default configureStore({
     userProfile: userProfile.reducer,
     gitToken: gitToken.reducer,
     issueModal: issueModal.reducer,
+    issueNumber: issueNumber.reducer,
   },
 })

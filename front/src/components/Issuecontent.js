@@ -1,5 +1,6 @@
 import { CButton, CCard, CCardBody, CCardHeader, CCardText, CCardTitle } from '@coreui/react'
-import { Link, NavLink } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateissueNumber } from 'src/store'
 
 const box = {
   width: '600px',
@@ -7,11 +8,12 @@ const box = {
 }
 
 const Issuecontent = (props) => {
+  const dispatch = useDispatch()
+
   const makeLink = (e) => {
-    console.log(e.target.value)
-    props.getMakeLink(e.target.value)
     dispatch(updateissueNumber(e.target.value))
   }
+
   let issue = props.issuelist
   return (
     <>
