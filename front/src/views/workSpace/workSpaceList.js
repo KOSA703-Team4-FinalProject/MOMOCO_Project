@@ -13,6 +13,7 @@ import {
   CInputGroupText,
   CRow,
   CCardFooter,
+  CWidgetStatsF,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -23,10 +24,26 @@ import { useNavigate } from 'react-router-dom'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import momocologo from 'src/assets/images/momocologo.png'
 import { map } from 'jquery'
+import styled from 'styled-components'
 
 const workSpaceList = () => {
+  const Container = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(20, 20, 20, 0.1) 10%,
+        rgba(20, 20, 20, 0.7) 70%,
+        rgba(20, 20, 20, 1)
+      ),
+      url({momoco});
+    background-size: cover;
+  `
   const [workspacelist, setWorkspacelist] = useState([])
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const login = JSON.parse(localStorage.getItem('login'))
 
@@ -49,7 +66,7 @@ const workSpaceList = () => {
 
   return (
     <>
-      <div className="min-vh-100 align-items-center">
+      <div className="min-vh-100 align-items-center Container">
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCardGroup>
@@ -57,51 +74,39 @@ const workSpaceList = () => {
                 <CCardBody>
                   <CForm>
                     <h2>
-                      <strong>WorkSpace List</strong>
+                      <strong>{params.nickname}`s WorkSpace </strong>
                     </h2>
-                    <p className="text-medium-emphasis my-1">
-                      깃허브의 레파지토리와 연동된 momoco의 워크스페이스입니다.
-                    </p>
                     {workspacelist.map((data, idx) => {
                       console.log(data)
 
                       return (
-                        <div key={data.url} onClick={()=>{
-                          navigate(`/ws/${data.url}/dashboard`)
-                        }}>
-                          <h3>
-                            {data.url} : {data.space_name}
-                          </h3>
+                        <div
+                          key={data.url}
+                          onClick={() => {
+                            navigate(`/ws/${data.url}/dashboard`)
+                          }}
+                        >
+                          <br />
+
+                          <CCol xs={6}>
+                            <CWidgetStatsF
+                              className="mb-3"
+                              color="primary"
+                              icon={<CIcon icon={icon.cilChartPie} height={24} />}
+                              padding={false}
+                              title={data.space_name}
+                              value="89.9%"
+                            />
+                          </CCol>
                         </div>
                       )
                     })}
-                    <CInputGroup className="mb-4 my-5">
-                      <CInputGroupText>
-                        <CIcon icon={icon.cibGithub} />
-                      </CInputGroupText>
-                      <CFormInput placeholder="워크스페이스 이름" required />
-                    </CInputGroup>
-                    <CInputGroup className="mb-4">
-                      <CInputGroupText>
-                        <CIcon icon={icon.cilLinkBroken} />
-                      </CInputGroupText>
-                      <CFormInput type="text" placeholder="momoco.kr/워크스페이스 주소" required />
-                    </CInputGroup>
-                    <CInputGroup className="mb-4">
-                      <CInputGroupText>
-                        <CIcon icon={icon.cibGithub} />
-                      </CInputGroupText>
-                      <CFormInput
-                        type="text"
-                        placeholder="불러온 github 레파지토리 이름"
-                        required
-                      />
-                    </CInputGroup>
                   </CForm>
                 </CCardBody>
               </CCard>
             </CCardGroup>
           </CCol>
+          <img src={momocologo} width="40%" />
         </CRow>
       </div>
     </>
