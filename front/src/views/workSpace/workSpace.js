@@ -101,13 +101,13 @@ const workSpace = () => {
         console.log(data)
         if (data.data == 1) {
           alert('워크스페이스가 생성되었습니다')
-          Navigate('/' + url + '/dashboard')
+          Navigate('/ws/' + url + '/dashboard')
         }
         if (data.data != 1) {
           alert('워크스페이스 생성 실패')
         }
       })
-    } else if (start_Date > end_Date) {
+    } else if (new Date(start_Date) > new Date(end_Date)) {
       alert('프로젝트 날짜가 잘못되었습니다')
     } else {
       alert('중복확인을 해주세요')
@@ -116,7 +116,6 @@ const workSpace = () => {
 
   return (
     <>
-      
       <div className="min-vh-100 align-items-center">
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -218,15 +217,18 @@ const workSpace = () => {
                             만들기
                           </CButton>
                         ) : (
-                          <CButton
-                            type="submit"
-                            className="mx-1"
-                            color="primary"
-                            shape="rounded-pill"
-                            disabled
-                          >
-                            만들기
-                          </CButton>
+                          <>
+                            <strong>중복 체크 필요</strong>
+                            <CButton
+                              type="submit"
+                              className="mx-1"
+                              color="primary"
+                              shape="rounded-pill"
+                              disabled
+                            >
+                              만들기
+                            </CButton>
+                          </>
                         )}
                         <CButton className="mx-1" color="dark" shape="rounded-pill">
                           레파지토리 변경

@@ -6,7 +6,6 @@ import { CContainer, CSpinner } from '@coreui/react'
 import routes from '../routes'
 
 const AppContent = () => {
-
   return (
     <CContainer lg>
       <Suspense fallback={<CSpinner color="primary" />}>
@@ -24,7 +23,7 @@ const AppContent = () => {
               )
             )
           })}
-          <Route path="/ws/:url/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/ws/:url" element={<Navigate to="/DashBoard" replace />} />
         </Routes>
       </Suspense>
     </CContainer>
