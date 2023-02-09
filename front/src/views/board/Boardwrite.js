@@ -52,9 +52,8 @@ const Boardwirte = (props) => {
 
   const makeLink = (issueNumber) => {
     console.log('링크값 받아오기' + issueNumber)
-    dispatch(updateissueNumber(issueNumber))
 
-    return <NavLink>issueNumber</NavLink>
+    return <NavLink>{issueNumber}</NavLink>
   }
   return (
     <>
@@ -96,6 +95,7 @@ const Boardwirte = (props) => {
                         aria-label="default input example"
                         onKeyUp={onKeyUP}
                         onChange={makeLink}
+                        value={issueNumber}
                       />
                     </CCol>
                   </CCol>

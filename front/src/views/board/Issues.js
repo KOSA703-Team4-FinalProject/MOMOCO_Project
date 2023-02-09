@@ -14,12 +14,7 @@ function Issues(props) {
   let issue = props.issuelist
   const issueModal = useSelector((state) => state.issueModal) //issueModal 값가져옴
   const dispatch = useDispatch() //issueModal함수를 쓰기위해 선언
-  const issueNumber = useSelector((state) => state.issueNumber)
 
-  const getMakeLink = (num) => {
-    console.log('이거 잘되는 건가' + num)
-    console.log('업데이트가 되었나' + issueNumber)
-  }
   const view = (issueModal) => {
     if (issueModal === '#' || issueModal === '@') {
       return true
@@ -42,7 +37,7 @@ function Issues(props) {
         </CModalHeader>
 
         <div>
-          <Issuecontent issuelist={issue} getMakeLink={getMakeLink} value={getMakeLink} />
+          <Issuecontent issuelist={issue} />
         </div>
       </CModal>
     </>
