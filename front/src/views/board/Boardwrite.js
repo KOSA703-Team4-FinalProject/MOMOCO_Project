@@ -1,21 +1,18 @@
 import {
   CAvatar,
-  CBadge,
   CButton,
   CCard,
   CCardBody,
   CCol,
-  CForm,
   CFormCheck,
   CFormInput,
   CFormSelect,
-  CFormTextarea,
   CRow,
 } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
-import React, { Component, useRef, useState } from 'react'
+import React, { Component, useEffect, useRef, useState } from 'react'
 
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 
 import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,10 +32,6 @@ const Boardwirte = (props) => {
   const onKeyUP = (e) => {
     if (e.keyCode === 51 || e.keyCode === 50) {
       dispatch(updateIssueModal(!issueModal))
-
-      console.log('눌러줌눌러줌눌러줌')
-      console.log('원래값' + e.target.value)
-
       issuelist.map((item, i) => {
         if (
           e.target.value === '#' + issuelist[i].idx ||
@@ -50,11 +43,8 @@ const Boardwirte = (props) => {
     }
   }
 
-  const makeLink = (issueNumber) => {
-    console.log('링크값 받아오기' + issueNumber)
-
-    return <NavLink>{issueNumber}</NavLink>
-  }
+  const params = useParams()
+  console.log(params.url)
   return (
     <>
       <CCard className="mb-4">
@@ -86,7 +76,7 @@ const Boardwirte = (props) => {
                     </CCol>
                     <CCol className="col-md-9" align="left">
                       <label>
-                        <strong>제목</strong>
+                        <strong>제목{issueNumber}</strong>
                       </label>
                       <br></br>
                       <CFormInput
@@ -94,8 +84,6 @@ const Boardwirte = (props) => {
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
                         onKeyUp={onKeyUP}
-                        onChange={makeLink}
-                        value={issueNumber}
                       />
                     </CCol>
                   </CCol>
