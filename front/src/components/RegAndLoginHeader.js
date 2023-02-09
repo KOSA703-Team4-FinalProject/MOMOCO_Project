@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -22,6 +22,9 @@ import { logo } from 'src/assets/brand/logo'
 const RegAndLoginHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+  const [login, SetLogin] = useState(false)
+
   // 로그인, 회원가입 전용 헤더(토글 삭제 및 필요없는 아이콘삭제 > 로그인 전 화면에만 적용)
   return (
     <CHeader position="sticky" className="mb-4">
@@ -31,21 +34,37 @@ const RegAndLoginHeader = () => {
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
-            <CNavLink href="#">
+            <CNavLink to="/" component={NavLink}>
               <img src={momocologo} width="20%" />
               {/* 여기에 모모코 로고 들어감 */}
             </CNavLink>
           </CNavItem>
+
+          {/* {
+            (login = true ? (
+              <CNavItem>
+                <CNavLink to="/gitlogin" component={NavLink}>
+                  로그아웃
+                </CNavLink>
+              </CNavItem>
+            ) : (
+              <CNavItem>
+                <CNavLink to="/gitlogin" component={NavLink}>
+                  로그인
+                </CNavLink>
+              </CNavItem>
+            ))
+          } 이건 나중에 처리 */}
+
           <CNavItem>
-            <CNavLink to="/dashboard" component={NavLink}>
-              Dashboard
+            <CNavLink to="/workSpaceList" component={NavLink}>
+              워크스페이스
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
+            <CNavLink to="/aboutus" component={NavLink}>
+              모모코란?
+            </CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav></CHeaderNav>
