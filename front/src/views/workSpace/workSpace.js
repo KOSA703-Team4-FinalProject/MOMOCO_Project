@@ -98,11 +98,12 @@ const workSpace = () => {
 
     if (check === '사용 가능') {
       axios.post('api/makeWorkSpace', makeWorkSpace).then((data) => {
-        if (data == 1) {
+        console.log(data)
+        if (data.data == 1) {
           alert('워크스페이스가 생성되었습니다')
-          Navigate('/' + url)
+          Navigate('/' + url + '/dashboard')
         }
-        if (data != 1) {
+        if (data.data != 1) {
           alert('워크스페이스 생성 실패')
         }
       })

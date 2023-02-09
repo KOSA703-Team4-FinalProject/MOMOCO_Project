@@ -1,6 +1,8 @@
 package kr.or.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,27 +33,44 @@ public class WorkSpaceService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
+		return result;
+	}
+
+	// 워크스페이스 생성
+	@Transactional
+	public int makeWorkSpace(WorkSpace workspace) {
+		int result = 0;
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			result = workspacedao.makeWorkSpace(workspace);
+			workspacedao.createTable(workspace.getUrl());
+			result = workspacedao.isDomain(workspace.getUrl());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return result;
 	}
 	
-	// 워크스페이스 생성
-		@Transactional
-		public int makeWorkSpace(WorkSpace workspace) {
-			int result = 0;
-			try {
-				WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
-				result = workspacedao.makeWorkSpace(workspace);
-				workspacedao.createTable(workspace.getUrl());
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+	//워크스페이스 전체 조회
+	public List<WorkSpace> getWorkSpace(int u_idx) {
+		List<WorkSpace> workspacelist = new ArrayList<WorkSpace>();
+		
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
 			
-			return result;
+			workspacelist = workspacedao.getWorkSpace(u_idx);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-	
-
+		
+		return workspacelist;
+	}
 
 }

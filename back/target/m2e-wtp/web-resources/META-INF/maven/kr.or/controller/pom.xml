@@ -283,6 +283,13 @@
 			<version>1.1.1</version>
 		</dependency>
 
+		<!-- 토큰 생성 -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
 
 	</dependencies>
 	<build>
