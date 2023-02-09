@@ -25,6 +25,9 @@ import { BsFillCheckCircleFill } from 'react-icons/bs'
 import momocologo from 'src/assets/images/momocologo.png'
 import { map } from 'jquery'
 import styled from 'styled-components'
+import CryptoJS from 'crypto-js'
+
+import { PRIMARY_KEY } from '../../oauth'
 
 const workSpaceList = () => {
   const Container = styled.div`
@@ -53,8 +56,19 @@ const workSpaceList = () => {
   }
 
   useEffect(() => {
+
+    // AES알고리즘 사용 복호화 
+    const bytes = CryptoJS.AES.decrypt(localStorage.getItem("token"), PRIMARY_KEY);
+    //인코딩, 문자열로 변환, JSON 변환
+    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    
+    const accessToken = decrypted.token;
+
     axios({
       url: 'api/getWorkSpace',
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
       method: 'POST',
       data: params,
     }).then((res) => {

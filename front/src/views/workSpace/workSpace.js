@@ -22,6 +22,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import momocologo from 'src/assets/images/momocologo.png'
+import CryptoJS from 'crypto-js'
+import { PRIMARY_KEY } from '../../oauth'
 
 const workSpace = () => {
   const [space_Name, SetSpace_Name] = useState('')
@@ -69,7 +71,21 @@ const workSpace = () => {
     }
 
     if (url != '') {
-      axios.post('api/isDomain', send).then((data) => {
+      // AES알고리즘 사용 복호화
+      const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+      //인코딩, 문자열로 변환, JSON 변환
+      const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+
+      const accessToken = decrypted.token
+
+      axios({
+        method: 'poat',
+        url: 'api/isDomain',
+        data: send,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((data) => {
         if (data.data == 1) {
           SetCheck('사용 불가')
           alert('이미 사용 중인 주소입니다')
