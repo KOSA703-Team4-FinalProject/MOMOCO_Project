@@ -35,7 +35,6 @@ const Layout = React.lazy(() => import('./views/forms/layout/Layout'))
 const Range = React.lazy(() => import('./views/forms/range/Range'))
 const Select = React.lazy(() => import('./views/forms/select/Select'))
 const Validation = React.lazy(() => import('./views/forms/validation/Validation'))
-
 const Charts = React.lazy(() => import('./views/charts/Charts'))
 
 // Icons
@@ -48,7 +47,6 @@ const Alerts = React.lazy(() => import('./views/notifications/alerts/Alerts'))
 const Badges = React.lazy(() => import('./views/notifications/badges/Badges'))
 const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
-
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 //calendar
@@ -74,20 +72,17 @@ const videochat = React.lazy(() => import('./views/viewchat/Viewchat'))
 // kanban 보드
 const Kanban = React.lazy(() => import('./views/kanban/Kanban'))
 const KanbanDetail = React.lazy(() => import('./views/kanban/KanbanDetail.js'))
-
 // unregister
 const UnRegisterCheck = React.lazy(() => import('./views/register/UnRegisterCheck')) // 회원탈퇴
-
 //문서 저장소
 const docStorage = React.lazy(() => import('./views/docStorage/docStorage'))
-
 //프로젝트 관리메인
-const Projectmain =  React.lazy(() => import('./views/project/Projectmain'))
+const Projectmain = React.lazy(() => import('./views/project/Projectmain'))
 //프로젝트 상세페이지
-const Projectcontent =  React.lazy(() => import('./views/project/Projectcontent'))
+const Projectcontent = React.lazy(() => import('./views/project/Projectcontent'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '/', exact: true, name: 'Home', element: Dashboard },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/calendar', name: 'calendar', exact: true, element: Calendar },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
@@ -145,8 +140,8 @@ const routes = [
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소
   { path: '/kanbandetail', name: 'KanbanDetail', element: KanbanDetail }, // 칸반 아이템 상세보기
-  { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain}, //프로젝트관리 메인
-  {path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent}, //프로젝트관리 메인
+  { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain }, //프로젝트관리 메인
+  { path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent }, //프로젝트관리 메인
 ]
 
 export default routes
