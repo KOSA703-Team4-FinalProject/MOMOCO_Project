@@ -1,10 +1,12 @@
 package kr.or.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.LoginService;
@@ -27,7 +29,10 @@ public class LoginController {
 	//신규 유저면 데이터 insert
 	//기존 유저면 데이터 update
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public int isMember(@RequestBody  MemberAll memberAll) {
+	public int isMember(@RequestBody  MemberAll memberAll, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("login", memberAll.getU_idx());
 		
 		Member member = new Member();
 		member.setU_idx(memberAll.getU_idx());

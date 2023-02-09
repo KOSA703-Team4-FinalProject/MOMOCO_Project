@@ -32,7 +32,7 @@ const Profile = () => {
     }
 
     fetchGithubUser()
-      .then((response) => {
+      .then( (response) => {
         const data = {
           u_idx: response.data.id,
           nickname: response.data.login

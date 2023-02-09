@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.WorkSpaceUserDao">
+
+	<!-- 유저가 가진 워크스페이스 권한 탐색 : public WorkSpaceUser getWorkSpaceUser(WorkSpaceUser workspaceuser) -->
+	<select id="getWorkSpaceUser" parameterType="kr.or.vo.WorkSpaceUser" resultType="kr.or.vo.WorkSpaceUser">
+		select url, u_idx, role from workspace_user where u_idx = #{u_idx} and url = #{url} 
+	</select>
+	
+   
+</mapper>
