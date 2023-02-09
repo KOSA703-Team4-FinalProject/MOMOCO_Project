@@ -19,12 +19,12 @@ import { Link, NavLink } from 'react-router-dom'
 
 import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateIssueModal } from 'src/store'
+import { updateIssueModal, updateissueNumber } from 'src/store'
 
 const Boardwirte = (props) => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
-
+  const issueNumber = useSelector((state) => state.issueNumber)
   const labelselect = {
     width: '300px',
   }
@@ -38,22 +38,23 @@ const Boardwirte = (props) => {
 
       console.log('눌러줌눌러줌눌러줌')
       console.log('원래값' + e.target.value)
+
       issuelist.map((item, i) => {
         if (
           e.target.value === '#' + issuelist[i].idx ||
           e.target.value === '@' + issuelist[i].idx
         ) {
-          //dispatch(updateIssueModal(!issueModal))
           console.log(issuelist[i].title)
         }
       })
     }
   }
-  const [inputMakeLink, setinputMakeLink] = useState('')
-  const makeLink = (num) => {
-    console.log('링크값 받아오기')
 
-    return <NavLink>num</NavLink>
+  const makeLink = (issueNumber) => {
+    console.log('링크값 받아오기' + issueNumber)
+    dispatch(updateissueNumber(issueNumber))
+
+    return <NavLink>issueNumber</NavLink>
   }
   return (
     <>

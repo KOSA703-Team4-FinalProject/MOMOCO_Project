@@ -67,12 +67,28 @@ let issueModal = createSlice({
   reducers: {
     updateIssueModal(state, action) {
       state = action.payload
+
       return state
     },
   },
 })
 
 export let { updateIssueModal } = issueModal.actions
+
+// 이슈번호 클릭값 받아오기
+let issueNumber = createSlice({
+  name: 'issueNumber',
+  initialState: '',
+  reducers: {
+    updateissueNumber(state, action) {
+      state = action.payload
+
+      return state
+    },
+  },
+})
+
+export let { updateissueNumber } = issueNumber.actions
 
 export default configureStore({
   reducer: {
