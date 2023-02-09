@@ -25,6 +25,7 @@ import { BsFillCheckCircleFill } from 'react-icons/bs'
 import momocologo from 'src/assets/images/momocologo.png'
 import { map } from 'jquery'
 import styled from 'styled-components'
+import WorkSpaceListItem from 'src/components/WorkSpaceListItem'
 import CryptoJS from 'crypto-js'
 
 import { PRIMARY_KEY } from '../../oauth'
@@ -42,7 +43,7 @@ const workSpaceList = () => {
         rgba(20, 20, 20, 0.7) 70%,
         rgba(20, 20, 20, 1)
       ),
-      url({momoco});
+      url(https://source.unsplash.com/random/1920x1080);
     background-size: cover;
   `
   const [workspacelist, setWorkspacelist] = useState([])
@@ -80,7 +81,7 @@ const workSpaceList = () => {
 
   return (
     <>
-      <div className="min-vh-100 align-items-center Container">
+      <div className="min-vh-100 align-items-center">
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCardGroup>
@@ -90,37 +91,12 @@ const workSpaceList = () => {
                     <h2>
                       <strong>{params.nickname}`s WorkSpace </strong>
                     </h2>
-                    {workspacelist.map((data, idx) => {
-                      console.log(data)
-
-                      return (
-                        <div
-                          key={data.url}
-                          onClick={() => {
-                            navigate(`/ws/${data.url}/dashboard`)
-                          }}
-                        >
-                          <br />
-
-                          <CCol xs={6}>
-                            <CWidgetStatsF
-                              className="mb-3"
-                              color="primary"
-                              icon={<CIcon icon={icon.cilChartPie} height={24} />}
-                              padding={false}
-                              title={data.space_name}
-                              value="89.9%"
-                            />
-                          </CCol>
-                        </div>
-                      )
-                    })}
+                    <WorkSpaceListItem />
                   </CForm>
                 </CCardBody>
               </CCard>
             </CCardGroup>
           </CCol>
-          <img src={momocologo} width="40%" />
         </CRow>
       </div>
     </>
