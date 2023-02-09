@@ -3,7 +3,7 @@
 export const PRIMARY_KEY = 'xcvsdfwerasdqwewerbn123244559876'
 
 export const CLIENT_ID = "31c68970a72ad9048531";
-export const CLIENT_SECRETS = "1d0cbe1b89e30af7733549c5562296d74031c310";
+export const CLIENT_SECRETS = "47a78289c60b3cacc26be6f8063e6ef8d95ab9f5";
 export const CALLBACK_URL = "http://localhost:3000/oauth/callback";
 
 export const GITHUB_AUTH_CODE_SERVER = "/login/oauth/authorize";

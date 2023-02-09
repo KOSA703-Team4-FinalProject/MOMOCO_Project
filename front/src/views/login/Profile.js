@@ -4,7 +4,6 @@ import axios from 'axios';
 import { GITHUB_API_SERVER, PRIMARY_KEY } from '../../oauth'
 import { loginaxios } from './backlogin'
 import { useDispatch } from 'react-redux';
-import { updateMember } from 'src/store';
 import { useNavigate } from 'react-router';
 import CryptoJS from 'crypto-js'
 
@@ -21,6 +20,7 @@ const Profile = () => {
       const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       
       const accessToken = decrypted.token;
+      console.log(accessToken)
 
       return axios(GITHUB_API_SERVER, {
         method: 'GET',

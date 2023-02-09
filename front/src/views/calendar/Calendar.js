@@ -21,6 +21,7 @@ import CIcon from '@coreui/icons-react'
 import { cilClipboard } from '@coreui/icons'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 const Calendar = () => {
   let [addView, setAddView] = useState('d-none')
@@ -29,6 +30,9 @@ const Calendar = () => {
   let [attend, setAttend] = useState(false)
 
   let member = useSelector((state) => state.member)
+
+  const params = useParams();
+  console.log(params.url)
 
   const addCalendar = ()=>{
     const login = JSON.parse(localStorage.getItem("login"))
