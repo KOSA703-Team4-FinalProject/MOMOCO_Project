@@ -18,13 +18,14 @@ import { Link, NavLink, useParams } from 'react-router-dom'
 import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateIssueModal, updateissueNumber } from 'src/store'
+import { AiFillBell } from 'react-icons/ai'
 
 const Boardwirte = (props) => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
   const issueNumber = useSelector((state) => state.issueNumber)
   const labelselect = {
-    width: '300px',
+    width: '200px',
   }
 
   //이슈번호 입력했을 때
@@ -50,6 +51,17 @@ const Boardwirte = (props) => {
   //워크스페이스 주소값
   const params = useParams()
   console.log(params.url)
+  //게시판 글작성
+  const [boardWrite, setboardWrite] = useState({
+    label: '',
+    issue: '',
+    title: '',
+    content: '',
+    nickname: '',
+    w_date: '',
+    b_code: '',
+  })
+  //
   return (
     <>
       <CCard className="mb-4">
@@ -63,7 +75,7 @@ const Boardwirte = (props) => {
               <CRow className="row">
                 <CCol className="col-md-12">
                   <CCol className="row">
-                    <CCol className="col-md-3">
+                    <CCol className="col-md-2" align="left">
                       <label>
                         <strong>라벨</strong>
                       </label>
@@ -72,16 +84,31 @@ const Boardwirte = (props) => {
                         style={labelselect}
                         aria-label="라벨"
                         options={[
-                          'Open this select menu',
+                          '선택하세요',
                           { label: 'One', value: '1' },
                           { label: 'Two', value: '2' },
-                          { label: 'Three', value: '3', disabled: true },
+                          { label: 'Three', value: '3' },
                         ]}
                       />
                     </CCol>
-                    <CCol className="col-md-9" align="left">
+                    <CCol className="col-md-4 ps-3" align="left">
                       <label>
-                        <strong>제목</strong> <strong>이슈번호:{issueNumber}</strong>
+                        <strong>이슈번호</strong>
+                      </label>
+                      <br></br>
+                      <CFormInput
+                        type="text"
+                        placeholder="참조이슈번호"
+                        aria-label="default input example"
+                        onKeyUp={onKeyUP}
+                        name="issue"
+                        //value={issueNumber}
+                        value={boardWrite.issue}
+                      />
+                    </CCol>
+                    <CCol className="col-md-6 ps-1" align="left">
+                      <label>
+                        <strong>제목</strong>
                       </label>
                       <br></br>
                       <CFormInput

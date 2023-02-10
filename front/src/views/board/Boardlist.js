@@ -28,7 +28,7 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const writedate = {}
 const title = {}
@@ -49,6 +49,12 @@ const ccardsize = {
 
 const Boardlist = () => {
   const [currentPage, setActivePage] = useState(2)
+  const params = useParams()
+  console.log(params)
+  const navigate = useNavigate()
+  const navigateToboardwrite = (params) => {
+    navigate(`/ws/${params.url}/boardwrite`)
+  }
   return (
     <>
       <CCard className="mb-4">
@@ -129,50 +135,48 @@ const Boardlist = () => {
                     </CButtonGroup>
                   </div>
                   <div className="col-md-3" align="right">
-                    <Link to="/boardwrite">
-                      <CButton variant="outline">글쓰기</CButton>
-                    </Link>
+                    <CButton variant="outline" onClick={navigateToboardwrite}>
+                      글쓰기
+                    </CButton>
                   </div>
                 </div>
 
                 {/* 게시판 목록 시작 */}
 
                 <CCard className="p-3 mt-3">
-                  
-                    <div className="col-md-12">
-                      <div className="row">
-                        <div className="col-md-1" style={number}>
-                          <CIcon icon={cilCheck} />
-                          <strong>NO.</strong>
-                        </div>
-                        <div className="col-md-8">
-                          <div className='row'>
-                              <div className="col-md-12" style={title}>
-                                <strong> 글제목</strong>
-                              </div>
-                              <div className="col-md-12" style={context}>
-                                글내용
-                              </div>
-                              <div className="col-md-12">
-                                <CBadge color="dark" shape="rounded-pill" style={boardname}>
-                                  게시판이름
-                                </CBadge>
-                              </div>
+                  <div className="col-md-12">
+                    <div className="row">
+                      <div className="col-md-1" style={number}>
+                        <CIcon icon={cilCheck} />
+                        <strong>NO.</strong>
+                      </div>
+                      <div className="col-md-8">
+                        <div className="row">
+                          <div className="col-md-12" style={title}>
+                            <strong> 글제목</strong>
+                          </div>
+                          <div className="col-md-12" style={context}>
+                            글내용
+                          </div>
+                          <div className="col-md-12">
+                            <CBadge color="dark" shape="rounded-pill" style={boardname}>
+                              게시판이름
+                            </CBadge>
                           </div>
                         </div>
+                      </div>
                       <div className="col-md-3">
                         <div className="col-md-12" align="end">
                           <CAvatar
-                              className="ms-3"
-                              src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                            />
-                            usernick
+                            className="ms-3"
+                            src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
+                          />
+                          usernick
                         </div>
                         <div className="col-md-12" align="end" style={writedate}>
-                            2023.01.31 12:00
+                          2023.01.31 12:00
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </CCard>
