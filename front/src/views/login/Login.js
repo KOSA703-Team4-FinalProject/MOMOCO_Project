@@ -19,22 +19,17 @@ import * as icon from '@coreui/icons'
 import axios from 'axios'
 
 import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
-import {
-  CALLBACK_URL,
-  CLIENT_ID,
-  GITHUB_AUTH_CODE_SERVER,
-} from "../../oauth.js";
-
+import { CALLBACK_URL, CLIENT_ID, GITHUB_AUTH_CODE_SERVER } from '../../oauth.js'
 
 const Login = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // 로그인
-  const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`;
+  const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`
 
   return (
     <>
-      <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      <div className="min-vh-100 d-flex flex-row align-items-center">
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCardGroup>
@@ -67,7 +62,13 @@ const Login = () => {
                         </a>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0" onClick={()=>{navigate('/workSpaceList')}}>
+                        <CButton
+                          color="link"
+                          className="px-0"
+                          onClick={() => {
+                            navigate('/workSpaceList')
+                          }}
+                        >
                           비밀번호 찾기
                         </CButton>
                       </CCol>
@@ -83,7 +84,7 @@ const Login = () => {
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                       tempor incididunt ut labore et dolore magna aliqua.
                     </p>
-                    <CButton color="primary" className="mt-3" active tabIndex={-1} >
+                    <CButton color="primary" className="mt-3" active tabIndex={-1}>
                       회원가입
                     </CButton>
                   </div>

@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 워크스페이스 전체 조회 public List<WorkSpace> getWorkSpace() -->
    	<select id="getWorkSpace" parameterType="int" resultType="kr.or.vo.WorkSpace">
-   		select url, space_name, to_char(start_date, 'YYYY-MM-DD'), to_char(end_date, 'YYYY-MM-DD'), linked_repo 
+   		select url, space_name, to_char(start_date, 'YYYY/MM/DD') AS start_date, to_char(end_date, 'YYYY/MM/DD') AS end_date, linked_repo 
    		from workspace 
 		where url in (select url from workspace_user where u_idx = #{u_idx} )
    	</select>

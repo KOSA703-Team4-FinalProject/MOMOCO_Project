@@ -62,7 +62,7 @@ const workSpaceList = () => {
                     <strong className="text-light">{params.nickname}`s WorkSpace </strong>
                   </h2>
                   <br />
-                  <WorkSpaceListItem width="600px" />
+                  <WorkSpaceListItem width="455px" />
                 </CForm>
               </CCardBody>
             </CCardGroup>
