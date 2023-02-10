@@ -1,4 +1,8 @@
+import { cilSpeedometer } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
+import { CNavItem, CNavTitle } from '@coreui/react'
 import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { useParams } from 'react-router-dom'
 
 //side bar 상태
 let sidebarShow = createSlice({

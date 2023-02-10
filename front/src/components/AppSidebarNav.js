@@ -1,11 +1,14 @@
-import React from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { NavLink, useLocation, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { CBadge } from '@coreui/react'
 
 export const AppSidebarNav = ({ items }) => {
   const location = useLocation()
+
+  const params = useParams()
+
   const navLink = (name, icon, badge) => {
     return (
       <>
@@ -19,10 +22,14 @@ export const AppSidebarNav = ({ items }) => {
       </>
     )
   }
-
   const navItem = (item, index) => {
+
     const { component, name, badge, icon, ...rest } = item
     const Component = component
+
+    const re = {...rest}
+    rest.to = '/ws/' + params.url + re.to
+
     return (
       <Component
         {...(rest.to &&
