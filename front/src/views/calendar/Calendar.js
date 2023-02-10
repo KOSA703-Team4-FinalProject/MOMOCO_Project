@@ -36,37 +36,35 @@ const Calendar = () => {
 
   let member = useSelector((state) => state.member)
 
-  const params = useParams();
+  const params = useParams()
 
-  const addCalendar = ()=>{
-    const login = JSON.parse(localStorage.getItem("login"))
-    console.log(login.u_idx + " " + login.nickname)
+  const addCalendar = () => {
+    const login = JSON.parse(localStorage.getItem('login'))
+    console.log(login.u_idx + ' ' + login.nickname)
   }
 
-  useEffect(()=>{
-
-    // AES알고리즘 사용 복호화 
-    const bytes = CryptoJS.AES.decrypt(localStorage.getItem("token"), PRIMARY_KEY);
+  useEffect(() => {
+    // AES알고리즘 사용 복호화
+    const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
     //인코딩, 문자열로 변환, JSON 변환
-    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    
-    const accessToken = decrypted.token;
+    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+
+    const accessToken = decrypted.token
 
     const myparams = {
-      url: params.url
+      url: params.url,
     }
 
     axios({
       method: 'GET',
       url: '/cal/get',
       headers: {
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
       data: myparams,
-    }).then((res)=>{
+    }).then((res) => {
       console.log(res)
     })
-
   }, [])
 
   return (
@@ -158,7 +156,14 @@ const Calendar = () => {
                         ></CFormTextarea>
                       </CCol>
                       <CCol className="text-center">
-                        <CButton color="primary" variant="outline" className="add_btn m-2" onClick={()=>{addCalendar()}}>
+                        <CButton
+                          color="primary"
+                          variant="outline"
+                          className="add_btn m-2"
+                          onClick={() => {
+                            addCalendar()
+                          }}
+                        >
                           확인
                         </CButton>
                         <CButton

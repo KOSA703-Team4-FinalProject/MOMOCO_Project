@@ -19,11 +19,19 @@ import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateIssueModal, updateissueNumber } from 'src/store'
 import { AiFillBell } from 'react-icons/ai'
+import axios from 'axios'
+import CryptoJS from 'crypto-js'
+import { PRIMARY_KEY } from '../../oauth'
 
 const Boardwirte = (props) => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
   const issueNumber = useSelector((state) => state.issueNumber)
+
+  //워크스페이스 주소값
+  const params = useParams()
+  console.log(params.url + 'hahah')
+
   const labelselect = {
     width: '200px',
   }
@@ -48,20 +56,55 @@ const Boardwirte = (props) => {
     setInputs(e.target.value)
   }
 
-  //워크스페이스 주소값
-  const params = useParams()
-  console.log(params.url)
   //게시판 글작성
-  const [boardWrite, setboardWrite] = useState({
-    label: '',
-    issue: '',
-    title: '',
-    content: '',
-    nickname: '',
-    w_date: '',
-    b_code: '',
+  const [label, setLabel] = useState('')
+  const [title, setTile] = useState('')
+  const [issue, setIssue] = useState('')
+  const [b_code, setB_date] = useState('')
+  const [content, setContent] = useState('')
+  //로그인한 유저
+  const login = JSON.parse(localStorage.getItem('login'))
+  console.log(login.u_idx + ' ' + login.nickname)
+  const tileName = (e) => {
+    e.preventDefault()
+    setTile(e.target.value)
+    console.log('제목' + e.target.value)
+  }
+  const getIssue = (e) => {
+    setIssue(e.target.value)
+    console.log('이슈번호' + e.target.value)
+  }
+
+  const handleEditorChange = (content) => {
+    setContent(content)
+    console.log('내용' + content)
+  }
+  let [boardWrite, setboardWrite] = useState({
+    label: label,
+    title: issue + title,
+    content: content,
+    nickname: login.nickname,
   })
-  //
+  const myparams = {
+    url: params.url,
+  }
+
+  useEffect(() => {
+    // AES알고리즘 사용 복호화
+    const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+    //인코딩, 문자열로 변환, JSON 변환
+    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+    const accessToken = decrypted.token
+    axios({
+      method: 'post',
+      url: '/board/boardwrite',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: myparams,
+    })
+  }, [])
+
   return (
     <>
       <CCard className="mb-4">
@@ -82,6 +125,7 @@ const Boardwirte = (props) => {
                       <br></br>
                       <CFormSelect
                         style={labelselect}
+                        name="issue"
                         aria-label="라벨"
                         options={[
                           '선택하세요',
@@ -102,8 +146,8 @@ const Boardwirte = (props) => {
                         aria-label="default input example"
                         onKeyUp={onKeyUP}
                         name="issue"
-                        //value={issueNumber}
-                        value={boardWrite.issue}
+                        value={issueNumber}
+                        onChange={getIssue}
                       />
                     </CCol>
                     <CCol className="col-md-6 ps-1" align="left">
@@ -115,8 +159,8 @@ const Boardwirte = (props) => {
                         type="text"
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
-                        onKeyUp={onKeyUP}
-                        onChange={change}
+                        value={title}
+                        onChange={tileName}
                       />
                     </CCol>
                   </CCol>
@@ -136,7 +180,7 @@ const Boardwirte = (props) => {
                     <CCol className="col-md-4">
                       <label>
                         <strong>알림</strong>
-                      </label>{' '}
+                      </label>
                       <br></br>&nbsp;
                       <CFormCheck inline id="inlineCheckbox1" value="option1" label="전체보내기" />
                       <CFormCheck inline id="inlineCheckbox2" value="option2" />
@@ -161,6 +205,8 @@ const Boardwirte = (props) => {
                   <CCol className="row">
                     <CCol className="col-md-12">
                       <Editor
+                        onEditorChange={handleEditorChange}
+                        id="tinyEditor"
                         apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
                         init={{
                           height: 500,
@@ -182,7 +228,7 @@ const Boardwirte = (props) => {
 
                       <br></br>
                       <CCol align="right">
-                        <Link to="/boardlist">
+                        <Link to={`/ws/${params.url}/boardlist`}>
                           <CButton variant="outline">글쓰기</CButton>
                         </Link>
                       </CCol>

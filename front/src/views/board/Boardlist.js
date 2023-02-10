@@ -5,31 +5,21 @@ import {
   CBadge,
   CButton,
   CButtonGroup,
-  CButtonToolbar,
   CCard,
   CCardBody,
-  CCardFooter,
   CCol,
-  CContainer,
-  CForm,
   CFormCheck,
   CFormInput,
-  CFormSelect,
   CInputGroup,
-  CInputGroupText,
   CPagination,
   CPaginationItem,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
-import { useState } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-
+import CryptoJS from 'crypto-js'
+import { PRIMARY_KEY } from '../../oauth'
 const writedate = {}
 const title = {}
 const context = {}
@@ -50,11 +40,32 @@ const ccardsize = {
 const Boardlist = () => {
   const [currentPage, setActivePage] = useState(2)
   const params = useParams()
-  console.log(params)
   const navigate = useNavigate()
+
+  console.log('이건 밖에서' + params.url)
+
   const navigateToboardwrite = (params) => {
     navigate(`/ws/${params.url}/boardwrite`)
   }
+  const myparams = {
+    url: params.url,
+  }
+  useEffect(() => {
+    // AES알고리즘 사용 복호화
+    const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+    //인코딩, 문자열로 변환, JSON 변환
+    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+    const accessToken = decrypted.token
+    axios({
+      method: 'get',
+      url: '/board/boardlist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: myparams,
+    })
+  }, [])
+
   return (
     <>
       <CCard className="mb-4">
@@ -107,37 +118,42 @@ const Boardlist = () => {
                         id="btncheck1"
                         autoComplete="off"
                         label="전체보기"
+                        value={0}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck2"
                         autoComplete="off"
                         label="칸반보드"
+                        value={2}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck3"
                         autoComplete="off"
                         label="캘린더"
+                        value={4}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck4"
                         autoComplete="off"
                         label="문서저장소"
+                        value={3}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck5"
                         autoComplete="off"
                         label="게시판"
+                        value={1}
                       />
                     </CButtonGroup>
                   </div>
                   <div className="col-md-3" align="right">
-                    <CButton variant="outline" onClick={navigateToboardwrite}>
-                      글쓰기
-                    </CButton>
+                    <Link to={`/ws/${params.url}/boardwrite`}>
+                      <CButton variant="outline">글쓰기</CButton>
+                    </Link>
                   </div>
                 </div>
 
