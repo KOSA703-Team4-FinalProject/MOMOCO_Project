@@ -17,15 +17,13 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import bootstrap5 from '@fullcalendar/bootstrap5'
-import CIcon from '@coreui/icons-react'
-import { cilClipboard } from '@coreui/icons'
-import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
+import axios from 'axios'
+import $ from 'jquery'
 
 import { PRIMARY_KEY } from '../../oauth'
-import axios from 'axios'
 
 const Calendar = () => {
   let [addView, setAddView] = useState('d-none')
@@ -33,41 +31,91 @@ const Calendar = () => {
   let [readView, setReadView] = useState('d-none')
   let [attend, setAttend] = useState(false)
   let [schedule, setSchedule] = useState([])
+  const [statusList, setStateList] = useState([])
+  const [calList, setCalList] = useState({})
 
-  let member = useSelector((state) => state.member)
+  const params = useParams()
 
-  const params = useParams();
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
 
-  const addCalendar = ()=>{
-    const login = JSON.parse(localStorage.getItem("login"))
-    console.log(login.u_idx + " " + login.nickname)
-  }
+  const url = params.url
+  const login = JSON.parse(localStorage.getItem('login'))
 
-  useEffect(()=>{
+  //전체 일정 조회
+  useEffect(() => {
+    axios({
+      method: 'POST',
+      url: '/cal/get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        idx: 1,
+        url: url,
+      },
+    }).then((res) => {
 
-    // AES알고리즘 사용 복호화 
-    const bytes = CryptoJS.AES.decrypt(localStorage.getItem("token"), PRIMARY_KEY);
-    //인코딩, 문자열로 변환, JSON 변환
-    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    
-    const accessToken = decrypted.token;
+      const events = []
 
-    const myparams = {
-      url: params.url
+      res.data.map((response)=>{
+
+        const endd = new Date(response.end_date )
+        events.push({ title: response.title, start: response.start_date, end: endd })
+      })
+      console.log(events);
+      setCalList(events)
+    })
+  }, [])
+
+  //상태값 불러오기
+  useEffect(() => {
+    axios({
+      method: 'POST',
+      url: '/api/status/getStatus',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        s_idx: 2,
+        url: url,
+      },
+    }).then((res) => {
+      setStateList(res.data)
+    })
+  }, [])
+
+  //전체 일정 추가
+  const addCal = () => {
+
+    const reqData = {
+      start_date: $('#calstart_date').val(),
+      end_date: $('#calend_date').val(),
+      s_idx: $('#addSelect option:selected').val(),
+      nickname: login.nickname,
+      title: $('#caltitle').val(),
+      content: $('#calcontent').val(),
+      b_code: 4,
+      label: '.',
+      u_idx: login.u_idx,
+      url: url,
     }
 
     axios({
-      method: 'GET',
-      url: '/cal/get',
+      method: 'POST',
+      url: '/cal/add',
       headers: {
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
-      data: myparams,
-    }).then((res)=>{
-      console.log(res)
+      data: reqData,
+    }).then((res) => {
+      console.log(res);
+      addView == '' ? setAddView('d-none') : setAddView('')
     })
-
-  }, [])
+  }
 
   return (
     <>
@@ -79,6 +127,7 @@ const Calendar = () => {
               <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 themeSystem={bootstrap5}
+                initialView="dayGridMonth"
                 headerToolbar={{
                   //캘린더 상단
                   start: 'today parkCustomButton',
@@ -108,75 +157,88 @@ const Calendar = () => {
                 nowIndicator="true" // 현재 시간 마크
                 locale="ko" //한국어 설정
                 dayMaxEventRows="true" //day 그리드에서 지정 일 내 쌓인 최대 일정 수(이벤트 수가 주간 셀의 높이로 제한)
-
-                //events={} 일정 넣는 부분
+                displayEventEnd="true"
+                events={calList} //일정 넣는 부분
                 //eventClick={()=>{}} //일정 클릭시 발생하는 이벤트
               />
             </CCol>
             {/* 일정 추가 시작 */}
-            <CCol className={'add mt-10 col-md-6 park-card p-3 ' + addView}>
-              <CCard>
-                <CCardBody>
-                  <CCol className="h4">
-                    <div className="d-grid gap-2 d-md-flex justify-content-md-between">
-                      <strong className="ms-2 mt-2">일정 추가</strong>
-                      <CButton color="primary" variant="outline" className="me-2 mt-2">
-                        KanBan에서 불러오기
-                      </CButton>
-                    </div>
-                  </CCol>
-                  <CCol className="mt-3">
-                    <CRow className="g-3 mt-2">
-                      <CCol md={12}>
-                        <CFormInput
-                          type="text"
-                          id="caltitle"
-                          floatingLabel="일정"
-                          defaultValue="일정을 추가해주세요"
-                        />
-                      </CCol>
-                      <CCol md={6}>
-                        <CFormInput type="date" id="calstart_date" floatingLabel="시작일" />
-                      </CCol>
-                      <CCol md={6}>
-                        <CFormInput type="date" id="calend_date" floatingLabel="종료일" />
-                      </CCol>
-                      <CCol md={12}>
-                        <CFormSelect id="addSelect">
-                          <option value="1">ToDo</option>
-                          <option value="2">In progress</option>
-                          <option value="3">Done</option>
-                        </CFormSelect>
-                      </CCol>
-                      <CCol md={12}>
-                        <CFormTextarea
-                          type="text"
-                          id="calcontent"
-                          floatingLabel="상세 일정"
-                          placeholder="상세 일정"
-                          style={{ height: '100px' }}
-                        ></CFormTextarea>
-                      </CCol>
-                      <CCol className="text-center">
-                        <CButton color="primary" variant="outline" className="add_btn m-2" onClick={()=>{addCalendar()}}>
-                          확인
+            {addView == 'd-none' ? (
+              <></>
+            ) : (
+              <CCol className={'add mt-10 col-md-6 park-card p-3 '}>
+                <CCard>
+                  <CCardBody>
+                    <CCol className="h4">
+                      <div className="d-grid gap-2 d-md-flex justify-content-md-between">
+                        <strong className="ms-2 mt-2">일정 추가</strong>
+                        <CButton color="primary" variant="outline" className="me-2 mt-2">
+                          KanBan에서 불러오기
                         </CButton>
-                        <CButton
-                          color="primary"
-                          variant="outline"
-                          className="add_reset m-2"
-                          onClick={() => {
-                            addView == '' ? setAddView('d-none') : setAddView('')
-                          }}
-                        >
-                          취소
-                        </CButton>
-                      </CCol>
-                    </CRow>
-                  </CCol>
-                </CCardBody>
-              </CCard>
-            </CCol>
+                      </div>
+                    </CCol>
+                    <CCol className="mt-3">
+                      <CRow className="g-3 mt-2">
+                        <CCol md={12}>
+                          <CFormInput
+                            type="text"
+                            id="caltitle"
+                            floatingLabel="일정"
+                            defaultValue="일정을 추가해주세요"
+                          />
+                        </CCol>
+                        <CCol md={6}>
+                          <CFormInput type="date" id="calstart_date" floatingLabel="시작일" />
+                        </CCol>
+                        <CCol md={6}>
+                          <CFormInput type="date" id="calend_date" floatingLabel="종료일" />
+                        </CCol>
+                        <CCol md={12}>
+                          <CFormSelect id="addSelect">
+                            {statusList.map((sta) => (
+                              <option value={sta.s_idx} key={sta.s_idx}>
+                                {sta.s_name}
+                              </option>
+                            ))}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol md={12}>
+                          <CFormTextarea
+                            type="text"
+                            id="calcontent"
+                            floatingLabel="상세 일정"
+                            placeholder="상세 일정"
+                            style={{ height: '100px' }}
+                          ></CFormTextarea>
+                        </CCol>
+                        <CCol className="text-center">
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            className="add_btn m-2"
+                            onClick={() => {
+                              addCal()
+                            }}
+                          >
+                            확인
+                          </CButton>
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            className="add_reset m-2"
+                            onClick={() => {
+                              addView == '' ? setAddView('d-none') : setAddView('')
+                            }}
+                          >
+                            취소
+                          </CButton>
+                        </CCol>
+                      </CRow>
+                    </CCol>
+                  </CCardBody>
+                </CCard>
+              </CCol>
+            )}
             {/* 일정 추가 끝 */}
             {/* 일정 수정 시작 */}
             <CCol className={'modify mt-10 col-md-6 park-card p-3 ' + modifyView}>
@@ -204,7 +266,7 @@ const Calendar = () => {
                         <CFormInput type="date" id="modifyend_date" floatingLabel="종료일" />
                       </CCol>
                       <CCol md={12}>
-                        <CFormSelect id="addSelect">
+                        <CFormSelect id="updateSelect">
                           <option value="1">ToDo</option>
                           <option value="2">In progress</option>
                           <option value="3">Done</option>

@@ -5,8 +5,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="kr.or.dao.CalendarDao">
 
 	<!-- 전체 일정 조회 public List<Calendar> getCalendar() -->
-	<select id="getCalendar" resultType="kr.or.vo.Calendar">
-		select b_idx, start_date, end_date, idx, s_idx from calendar
+	<select id="getCalendar" parameterType="String" resultType="kr.or.vo.CalendarAll">
+		select e.idx, e.nickname, e.title, e.content, to_char(e.w_date, 'YYYY-MM-DD') as w_date, e.b_code, label, u_idx, c.b_idx, to_char(c.start_date, 'YYYY-MM-DD') as start_date, to_char(c.end_date, 'YYYY-MM-DD') as end_date, c.s_idx
+		from board_${url} e join calendar_${url} c
+		on c.idx = e.idx
 	</select>
 	
 	<!-- 특정 일정 조회 public Calendar getCalendarByB_idx(int b_idx) -->
@@ -17,12 +19,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<!-- 일정 추가 public int addCalendar(Map map) -->
-	<insert id="addCalendar" parameterType="hashMap">
+	<insert id="addCalendar" parameterType="kr.or.vo.CalendarAll">
 		insert all
-			into board (idx, nickname, title, content, b_code, label, u_idx)
-				values (BOARD_IDX_SEQ.nextval, #{board.nickname}, #{board.title}, #{board.content}, #{board.b_code}, #{board.label}, #{board.u_idx})
-			into calendar (b_idx, start_date, end_date, idx, s_idx)
-				values (CALENDAR_B_IDX_SEQ.nextval, to_date(#{calendar.start_date}, 'YYYY/MM/DD'), to_date(#{calendar.end_date}, 'YYYY/MM/DD'), BOARD_IDX_SEQ.CURRVAL, #{calendar.s_idx})
+			into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
+				values (board_idx_seq_${url}.nextval, '${nickname}', '${title}', '${content}', ${b_code}, '${label}', ${u_idx})
+			into board_status_${url} (idx, s_idx)
+				values (board_idx_seq_${url}.currval, ${s_idx})
+			into calendar_${url} (b_idx, start_date, end_date, idx, s_idx)
+				values (calendar_b_idx_seq_${url}.nextval, to_date('${start_date}', 'YY/MM/DD'), to_date('${end_date}', 'YY/MM/DD'), board_idx_seq_${url}.CURRVAL, ${s_idx})
+		select * from dual
 	</insert>
 	
 	<!-- 일정 수정 public int updateCalendar(Calendar calendar) -->
