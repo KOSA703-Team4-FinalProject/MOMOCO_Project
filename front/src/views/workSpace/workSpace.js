@@ -33,6 +33,12 @@ const workSpace = () => {
   const [end_Date, SetEnd_Date] = useState('')
   const [check, SetCheck] = useState('')
 
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+
   const spaceNameHandler = (e) => {
     e.preventDefault()
     SetSpace_Name(e.target.value)
@@ -71,20 +77,13 @@ const workSpace = () => {
     }
 
     if (url != '') {
-      // AES알고리즘 사용 복호화
-      const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-      //인코딩, 문자열로 변환, JSON 변환
-      const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-
-      const accessToken = decrypted.token
-
       axios({
-        method: 'poat',
-        url: 'api/isDomain',
-        data: send,
+        method: 'post',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        url: '/api/isDomain',
+        data: send,
       }).then((data) => {
         if (data.data == 1) {
           SetCheck('사용 불가')
@@ -113,7 +112,14 @@ const workSpace = () => {
     console.log(makeWorkSpace)
 
     if (check === '사용 가능') {
-      axios.post('api/makeWorkSpace', makeWorkSpace).then((data) => {
+      axios({
+        method: 'post',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        url: '/api/makeWorkSpace',
+        data: makeWorkSpace,
+      }).then((data) => {
         console.log(data)
         if (data.data == 1) {
           alert('워크스페이스가 생성되었습니다')
