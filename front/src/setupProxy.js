@@ -25,4 +25,10 @@ module.exports = function (app) {
       changeOrigin: true,
     }),
   )
+  app.use(
+    createProxyMiddleware('/cal', {
+      target: 'http://localhost:8090/controller',
+      changeOrigin: true,
+    }),
+  )
 }

@@ -127,8 +127,8 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist },
-  { path: '/boardcontent', name: 'Boardcontent', exact: true, element: Boardcontent },
+  { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist }, //게시판 전체 보기
+  { path: '/boardcontent', name: 'Boardcontent', exact: true, element: Boardcontent }, //게시판 내용 보기
   { path: '/boardwrite', name: 'Boardwrite', exact: true, element: Boardwrite },
   { path: '/boardedit', name: 'Boardedit', exact: true, element: Boardedit },
   { path: '/mypage', name: 'Mypage', exact: true, element: Mypage },
