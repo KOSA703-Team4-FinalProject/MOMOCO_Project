@@ -34,6 +34,9 @@ import issuelist from '../views/board/issuelist'
 import Issues from 'src/views/board/Issues'
 import { data } from 'jquery'
 import momoco from '../assets/images/momocologo.png'
+import WorkSpaceListItem from 'src/components/WorkSpaceListItem'
+import { CButton } from '@coreui/react'
+import { CCard } from '@coreui/react'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -60,10 +63,15 @@ const AppHeader = () => {
             {/* 워크스페이스 리스트 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-                <BsFillHouseDoorFill /> <strong>{params.url}</strong>
+                <strong>{params.url}</strong>
               </CDropdownToggle>
               <CDropdownMenu>
-                <CDropdownItem>워크스페이스 리스트 컴포넌트</CDropdownItem>
+                <CNavLink align="center" to={'/workspace'} component={NavLink}>
+                  <CButton className="mx-1" color="primary" shape="rounded-pill">
+                    <strong>새 워스크페이스 만들기</strong>
+                  </CButton>
+                </CNavLink>
+                <WorkSpaceListItem width="400px" height="400px" overflowY="scroll" />
               </CDropdownMenu>
             </CDropdown>
           </CNavItem>

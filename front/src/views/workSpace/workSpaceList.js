@@ -32,19 +32,13 @@ import { PRIMARY_KEY } from '../../oauth'
 
 const workSpaceList = () => {
   const Container = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: linear-gradient(
         to right,
         rgba(20, 20, 20, 0.1) 10%,
         rgba(20, 20, 20, 0.7) 70%,
         rgba(20, 20, 20, 1)
       ),
-      url(https://source.unsplash.com/random/1920x1080);
-    background-size: cover;
+      url(https://picsum.photos/1920/1080/?blur=2​);
   `
   const [workspacelist, setWorkspacelist] = useState([])
   const navigate = useNavigate()
@@ -57,26 +51,25 @@ const workSpaceList = () => {
   }
 
   return (
-    <>
-      <div className="min-vh-100 align-items-center">
-        <CRow className="justify-content-center">
-          <CCol md={8}>
+    <Container>
+      <div className="min-vh-100 d-flex align-items-center justify-content-center">
+        <CRow>
+          <CCol md={12}>
             <CCardGroup>
-              <CCard className="p-4">
-                <CCardBody>
-                  <CForm>
-                    <h2>
-                      <strong>{params.nickname}`s WorkSpace </strong>
-                    </h2>
-                    <WorkSpaceListItem />
-                  </CForm>
-                </CCardBody>
-              </CCard>
+              <CCardBody>
+                <CForm>
+                  <h2>
+                    <strong className="text-light">{params.nickname}`s WorkSpace </strong>
+                  </h2>
+                  <br />
+                  <WorkSpaceListItem width="600px" />
+                </CForm>
+              </CCardBody>
             </CCardGroup>
           </CCol>
         </CRow>
       </div>
-    </>
+    </Container>
   )
 }
 
