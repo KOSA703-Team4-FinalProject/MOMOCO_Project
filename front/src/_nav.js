@@ -1,6 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
+  cifKr,
   cilBarcode,
   cilBell,
   cilCalculator,
@@ -21,14 +22,14 @@ import {
   cilTask,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-import { CiViewTimeline } from "react-icons/ci";
+import { CiViewTimeline } from 'react-icons/ci'
 
 const _nav = [
   {
     component: CNavItem,
     name: '전체보기',
     to: '/boardlist',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    icon: <CIcon icon={cifKr} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
@@ -62,15 +63,15 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Git 타임라인',
+    name: 'Git 차트',
     to: '/gitchart',
-    icon: <CIcon icon={cilListRich} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Git 차트',
+    name: 'Git 타임라인',
     to: '/gittimeline',
-    icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilListRich} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
