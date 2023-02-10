@@ -19,25 +19,55 @@ import interactionPlugin from '@fullcalendar/interaction'
 import bootstrap5 from '@fullcalendar/bootstrap5'
 import CIcon from '@coreui/icons-react'
 import { cilClipboard } from '@coreui/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import CryptoJS from 'crypto-js'
+
+import { PRIMARY_KEY } from '../../oauth'
+import axios from 'axios'
 
 const Calendar = () => {
   let [addView, setAddView] = useState('d-none')
   let [modifyView, setModifyView] = useState('d-none')
   let [readView, setReadView] = useState('d-none')
   let [attend, setAttend] = useState(false)
+  let [schedule, setSchedule] = useState([])
 
   let member = useSelector((state) => state.member)
 
   const params = useParams();
-  console.log(params.url)
 
   const addCalendar = ()=>{
     const login = JSON.parse(localStorage.getItem("login"))
     console.log(login.u_idx + " " + login.nickname)
   }
+
+  useEffect(()=>{
+
+    // AES알고리즘 사용 복호화 
+    const bytes = CryptoJS.AES.decrypt(localStorage.getItem("token"), PRIMARY_KEY);
+    //인코딩, 문자열로 변환, JSON 변환
+    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    
+    const accessToken = decrypted.token;
+
+    const myparams = {
+      url: params.url
+    }
+
+    axios({
+      method: 'GET',
+      url: '/cal/get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      data: myparams,
+    }).then((res)=>{
+      console.log(res)
+    })
+
+  }, [])
 
   return (
     <>

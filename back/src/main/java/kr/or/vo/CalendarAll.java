@@ -18,5 +18,7 @@ public class CalendarAll {
 	private int b_code;			//게시판 코드
 	private String label;		//라벨 키워드
 	private int u_idx;			//깃헙 키
+	
+	private String url;		//워크스페이스 주소
 
 }
