@@ -37,7 +37,6 @@ public class WorkSpaceController {
 	public int isDomain(@RequestBody WorkSpace workspace) {
 			
 		int result = workspaceservice.isDomain(workspace.getUrl());
-		System.out.println(result);
 		
 		return result;
 	}
@@ -45,8 +44,6 @@ public class WorkSpaceController {
 	//해당 유저가 소속된 워크스페이스 전체 조회
 	@RequestMapping(value="/getWorkSpace", method=RequestMethod.POST)
 	public List<WorkSpace> getWorkSpace(@RequestBody Member member) {
-		
-		System.out.println(member.toString());
 		
 		List<WorkSpace> workspacelist = workspaceservice.getWorkSpace(member.getU_idx());
 		

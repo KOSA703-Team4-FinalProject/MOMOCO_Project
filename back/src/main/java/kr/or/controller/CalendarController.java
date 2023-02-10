@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.BoardService;
@@ -27,49 +29,24 @@ public class CalendarController {
 		this.calendarservice = calendarservice;
 	}
 	
-	private BoardService boardservice;
-	
-	@Autowired
-	public void setBoardService(BoardService boardservice) {
-		this.boardservice = boardservice;
-	}
-	
 	//전체 일정 조회
-	@RequestMapping(value="/", method=RequestMethod.GET)
-	public JSONObject getCalendar() {
+	@RequestMapping(value="/get", method=RequestMethod.POST)
+	public List<CalendarAll> getCalendar(@RequestBody CalendarAll url) {
 		
-		List<Calendar> calendar = new ArrayList<Calendar>();
-		List<Board> board = new ArrayList<Board>();
+		
+		List<CalendarAll> calendar = new ArrayList<CalendarAll>();
 	
-		calendar = calendarservice.getCalendar();
-		board = boardservice.getBoard();
+		calendar = calendarservice.getCalendar(url.getUrl());
 		
-		JSONObject jsonObject = new JSONObject();
 		
-		jsonObject.put("calendar", calendar);
-		jsonObject.put("board", board);
-		
-		return jsonObject;
+		return calendar;
 	}
 	
 	//일정 추가
-	@RequestMapping(value="/", method=RequestMethod.POST)
-	public int addCalendar(@RequestBody  CalendarAll calendarAll) {
+	@RequestMapping(value="/add", method=RequestMethod.POST)
+	public int addCalendar(@RequestBody CalendarAll calendarAll) {
 		
-		Calendar calendar = new Calendar();
-		calendar.setStart_date(calendarAll.getStart_date());
-		calendar.setEnd_date(calendarAll.getEnd_date());
-		calendar.setS_idx(calendarAll.getS_idx());
-		
-		Board board = new Board();
-		board.setNickname(calendarAll.getNickname());
-		board.setTitle(calendarAll.getTitle());
-		board.setContent(calendarAll.getContent());
-		board.setB_code(calendarAll.getB_code());
-		board.setLabel(calendarAll.getLabel());
-		board.setU_idx(calendarAll.getU_idx());
-		
-		int result = calendarservice.addCalendar(calendar, board);
+		int result = calendarservice.addCalendar(calendarAll);
 	
 		return result;
 	}
