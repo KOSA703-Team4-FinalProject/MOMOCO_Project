@@ -39,5 +39,18 @@ public class BoardService {
 		
 		return board;
 	}
-
+	//글작성
+	public int addBoard(Board board) {
+		int result = 0;
+		try {
+			BoardDao boarddao =sqlsession.getMapper(BoardDao.class);
+			result = boarddao.addBoard(board);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			
+		return result;
+	}
 }
