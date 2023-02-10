@@ -32,7 +32,7 @@ const RegAndLoginHeader = () => {
         <CHeaderBrand className="mx-auto d-md-none" to="/">
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
-        <CHeaderNav className="d-none d-md-flex me-auto">
+        <CHeaderNav className="justify-content-center">
           <CNavItem>
             <CNavLink to="/" component={NavLink}>
               <img src={momocologo} width="20%" />
@@ -57,13 +57,13 @@ const RegAndLoginHeader = () => {
           } 이건 나중에 처리 */}
 
           <CNavItem>
-            <CNavLink to="/workSpaceList" component={NavLink}>
-              워크스페이스
+            <CNavLink className="my-auto" to="/workSpaceList" component={NavLink}>
+              <strong>나의 워크스페이스</strong>
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink to="/aboutus" component={NavLink}>
-              모모코란?
+            <CNavLink className="my-auto" to="/aboutus" component={NavLink}>
+              <strong>모모코란?</strong>
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

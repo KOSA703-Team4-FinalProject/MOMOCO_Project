@@ -58,10 +58,28 @@ const workSpaceList = () => {
             <CCardGroup>
               <CCardBody>
                 <CForm>
-                  <h2>
-                    <strong className="text-light">{params.nickname}`s WorkSpace </strong>
-                  </h2>
-                  <br />
+                  <CRow>
+                    <CCol xs="auto" className="me-auto">
+                      <h2>
+                        <strong className="text-light">{params.nickname}`s WorkSpace </strong>
+                      </h2>
+                      <br />
+                    </CCol>
+                    <CCol xs="auto" className="my-auto">
+                      <div align="right">
+                        <h5
+                          onClick={() => {
+                            navigate('/workSpace')
+                          }}
+                        >
+                          <strong className="text-light">
+                            <CIcon icon={icon.cilMedicalCross} /> Add WorkSpace
+                          </strong>
+                        </h5>
+                      </div>
+                    </CCol>
+                  </CRow>
+
                   <WorkSpaceListItem width="600px" />
                 </CForm>
               </CCardBody>
