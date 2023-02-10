@@ -31,4 +31,10 @@ module.exports = function (app) {
       changeOrigin: true,
     }),
   )
+  app.use(
+    createProxyMiddleware('/board', {
+      target: 'http://localhost:8090/controller',
+      changeOrigin: true,
+    }),
+  )
 }

@@ -13,5 +13,6 @@ public class Board {
 	private int b_code;			//게시판 코드
 	private String label;		//라벨 키워드
 	private int u_idx;			//깃헙 키
+	
 
 }

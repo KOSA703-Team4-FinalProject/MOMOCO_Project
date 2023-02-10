@@ -1,5 +1,8 @@
 package kr.or.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,19 @@ public class BoardController {
 	public void BoardSerive(BoardService boardservice) {
 		this.boardservice = boardservice;
 	}
+	//글 리스트
+	@RequestMapping(value="/baordlist",method =RequestMethod.GET)
+	public ResponseEntity<List<Board>> boardlist(){
+		List<Board> list = new ArrayList<Board>();
+		try {
+			System.out.println("list 정상실행");
+			return new ResponseEntity<List<Board>>(list,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<Board>>(list,HttpStatus.BAD_REQUEST);
+		}
+		
+		}
+	
 	//게시판 글작성
 	@RequestMapping(value="/boardwrite",method=RequestMethod.POST)
 	public ResponseEntity<String> insert (@RequestBody Board board){
