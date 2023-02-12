@@ -29,7 +29,7 @@ const Login = () => {
 
   return (
     <>
-      <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      <div className="min-vh-100 d-flex flex-row align-items-center">
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCardGroup>
@@ -84,7 +84,7 @@ const Login = () => {
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                       tempor incididunt ut labore et dolore magna aliqua.
                     </p>
-                    <CButton color="primary" className="my-3" active tabIndex={-1}>
+                    <CButton color="primary" className="mt-3" active tabIndex={-1}>
                       회원가입
                     </CButton>
                   </div>

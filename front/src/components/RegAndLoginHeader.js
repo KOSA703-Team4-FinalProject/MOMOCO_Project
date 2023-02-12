@@ -1,76 +1,113 @@
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useState } from 'react'
 import {
+  CButton,
+  CCol,
+  CCollapse,
   CContainer,
-  CHeader,
-  CHeaderBrand,
-  CHeaderDivider,
-  CHeaderNav,
-  CHeaderToggler,
-  CNavLink,
+  CDropdown,
+  CDropdownDivider,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
+  CForm,
+  CFormInput,
+  CNavbar,
+  CNavbarBrand,
+  CNavbarNav,
+  CNavbarToggler,
   CNavItem,
+  CNavLink,
+  CRow,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
-
-import { AppBreadcrumb } from './index'
-import momocologo from '../assets/images/momocologo.png'
-import { AppHeaderDropdown } from './header/index'
-import { logo } from 'src/assets/brand/logo'
+import momoco from '../assets/images/momocologo.png'
+import { NavLink } from 'react-router-dom'
 
 const RegAndLoginHeader = () => {
-  const dispatch = useDispatch()
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+  const [visible, setVisible] = useState(false)
 
-  const [login, SetLogin] = useState(false)
-
-  // 로그인, 회원가입 전용 헤더(토글 삭제 및 필요없는 아이콘삭제 > 로그인 전 화면에만 적용)
   return (
-    <CHeader position="sticky" className="mb-4">
-      <CContainer fluid>
-        <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <CIcon icon={logo} height={48} alt="Logo" />
-        </CHeaderBrand>
-        <CHeaderNav className="justify-content-center">
-          <CNavItem>
-            <CNavLink to="/" component={NavLink}>
-              <img src={momocologo} width="20%" />
-              {/* 여기에 모모코 로고 들어감 */}
-            </CNavLink>
-          </CNavItem>
+    <>
+      <CNavbar expand="lg" colorScheme="light" className="bg-light">
+        <CContainer fluid>
+          <CNavbarBrand href="">
+            <CCol className="align-self-center">
+              <h1>
+                <img src={momoco} width="75px" />
+                <strong> momoco</strong>
+              </h1>
+            </CCol>
+          </CNavbarBrand>
+          <CNavbarToggler
+            aria-label="Toggle navigation"
+            aria-expanded={visible}
+            onClick={() => setVisible(!visible)}
+          />
 
-          {/* {
-            (login = true ? (
-              <CNavItem>
-                <CNavLink to="/gitlogin" component={NavLink}>
-                  로그아웃
+          <CCollapse className="navbar-collapse" visible={visible}>
+            <CNavbarNav>
+              <CNavItem className="px-4">
+                <CDropdown variant="nav-item" popper={false}>
+                  <h4>
+                    <CDropdownToggle color="secondary">
+                      <strong>워크스페이스</strong>
+                    </CDropdownToggle>
+                    <CDropdownMenu>
+                      <CDropdownItem>
+                        <CNavLink to="/workSpace" component={NavLink}>
+                          워크스페이스 만들기
+                        </CNavLink>
+                      </CDropdownItem>
+                      <CDropdownItem>
+                        <CNavLink to="/workSpaceList" component={NavLink}>
+                          나의 워크스페이스 목록
+                        </CNavLink>
+                      </CDropdownItem>
+                      <CDropdownDivider />
+                      <CDropdownItem>Something else here</CDropdownItem>
+                    </CDropdownMenu>
+                  </h4>
+                </CDropdown>
+              </CNavItem>
+              <CNavItem className="px-4">
+                <CDropdown variant="nav-item" popper={false}>
+                  <h4>
+                    <CDropdownToggle color="secondary">
+                      <strong> About 모모코</strong>
+                    </CDropdownToggle>
+                    <CDropdownMenu>
+                      <CDropdownItem>
+                        <CNavLink to="/aboutus" component={NavLink}>
+                          모모코란?
+                        </CNavLink>
+                      </CDropdownItem>
+                      <CDropdownItem>
+                        <CNavLink to="/aboutus" component={NavLink}>
+                          프로젝트 소개
+                        </CNavLink>
+                      </CDropdownItem>
+                      <CDropdownDivider />
+                      <CDropdownItem href="#">
+                        <CNavLink to="/aboutus" component={NavLink}>
+                          모모코 팀
+                        </CNavLink>
+                      </CDropdownItem>
+                    </CDropdownMenu>
+                  </h4>
+                </CDropdown>
+              </CNavItem>
+              <CNavItem className="px-4">
+                <CNavLink href="#" disabled>
+                  <strong>
+                    <h4> Contact us</h4>
+                  </strong>
                 </CNavLink>
               </CNavItem>
-            ) : (
-              <CNavItem>
-                <CNavLink to="/gitlogin" component={NavLink}>
-                  로그인
-                </CNavLink>
-              </CNavItem>
-            ))
-          } 이건 나중에 처리 */}
-
-          <CNavItem>
-            <CNavLink className="my-auto" to="/workSpaceList" component={NavLink}>
-              <strong>나의 워크스페이스</strong>
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink className="my-auto" to="/aboutus" component={NavLink}>
-              <strong>모모코란?</strong>
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav>
-        <CHeaderNav></CHeaderNav>
-      </CContainer>
-      <CHeaderDivider />
-    </CHeader>
+            </CNavbarNav>
+          </CCollapse>
+        </CContainer>
+      </CNavbar>
+    </>
   )
 }
 

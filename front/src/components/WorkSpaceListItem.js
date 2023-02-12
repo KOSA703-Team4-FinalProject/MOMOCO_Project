@@ -53,8 +53,8 @@ const WorkSpaceListItem = (props) => {
               color="dark"
               icon={<CIcon icon={icon.cibGithub} height={24} />}
               padding={false}
-              title={data.space_name}
-              value="89.9%"
+              title={' (momoco.kr/ws/' + data.url + ')'}
+              value={data.space_name + ' (' + data.start_date + '~ ' + data.end_date + ')'}
             />
           </CCardBody>
         )

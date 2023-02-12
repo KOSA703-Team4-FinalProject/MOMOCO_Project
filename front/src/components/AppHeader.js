@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -44,6 +44,7 @@ const AppHeader = () => {
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
   const params = useParams()
+  const navigate = useNavigate()
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -64,14 +65,35 @@ const AppHeader = () => {
             {/* 워크스페이스 리스트 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-                <strong>{params.url}</strong>
+                <BsFillHouseDoorFill />
+                <strong> {params.url}</strong>
               </CDropdownToggle>
               <CDropdownMenu>
-                <CNavLink align="center" to={'/workspace'} component={NavLink}>
-                  <CButton className="mx-1" color="primary" shape="rounded-pill">
-                    <strong>새 워스크페이스 만들기</strong>
-                  </CButton>
-                </CNavLink>
+                <CRow className="mb-2 px-2">
+                  <CCol className="my-auto px-4" md={4}>
+                    <strong>MY SPACE</strong>
+                  </CCol>
+                  <CCol md={8} align="end">
+                    <CButton
+                      onClick={() => navigate('/workspace')}
+                      className="mx-1"
+                      color="primary"
+                      variant="outline"
+                      shape="rounded-pill"
+                    >
+                      <strong>만들기</strong>
+                    </CButton>
+                    <CButton
+                      onClick={() => navigate('/workspacelist')}
+                      className="mx-1"
+                      color="dark"
+                      variant="outline"
+                      shape="rounded-pill"
+                    >
+                      <strong>전체보기</strong>
+                    </CButton>
+                  </CCol>
+                </CRow>
                 <CRow className="px-2">
                   <WorkSpaceListItem width="400px" maxHeight="400px" overflowY="scroll" />
                 </CRow>
@@ -89,7 +111,6 @@ const AppHeader = () => {
             {/* 알림 이모티콘 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-                {' '}
                 <CIcon icon={cilBell} size="lg" />
               </CDropdownToggle>
               <CDropdownMenu>
@@ -101,7 +122,6 @@ const AppHeader = () => {
             {/* 채팅 이모티콘 */}
             <CDropdown autoClose={false}>
               <CDropdownToggle color="ghost">
-                {' '}
                 <CIcon
                   icon={cilCommentSquare}
                   size="lg"

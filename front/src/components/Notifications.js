@@ -30,7 +30,7 @@ import { CAvatar } from '@coreui/react'
 
 const NotisStyle = {
   width: '400px',
-  height: '600px',
+  maxHeight: '600px',
   overflowY: 'scroll',
 }
 

@@ -29,9 +29,7 @@ const Comments = () => {
                 />
                 <strong> 메타몽</strong>
               </CCol>
-              <CCol className="col-md-2 px-4" align="end">
-                2023-02-16 02:20:12
-              </CCol>
+              <CCol className="col-md-2 px-4">2023-02-16 02:20:12</CCol>
             </CCol>
             <CCol class="row" align="center">
               <CCol class="col-md-12 py-3 px-4">
