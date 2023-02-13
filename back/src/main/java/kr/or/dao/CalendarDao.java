@@ -5,23 +5,22 @@ import java.util.List;
 import java.util.Map;
 
 import kr.or.vo.Calendar;
-import kr.or.vo.CalendarAll;
 
 public interface CalendarDao {
 	
 	//전체 일정 조회
-	public List<CalendarAll> getCalendar(String url) throws ClassNotFoundException, SQLException;
+	public List<Calendar> getCalendar(String url) throws ClassNotFoundException, SQLException;
 	
 	//특정 일정 조회
-	public CalendarAll getCalendarByTitle(CalendarAll cal) throws ClassNotFoundException, SQLException;
+	public Calendar getCalendarByTitle(Calendar cal) throws ClassNotFoundException, SQLException;
 	
 	//일정 추가
-	public int addCalendar(CalendarAll all) throws ClassNotFoundException, SQLException;
+	public int addCalendar(Calendar all) throws ClassNotFoundException, SQLException;
 	
 	//일정 수정
 	public int updateCalendar(Calendar calendar) throws ClassNotFoundException, SQLException;
 	
 	//일정 삭제
-	public int deleteCalendar(int b_idx) throws ClassNotFoundException, SQLException;
+	public int deleteCalendar(Calendar calendar) throws ClassNotFoundException, SQLException;
 
 }

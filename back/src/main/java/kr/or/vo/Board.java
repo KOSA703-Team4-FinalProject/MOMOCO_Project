@@ -18,5 +18,7 @@ public class Board {
 	
 	private String url;			//워크스페이스 url
 	
-	private List<Comments> comments;
+	private List<Comments> comments; 	//댓글
+	
+	private List<Checked> checked;	//확인
 }

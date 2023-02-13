@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.CalendarService;
 import kr.or.vo.Calendar;
-import kr.or.vo.CalendarAll;
 
 @RestController
 @RequestMapping("/cal")
@@ -26,10 +25,10 @@ public class CalendarController {
 	
 	//전체 일정 조회
 	@RequestMapping(value="/get", method=RequestMethod.POST)
-	public List<CalendarAll> getCalendar(@RequestBody CalendarAll url) {
+	public List<Calendar> getCalendar(@RequestBody Calendar url) {
 		
 		
-		List<CalendarAll> calendar = new ArrayList<CalendarAll>();
+		List<Calendar> calendar = new ArrayList<Calendar>();
 	
 		calendar = calendarservice.getCalendar(url.getUrl());
 		
@@ -39,7 +38,7 @@ public class CalendarController {
 	
 	//일정 추가
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public int addCalendar(@RequestBody CalendarAll calendarAll) {
+	public int addCalendar(@RequestBody Calendar calendarAll) {
 		
 		int result = calendarservice.addCalendar(calendarAll);
 	
@@ -48,14 +47,32 @@ public class CalendarController {
 	
 	//일정 확인
 	@RequestMapping(value="/read", method=RequestMethod.POST)
-	public CalendarAll getCalendarByTitle(@RequestBody CalendarAll cal) {
+	public Calendar getCalendarByTitle(@RequestBody Calendar cal) {
 		
-		CalendarAll calendar = new CalendarAll();
+		Calendar calendar = new Calendar();
 	
 		calendar = calendarservice.readCalendar(cal);
 		
 		
 		return calendar;
+	}
+	
+	//일정 수정
+	@RequestMapping(value="/modify", method=RequestMethod.POST)
+	public int modifyCalendar(@RequestBody Calendar calendar) {
+		
+		int result = calendarservice.modifyCalendar(calendar);
+		
+		return result;
+	}
+	
+	//일정 삭제
+	@RequestMapping(value="/delete", method=RequestMethod.POST)
+	public int deleteCalendar(@RequestBody Calendar calendar) {
+		
+		int result = calendarservice.deleteCalendar(calendar);
+		
+		return result;
 	}
 	
 }
