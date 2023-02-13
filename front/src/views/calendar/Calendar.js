@@ -32,6 +32,7 @@ const Calendar = () => {
   const [calList, setCalList] = useState({})
   const [readCalList, setReadCalList] = useState({})
   const [start_date, setStart_date] = useState('')
+  const [checkList, setCheckList] = useState([])
 
   const params = useParams()
 
@@ -107,7 +108,6 @@ const Calendar = () => {
       },
       data: reqData,
     }).then((res) => {
-      console.log(res)
       view == '' ? setView('add') : setView('')
     })
   }
@@ -129,10 +129,8 @@ const Calendar = () => {
       },
       data: reqData,
     }).then((res) => {
+      setCheckList(res.data.checked)
       setReadCalList(res.data)
-
-      
-
     })
   }
 
@@ -178,8 +176,29 @@ const Calendar = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       data: reqData,
-    }).then((res)=>{
+    }).then((res) => {
       setView('')
+    })
+  }
+
+  //일정 참석하기
+  const addCheck = () => {
+    const reqData2 = {
+      idx: readCalList.idx,
+      u_idx: login.u_idx,
+      nickname: login.nickname,
+      url: url,
+    }
+
+    axios({
+      method: 'POST',
+      url: '/api/check/add',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData2,
+    }).then((res) => {
+      console.log(res)
     })
   }
 
@@ -209,10 +228,20 @@ const Calendar = () => {
                       />
                     </CCol>
                     <CCol md={6}>
-                      <CFormInput type="date" id="calstart_date" floatingLabel="시작일" defaultValue={start_date} />
+                      <CFormInput
+                        type="date"
+                        id="calstart_date"
+                        floatingLabel="시작일"
+                        defaultValue={start_date}
+                      />
                     </CCol>
                     <CCol md={6}>
-                      <CFormInput type="date" id="calend_date" floatingLabel="종료일" defaultValue={start_date} />
+                      <CFormInput
+                        type="date"
+                        id="calend_date"
+                        floatingLabel="종료일"
+                        defaultValue={start_date}
+                      />
                     </CCol>
                     <CCol md={12}>
                       <CFormSelect id="addSelect">
@@ -271,7 +300,7 @@ const Calendar = () => {
                   </div>
                 </CCol>
                 <CCol className="mt-3">
-                  <CRow className="g-3 mt-2">
+                  <CRow className="g-3 mt-2 mx-3">
                     <CCol md={12}>
                       <h5 className="titlediv">
                         <strong>{readCalList.nickname}</strong>
@@ -302,26 +331,23 @@ const Calendar = () => {
                         </CCardBody>
                       </CCard>
                     </div>
-                    <div className="row mt-3">
+                    <div className="row mt-5">
                       <div className="col-md-4">
                         <CFormCheck
                           button={{ color: 'primary', variant: 'outline' }}
                           id="gridCheck2"
                           autoComplete="off"
                           label="참석하기"
+                          onClick={addCheck}
                         />
                       </div>
                       <div className="col-md-8 mt-1" align="right">
                         <strong>참석 : </strong>
-                        <CAvatar color="secondary" status="success">
-                          gkg
+                        {checkList.map((data) => (
+                          <CAvatar color="primary" textColor="white" shape="rounded"  key={data.u_idx}>
+                          {data.nickname}..
                         </CAvatar>
-                        <CAvatar color="secondary" status="success">
-                          humm
-                        </CAvatar>
-                        <CAvatar color="secondary" status="danger">
-                          hi
-                        </CAvatar>
+                        ))}
                       </div>
                     </div>
                     <div className="col-md-12 text-center">
@@ -337,7 +363,12 @@ const Calendar = () => {
                           >
                             수정
                           </CButton>
-                          <CButton color="primary" variant="outline" className="deletebtn m-1" onClick={deleteCal}>
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            className="deletebtn m-1"
+                            onClick={deleteCal}
+                          >
                             삭제
                           </CButton>
                         </>
@@ -417,7 +448,12 @@ const Calendar = () => {
                       ></CFormTextarea>
                     </CCol>
                     <CCol className="text-center">
-                      <CButton color="primary" variant="outline" className="modify_btn m-2" onClick={modifyCal}>
+                      <CButton
+                        color="primary"
+                        variant="outline"
+                        className="modify_btn m-2"
+                        onClick={modifyCal}
+                      >
                         확인
                       </CButton>
                       <CButton
@@ -443,7 +479,7 @@ const Calendar = () => {
   }
 
   const contentS = {
-    minHeight: '200px',
+    minHeight: '150px',
   }
 
   return (

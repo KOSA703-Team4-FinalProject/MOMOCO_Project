@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.or.dao.BoardDao;
 import kr.or.dao.BoardStatusDao;
 import kr.or.dao.CalendarDao;
+import kr.or.dao.CheckedDao;
 import kr.or.vo.Board;
 import kr.or.vo.BoardStatus;
 import kr.or.vo.Calendar;
+import kr.or.vo.Checked;
 
 @Service
 public class CalendarService {
@@ -65,6 +67,7 @@ public class CalendarService {
 	}
 
 	// 일정 읽기
+	@Transactional
 	public Calendar readCalendar(Calendar all) {
 		Calendar cal = new Calendar();
 
@@ -73,7 +76,18 @@ public class CalendarService {
 			CalendarDao calendardao = sqlsession.getMapper(CalendarDao.class);
 			cal = calendardao.getCalendarByTitle(all);
 			
-
+			//해당 글의 체크리스트 확인
+			Checked check = new Checked();
+			check.setIdx(cal.getIdx());
+			check.setUrl(all.getUrl());
+			
+			List<Checked> checkList = new ArrayList<Checked>();
+			
+			CheckedDao checkdao = sqlsession.getMapper(CheckedDao.class);
+			checkList = checkdao.getCheckedByIdx(check);
+			
+			cal.setChecked(checkList);
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
