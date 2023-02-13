@@ -36,10 +36,55 @@ import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import KanbanItem from '../../components/KanbanItem'
 import { useEffect, useRef, useState } from 'react'
 import HorizontalScroll from 'react-horizontal-scrolling'
+import CryptoJS from 'crypto-js'
+import axios from 'axios'
+import { PRIMARY_KEY } from '../../oauth'
 import { width } from '@mui/system'
+import { Navigate, useParams } from 'react-router-dom'
+import $ from 'jquery'
 
 const Kanban = () => {
   const [visible, setVisible] = useState(false)
+
+  // 변수
+  const [addKanbanItem, setAddKanbanItem] = useState([])
+
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+  const params = useParams()
+
+  const url = params.url
+  const login = JSON.parse(localStorage.getItem('login'))
+
+  //전체 일정 추가
+  const addKanban = () => {
+    const reqData = {
+      s_idx: $('#status_select option:selected').val(),
+      nickname: login.nickname,
+      title: $('#kanbantitle').val(),
+      content: $('#kanbancontent').val(),
+      b_code: 6,
+      label: '.',
+      u_idx: login.u_idx,
+      url: url,
+    }
+
+    axios({
+      method: 'POST',
+      url: '/api/kanban/addKanban',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData,
+    }).then((res) => {
+      console.log(res)
+      alert('등록되었습니다.')
+      location.reload()
+    })
+  }
 
   /**
    * [x] 엘리먼트의 .draggable, .container의 배열로 선택자를 지정합니다.
@@ -107,29 +152,28 @@ const Kanban = () => {
             <div className="mb-3">
               <CIcon icon={icon.cibGithub} className="me-2" />
               <CFormLabel htmlFor="exampleFormControlInput1">Add Item</CFormLabel>
-              <CFormInput
-                type="email"
-                id="exampleFormControlInput1"
-                placeholder="제목을 입력해주세요"
-              />
+              <CFormInput type="email" id="kanbantitle" placeholder="제목을 입력해주세요" />
             </div>
-
             <hr />
-
+            상태 입력
+            <br />
+            <br />
             <CFormSelect
+              id="status_select"
               aria-label="상태 입력"
               options={[
-                '상태 입력',
-                { label: '상태1', value: '1' },
-                { label: '상태2', value: '2' },
-                { label: '상태3', value: '3' },
+                { label: '진행 전', value: '1' },
+                { label: '진행중', value: '2' },
+                { label: '완료', value: '3' },
               ]}
             />
             <br />
             <div className="mb-3">
               <CFormLabel htmlFor="exampleFormControlTextarea1">내용</CFormLabel>
+              <br />
+              <br />
               <CFormTextarea
-                id="exampleFormControlTextarea1"
+                id="kanbancontent"
                 rows={4}
                 placeholder="내용을 입력해주세요"
               ></CFormTextarea>
@@ -140,7 +184,14 @@ const Kanban = () => {
           <CButton color="secondary" onClick={() => setVisible(false)}>
             취소
           </CButton>
-          <CButton color="primary">등록</CButton>
+          <CButton
+            color="primary"
+            onClick={() => {
+              addKanban()
+            }}
+          >
+            등록
+          </CButton>
           {/* 등록 시 알림 sweetalert2 */}
         </CModalFooter>
       </CModal>
@@ -150,181 +201,8 @@ const Kanban = () => {
           <CCardBody className="mx-2">
             <CRow>
               {/*  */}
-              <CCard style={{ width: '300px' }} className="bg-light py-3 me-2 container1">
-                <CRow>
-                  <CCol xs="auto" className="me-auto bg-light">
-                    To-Do
-                  </CCol>
-                  <CCol xs="auto">
-                    {' '}
-                    <CDropdown alignment="end">
-                      <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} />
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
-                        <CDropdownItem>Something else here...</CDropdownItem>
-                        <CDropdownItem disabled>Disabled action</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </CCol>
-                </CRow>
-
-                {/* 카드가 들어갈 곳 */}
-                <KanbanItem />
-                <KanbanItem />
-              </CCard>
-              {/*  */}
-
-              <CCard style={{ width: '300px' }} className="bg-light py-3 me-2 container1">
-                <CRow>
-                  <CCol xs="auto" className="me-auto">
-                    In Progress
-                  </CCol>
-                  <CCol xs="auto">
-                    {' '}
-                    <CDropdown alignment="end">
-                      <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} />
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
-                        <CDropdownItem>Something else here...</CDropdownItem>
-                        <CDropdownItem disabled>Disabled action</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </CCol>
-                </CRow>
-
-                {/* 카드가 들어갈 곳 */}
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-              </CCard>
-
-              <CCard style={{ width: '300px' }} className="bg-light py-3 me-2 container1">
-                <CRow>
-                  <CCol xs="auto" className="me-auto">
-                    Done
-                  </CCol>
-                  <CCol xs="auto">
-                    {' '}
-                    <CDropdown alignment="end">
-                      <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} />
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
-                        <CDropdownItem>Something else here...</CDropdownItem>
-                        <CDropdownItem disabled>Disabled action</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </CCol>
-                </CRow>
-
-                {/* 카드가 들어갈 곳 */}
-                <div className="py-1">
-                  <KanbanItem />
-                  {/* 여기에 계속 추가되면 됩니다.... */}
-                </div>
-
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-              </CCard>
-
-              <CCard style={{ width: '300px' }} className="bg-light py-3 me-2 container1">
-                <CRow>
-                  <CCol xs="auto" className="me-auto">
-                    Done
-                  </CCol>
-                  <CCol xs="auto">
-                    {' '}
-                    <CDropdown alignment="end">
-                      <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} />
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
-                        <CDropdownItem>Something else here...</CDropdownItem>
-                        <CDropdownItem disabled>Disabled action</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </CCol>
-                </CRow>
-
-                {/* 카드가 들어갈 곳 */}
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-              </CCard>
-
-              <CCard style={{ width: '300px' }} className="bg-light py-3 me-2 container1">
-                <CRow>
-                  <CCol xs="auto" className="me-auto">
-                    Done
-                  </CCol>
-                  <CCol xs="auto">
-                    {' '}
-                    <CDropdown alignment="end">
-                      <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} />
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
-                        <CDropdownItem>Something else here...</CDropdownItem>
-                        <CDropdownItem disabled>Disabled action</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </CCol>
-                </CRow>
-
-                {/* 카드가 들어갈 곳 */}
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-              </CCard>
-
-              <CCard style={{ width: '300px' }} className="bg-light py-3 me-2 container1">
-                <CRow>
-                  <CCol xs="auto" className="me-auto">
-                    Done
-                  </CCol>
-                  <CCol xs="auto">
-                    {' '}
-                    <CDropdown alignment="end">
-                      <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} />
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
-                        <CDropdownItem>Something else here...</CDropdownItem>
-                        <CDropdownItem disabled>Disabled action</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </CCol>
-                </CRow>
-
-                {/* 카드가 들어갈 곳 */}
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-                <KanbanItem />
-              </CCard>
+              {/* 카드 + 아이템이 들어갈 곳 */}
+              <KanbanItem />
 
               <CCard style={{ width: '300px' }} className="">
                 <CCardHeader>
