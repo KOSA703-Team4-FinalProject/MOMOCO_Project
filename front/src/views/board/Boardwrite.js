@@ -52,24 +52,15 @@ const Boardwirte = (props) => {
   }
   //제목란에 클릭한 이슈번호 넣기
   const [inputs, setInputs] = useState('')
+  const [issue, setIssue] = useState('')
   const change = (e) => {
     setInputs(e.target.value)
   }
 
-  //게시판 글작성
-  const [label, setLabel] = useState('')
-  const [title, setTile] = useState('')
-  const [issue, setIssue] = useState('')
-  const [b_code, setB_date] = useState('')
   const [content, setContent] = useState('')
   //로그인한 유저
   const login = JSON.parse(localStorage.getItem('login'))
-  console.log(login.u_idx + ' ' + login.nickname)
-  const tileName = (e) => {
-    e.preventDefault()
-    setTile(e.target.value)
-    console.log('제목' + e.target.value)
-  }
+
   const getIssue = (e) => {
     setIssue(e.target.value)
     console.log('이슈번호' + e.target.value)
@@ -79,32 +70,38 @@ const Boardwirte = (props) => {
     setContent(content)
     console.log('내용' + content)
   }
-  let [boardWrite, setboardWrite] = useState({
-    label: label,
-    title: issue + title,
-    content: content,
-    nickname: login.nickname,
-  })
+
   const myparams = {
     url: params.url,
   }
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+  const [boardcontent, setBoardcontent] = useState([])
+  useEffect(() => {})
+  //파일 업로드
+  const [file, setFile] = useState(null)
+  const handleChangeFile = (e) => {
+    setFile(e.target.files)
+  }
 
-  useEffect(() => {
-    // AES알고리즘 사용 복호화
-    const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-    //인코딩, 문자열로 변환, JSON 변환
-    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-    const accessToken = decrypted.token
+  function Send() {
+    const fd = new FormData()
+    Object.values(file).forEach((file) => fd.append('file', file))
     axios({
       method: 'post',
       url: '/board/boardwrite',
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        'Content-Type': `multipart/form-data; `,
       },
       data: myparams,
+    }).then((res) => {
+      setBoardcontent(res.data)
     })
-  }, [])
-
+  }
   return (
     <>
       <CCard className="mb-4">
@@ -135,7 +132,7 @@ const Boardwirte = (props) => {
                         ]}
                       />
                     </CCol>
-                    <CCol className="col-md-4 ps-3" align="left">
+                    <CCol className="col-md-2 ps-3" align="left">
                       <label>
                         <strong>이슈번호</strong>
                       </label>
@@ -150,17 +147,16 @@ const Boardwirte = (props) => {
                         onChange={getIssue}
                       />
                     </CCol>
-                    <CCol className="col-md-6 ps-1" align="left">
+                    <CCol className="col-md-8 ps-1" align="left">
                       <label>
-                        <strong>제목</strong>
+                        <strong>{}</strong>
                       </label>
                       <br></br>
                       <CFormInput
                         type="text"
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
-                        value={title}
-                        onChange={tileName}
+                        value={boardcontent.title}
                       />
                     </CCol>
                   </CCol>
@@ -172,7 +168,13 @@ const Boardwirte = (props) => {
                       </label>
                       <br></br>
                       <CCol className="mb-3">
-                        <CFormInput type="file" id="formFile" />
+                        <CFormInput
+                          type="file"
+                          id="file"
+                          onChange={handleChangeFile}
+                          multiple="multiple"
+                          value={boardcontent.ori_filename}
+                        />
                       </CCol>
                     </CCol>
                   </CCol>
@@ -206,6 +208,7 @@ const Boardwirte = (props) => {
                     <CCol className="col-md-12">
                       <Editor
                         onEditorChange={handleEditorChange}
+                        value={content.content}
                         id="tinyEditor"
                         apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
                         init={{
@@ -229,7 +232,9 @@ const Boardwirte = (props) => {
                       <br></br>
                       <CCol align="right">
                         <Link to={`/ws/${params.url}/boardlist`}>
-                          <CButton variant="outline">글쓰기</CButton>
+                          <CButton variant="outline" onClick={() => Send()}>
+                            글쓰기
+                          </CButton>
                         </Link>
                       </CCol>
                     </CCol>

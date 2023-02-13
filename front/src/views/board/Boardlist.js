@@ -17,9 +17,10 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, NavLink, useNavigate, useParams, useHistory } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
+import { data, event } from 'jquery'
 const writedate = {}
 const title = {}
 const context = {}
@@ -41,7 +42,7 @@ const Boardlist = () => {
   const [currentPage, setActivePage] = useState(2)
   const params = useParams()
   const navigate = useNavigate()
-  const [baordlist, setBoardList] = useState([])
+  const [boardlist, setBoardList] = useState([])
   const navigateToboardwrite = (params) => {
     navigate(`/ws/${params.url}/boardwrite`)
   }
@@ -55,23 +56,22 @@ const Boardlist = () => {
     const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
     const accessToken = decrypted.token
     axios({
-      method: 'get',
+      method: 'POST',
       url: '/board/boardlist',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       data: myparams,
     }).then((res) => {
-      console.log(res.data)
+      setBoardList(res.data)
     })
   }, [])
-  const listData = {
-    title: '',
-    writedate: '',
-    content: '',
-    boardname: '',
-    usernick: '',
+  //글세부내용
+  const navigate1 = useNavigate()
+  const handleClick = () => {
+    boardlist.map((data) => navigate1(`/ws/${params.url}/boardcontent/${data.idx}`))
   }
+
   return (
     <>
       <CCard className="mb-4">
@@ -164,45 +164,45 @@ const Boardlist = () => {
                 </div>
 
                 {/* 게시판 목록 시작 */}
-
-                <CCard className="p-3 mt-3">
-                  <div className="col-md-12">
-                    <div className="row">
-                      <div className="col-md-1" style={number}>
-                        <CIcon icon={cilCheck} />
-                        <strong>NO.</strong>
-                      </div>
-                      <div className="col-md-8">
-                        <div className="row">
-                          <div className="col-md-12" style={title}>
-                            <strong> {listData.title}</strong>
-                          </div>
-                          <div className="col-md-12" style={context}>
-                            {listData.content}
-                          </div>
-                          <div className="col-md-12">
-                            <CBadge color="dark" shape="rounded-pill" style={boardname}>
-                              {listData.boardname}
-                            </CBadge>
+                {boardlist.map((data, key) => (
+                  <CCard className="p-3 mt-3" key={key} onClick={handleClick}>
+                    <div className="col-md-12">
+                      <div className="row">
+                        <div className="col-md-1" style={number}>
+                          <CIcon icon={cilCheck} />
+                          <strong>{data.idx}.</strong>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="row">
+                            <div className="col-md-12" style={title}>
+                              <strong> {data.title}</strong>
+                            </div>
+                            <div className="col-md-12" style={context}>
+                              {data.content}
+                            </div>
+                            <div className="col-md-12">
+                              <CBadge color="dark" shape="rounded-pill" style={boardname}>
+                                {data.idx}
+                              </CBadge>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="col-md-3">
-                        <div className="col-md-12" align="end">
-                          <CAvatar
-                            className="ms-3"
-                            src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                          />
-                          {listData.usernick}
-                        </div>
-                        <div className="col-md-12" align="end" style={writedate}>
-                          {listData.writedate}
+                        <div className="col-md-3">
+                          <div className="col-md-12" align="end">
+                            <CAvatar
+                              className="ms-3"
+                              src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
+                            />
+                            {data.nickname}
+                          </div>
+                          <div className="col-md-12" align="end" style={writedate}>
+                            {data.w_date}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CCard>
-
+                  </CCard>
+                ))}
                 {/* 게시판 목록 끝 */}
                 <br />
 

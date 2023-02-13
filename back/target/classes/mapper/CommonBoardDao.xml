@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.CommonBoardDao">
+
+	<!-- commandBoard list-->
+	
+	<!-- 전체 글 확인 public List<Board> getBoard() -->
+	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
+		select idx, nickname, title, content, w_date, b_code, label, u_idx from board_${url} 
+	</select>
+	
+   <!-- 글읽기-->
+  	<select id="getBoardByIdx" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
+		select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-dd') as w_date, b_code, label, u_idx, ori_filename, save_filename, filetype, ref, depth, depth, step, thumb
+		from board_${url} b join common_board_${url} c
+		on b.idx = c.idx
+		where c.idx = #{idx}
+	</select>
+	
+	<!-- 글쓰기 -->
+	<insert id="addCommonBoard" parameterType="kr.or.vo.CommonBoard">
+	insert all
+	into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
+		values (BOARD_IDX_SEQ_${url}.nextval,'${nickname}','${title}','${content}',${b_code},'${label}', ${u_idx})
+	into common_board_${url}(b_idx,ori_filename,save_filename,volume, filetype, ref, depth, step, thumb, idx)
+		values(COMMON_BOARD_B_IDX_SEQ_${url}.nextval,'${ori_filename}','${save_filename}',${volume},'${filetype}',${ref},${depth},${step},'${thumb}',board_idx_seq_${url}.CURRVAL)
+		select * from dual
+
+	</insert>
+	
+	<!-- 검색-->
+	
+</mapper>

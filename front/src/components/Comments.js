@@ -31,8 +31,8 @@ const Comments = () => {
               </CCol>
               <CCol className="col-md-2 px-4">2023-02-16 02:20:12</CCol>
             </CCol>
-            <CCol class="row" align="center">
-              <CCol class="col-md-12 py-3 px-4">
+            <CCol className="row" align="center">
+              <CCol className="col-md-12 py-3 px-4">
                 <CForm>
                   <CFormTextarea rows={3}>댓글을 작성해주세요</CFormTextarea>
                 </CForm>
