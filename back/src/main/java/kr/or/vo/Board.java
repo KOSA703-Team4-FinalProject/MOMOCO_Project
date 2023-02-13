@@ -14,5 +14,6 @@ public class Board {
 	private String label;		//라벨 키워드
 	private int u_idx;			//깃헙 키
 	
-
+	private String url;
+	
 }

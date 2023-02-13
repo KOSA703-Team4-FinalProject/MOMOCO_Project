@@ -23,7 +23,7 @@ public class BoardController {
 		this.boardservice = boardservice;
 	}
 	//글 리스트
-	@RequestMapping(value="/baordlist",method =RequestMethod.GET)
+	@RequestMapping(value="/boardlist",method =RequestMethod.GET)
 	public ResponseEntity<List<Board>> boardlist(){
 		List<Board> list = new ArrayList<Board>();
 		try {
@@ -35,22 +35,9 @@ public class BoardController {
 		
 		}
 	
-	//게시판 글작성
-	@RequestMapping(value="/boardwrite",method=RequestMethod.POST)
-	public ResponseEntity<String> insert (@RequestBody Board board){
-		
-		try {
-			System.out.println("게시판 글작성");
-			boardservice.addBoard(board);
-			return new ResponseEntity<String>("insert success", HttpStatus.OK);
-			
-		} catch (Exception e) {
-			return new ResponseEntity<String>("insert fail", HttpStatus.BAD_REQUEST);
-		}
 		
 		
 		
 		
-		
-	}
+	
 }
