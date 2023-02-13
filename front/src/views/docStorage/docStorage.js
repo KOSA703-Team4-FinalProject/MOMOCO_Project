@@ -25,7 +25,7 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import WriteDocStorage from '../../components/WriteDocStorage'
 import Comments from '../../components/Comments'
-import issuelist from './issuelist'
+
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { useDispatch, useSelector } from 'react-redux'
