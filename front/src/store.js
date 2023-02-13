@@ -32,6 +32,21 @@ let chatState = createSlice({
 
 export let { changeChatState } = chatState.actions
 
+//접속한 채팅방 관리
+let chatRoomNumber = createSlice({
+  name: 'chatRoomNumber',
+  initialState: 0,
+  reducers: {
+    updateChatRoomNumber(state, action) {
+      state = action.payload
+      console.log(state)
+      return state
+    },
+  },
+})
+
+export let { updateChatRoomNumber } = chatRoomNumber.actions
+
 //프로필 상태
 let userProfile = createSlice({
   name: 'userProfile',
@@ -93,6 +108,7 @@ export default configureStore({
   reducer: {
     sidebarShow: sidebarShow.reducer,
     chatState: chatState.reducer,
+    chatRoomNumber: chatRoomNumber.reducer,
     userProfile: userProfile.reducer,
     gitToken: gitToken.reducer,
     issueModal: issueModal.reducer,

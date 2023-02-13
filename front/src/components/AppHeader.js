@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -23,7 +23,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilCommentSquare, cilMenu } from '@coreui/icons'
 
-import { AppBreadcrumb, ChatRoom } from './index'
+import { AppBreadcrumb, Chat, ChatRoom } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 import ChatAll from './ChatAll'
@@ -38,11 +38,14 @@ import momoco from '../assets/images/momocologo.png'
 import WorkSpaceListItem from 'src/components/WorkSpaceListItem'
 import { CButton } from '@coreui/react'
 import { CCard } from '@coreui/react'
+import TalkDrawer from './TalkDrawer'
+import TalkDrawerDetail from './TalkDrawerDetail'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
+  const [chatState, setCahtState] = useState(false);
   const params = useParams()
   const navigate = useNavigate()
 
@@ -120,17 +123,16 @@ const AppHeader = () => {
           </CNavItem>
           <CNavItem>
             {/* 채팅 이모티콘 */}
-            <CDropdown autoClose={false}>
+            <CDropdown autoClose={false} visible={chatState}>
               <CDropdownToggle color="ghost">
                 <CIcon
                   icon={cilCommentSquare}
                   size="lg"
                   onClick={() => {
-                    if (chatView === 'none') {
-                      dispatch(changeChatState('chatroom'))
-                    } else {
-                      dispatch(changeChatState('none'))
-                    }
+                    chatState == false ? setCahtState(true) : setCahtState(false)
+                    chatView == 'none'
+                      ? dispatch(changeChatState('chatroom'))
+                      : dispatch(changeChatState('none'))
                   }}
                 />
               </CDropdownToggle>

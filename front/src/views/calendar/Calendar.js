@@ -24,11 +24,15 @@ import axios from 'axios'
 import $ from 'jquery'
 
 import { PRIMARY_KEY } from '../../oauth'
+import { minHeight } from '@mui/system'
 
 const Calendar = () => {
   let [view, setView] = useState('')
   const [statusList, setStateList] = useState([])
   const [calList, setCalList] = useState({})
+  const [readCalList, setReadCalList] = useState({})
+  const [start_date, setStart_date] = useState('')
+  const [checkList, setCheckList] = useState([])
 
   const params = useParams()
 
@@ -60,10 +64,9 @@ const Calendar = () => {
         const endd = new Date(response.end_date)
         events.push({ title: response.title, start: response.start_date, end: endd })
       })
-      console.log(events)
       setCalList(events)
     })
-  }, [])
+  }, [view])
 
   //상태값 불러오기
   useEffect(() => {
@@ -105,7 +108,6 @@ const Calendar = () => {
       },
       data: reqData,
     }).then((res) => {
-      console.log(res)
       view == '' ? setView('add') : setView('')
     })
   }
@@ -116,7 +118,7 @@ const Calendar = () => {
 
     const reqData = {
       title: clicktitle,
-      url: url
+      url: url,
     }
 
     axios({
@@ -126,6 +128,75 @@ const Calendar = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       data: reqData,
+    }).then((res) => {
+      setCheckList(res.data.checked)
+      setReadCalList(res.data)
+    })
+  }
+
+  //일정 수정
+  const modifyCal = () => {
+    const reqData1 = {
+      idx: readCalList.idx,
+      start_date: $('#modifystart_date').val(),
+      end_date: $('#modifyend_date').val(),
+      s_idx: $('#updateSelect option:selected').val(),
+      nickname: login.nickname,
+      title: $('#modifytitle').val(),
+      content: $('#modifycontent').val(),
+      b_code: 4,
+      label: '.',
+      u_idx: login.u_idx,
+      url: url,
+    }
+
+    axios({
+      method: 'POST',
+      url: '/cal/modify',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData1,
+    }).then((res) => {
+      setView('')
+    })
+  }
+
+  //일정 삭제
+  const deleteCal = () => {
+    const reqData = {
+      idx: readCalList.idx,
+      url: url,
+    }
+
+    axios({
+      method: 'POST',
+      url: '/cal/delete',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData,
+    }).then((res) => {
+      setView('')
+    })
+  }
+
+  //일정 참석하기
+  const addCheck = () => {
+    const reqData2 = {
+      idx: readCalList.idx,
+      u_idx: login.u_idx,
+      nickname: login.nickname,
+      url: url,
+    }
+
+    axios({
+      method: 'POST',
+      url: '/api/check/add',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData2,
     }).then((res) => {
       console.log(res)
     })
@@ -157,10 +228,20 @@ const Calendar = () => {
                       />
                     </CCol>
                     <CCol md={6}>
-                      <CFormInput type="date" id="calstart_date" floatingLabel="시작일" />
+                      <CFormInput
+                        type="date"
+                        id="calstart_date"
+                        floatingLabel="시작일"
+                        defaultValue={start_date}
+                      />
                     </CCol>
                     <CCol md={6}>
-                      <CFormInput type="date" id="calend_date" floatingLabel="종료일" />
+                      <CFormInput
+                        type="date"
+                        id="calend_date"
+                        floatingLabel="종료일"
+                        defaultValue={start_date}
+                      />
                     </CCol>
                     <CCol md={12}>
                       <CFormSelect id="addSelect">
@@ -215,14 +296,14 @@ const Calendar = () => {
               <CCardBody>
                 <CCol className="h4">
                   <div className="d-grid gap-2 d-md-flex justify-content-md-between">
-                    <strong className="ms-2 mt-2">일정</strong>
+                    <strong className="ms-2 mt-2">{readCalList.title}</strong>
                   </div>
                 </CCol>
                 <CCol className="mt-3">
-                  <CRow className="g-3 mt-2">
+                  <CRow className="g-3 mt-2 mx-3">
                     <CCol md={12}>
                       <h5 className="titlediv">
-                        <strong>일정 title 적힐 곳</strong>
+                        <strong>{readCalList.nickname}</strong>
                       </h5>
                     </CCol>
                     <CCol md={12}>
@@ -230,9 +311,7 @@ const Calendar = () => {
                         <label className="col-sm-2 col-form-label">
                           <strong>시작일</strong>
                         </label>
-                        <div className="col-sm-10">
-                          <CFormInput type="date" id="read-startdate" readOnly />
-                        </div>
+                        <div className="col-sm-10">{readCalList.start_date}</div>
                       </div>
                     </CCol>
                     <CCol md={12}>
@@ -240,61 +319,62 @@ const Calendar = () => {
                         <label className="col-sm-2 col-form-label">
                           <strong>종료일</strong>
                         </label>
-                        <div className="col-sm-10">
-                          <CFormInput type="date" id="read-enddate" readOnly />
-                        </div>
+                        <div className="col-sm-10">{readCalList.end_date}</div>
                       </div>
                     </CCol>
                     <div className="col-md-12">
                       <CCard>
                         <CCardBody>
-                          <p className="readcalcontent">
-                            일정 세부 사항 넣을 거얌!!!!!!!!
-                            <br></br>
-                            아하하하하하하ㅏㅎ하
-                            <br />
-                            나는 아무생각이 없엉~~~~~~~
-                            <br />
-                            아하하하하하하ㅏㅎ하
-                            <br />
-                            아하하하하하하ㅏㅎ하
-                            <br />
-                            아하하하하하하ㅏㅎ하
-                            <br />
-                            아하하하하하하ㅏㅎ하
+                          <p className="readcalcontent" style={contentS}>
+                            {readCalList.content}
                           </p>
                         </CCardBody>
                       </CCard>
                     </div>
-                    <div className="row mt-3">
+                    <div className="row mt-5">
                       <div className="col-md-4">
                         <CFormCheck
                           button={{ color: 'primary', variant: 'outline' }}
                           id="gridCheck2"
                           autoComplete="off"
                           label="참석하기"
+                          onClick={addCheck}
                         />
                       </div>
                       <div className="col-md-8 mt-1" align="right">
                         <strong>참석 : </strong>
-                        <CAvatar color="secondary" status="success">
-                          gkg
+                        {checkList.map((data) => (
+                          <CAvatar color="primary" textColor="white" shape="rounded"  key={data.u_idx}>
+                          {data.nickname}..
                         </CAvatar>
-                        <CAvatar color="secondary" status="success">
-                          humm
-                        </CAvatar>
-                        <CAvatar color="secondary" status="danger">
-                          hi
-                        </CAvatar>
+                        ))}
                       </div>
                     </div>
                     <div className="col-md-12 text-center">
-                      <CButton color="primary" variant="outline" className="modifybtn m-1">
-                        수정
-                      </CButton>
-                      <CButton color="primary" variant="outline" className="deletebtn m-1">
-                        삭제
-                      </CButton>
+                      {readCalList.u_idx == login.u_idx ? (
+                        <>
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            className="modifybtn m-1"
+                            onClick={() => {
+                              setView('modify')
+                            }}
+                          >
+                            수정
+                          </CButton>
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            className="deletebtn m-1"
+                            onClick={deleteCal}
+                          >
+                            삭제
+                          </CButton>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                       <CButton
                         color="primary"
                         variant="outline"
@@ -329,20 +409,32 @@ const Calendar = () => {
                         type="text"
                         id="modifytitle"
                         floatingLabel="일정"
-                        defaultValue="일정을 추가해주세요"
+                        defaultValue={readCalList.title}
                       />
                     </CCol>
                     <CCol md={6}>
-                      <CFormInput type="date" id="modifystart_date" floatingLabel="시작일" />
+                      <CFormInput
+                        type="date"
+                        id="modifystart_date"
+                        floatingLabel="시작일"
+                        value={readCalList.start_date}
+                      />
                     </CCol>
                     <CCol md={6}>
-                      <CFormInput type="date" id="modifyend_date" floatingLabel="종료일" />
+                      <CFormInput
+                        type="date"
+                        id="modifyend_date"
+                        floatingLabel="종료일"
+                        value={readCalList.end_date}
+                      />
                     </CCol>
                     <CCol md={12}>
                       <CFormSelect id="updateSelect">
-                        <option value="1">ToDo</option>
-                        <option value="2">In progress</option>
-                        <option value="3">Done</option>
+                        {statusList.map((sta) => (
+                          <option value={sta.s_idx} key={sta.s_idx}>
+                            {sta.s_name}
+                          </option>
+                        ))}
                       </CFormSelect>
                     </CCol>
                     <CCol md={12}>
@@ -351,11 +443,17 @@ const Calendar = () => {
                         id="modifycontent"
                         floatingLabel="상세 일정"
                         placeholder="상세 일정"
-                        style={{ height: '100px' }}
+                        style={{ height: '200px' }}
+                        defaultValue={readCalList.content}
                       ></CFormTextarea>
                     </CCol>
                     <CCol className="text-center">
-                      <CButton color="primary" variant="outline" className="modify_btn m-2">
+                      <CButton
+                        color="primary"
+                        variant="outline"
+                        className="modify_btn m-2"
+                        onClick={modifyCal}
+                      >
                         확인
                       </CButton>
                       <CButton
@@ -363,7 +461,7 @@ const Calendar = () => {
                         variant="outline"
                         className="modify_reset m-2"
                         onClick={() => {
-                          view == '' ? setView('modify') : setView('')
+                          setView('')
                         }}
                       >
                         취소
@@ -378,6 +476,10 @@ const Calendar = () => {
       default:
         return <></>
     }
+  }
+
+  const contentS = {
+    minHeight: '150px',
   }
 
   return (
@@ -413,7 +515,8 @@ const Calendar = () => {
                   return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월'
                 }}
                 // 날짜 클릭 시 발생하는 이벤트
-                dateClick={() => {
+                dateClick={(e) => {
+                  setStart_date(e.dateStr)
                   view == '' ? setView('add') : setView('')
                 }}
                 nowIndicator="true" // 현재 시간 마크

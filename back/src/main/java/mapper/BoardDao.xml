@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.BoardDao">
+
+	<!-- 수정 public int modifyBoard(Board board) -->
+	<update id="modifyBoard" parameterType="kr.or.vo.Board">
+		update board_${url}
+			set nickname = #{nickname},
+				title = #{title},
+				content = #{content},
+				label = #{label}
+			where idx = #{idx}
+	</update>
+
+</mapper>
