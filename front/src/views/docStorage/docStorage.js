@@ -23,43 +23,45 @@ import { cilCheck } from '@coreui/icons'
 import { CForm, CFormTextarea } from '@coreui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import WriteDocStorage from '../../components/WriteDocStorage'
+import WriteDocStorage from './WriteDocStorage'
 import Comments from '../../components/Comments'
-
+import issuelist from '../board/issuelist'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 const docStorage = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
-
+  const [list, SetList] = useState([])
   //워크스페이스 주소값
   const dispatch = useDispatch()
   const params = useParams()
-  const issueModal = useSelector((state) => state.issueModal)
-  const issueNumber = useSelector((state) => state.issueNumber)
+  // const issueModal = useSelector((state) => state.issueModal)
+  // const issueNumber = useSelector((state) => state.issueNumber)
 
-  const navigateTodocwrite = (params) => {
-    navigate(`/ws/${params.url}/docWrite`)
-  }
   const myparams = {
     url: params.url,
   }
 
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+  console.log(myparams)
   //문서저장소 게시판 리스트 호출
   useEffect(() => {
-    // AES알고리즘 사용 복호화
-    const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-    //인코딩, 문자열로 변환, JSON 변환
-    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-    const accessToken = decrypted.token
     axios({
-      method: 'get',
-      url: '/doc/doclist',
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
+      url: '/doc/list',
       data: myparams,
+    }).then((res) => {
+      SetList(res.data)
+      console.log(res.data)
     })
   }, [])
 
@@ -74,7 +76,9 @@ const docStorage = (props) => {
               </h4>
             </CCol>
             <CCol sm={7} align="end" className="d-none d-md-block">
-              <CButton onClick={() => setVisibleXL(!visibleXL)}>등록</CButton>
+              <CButton type="submit" onClick={() => setVisibleXL(!visibleXL)}>
+                등록
+              </CButton>
               <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
                 <CModalHeader>
                   <CModalTitle>문서저장소 등록</CModalTitle>

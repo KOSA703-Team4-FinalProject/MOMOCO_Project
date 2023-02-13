@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.DocDao">
+
+	<!-- 전체 일정 조회 public List<Calendar> getCalendar() -->
+	<select id="getDoc" parameterType="String" resultType="kr.or.vo.Doc">
+		select e.idx, e.nickname, e.title, e.content, to_char(e.w_date, 'YYYY-MM-DD') as w_date, e.b_code, e.label, e.u_idx, c.b_idx, c.ori_filename, c.save_filename, c.ref, c.depth, c.step, c.thumb, c.idx
+		from board_${url} e join doc_storage_${url} c
+		on c.idx = e.idx
+	</select>
+	
+	<!-- 일정 추가 public int addCalendar(Map map) -->
+	<insert id="addDoc" parameterType="kr.or.vo.Doc">
+		insert all
+			into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
+				values (board_idx_seq_${url}.nextval, '${nickname}', '${title}', '${content}', ${b_code}, '${label}', ${u_idx})
+			into doc_storage_${url} (b_idx, ori_filename, save_filename, ref, depth, step, thumb, idx)
+				values (doc_storage_b_idx_seq_${url}.nextval, ${ori_filename}, ${save_filename}, ${ref}, ${depth}, ${step}, ${thumb}, board_idx_seq_${url}.CURRVAL)
+		select * from dual
+	</insert>
+	
+	
+   
+</mapper>
