@@ -5,7 +5,7 @@ import java.util.List;
 
 import kr.or.vo.Kanban;
 
-//CRUD123
+//CRUD
 public interface KanbanDao {
 
 	// 전체 칸반 조회
