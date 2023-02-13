@@ -11,11 +11,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		on c.idx = e.idx
 	</select>
 	
-	<!-- 특정 일정 조회 public Calendar getCalendarByB_idx(int b_idx) -->
-	<select id="getCalendarByB_idx" parameterType="int" resultType="kr.or.vo.Calendar">
-		select b_idx, start_date, end_date, idx, s_idx 
-		from calendar
-		where b_idx = #{b_idx}	
+	<!-- 특정 일정 조회 public CalendarAll getCalendarByTitle(CalendarAll cal) -->
+	<select id="getCalendarByTitle" parameterType="kr.or.vo.CalendarAll" resultType="kr.or.vo.CalendarAll">
+		select idx, nickname, title, content, w_date, b_code, label, u_idx, b_idx, start_date, end_date, a.s_idx, s_name
+		from (select b.idx, nickname, title, content, w_date, b_code, label, u_idx, b_idx, start_date, end_date, s_idx
+    		from board_${url} b join calendar_${url} c 
+    		on b.idx = c.idx 
+    		where title = #{title}) a join status_${url} s
+		on a.s_idx = s.s_idx
 	</select>
 	
 	<!-- 일정 추가 public int addCalendar(Map map) -->

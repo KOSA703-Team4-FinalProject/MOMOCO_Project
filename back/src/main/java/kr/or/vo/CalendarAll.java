@@ -20,5 +20,7 @@ public class CalendarAll {
 	private int u_idx;			//깃헙 키
 	
 	private String url;		//워크스페이스 주소
+	
+	private String s_name;	//상태 이름
 
 }

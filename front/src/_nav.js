@@ -8,6 +8,7 @@ import {
   cilCalendar,
   cilChart,
   cilChartPie,
+  cilClearAll,
   cilCopy,
   cilCursor,
   cilDescription,
@@ -29,7 +30,7 @@ const _nav = [
     component: CNavItem,
     name: '전체보기',
     to: '/boardlist',
-    icon: <CIcon icon={cifKr} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilClearAll} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

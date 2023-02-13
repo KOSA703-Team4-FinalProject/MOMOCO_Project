@@ -1,5 +1,7 @@
 package kr.or.vo;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -14,6 +16,7 @@ public class Board {
 	private String label;		//라벨 키워드
 	private int u_idx;			//깃헙 키
 	
-	private String url;
+	private String url;			//워크스페이스 url
 	
+	private List<Comments> comments;
 }

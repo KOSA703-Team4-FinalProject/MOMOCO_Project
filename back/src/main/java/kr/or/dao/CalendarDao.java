@@ -13,7 +13,7 @@ public interface CalendarDao {
 	public List<CalendarAll> getCalendar(String url) throws ClassNotFoundException, SQLException;
 	
 	//특정 일정 조회
-	public Calendar getCalendarByB_idx(int b_idx) throws ClassNotFoundException, SQLException;
+	public CalendarAll getCalendarByTitle(CalendarAll cal) throws ClassNotFoundException, SQLException;
 	
 	//일정 추가
 	public int addCalendar(CalendarAll all) throws ClassNotFoundException, SQLException;

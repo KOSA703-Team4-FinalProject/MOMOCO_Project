@@ -3,18 +3,13 @@ package kr.or.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.or.service.BoardService;
 import kr.or.service.CalendarService;
-import kr.or.vo.Board;
 import kr.or.vo.Calendar;
 import kr.or.vo.CalendarAll;
 
@@ -51,5 +46,16 @@ public class CalendarController {
 		return result;
 	}
 	
+	//일정 확인
+	@RequestMapping(value="/read", method=RequestMethod.POST)
+	public CalendarAll getCalendarByTitle(@RequestBody CalendarAll cal) {
+		
+		CalendarAll calendar = new CalendarAll();
+	
+		calendar = calendarservice.readCalendar(cal);
+		
+		
+		return calendar;
+	}
 	
 }
