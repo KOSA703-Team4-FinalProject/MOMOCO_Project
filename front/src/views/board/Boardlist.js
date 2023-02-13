@@ -41,9 +41,7 @@ const Boardlist = () => {
   const [currentPage, setActivePage] = useState(2)
   const params = useParams()
   const navigate = useNavigate()
-
-  console.log('이건 밖에서' + params.url)
-
+  const [baordlist, setBoardList] = useState([])
   const navigateToboardwrite = (params) => {
     navigate(`/ws/${params.url}/boardwrite`)
   }
@@ -63,9 +61,17 @@ const Boardlist = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       data: myparams,
+    }).then((res) => {
+      console.log(res.data)
     })
   }, [])
-
+  const listData = {
+    title: '',
+    writedate: '',
+    content: '',
+    boardname: '',
+    usernick: '',
+  }
   return (
     <>
       <CCard className="mb-4">
@@ -169,14 +175,14 @@ const Boardlist = () => {
                       <div className="col-md-8">
                         <div className="row">
                           <div className="col-md-12" style={title}>
-                            <strong> 글제목</strong>
+                            <strong> {listData.title}</strong>
                           </div>
                           <div className="col-md-12" style={context}>
-                            글내용
+                            {listData.content}
                           </div>
                           <div className="col-md-12">
                             <CBadge color="dark" shape="rounded-pill" style={boardname}>
-                              게시판이름
+                              {listData.boardname}
                             </CBadge>
                           </div>
                         </div>
@@ -187,10 +193,10 @@ const Boardlist = () => {
                             className="ms-3"
                             src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
                           />
-                          usernick
+                          {listData.usernick}
                         </div>
                         <div className="col-md-12" align="end" style={writedate}>
-                          2023.01.31 12:00
+                          {listData.writedate}
                         </div>
                       </div>
                     </div>
