@@ -3,13 +3,25 @@ import CIcon from '@coreui/icons-react'
 import { CFormInput, CPopover } from '@coreui/react'
 import $ from 'jquery'
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
+import CryptoJS from 'crypto-js'
 
 import '../scss/chatRoom.scss'
+import { PRIMARY_KEY } from '../oauth'
+import { useParams } from 'react-router-dom'
 
 const Chat = () => {
   const dispatch = useDispatch()
+  let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
+
+  const params = useParams()
+
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
 
   useEffect(() => {
     //채팅 전송 버튼 클릭
@@ -71,7 +83,7 @@ const Chat = () => {
     console.log(e.target.files[0])
     const file = e.target.files[0]
     if (file.type != 'image/png') {
-      console.log('넌 이미자가 아니야!')
+      console.log('넌 아니야!')
     }
   }
 
