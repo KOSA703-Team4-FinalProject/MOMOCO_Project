@@ -25,13 +25,14 @@ import momocologo from 'src/assets/images/momocologo.png'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { Container } from '@mui/material'
+import { Date } from 'core-js'
 
 const workSpace = () => {
   const [space_Name, SetSpace_Name] = useState('')
   const [url, SetUrl] = useState('')
   const [linked_Repo, SetLinked_Repo] = useState('')
-  const [start_Date, SetStart_Date] = useState('')
-  const [end_Date, SetEnd_Date] = useState('')
+  const [start_Date, SetStart_Date] = useState(new Date())
+  const [end_Date, SetEnd_Date] = useState(new Date())
   const [check, SetCheck] = useState('')
 
   // AES알고리즘 사용 복호화
@@ -130,8 +131,6 @@ const workSpace = () => {
           alert('워크스페이스 생성 실패')
         }
       })
-    } else if (new Date(start_Date) > new Date(end_Date)) {
-      alert('프로젝트 날짜가 잘못되었습니다')
     } else {
       alert('중복확인을 해주세요')
     }
@@ -269,6 +268,7 @@ const workSpace = () => {
                   <p></p>
 
                   <p>모모코를 통해 팀프로젝트를 쉽게 관리해보세요</p>
+                  <p></p>
                   <img src={momocologo} />
                 </CCol>
               </CCardBody>

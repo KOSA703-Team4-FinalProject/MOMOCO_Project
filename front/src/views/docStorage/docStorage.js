@@ -15,16 +15,53 @@ import {
   CModalTitle,
   CRow,
 } from '@coreui/react'
+import axios from 'axios'
+import { Editor } from '@tinymce/tinymce-react'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import CIcon from '@coreui/icons-react'
 import { cilCheck } from '@coreui/icons'
 import { CForm, CFormTextarea } from '@coreui/react'
 import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import WriteDocStorage from '../../components/WriteDocStorage'
 import Comments from '../../components/Comments'
+import issuelist from './issuelist'
+import CryptoJS from 'crypto-js'
+import { PRIMARY_KEY } from '../../oauth'
+import { useDispatch, useSelector } from 'react-redux'
 
-const docStorage = () => {
+const docStorage = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
+
+  //워크스페이스 주소값
+  const dispatch = useDispatch()
+  const params = useParams()
+  const issueModal = useSelector((state) => state.issueModal)
+  const issueNumber = useSelector((state) => state.issueNumber)
+
+  const navigateTodocwrite = (params) => {
+    navigate(`/ws/${params.url}/docWrite`)
+  }
+  const myparams = {
+    url: params.url,
+  }
+
+  //문서저장소 게시판 리스트 호출
+  useEffect(() => {
+    // AES알고리즘 사용 복호화
+    const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+    //인코딩, 문자열로 변환, JSON 변환
+    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+    const accessToken = decrypted.token
+    axios({
+      method: 'get',
+      url: '/doc/doclist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: myparams,
+    })
+  }, [])
 
   return (
     <>
