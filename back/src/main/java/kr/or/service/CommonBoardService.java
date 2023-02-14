@@ -70,5 +70,18 @@ public class CommonBoardService {
 		}
 		return result;
 	}
+	//삭제
+	public int delectCommonboard(CommonBoard com) {
+		int result =0;
+		try {
+			CommonBoardDao commonboarddao =sqlsession.getMapper(CommonBoardDao.class);
+			result = commonboarddao.deletecommonboard(com);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 }

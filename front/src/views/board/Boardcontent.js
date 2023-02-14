@@ -13,7 +13,7 @@ import {
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Commentreply from 'src/components/Commentreply'
 import CryptoJS from 'crypto-js'
 
@@ -22,6 +22,7 @@ import Comments from 'src/components/Comments'
 import Commentwrite from 'src/components/Commentwrite'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import Issues from './Issues'
+import { param } from 'jquery'
 const title = {
   fontSize: 25,
   border: '2px',
@@ -58,7 +59,6 @@ const Boardcontent = () => {
       url: params.url,
       idx: params.idx,
     }
-    console.log(myparams)
 
     axios({
       method: 'POST',
@@ -71,6 +71,23 @@ const Boardcontent = () => {
       setBoardcontent(res.data)
     })
   }, [])
+  //삭제하기
+  const deletecommon = () => {
+    const param = {
+      url: params.url,
+      idx: params.idx,
+    }
+    axios({
+      method: 'POST',
+      url: '/board/boarddelete',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: param,
+    }).then((res) => {
+      setBoardcontent('')
+    })
+  }
   return (
     <div>
       <CCard className="mb-4">
@@ -167,14 +184,17 @@ const Boardcontent = () => {
             </div>
           </div>
         </CCardBody>
+
         <div align="right" className="me-4">
           <CButton color="primary" variant="outline">
             수정
           </CButton>{' '}
           &nbsp;
-          <CButton color="danger" variant="outline">
-            삭제
-          </CButton>
+          <Link to={`/ws/${params.url}/boardlist`}>
+            <CButton color="danger" variant="outline" onClick={deletecommon}>
+              삭제
+            </CButton>
+          </Link>
         </div>
         <br></br>
 
