@@ -1,19 +1,25 @@
 import { cilArrowLeft, cilFolderOpen, cilImagePlus, cilLink, cilStorage } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CFormInput, CPopover } from '@coreui/react'
-import $ from 'jquery'
-import React, { useEffect } from 'react'
+import $, { param } from 'jquery'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
 import CryptoJS from 'crypto-js'
+import SockJS from 'sockjs-client'
+import stomp from 'react-stomp'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
 import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 const Chat = () => {
   const dispatch = useDispatch()
   let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
+  let [initview, setInitview] = useState(false)
+  let [room, setRoom] = useState({})
+  let [chatList, setChatList] = useState([])
 
   const params = useParams()
 
@@ -23,37 +29,26 @@ const Chat = () => {
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
 
+  //채팅 기록 & 채팅방 정보 불러오기
   useEffect(() => {
-    //채팅 전송 버튼 클릭
-    const fuc = () => {
-      $('.inputmessage').val('')
-
-      let msgbox = '<li class="me">'
-      msgbox += '<div class="entete">'
-      msgbox += '<h3>10:12AM, Today</h3>'
-      msgbox += '<h2>Vincent</h2>'
-      msgbox += '<span class="status blue"></span>'
-      msgbox += '</div>'
-      msgbox += '<div class="triangle"></div>'
-      msgbox += '<div class="message">'
-      msgbox += '내용 들어갈거'
-      msgbox += '</div>'
-      msgbox += '</li>'
-
-      $('.chat').append(msgbox)
-
-      //스크롤 내리기
-      let elem = document.getElementById('chat')
-      elem.scrollTop = elem.scrollHeight
+    const reqData = {
+      url: params.url,
+      r_idx: chatRoomNumber,
     }
 
-    //이벤트 걸기
-    $(document).on('click', '.sendbtn', fuc)
-
-    //dom이 사라질때 이벤트 제거
-    return () => {
-      $(document).off('click', '.sendbtn', fuc)
-    }
+    axios({
+      method: 'POST',
+      url: '/api/chat/get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData,
+    }).then((res) => {
+      console.log(res.data)
+      setChatList(res.data[0])
+      setRoom(res.data[1])
+      setInitview(true)
+    })
   }, [])
 
   //파일 업로드 아이콘 클릭
@@ -64,18 +59,22 @@ const Chat = () => {
 
     $(document).on('click', '.filebtn', fnc)
 
-    return ()=>{$(document).off('click', '.filebtn', fnc)}
+    return () => {
+      $(document).off('click', '.filebtn', fnc)
+    }
   }, [])
 
   //이미지 업로드 아이콘 클릭
-  useEffect(()=>{
+  useEffect(() => {
     const fnc = () => {
       $('.uploadimg').click()
     }
 
     $(document).on('click', '.imgbtn', fnc)
 
-    return ()=>{$(document).off('click', '.imgbtn', fnc)}
+    return () => {
+      $(document).off('click', '.imgbtn', fnc)
+    }
   }, [])
 
   //파일이 업로드 된 경우
@@ -93,10 +92,31 @@ const Chat = () => {
     const img = e.target.files[0]
   }
 
-  const ChatCss = {}
+  //채팅 전송
+  const sendChat = () => {
+    $('.inputmessage').val('')
+
+    let msgbox = '<li class="me">'
+    msgbox += '<div class="entete">'
+    msgbox += '<h3>10:12AM, Today</h3>'
+    msgbox += '<h2>Vincent</h2>'
+    msgbox += '<span class="status blue"></span>'
+    msgbox += '</div>'
+    msgbox += '<div class="triangle"></div>'
+    msgbox += '<div class="message">'
+    msgbox += '내용 들어갈거'
+    msgbox += '</div>'
+    msgbox += '</li>'
+
+    $('.chat').append(msgbox)
+
+    //스크롤 내리기
+    let elem = document.getElementById('chat')
+    elem.scrollTop = elem.scrollHeight
+  }
 
   return (
-    <main style={ChatCss}>
+    <main>
       <header>
         <div className="row justify-content-between">
           <div className="col-md-8">
@@ -110,7 +130,7 @@ const Chat = () => {
                 }}
               ></CIcon>
               <h5 className="chat-room col pt-2 mt-2">
-                <strong>기본채팅방입니다하세요</strong>
+                <strong>{initview == true ? room.r_name : <></>}</strong>
               </h5>
             </div>
           </div>
@@ -126,18 +146,24 @@ const Chat = () => {
         </div>
       </header>
       <ul className="chat">
-        <li className="you">
-          <div className="entete">
-            <span className="status green"></span>
-            <h2>Vincent</h2>
-            <h3>10:12AM, Today</h3>
-          </div>
-          <div className="triangle"></div>
-          <div className="message">
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-            dolor.
-          </div>
-        </li>
+        {initview == false ? (
+          <li></li>
+        ) : (
+          chatList.map((data) => {
+            return (
+              <li className="you" key={data.ch_idx}>
+                <div className="entete">
+                  <span className="status green"></span>
+                  <h2 data={data.u_idx}>{data.nickname}</h2>
+                  <h3>{data.w_date}</h3>
+                </div>
+                <div className="triangle"></div>
+                <div className="message">{data.content}</div>
+              </li>
+            )
+          })
+        )}
+
         <li className="me">
           <div className="entete">
             <h3>10:12AM, Today</h3>
@@ -154,11 +180,7 @@ const Chat = () => {
       <footer>
         <textarea className="inputmessage" placeholder="Type your message"></textarea>
         <div className="row">
-          <CFormInput
-            type="file"
-            className="uploadfile d-none"
-            onChange={fileChange}
-          />
+          <CFormInput type="file" className="uploadfile d-none" onChange={fileChange} />
           <CIcon className="filebtn ms-2" icon={cilFolderOpen} size="3xl"></CIcon>
           <CFormInput
             type="file"
@@ -168,7 +190,7 @@ const Chat = () => {
           />
           <CIcon className="imgbtn" icon={cilImagePlus} size="3xl" />
           <CIcon className="linkbtn" icon={cilLink} size="3xl" />
-          <a align="right" className="sendbtn col mt-3" href="#">
+          <a align="right" className="sendbtn col mt-3" onClick={sendChat}>
             Send
           </a>
         </div>

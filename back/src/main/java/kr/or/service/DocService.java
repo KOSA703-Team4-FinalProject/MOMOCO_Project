@@ -17,11 +17,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import kr.or.dao.CalendarDao;
 import kr.or.dao.DocDao;
-import kr.or.vo.CalendarAll;
 import kr.or.vo.Doc;
 
 @Service
@@ -52,7 +50,7 @@ public class DocService {
 
 		return doc;
 	}
-	
+	/*
 	// 문서저장소 글쓰기
 	public int addDoc(Doc doc, MultipartFile file) {
 		
@@ -135,5 +133,5 @@ public class DocService {
 		
 		return cal;
 	}
-
+*/
 }

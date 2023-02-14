@@ -34,4 +34,22 @@ public class CharRoomController {
 		return chatroomlist;
 	}
 
+	//채팅방 생성
+	@RequestMapping(value="/create", method=RequestMethod.POST)
+	public int createRoom(@RequestBody ChatRoom chatroom) {
+		
+		int result = chatroomservice.createRoom(chatroom);
+		
+		return result;
+	}
+	
+	//채팅방 삭제
+	@RequestMapping(value="/delete", method=RequestMethod.POST)
+	public int deleteRoom(@RequestBody ChatRoom chatroom) {
+		
+		int result = chatroomservice.deleteRoom(chatroom);
+		
+		return result;
+	}
+	
 }

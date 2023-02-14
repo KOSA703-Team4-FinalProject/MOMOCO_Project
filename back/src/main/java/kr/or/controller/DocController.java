@@ -40,7 +40,7 @@ public class DocController {
 		System.out.println(doc);
 		return doc;
 	}
-	
+	/*
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	public int addDoc(@RequestBody Doc doc, @RequestPart("file") MultipartFile file) {
 		
@@ -55,7 +55,7 @@ public class DocController {
 		  docservice.downDoc(url, p, f, request, response);
 	}
 	
- 
+ */
  
  	/*
 	 * //일정 확인
