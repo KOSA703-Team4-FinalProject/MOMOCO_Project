@@ -22,6 +22,7 @@ import { AiFillBell } from 'react-icons/ai'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
+import $ from 'jquery'
 
 const Boardwirte = (props) => {
   const dispatch = useDispatch()
@@ -86,10 +87,21 @@ const Boardwirte = (props) => {
   const handleChangeFile = (e) => {
     setFile(e.target.files)
   }
-
-  function Send() {
+  console.log(file)
+  //파일업로드 글작성
+  const send = () => {
     const fd = new FormData()
     Object.values(file).forEach((file) => fd.append('file', file))
+
+    const write = {
+      url: params.url,
+      title: $('#issue').val() + ' ' + $('#title').val(),
+      nickname: login.nickname,
+      ori_filename: file[0].name,
+      content: content,
+      filesize: file[0].size,
+    }
+    console.log('파일사이즈' + file[0].size)
     axios({
       method: 'post',
       url: '/board/boardwrite',
@@ -97,11 +109,15 @@ const Boardwirte = (props) => {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': `multipart/form-data; `,
       },
-      data: myparams,
+
+      data: write,
     }).then((res) => {
       setBoardcontent(res.data)
     })
+    console.log(write)
   }
+  console.log(file)
+  console.log('wpahr' + $('#title').val())
   return (
     <>
       <CCard className="mb-4">
@@ -142,7 +158,7 @@ const Boardwirte = (props) => {
                         placeholder="참조이슈번호"
                         aria-label="default input example"
                         onKeyUp={onKeyUP}
-                        name="issue"
+                        id="issue"
                         value={issueNumber}
                         onChange={getIssue}
                       />
@@ -153,10 +169,10 @@ const Boardwirte = (props) => {
                       </label>
                       <br></br>
                       <CFormInput
+                        id="title"
                         type="text"
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
-                        value={boardcontent.title}
                       />
                     </CCol>
                   </CCol>
@@ -232,7 +248,7 @@ const Boardwirte = (props) => {
                       <br></br>
                       <CCol align="right">
                         <Link to={`/ws/${params.url}/boardlist`}>
-                          <CButton variant="outline" onClick={() => Send()}>
+                          <CButton variant="outline" onClick={send}>
                             글쓰기
                           </CButton>
                         </Link>

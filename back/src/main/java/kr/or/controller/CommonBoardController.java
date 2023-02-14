@@ -62,14 +62,21 @@ public class CommonBoardController {
 	@RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
 	public int addCommonBoard(
 	    @RequestParam(value = "file", required = false) MultipartFile[] files,
+	    @RequestParam("url") String url,
 	    @RequestParam("title") String title,
 	    @RequestParam("nickname") String nickname,
 	    @RequestParam("content") String content,
-	    @RequestParam("ori_filename") String ori_filename
+	    @RequestParam("ori_filename") String ori_filename,
+	    @RequestParam("filesize") int filesize
 	) {
+		System.out.println(files);
 	    String fileNames = "";
 	    String filePath = "C:/saveFolder/";
-
+	    File folder = new File("C:/saveFolder/");
+	    if (!folder.exists()) {
+	        folder.mkdir();
+	    }
+	   
 	    // Handle file upload
 	    if (files != null) {
 	        for (MultipartFile file : files) {
@@ -94,12 +101,23 @@ public class CommonBoardController {
 	    }
 
 	    CommonBoard commonboard = new CommonBoard();
+	    commonboard.setUrl(url);
 	    commonboard.setTitle(title);
 	    commonboard.setNickname(nickname);
+	   
 	    commonboard.setContent(content);
+	    commonboard.setVolume(filesize);
+	    
 	    commonboard.setOri_filename(ori_filename); // Remove first comma
 
 	    int result = commonboardservice.addCommonBoard(commonboard);
 	    return result;
+	}
+	//글 삭제 
+	@RequestMapping(value="boarddelete", method =RequestMethod.POST)
+	public int deleteCommonBoard(@RequestBody CommonBoard commonboard) {
+		int result = commonboardservice.delectCommonboard(commonboard);
+		return result;
+		
 	}
 }

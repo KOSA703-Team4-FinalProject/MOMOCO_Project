@@ -49,6 +49,7 @@ const Boardlist = () => {
   const myparams = {
     url: params.url,
   }
+
   useEffect(() => {
     // AES알고리즘 사용 복호화
     const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -69,9 +70,9 @@ const Boardlist = () => {
   //글세부내용
   const navigate1 = useNavigate()
   const handleClick = () => {
-    boardlist.map((data) => navigate1(`/ws/${params.url}/boardcontent/${data.idx}`))
+    boardlist.map((data1) => navigate1(`/ws/${params.url}/boardcontent/${data1.idx}`))
   }
-
+  console.log('이거는 무슨데이터냐' + data.idx)
   return (
     <>
       <CCard className="mb-4">

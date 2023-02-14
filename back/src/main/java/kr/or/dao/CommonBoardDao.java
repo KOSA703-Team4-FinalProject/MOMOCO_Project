@@ -16,4 +16,8 @@ public interface CommonBoardDao {
 	//글쓰기
 	public int addCommonBoard(CommonBoard all) throws ClassNotFoundException, SQLException;
 	
+	//글삭제
+	public int deletecommonboard(CommonBoard cmm)throws ClassNotFoundException, SQLException;
+	
+	
 }

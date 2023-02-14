@@ -344,9 +344,14 @@ const Calendar = () => {
                       <div className="col-md-8 mt-1" align="right">
                         <strong>참석 : </strong>
                         {checkList.map((data) => (
-                          <CAvatar color="primary" textColor="white" shape="rounded"  key={data.u_idx}>
-                          {data.nickname}..
-                        </CAvatar>
+                          <CAvatar
+                            color="primary"
+                            textColor="white"
+                            shape="rounded"
+                            key={data.u_idx}
+                          >
+                            {data.nickname}..
+                          </CAvatar>
                         ))}
                       </div>
                     </div>
