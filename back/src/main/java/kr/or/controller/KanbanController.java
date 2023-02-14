@@ -43,7 +43,7 @@ public class KanbanController {
 				arr = myMap.get(k.getS_name()); // 이미 존재하는 배열을 가지고 와
 				arr.add(k); // 배열에 새 칸반을 추가하고
 				myMap.remove(k.getS_name()); // 기존 해시맵에 있는 컬럼을 지운 다음
-				myMap.put(k.getS_name(), arr); // 해시맴에 추가
+				myMap.put(k.getS_name(), arr); // 해시맵에 추가
 
 			} else { // 맵에 해당하는 키가 이미 존재하지 않는 경우
 				conArr.add(k.getS_name());

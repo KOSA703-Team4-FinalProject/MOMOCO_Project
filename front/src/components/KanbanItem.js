@@ -90,48 +90,50 @@ const KanbanItem = () => {
     })
   }, [])
 
-  function myView(data) {
-    {
-      data.map((data2) => {
-        return (
-          <div className="py-1" key={data2.idx}>
-            <CCard className="draggable" draggable="true">
-              <CRow>
-                <CCol xs="auto" className="me-auto">
-                  <CCardHeader>{data2.title}</CCardHeader>
-                </CCol>
-                <CCol xs="auto">
-                  <CDropdown alignment="end">
-                    <CDropdownToggle color="transparent" caret={false} className="p-0">
-                      <CIcon icon={icon.cilChevronBottom} />
-                    </CDropdownToggle>
-                    <CDropdownMenu>
-                      <CDropdownItem>wlsgo</CDropdownItem>
-                      <CDropdownItem>Another action</CDropdownItem>
-                      <CDropdownItem>Something else here...</CDropdownItem>
-                      <CDropdownItem disabled>Disabled action</CDropdownItem>
-                    </CDropdownMenu>
-                  </CDropdown>
-                </CCol>
-              </CRow>
-              <CCardBody>
-                <CCardTitle>
-                  <a onClick={() => setVisibleXL(!visibleXL)} style={font}>
-                    {data2.content}
-                  </a>
-                </CCardTitle>
-              </CCardBody>
-              <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
-                <CModalBody>
-                  <KanbanDetail />
-                </CModalBody>
-              </CModal>
-            </CCard>
-          </div>
-        )
+  useEffect(() => {
+    let draggables = document.querySelectorAll('.draggable')
+    let containers = document.querySelectorAll('.container1')
+
+    draggables.forEach((draggable) => {
+      draggable.addEventListener('dragstart', () => {
+        draggable.classList.add('dragging')
       })
+
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging')
+      })
+    })
+
+    containers.forEach((container1) => {
+      container1.addEventListener('dragover', (e) => {
+        e.preventDefault()
+        const afterElement = getDragAfterElement(container1, e.clientX)
+        const draggable = document.querySelector('.dragging')
+        if (afterElement === undefined) {
+          container1.appendChild(draggable)
+        } else {
+          container1.insertBefore(draggable, afterElement)
+        }
+      })
+    })
+
+    function getDragAfterElement(container1, x) {
+      const draggableElements = [...container1.querySelectorAll('.draggable:not(.dragging)')]
+      return draggableElements.reduce(
+        (closest, child) => {
+          const box = child.getBoundingClientRect()
+          const offset = x - box.left - box.width / 2
+          // console.log(offset);
+          if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child }
+          } else {
+            return closest
+          }
+        },
+        { offset: Number.NEGATIVE_INFINITY },
+      ).element
     }
-  }
+  }, [view, view2])
 
   return (
     <>
@@ -145,18 +147,18 @@ const KanbanItem = () => {
             return (
               <CCard
                 style={{ width: '300px' }}
-                className="bg-light py-3 me-2 container1"
+                className="bg-dark py-3 me-2 container1"
                 key={conList[key].s_name}
               >
                 <CRow>
-                  <CCol xs="auto" className="me-auto bg-light">
+                  <CCol xs="auto" className="me-auto text-light">
                     {conList[key].s_name}
                   </CCol>
                   <CCol xs="auto">
                     {' '}
                     <CDropdown alignment="end">
                       <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} />
+                        <CIcon icon={icon.cilOptions} className="text-light" />
                       </CDropdownToggle>
                       <CDropdownMenu>
                         <CDropdownItem>Action</CDropdownItem>
@@ -170,7 +172,7 @@ const KanbanItem = () => {
                 <Suspense fallback={loading}>
                   {data.map((data2) => {
                     return (
-                      <div className="py-1" key={data2.idx}>
+                      <div className="" key={data2.idx}>
                         <CCard className="draggable" draggable="true">
                           <CRow>
                             <CCol xs="auto" className="me-auto">

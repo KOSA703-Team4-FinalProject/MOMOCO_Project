@@ -42,6 +42,7 @@ import { PRIMARY_KEY } from '../../oauth'
 import { width } from '@mui/system'
 import { Navigate, useParams } from 'react-router-dom'
 import $ from 'jquery'
+import KanbanAddColumn from './KanbanAddColumn'
 
 const Kanban = () => {
   const [visible, setVisible] = useState(false)
@@ -86,57 +87,14 @@ const Kanban = () => {
     })
   }
 
+  const addColumn = () => {}
+
   /**
    * [x] 엘리먼트의 .draggable, .container의 배열로 선택자를 지정합니다.
    * [x] draggables를 전체를 루프하면서 dragstart, dragend를 이벤트를 발생시킵니다.
    * [x] dragstart, dragend 이벤트를 발생할때 .dragging라는 클래스를 토글시킨다.
    * [x] dragover 이벤트가 발생하는 동안 마우스 드래그하고 마지막 위치해놓은 Element를 리턴하는 함수를 만듭니다.
    */
-
-  useEffect(() => {
-    let draggables = document.querySelectorAll('.draggable')
-    let containers = document.querySelectorAll('.container1')
-
-    draggables.forEach((draggable) => {
-      draggable.addEventListener('dragstart', () => {
-        draggable.classList.add('dragging')
-      })
-
-      draggable.addEventListener('dragend', () => {
-        draggable.classList.remove('dragging')
-      })
-    })
-
-    containers.forEach((container1) => {
-      container1.addEventListener('dragover', (e) => {
-        e.preventDefault()
-        const afterElement = getDragAfterElement(container1, e.clientX)
-        const draggable = document.querySelector('.dragging')
-        if (afterElement === undefined) {
-          container1.appendChild(draggable)
-        } else {
-          container1.insertBefore(draggable, afterElement)
-        }
-      })
-    })
-
-    function getDragAfterElement(container1, x) {
-      const draggableElements = [...container1.querySelectorAll('.draggable:not(.dragging)')]
-      return draggableElements.reduce(
-        (closest, child) => {
-          const box = child.getBoundingClientRect()
-          const offset = x - box.left - box.width / 2
-          // console.log(offset);
-          if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child }
-          } else {
-            return closest
-          }
-        },
-        { offset: Number.NEGATIVE_INFINITY },
-      ).element
-    }
-  }, [])
 
   return (
     <>
@@ -152,7 +110,7 @@ const Kanban = () => {
             <div className="mb-3">
               <CIcon icon={icon.cibGithub} className="me-2" />
               <CFormLabel htmlFor="exampleFormControlInput1">Add Item</CFormLabel>
-              <CFormInput type="email" id="kanbantitle" placeholder="제목을 입력해주세요" />
+              <CFormInput type="text" id="kanbantitle" placeholder="제목을 입력해주세요" />
             </div>
             <hr />
             상태 입력
@@ -206,12 +164,7 @@ const Kanban = () => {
 
               <CCard style={{ width: '300px' }} className="">
                 <CCardHeader>
-                  <CIcon
-                    icon={icon.cilPlus}
-                    onClick={() => {
-                      alert('플러스 클릭')
-                    }}
-                  />
+                  <CIcon icon={icon.cilPlus} onClick={() => {}} />
                 </CCardHeader>
               </CCard>
             </CRow>
