@@ -10,4 +10,13 @@ public interface ChatRoomDao {
 	//채팅방 전체 확인
 	public List<ChatRoom> getChatRoom(ChatRoom chatroom) throws ClassNotFoundException, SQLException;
 	
+	//채팅방 생성
+	public int createRoom(ChatRoom chatroom) throws ClassNotFoundException, SQLException;
+	
+	//채팅방 삭제
+	public int deleteRoom(ChatRoom chatroom) throws ClassNotFoundException, SQLException; 
+	
+	//특정 채팅방 조회
+	public ChatRoom getChatRoomByRidx(ChatRoom chatroom) throws ClassNotFoundException, SQLException; 
+	
 }

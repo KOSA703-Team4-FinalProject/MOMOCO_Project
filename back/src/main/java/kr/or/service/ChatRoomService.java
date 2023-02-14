@@ -40,4 +40,58 @@ public class ChatRoomService {
 		return list;
 	}
 
+	//채팅방 생성
+	public int createRoom(ChatRoom chatroom) {
+		int result = 0;
+		
+		try {
+			
+			ChatRoomDao charroomdao = sqlsession.getMapper(ChatRoomDao.class);
+			result = charroomdao.createRoom(chatroom);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	//채팅방 삭제
+	public int deleteRoom(ChatRoom chatroom) {
+		int result = 0;
+		
+		try {
+			
+			ChatRoomDao charroomdao = sqlsession.getMapper(ChatRoomDao.class);
+			result = charroomdao.deleteRoom(chatroom);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	//특정 채팅방 조회
+	public ChatRoom selectRoom(ChatRoom chatroom) {
+		ChatRoom room = new ChatRoom();
+		
+		try {
+			
+			ChatRoomDao charroomdao = sqlsession.getMapper(ChatRoomDao.class);
+			room = charroomdao.getChatRoomByRidx(chatroom);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return room;
+	}
+	
 }

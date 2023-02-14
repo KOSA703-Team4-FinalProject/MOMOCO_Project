@@ -7,7 +7,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 채팅방 전체 조회 public List<ChatRoom> getChatRoom(ChatRoom chatroom) -->
 	<select id="getChatRoom" parameterType="kr.or.vo.ChatRoom" resultType="kr.or.vo.ChatRoom">
 		select r_idx, r_name
-		from chatroom_${url}
+		from chatroom_${url} order by r_idx
 	</select>
+	
+	<!-- 채팅방 생성 public int createRoom(ChatRoom chatroom) -->
+	<insert id="createRoom" parameterType="kr.or.vo.ChatRoom">
+		insert into chatroom_${url} (r_idx, r_name)
+				values (chatroom_r_idx_seq_${url}.nextval, #{r_name})
+	</insert>
+	
+	<!-- 채팅방 제거 public int deleteRoom(ChatRoom chatroom) -->
+	<delete id="deleteRoom" parameterType="kr.or.vo.ChatRoom">
+		delete from chatroom_${url}
+			where r_idx = #{r_idx}
+	</delete>
+	
+	<!-- 특정 채팅방 조회 public ChatRoom getChatRoomByRidx(ChatRoom chatroom)  -->
+	<select id="getChatRoomByRidx" parameterType="kr.or.vo.ChatRoom" resultType="kr.or.vo.ChatRoom">
+		select r_idx, r_name from chatroom_${url} where r_idx = #{r_idx}
+	</select>
+
 
 </mapper>
