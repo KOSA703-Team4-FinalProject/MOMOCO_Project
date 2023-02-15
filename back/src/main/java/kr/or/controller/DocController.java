@@ -42,7 +42,7 @@ public class DocController {
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public int addDoc(@RequestBody Doc doc, @RequestPart("file") MultipartFile file) {
+	public int addDoc(@RequestBody Doc doc, @RequestPart("ori_filename") MultipartFile file) {
 		
 		System.out.println("doc 글입력");
 		int result = docservice.addDoc(doc, file);
@@ -51,24 +51,11 @@ public class DocController {
 	}
 	
 	@RequestMapping("/download")
-	public void downDoc(String url, String p , String f , HttpServletRequest request , HttpServletResponse response) throws IOException {
-		  docservice.downDoc(url, p, f, request, response);
+	public void downDoc(String url, String filename, HttpServletRequest request , HttpServletResponse response) throws IOException {
+		  docservice.downDoc(url, filename, request, response);
 	}
 	
  
  
- 	/*
-	 * //일정 확인
-	 * 
-	 * @RequestMapping(value="/read", method=RequestMethod.POST) public CalendarAll
-	 * getCalendarByTitle(@RequestBody CalendarAll cal) {
-	 * 
-	 * CalendarAll calendar = new CalendarAll();
-	 * 
-	 * calendar = calendarservice.readCalendar(cal);
-	 * 
-	 * 
-	 * return calendar; }
-	 */
 	
 }

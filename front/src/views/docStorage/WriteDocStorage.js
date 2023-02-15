@@ -32,34 +32,42 @@ const WriteDocStorage = () => {
   const url = params.url
 
   const titleHandler = (e) => {
-    e.preventDefault()
     SetTitle(e.target.value)
   }
 
   const FileHandler = (e) => {
-    e.preventDefault()
     SetOrifile(e.target.file[0])
   }
 
   const EditorHandler = (e) => {
-    e.preventDefault()
-    SetContent(e.target.value)
+    SetContent(e)
   }
 
   const SubmitHandler = (e) => {
     e.preventDefault()
 
     const formData = new FormData()
-    formData.append('nickname', nickname)
-    formData.append('title', title)
-    formData.append('content', content)
-    formData.append('b_code', 3)
-    formData.append('label', 'doc')
-    formData.append('depth', 0)
-    formData.append('step', 0)
-    formData.append('u_idx', u_idx)
-    formData.append('url', url)
+
+    const data = [
+      {
+        title: title,
+        content: content,
+        b_code: 3,
+        label: 'doc',
+        depth: 0,
+        step: 0,
+        u_idx: u_idx,
+        url: url,
+        nickname: nickname,
+      },
+    ]
     formData.append('ori_filename', orifile)
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(data)], {
+        type: 'application/json',
+      }),
+    )
 
     try {
       axios({
@@ -69,7 +77,7 @@ const WriteDocStorage = () => {
           'Content-Type': 'multipart/form-data',
         },
         url: '/doc/addDoc',
-        data: formData,
+        data: data,
       }).then((res) => {
         if (res.data == 1) {
           alert('문서가 등록되었습니다.')
@@ -136,6 +144,7 @@ const WriteDocStorage = () => {
         <CCardBody>
           <Editor
             onEditorChange={EditorHandler}
+            value={content.content}
             id="tinyEditor"
             apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
             init={{

@@ -29,7 +29,6 @@ import issuelist from '../board/issuelist'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
 
 const docStorage = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
