@@ -137,13 +137,13 @@ const KanbanItem = () => {
 
   return (
     <>
-      {view == false ? (
+      {view2 == false ? (
         <></>
-      ) : view2 == false ? (
+      ) : view == false ? (
         <></>
       ) : (
         <Suspense fallback={loading}>
-          {kanbanItemList.map((data, key) => {
+          {conList.map((data, key) => {
             return (
               <CCard
                 style={{ width: '300px' }}
@@ -169,46 +169,58 @@ const KanbanItem = () => {
                     </CDropdown>
                   </CCol>
                 </CRow>
-                <Suspense fallback={loading}>
-                  {data.map((data2) => {
-                    return (
-                      <div className="" key={data2.idx}>
-                        <CCard className="draggable" draggable="true">
-                          <CRow>
-                            <CCol xs="auto" className="me-auto">
-                              <CCardHeader>{data2.title}</CCardHeader>
-                            </CCol>
-                            <CCol xs="auto">
-                              <CDropdown alignment="end">
-                                <CDropdownToggle color="transparent" caret={false} className="p-0">
-                                  <CIcon icon={icon.cilChevronBottom} />
-                                </CDropdownToggle>
-                                <CDropdownMenu>
-                                  <CDropdownItem>wlsgo</CDropdownItem>
-                                  <CDropdownItem>Another action</CDropdownItem>
-                                  <CDropdownItem>Something else here...</CDropdownItem>
-                                  <CDropdownItem disabled>Disabled action</CDropdownItem>
-                                </CDropdownMenu>
-                              </CDropdown>
-                            </CCol>
-                          </CRow>
-                          <CCardBody>
-                            <CCardTitle>
-                              <a onClick={() => setVisibleXL(!visibleXL)} style={font}>
-                                {data2.content}
-                              </a>
-                            </CCardTitle>
-                          </CCardBody>
-                          <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
-                            <CModalBody>
-                              <KanbanDetail />
-                            </CModalBody>
-                          </CModal>
-                        </CCard>
-                      </div>
-                    )
-                  })}
-                </Suspense>
+                {kanbanItemList[key] == null ? (
+                  <></>
+                ) : (
+                  <Suspense fallback={loading}>
+                    {kanbanItemList[key].map((data2) => {
+                      return (
+                        <div className="" key={data2.idx}>
+                          <CCard className="draggable" draggable="true">
+                            <CRow>
+                              <CCol xs="auto" className="me-auto">
+                                <CCardHeader>{data2.title}</CCardHeader>
+                              </CCol>
+                              <CCol xs="auto">
+                                <CDropdown alignment="end">
+                                  <CDropdownToggle
+                                    color="transparent"
+                                    caret={false}
+                                    className="p-0"
+                                  >
+                                    <CIcon icon={icon.cilChevronBottom} />
+                                  </CDropdownToggle>
+                                  <CDropdownMenu>
+                                    <CDropdownItem>wlsgo</CDropdownItem>
+                                    <CDropdownItem>Another action</CDropdownItem>
+                                    <CDropdownItem>Something else here...</CDropdownItem>
+                                    <CDropdownItem disabled>Disabled action</CDropdownItem>
+                                  </CDropdownMenu>
+                                </CDropdown>
+                              </CCol>
+                            </CRow>
+                            <CCardBody>
+                              <CCardTitle>
+                                <a onClick={() => setVisibleXL(!visibleXL)} style={font}>
+                                  {data2.content}
+                                </a>
+                              </CCardTitle>
+                            </CCardBody>
+                            <CModal
+                              size="xl"
+                              visible={visibleXL}
+                              onClose={() => setVisibleXL(false)}
+                            >
+                              <CModalBody>
+                                <KanbanDetail />
+                              </CModalBody>
+                            </CModal>
+                          </CCard>
+                        </div>
+                      )
+                    })}
+                  </Suspense>
+                )}
               </CCard>
             )
           })}

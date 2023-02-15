@@ -21,6 +21,7 @@ public class KanbanService {
 		this.sqlsession = sqlsession;
 	}
 
+	// 칸반 전체 목록 불러오기
 	public List<Kanban> getKanban(String url) {
 		List<Kanban> kanban = new ArrayList<Kanban>();
 		
@@ -39,6 +40,7 @@ public class KanbanService {
 		return kanban;
 	}
 
+	// 칸반 아이템 추가
 	public int addKanban(Kanban kanban) {
 		int result = 0;
 		
@@ -51,6 +53,24 @@ public class KanbanService {
 			e.printStackTrace();
 		} catch (SQLException e) {
 		
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	public int addKanbanColumn(String url) {
+		int result = 0;
+		
+		
+		try {
+			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
+			result = kanbandao.addKanbanColumn(url);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

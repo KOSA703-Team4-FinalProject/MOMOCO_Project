@@ -74,10 +74,23 @@ public class KanbanController {
 
 	// 칸반 아이템 추가
 	@RequestMapping(value = "/addKanban", method = RequestMethod.POST)
-	public int addCalendar(@RequestBody Kanban kanban) {
-		System.out.println("칸반 컨트롤러");
+	public int addKanban(@RequestBody Kanban kanban) {
+		
 		int result = kanbanserivce.addKanban(kanban);
-		System.out.println("kanban : " + kanban);
+		
+		return result;
+	}
+	
+	
+	// 칸반 컬럼 추가
+	@RequestMapping(value = "addKanbanColumn", method = RequestMethod.POST)
+	public int addKanbanColumn(@RequestBody Kanban url) {
+		System.out.println("칸반 컨트롤러");
+		
+		int result = kanbanserivce.addKanbanColumn(url.getUrl());
+		
+		System.out.println(url.getUrl());
+		
 		return result;
 	}
 
