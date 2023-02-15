@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -65,8 +65,14 @@ const workSpace = () => {
 
   const EndDateHandler = (e) => {
     e.preventDefault()
+    console.log(start_Date)
     SetEnd_Date(e.target.value)
   }
+  useEffect(() => {
+    if (start_Date > end_Date) {
+      alert('종료일은 시작일보다 우선될 수 없습니다')
+    }
+  }, [end_Date])
 
   const login = JSON.parse(localStorage.getItem('login'))
   const admin = login.u_idx
@@ -228,18 +234,19 @@ const workSpace = () => {
                   </CRow>
                   <CRow>
                     <CCol align="end" className="pt-4">
-                      {check === '사용 가능' ? (
-                        <CButton
-                          type="submit"
-                          className="mx-1"
-                          color="primary"
-                          shape="rounded-pill"
-                        >
-                          만들기
-                        </CButton>
+                      {check === '사용 가능' && start_Date < end_Date ? (
+                        <>
+                          <CButton
+                            type="submit"
+                            className="mx-1"
+                            color="primary"
+                            shape="rounded-pill"
+                          >
+                            만들기
+                          </CButton>
+                        </>
                       ) : (
                         <>
-                          <strong>중복 체크 필요</strong>
                           <CButton
                             type="submit"
                             className="mx-1"
