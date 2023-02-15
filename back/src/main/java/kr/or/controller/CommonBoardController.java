@@ -67,7 +67,10 @@ public class CommonBoardController {
 	    @RequestParam("nickname") String nickname,
 	    @RequestParam("content") String content,
 	    @RequestParam("ori_filename") String ori_filename,
-	    @RequestParam("filesize") int filesize
+	    @RequestParam("filesize") int filesize,
+	    @RequestParam("u_idx") int u_idx,
+	    @RequestParam("b_code") int b_code
+	    
 	) {
 		System.out.println(files);
 	    String fileNames = "";
@@ -107,7 +110,8 @@ public class CommonBoardController {
 	   
 	    commonboard.setContent(content);
 	    commonboard.setVolume(filesize);
-	    
+	    commonboard.setB_code(b_code);
+	    commonboard.setU_idx(u_idx);
 	    commonboard.setOri_filename(ori_filename); // Remove first comma
 
 	    int result = commonboardservice.addCommonBoard(commonboard);

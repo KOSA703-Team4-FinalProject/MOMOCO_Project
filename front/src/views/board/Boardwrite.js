@@ -18,11 +18,11 @@ import { Link, NavLink, useParams } from 'react-router-dom'
 import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateIssueModal, updateissueNumber } from 'src/store'
-import { AiFillBell } from 'react-icons/ai'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import $ from 'jquery'
+import Swal from 'sweetalert2'
 
 const Boardwirte = (props) => {
   const dispatch = useDispatch()
@@ -69,7 +69,6 @@ const Boardwirte = (props) => {
 
   const handleEditorChange = (content) => {
     setContent(content)
-    console.log('내용' + content)
   }
 
   const myparams = {
@@ -100,8 +99,16 @@ const Boardwirte = (props) => {
       ori_filename: file[0].name,
       content: content,
       filesize: file[0].size,
+      b_code: 5,
+      u_idx: login.u_idx,
     }
-    console.log('파일사이즈' + file[0].size)
+    if ($('#title').val() == null) {
+      Swal.fire('제목을 입력하주세요')
+    } else if (file[0].name == null) {
+      Swal.fire('파일을 첨부해주세요')
+    } else if (content == null) {
+      Swal.fire('글을 입력해주세요')
+    }
     axios({
       method: 'post',
       url: '/board/boardwrite',
@@ -242,6 +249,7 @@ const Boardwirte = (props) => {
                             'removeformat | help',
                           content_style:
                             'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                          forced_root_block: false,
                         }}
                       />
 
