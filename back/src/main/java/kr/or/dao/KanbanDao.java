@@ -13,4 +13,6 @@ public interface KanbanDao {
 
 	public int addKanban(Kanban kanban) throws ClassNotFoundException, SQLException;
 
+	public int addKanbanColumn(String url) throws ClassNotFoundException, SQLException;
+
 }

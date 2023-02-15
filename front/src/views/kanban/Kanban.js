@@ -28,6 +28,8 @@ import {
   CFormTextarea,
   CFormLabel,
   CFormSelect,
+  CCollapse,
+  CHeader,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -45,6 +47,7 @@ import $ from 'jquery'
 
 const Kanban = () => {
   const [visible, setVisible] = useState(false)
+  const [visibleB, setVisibleB] = useState(false)
 
   // 변수
   const [addKanbanItem, setAddKanbanItem] = useState([])
@@ -86,7 +89,25 @@ const Kanban = () => {
     })
   }
 
-  const addColumn = () => {}
+  const addColumn = () => {
+    const reqData = {
+      s_name: $('#addcolumntitle').val(),
+      url: url,
+    }
+
+    axios({
+      method: 'POST',
+      url: '/api/kanban/addKanban',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData,
+    }).then((res) => {
+      console.log(res)
+      alert('등록되었습니다.')
+      location.reload()
+    })
+  }
 
   /**
    * [x] 엘리먼트의 .draggable, .container의 배열로 선택자를 지정합니다.
@@ -122,6 +143,7 @@ const Kanban = () => {
                 { label: '진행 전', value: '1' },
                 { label: '진행중', value: '2' },
                 { label: '완료', value: '3' },
+                { label: 'test', value: '4' },
               ]}
             />
             <br />
@@ -162,9 +184,52 @@ const Kanban = () => {
               <KanbanItem />
 
               <CCard style={{ width: '300px' }} className="">
-                <CCardHeader>
-                  <CIcon icon={icon.cilPlus} onClick={() => {}} />
-                </CCardHeader>
+                <CHeader onClick={() => setVisibleB(!visibleB)}>
+                  <CIcon icon={icon.cilPlus} />
+                </CHeader>
+                <CRow>
+                  <CCol xs={12}>
+                    <CCollapse visible={visibleB}>
+                      <CCard className="mt-3">
+                        <CCardBody>
+                          <div className="mb-3">
+                            <CForm>
+                              <CFormLabel htmlFor="exampleFormControlTextarea1">
+                                <strong>컬럼 추가</strong>
+                              </CFormLabel>
+                              <br />
+                              <br />
+                              제목
+                              <CFormInput
+                                type="text"
+                                id="addcolumntitle"
+                                placeholder="제목을 입력해주세요"
+                              />
+                              <br />
+                              <div align="end">
+                                <CButton
+                                  variant="outline"
+                                  type="submit"
+                                  color="primary"
+                                  onClick={() => {
+                                    if (confirm('컬럼을 등록하시겠습니까?')) {
+                                      alert('등록을 완료했습니다.')
+                                      addColumn()
+                                    } else {
+                                      alert('취소했습니다.')
+                                    }
+                                  }}
+                                >
+                                  등록
+                                </CButton>
+                              </div>
+                            </CForm>
+                          </div>
+                        </CCardBody>
+                      </CCard>
+                    </CCollapse>
+                  </CCol>
+                </CRow>
               </CCard>
             </CRow>
           </CCardBody>

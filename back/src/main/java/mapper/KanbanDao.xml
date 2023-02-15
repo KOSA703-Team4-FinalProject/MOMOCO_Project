@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	
-		<!-- 일정 추가 public int addKanban(Map map) -->
+		<!-- 칸반 아이템 추가 public int addKanban(Map map) -->
 	<insert id="addKanban" parameterType="kr.or.vo.Kanban">
 		insert all
 			into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
@@ -26,6 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				values (kanban_b_idx_seq_${url}.nextval, '', '' , board_idx_seq_${url}.CURRVAL, ${s_idx})
 		select * from dual
 	</insert>
+	
+		<!-- 칸반 컬럼 추가  -->
+		<insert id = "addKanbanColumn" parameterType = "kr.or.vo.Kanban">
+		insert into status_${url} (s_idx, s_name) values(status_s_idx_seq_${url}.nextval, '${s_name}')
+		</insert>
 	
 
 
