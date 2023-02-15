@@ -35,7 +35,7 @@
 	
 	
 	<websocket:message-broker application-destination-prefix="/pub" >
-        <websocket:stomp-endpoint path="/chat" allowed-origins="192.168.0.30:8090/controller/chat"> <!-- 웹소켓 핸드셰이크 커넥션을 생성할 경로 -->
+        <websocket:stomp-endpoint path="/chat" allowed-origins="192.168.0.30:8090/controller/api/chat"> <!-- 웹소켓 핸드셰이크 커넥션을 생성할 경로 -->
             <websocket:sockjs websocket-enabled="true" />
         </websocket:stomp-endpoint>
         <websocket:simple-broker prefix="/sub, /one" />

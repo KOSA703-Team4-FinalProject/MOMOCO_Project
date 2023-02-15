@@ -10,4 +10,7 @@ public interface ChatDao {
 	//채팅방 기록 불러오기
 	public List<Chat> getChat(Chat chat) throws ClassNotFoundException, SQLException;
 
+	//채팅 전송
+	public int sendChat(Chat chat) throws ClassNotFoundException, SQLException;
+	
 }
