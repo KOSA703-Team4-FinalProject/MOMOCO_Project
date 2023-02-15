@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 전체 글 확인 public List<Board> getBoard() -->
 	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
-		select idx, nickname, title, content, w_date, b_code, label, u_idx from board_${url}
+		select idx, nickname, title, content, w_date, b_code, label, u_idx from board_${url} order by idx
 	</select>
 	
    <!-- 글읽기-->
@@ -34,5 +34,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from board_${url} where idx = #{idx}
 	</delete>
 	<!-- 검색-->
+	<!--알림보내기-->
 	
 </mapper>

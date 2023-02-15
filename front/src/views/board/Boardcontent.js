@@ -42,6 +42,7 @@ const tag = {
 
 const Boardcontent = () => {
   const [boardcontent, setBoardcontent] = useState([])
+
   const params = useParams()
 
   // AES알고리즘 사용 복호화
@@ -88,6 +89,7 @@ const Boardcontent = () => {
       setBoardcontent('')
     })
   }
+
   return (
     <div>
       <CCard className="mb-4">
@@ -193,6 +195,12 @@ const Boardcontent = () => {
           <Link to={`/ws/${params.url}/boardlist`}>
             <CButton color="danger" variant="outline" onClick={deletecommon}>
               삭제
+            </CButton>
+          </Link>
+          &nbsp;
+          <Link to={`/ws/${params.url}/boardlist`}>
+            <CButton color="primary" variant="outline">
+              목록으로
             </CButton>
           </Link>
         </div>

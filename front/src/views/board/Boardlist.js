@@ -49,7 +49,7 @@ const Boardlist = () => {
   const myparams = {
     url: params.url,
   }
-
+  console.log(boardlist)
   useEffect(() => {
     // AES알고리즘 사용 복호화
     const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -69,10 +69,7 @@ const Boardlist = () => {
   }, [])
   //글세부내용
   const navigate1 = useNavigate()
-  const handleClick = () => {
-    boardlist.map((data1) => navigate1(`/ws/${params.url}/boardcontent/${data1.idx}`))
-  }
-  console.log('이거는 무슨데이터냐' + data.idx)
+
   return (
     <>
       <CCard className="mb-4">
@@ -166,7 +163,13 @@ const Boardlist = () => {
 
                 {/* 게시판 목록 시작 */}
                 {boardlist.map((data, key) => (
-                  <CCard className="p-3 mt-3" key={key} onClick={handleClick}>
+                  <CCard
+                    className="p-3 mt-3"
+                    key={key}
+                    onClick={() => {
+                      navigate1(`/ws/${params.url}/boardcontent/${data.idx}`)
+                    }}
+                  >
                     <div className="col-md-12">
                       <div className="row">
                         <div className="col-md-1" style={number}>
@@ -179,7 +182,7 @@ const Boardlist = () => {
                               <strong> {data.title}</strong>
                             </div>
                             <div className="col-md-12" style={context}>
-                              {data.content}
+                              {data.content.replace(/(<([^>]+)>)/gi, '')}
                             </div>
                             <div className="col-md-12">
                               <CBadge color="dark" shape="rounded-pill" style={boardname}>
@@ -193,9 +196,11 @@ const Boardlist = () => {
                             <CAvatar
                               className="ms-3"
                               src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                            />
+                            />{' '}
+                            &nbsp;
                             {data.nickname}
                           </div>
+
                           <div className="col-md-12" align="end" style={writedate}>
                             {data.w_date}
                           </div>
