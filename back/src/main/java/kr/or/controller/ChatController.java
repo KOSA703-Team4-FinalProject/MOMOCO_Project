@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/chat")
 public class ChatController {
 
 	private ChatService chatservice;
@@ -48,23 +47,10 @@ public class ChatController {
 	//특정 Broker로 메세지를 전달
 	private final SimpMessagingTemplate template;
 	
-	//채팅방 기록 & 채팅방 정보 불러오기
-	@RequestMapping(value="/get", method=RequestMethod.POST)
-	public List<Object> getChat(@RequestBody Chat chat){
-		
-		List<Chat> chatlist = new ArrayList<Chat>();
-		chatlist = chatservice.getChat(chat);
-		
-		ChatRoom tmp = new ChatRoom();
-		tmp.setR_idx(chat.getR_idx());
-		tmp.setUrl(chat.getUrl());
-		
-		//채팅방 정보 가져오기
-		ChatRoom room = chatroomservice.selectRoom(tmp);
-		
-		List<Object> result = new ArrayList<Object>();
-		result.add(chatlist);
-		result.add(room);
+	//채팅방 퇴장
+	@RequestMapping(value="/api/chat/del", method=RequestMethod.DELETE)
+	public int deleteChatUser(@RequestBody ChatUser chatuser) {
+		int result = chatuserservice.deleteChatUser(chatuser);
 		
 		return result;
 	}
@@ -72,8 +58,10 @@ public class ChatController {
 	//Client가 send할 수 있는 경로
 	//stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMapping 경로가 병합됨
 	//	/pub/chat/enter
-	@MessageMapping("/enter")
+	@MessageMapping("/chat/enter")
 	public void enter(Chat chat) {
+		
+		System.out.println("여기");
 		
 		ChatUser chatuser = new ChatUser();
 		chatuser.setU_idx(chat.getU_idx());
@@ -81,15 +69,39 @@ public class ChatController {
 		chatuser.setNickname(chat.getNickname());
 		chatuser.setUrl(chat.getUrl());
 		
-		chatuserservice.addChatUser(chatuser);
+		int result = chatuserservice.isChatUser(chatuser);
 		
-		chat.setContent(chat.getNickname() + "님이 채팅방에 참여하였습니다.");
-		template.convertAndSend("/sub/chat/room/" + chat.getR_idx(), chat);
+		if(result >= 1) {	//기존 유저
+			
+			//채팅 기록 불러오기
+			List<Chat> chatlist = new ArrayList<Chat>();
+			chatlist = chatservice.getChat(chat);
+			
+			//채팅방 정보 가져오기
+			ChatRoom tmp = new ChatRoom();
+			tmp.setR_idx(chat.getR_idx());
+			tmp.setUrl(chat.getUrl());
+			ChatRoom room = chatroomservice.selectRoom(tmp);
+			
+			List<Object> resultList = new ArrayList<Object>();
+			resultList.add(chatlist);
+			resultList.add(room);
+			
+			template.convertAndSend("/sub/chat/postInfo/" + chat.getR_idx(), resultList);
+			
+		} else { //신규 유저
+			
+			chatuserservice.addChatUser(chatuser); //DB 채팅방 유저에 추가
+			
+			chat.setContent(chat.getNickname() + "님이 채팅방에 참여하였습니다.");
+			chat.setNickname("sys");
+			template.convertAndSend("/sub/chat/room/" + chat.getR_idx(), chat);
+		}
 		
 	}
 	
 	//채팅 전송
-	@MessageMapping("/message")
+	@MessageMapping("/chat/message")
 	public void message(Chat chat) {
 		
 		chatservice.sendChat(chat);

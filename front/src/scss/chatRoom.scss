@@ -198,6 +198,12 @@ main header h3{
 .chat .me{
 	text-align:right;
 }
+.chat .sys{
+	text-align:center;
+}
+.chat .sys .message{
+	background-color:#b6ae58;
+}
 .chat .you .message{
 	background-color:#58b666;
 }
@@ -216,7 +222,7 @@ main header h3{
 }
 .chat .me .triangle{
 		border-color: transparent transparent #6fbced transparent;
-		margin-left:375px;
+		margin-left:355px;
 }
 
 main footer{
