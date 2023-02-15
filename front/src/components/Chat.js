@@ -6,8 +6,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
 import CryptoJS from 'crypto-js'
-import SockJS from 'sockjs-client'
-import stomp from 'react-stomp'
+import StompJs from "stompjs";
+import SockJS from "sockjs-client";
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
@@ -28,6 +28,51 @@ const Chat = () => {
   //인코딩, 문자열로 변환, JSON 변환
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
+
+  const login = JSON.parse(localStorage.getItem('login'))
+
+  const sockJs = new SockJS("/api/chat")
+  const stomp = StompJs.over(sockJs)
+
+  useEffect(() => {
+
+    connect()
+
+    return () => {
+      disconnect();
+    }
+
+  }, [])
+
+  const connect = () => {
+
+    stomp.connect(`Bearer ${accessToken}`, () => {
+      //메시지를 받음
+      stomp.subscribe("/sub/chat/room/"+chatRoomNumber, (chat) => {
+        appendMessage(chat);
+      })
+
+      //메시지 전송
+      stomp.send('/pub/chat/enter', `Bearer ${accessToken}`, JSON.stringify({r_idx: chatRoomNumber, u_idx: login.u_idx, nickname: login.nickname}))
+    })
+
+  }
+
+  const disconnect = () => {
+    console.log("연결 중지")
+    stomp.unsubscribe();
+  }
+
+  //서버로 부터 채팅 메시지가 도착함
+  function appendMessage(chat){
+
+    let message = JSON.parse(chat.body);
+    let userid = message.u_idx;
+
+    console.log("message");
+    console.log(message);
+
+  }
 
   //채팅 기록 & 채팅방 정보 불러오기
   useEffect(() => {

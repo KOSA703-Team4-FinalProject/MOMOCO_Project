@@ -42,7 +42,6 @@ import { PRIMARY_KEY } from '../../oauth'
 import { width } from '@mui/system'
 import { Navigate, useParams } from 'react-router-dom'
 import $ from 'jquery'
-import KanbanAddColumn from './KanbanAddColumn'
 
 const Kanban = () => {
   const [visible, setVisible] = useState(false)

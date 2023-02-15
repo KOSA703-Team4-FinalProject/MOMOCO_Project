@@ -37,9 +37,6 @@ import { data } from 'jquery'
 import momoco from '../assets/images/momocologo.png'
 import WorkSpaceListItem from 'src/components/WorkSpaceListItem'
 import { CButton } from '@coreui/react'
-import { CCard } from '@coreui/react'
-import TalkDrawer from './TalkDrawer'
-import TalkDrawerDetail from './TalkDrawerDetail'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
