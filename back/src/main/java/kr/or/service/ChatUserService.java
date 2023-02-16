@@ -1,6 +1,8 @@
 package kr.or.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,6 @@ public class ChatUserService {
 			e.printStackTrace();
 		}
 		
-		System.out.println("유무 결과 + " + result);
-		
 		return result;
 	}
 
@@ -63,7 +63,7 @@ public class ChatUserService {
 		try {
 			
 			ChatUserDao chatuserdao = sqlsession.getMapper(ChatUserDao.class);
-			chatuserdao.deleteChatUser(chatuser);
+			result = chatuserdao.deleteChatUser(chatuser);
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -73,4 +73,21 @@ public class ChatUserService {
 		return result;
 	}
 	
+	//채팅방 안 유저 리스트
+	public List<ChatUser> getChatUserList(ChatUser chatuser) {
+		List<ChatUser> userList = new ArrayList<ChatUser>();
+		
+		try {
+			
+			ChatUserDao chatuserdao = sqlsession.getMapper(ChatUserDao.class);
+			userList = chatuserdao.getChatUserList(chatuser);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userList;
+	}
 }

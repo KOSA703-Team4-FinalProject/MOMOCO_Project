@@ -2,14 +2,12 @@ import { cilArrowLeft, cilFolderOpen, cilImagePlus, cilLink, cilStorage } from '
 import CIcon from '@coreui/icons-react'
 import { CFormInput, CPopover } from '@coreui/react'
 import $, { param } from 'jquery'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
-import CryptoJS from 'crypto-js'
 import StompJs from 'stompjs'
 
 import '../scss/chatRoom.scss'
-import { PRIMARY_KEY } from '../oauth'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 
@@ -20,13 +18,9 @@ const Chat = () => {
   let [room, setRoom] = useState({})
   let [chatList, setChatList] = useState([])
 
-  const params = useParams()
+  const chatref = useRef()
 
-  // AES알고리즘 사용 복호화
-  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-  //인코딩, 문자열로 변환, JSON 변환
-  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-  const accessToken = decrypted.token
+  const params = useParams()
 
   const login = JSON.parse(localStorage.getItem('login'))
 
@@ -35,14 +29,13 @@ const Chat = () => {
 
   const connect = () => {
     stomp.connect({}, () => {
-
       //기존 메시지 불러오기
       stomp.subscribe('/sub/chat/postInfo/' + chatRoomNumber, (chat) => {
         const res = JSON.parse(chat.body)
         console.log(res)
         setRoom(res[1])
         res[0].map((chat) => {
-          setChatList(chatList => [...chatList, chat])
+          setChatList((chatList) => [...chatList, chat])
         })
         setInitview(true)
       })
@@ -68,31 +61,16 @@ const Chat = () => {
 
   //연결 끊기
   const disconnect = () => {
-    const reqData = {
-      url: params.url,
-      u_idx: login.u_idx,
-      r_idx: chatRoomNumber,
-    }
-
-    axios({
-      method: 'DELETE',
-      url: '/api/chat/del',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: reqData,
-    }).then(() => {
-      stomp.unsubscribe()
-    })
+    stomp.unsubscribe()
   }
 
   //서버로 부터 채팅 메시지가 도착함
   function appendMessage(chat) {
     const message = JSON.parse(chat.body)
-    setChatList(chatList => [...chatList, message])
+    setChatList((chatList) => [...chatList, message])
   }
 
-  //채팅 기록 & 채팅방 정보 불러오기
+  //채팅방에 연결하기
   useEffect(() => {
     connect()
 
@@ -100,6 +78,13 @@ const Chat = () => {
       disconnect()
     }
   }, [])
+
+  //채팅 기록이 늘어날때마다 스크롤 내리기
+  useEffect(() => {
+
+    chatref.current.scrollTop = chatref.current.scrollHeight;
+
+  }, [chatList])
 
   //파일 업로드 아이콘 클릭
   useEffect(() => {
@@ -140,11 +125,13 @@ const Chat = () => {
   const imgChange = (e) => {
     console.log(e.target.files[0])
     const img = e.target.files[0]
+    if (img.type != 'image/png') {
+      console.log('넌 아니야!')
+    }
   }
 
   //채팅 전송
   const sendChat = () => {
-
     const reqData = {
       url: params.url,
       nickname: login.nickname,
@@ -155,12 +142,10 @@ const Chat = () => {
       ref: '1',
     }
 
-    const data = JSON.stringify(reqData);
-    console.log(data);
-    stomp.send('/pub/chat/message', {}, data);
+    const data = JSON.stringify(reqData)
+    stomp.send('/pub/chat/message', {}, data)
 
     $('.inputmessage').val('')
-
   }
 
   return (
@@ -193,7 +178,7 @@ const Chat = () => {
           </div>
         </div>
       </header>
-      <ul className="chat">
+      <ul className="chat" ref={chatref}>
         {initview == false ? (
           <li></li>
         ) : (
@@ -207,7 +192,7 @@ const Chat = () => {
                 )
               case login.nickname:
                 return (
-                  <li className="me" key={key+data.u_idx}>
+                  <li className="me" key={key + data.u_idx}>
                     <div className="entete">
                       <h3>10:12AM, Today</h3>
                       <h2>{data.nickname}</h2>
@@ -219,7 +204,7 @@ const Chat = () => {
                 )
               default:
                 return (
-                  <li className="you" key={key+data.u_idx}>
+                  <li className="you" key={key + data.u_idx}>
                     <div className="entete">
                       <span className="status green"></span>
                       <h2>userid</h2>

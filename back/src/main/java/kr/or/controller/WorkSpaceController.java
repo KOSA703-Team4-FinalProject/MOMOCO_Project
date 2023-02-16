@@ -1,16 +1,19 @@
 package kr.or.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.WorkSpaceService;
 import kr.or.vo.Member;
 import kr.or.vo.WorkSpace;
+import kr.or.vo.WorkSpaceUser;
 
 @RestController
 @RequestMapping("/api")
@@ -50,4 +53,17 @@ public class WorkSpaceController {
 		return workspacelist;
 	}
 	
+	//워크스페이스 안 팀원 확인
+	@RequestMapping(value="/getWorkSpaceUser", method=RequestMethod.GET)
+	public List<WorkSpaceUser> getWorkSpaceUser(@RequestParam("url") String url){
+		
+		List<WorkSpaceUser> userList = new ArrayList<WorkSpaceUser>();
+		
+		WorkSpaceUser workspaceuser = new WorkSpaceUser();
+		workspaceuser.setUrl(url);
+		
+		userList = workspaceservice.getWorkSpaceUser(workspaceuser);
+		
+		return userList;
+	}
 }

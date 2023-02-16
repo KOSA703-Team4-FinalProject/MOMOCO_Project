@@ -9,14 +9,17 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.ChatRoomService;
 import kr.or.service.ChatService;
 import kr.or.service.ChatUserService;
+import kr.or.service.WorkSpaceService;
 import kr.or.vo.Chat;
 import kr.or.vo.ChatRoom;
 import kr.or.vo.ChatUser;
+import kr.or.vo.WorkSpaceUser;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -44,6 +47,13 @@ public class ChatController {
 		this.chatuserservice = chatuserservice;
 	}
 	
+	private WorkSpaceService workspaceservice;
+
+	@Autowired
+	public void setWorkspaceservice(WorkSpaceService workspaceservice) {
+		this.workspaceservice = workspaceservice;
+	}
+	
 	//특정 Broker로 메세지를 전달
 	private final SimpMessagingTemplate template;
 	
@@ -55,13 +65,46 @@ public class ChatController {
 		return result;
 	}
 	
+	//채팅방 안의 유저 리스트
+	@RequestMapping(value="/api/chat/userList", method=RequestMethod.GET)
+	public List<Object> getChatUserList(@RequestParam("url") String url){
+		List<ChatUser> userList = new ArrayList<ChatUser>();
+		
+		ChatUser chatuser = new ChatUser();
+		chatuser.setUrl(url);
+		
+		//채팅방 안의 유저 리스트
+		userList = chatuserservice.getChatUserList(chatuser);
+		
+		//채팅방 안에 없는 워크스페이스의 유저 리스트
+		List<WorkSpaceUser> workuserList = new ArrayList<WorkSpaceUser>();
+		WorkSpaceUser workspaceuser = new WorkSpaceUser();
+		workspaceuser.setUrl(url);
+		workuserList = workspaceservice.getWorkSpaceUser(workspaceuser);
+		
+		List<WorkSpaceUser> reworkuserList = new ArrayList<WorkSpaceUser>();
+		
+		for(WorkSpaceUser work : workuserList) {
+			reworkuserList.add(work);
+			for(ChatUser chat :  userList) {
+				if(work.getU_idx() == chat.getU_idx()) {
+					reworkuserList.remove(work);
+				}
+			}
+		}
+		
+		List<Object> re = new ArrayList<Object>();
+		re.add(userList);
+		re.add(reworkuserList);
+		
+		return re;
+	}
+	
 	//Client가 send할 수 있는 경로
 	//stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMapping 경로가 병합됨
 	//	/pub/chat/enter
 	@MessageMapping("/chat/enter")
 	public void enter(Chat chat) {
-		
-		System.out.println("여기");
 		
 		ChatUser chatuser = new ChatUser();
 		chatuser.setU_idx(chat.getU_idx());

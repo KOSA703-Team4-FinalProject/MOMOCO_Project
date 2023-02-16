@@ -1,6 +1,7 @@
 package kr.or.dao;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import kr.or.vo.ChatUser;
 
@@ -14,5 +15,8 @@ public interface ChatUserDao {
 	
 	//채팅방 퇴장
 	public int deleteChatUser(ChatUser chatuser) throws ClassNotFoundException, SQLException; 
+	
+	//채팅방 안의 유저 리스트
+	public List<ChatUser> getChatUserList(ChatUser chatuser) throws ClassNotFoundException, SQLException;
 	
 }
