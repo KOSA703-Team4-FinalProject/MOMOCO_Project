@@ -26,7 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values (BOARD_IDX_SEQ_${url}.nextval,'${nickname}','${title}','${content}',${b_code},'${label}', ${u_idx})
 	into common_board_${url}(b_idx,ori_filename,save_filename,volume, filetype, ref, depth, step, thumb, idx)
 		values(COMMON_BOARD_B_IDX_SEQ_${url}.nextval,'${ori_filename}','${save_filename}',${volume},'${filetype}',${ref},${depth},${step},'${thumb}',board_idx_seq_${url}.CURRVAL)
-		select * from dual
+	into alarm  (ALARM_A_IDX_SEQ, idx,content,url,u_uidx) 
+		values(ALARM_A_IDX_SEQ.nextval,${idx},${title},'${title} 글을 확인하세요!',${url},${u_idx})	
+	select * from dual
 
 	</insert>
 	<!--삭제  -->
@@ -34,6 +36,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from board_${url} where idx = #{idx}
 	</delete>
 	<!-- 검색-->
-	<!--알림보내기-->
+	
+	<!--알림보낼사람 선택하기-->
+	<select id="boardalramlist" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
+		select a.url , a.u_idx,b.nickname , b.profilephoto
+		from WORKSPACE_USER a join member b on a.u_idx = b.u_idx 
+		where a.url = '${url}'
+	</select>
 	
 </mapper>

@@ -43,9 +43,7 @@ const Boardlist = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [boardlist, setBoardList] = useState([])
-  const navigateToboardwrite = (params) => {
-    navigate(`/ws/${params.url}/boardwrite`)
-  }
+
   const myparams = {
     url: params.url,
   }

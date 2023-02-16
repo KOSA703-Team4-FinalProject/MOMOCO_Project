@@ -35,4 +35,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where url in (select url from workspace_user where u_idx = #{u_idx} )
    	</select>
    
+   
 </mapper>

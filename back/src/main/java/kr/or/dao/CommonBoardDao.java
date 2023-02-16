@@ -19,5 +19,9 @@ public interface CommonBoardDao {
 	//글삭제
 	public int deletecommonboard(CommonBoard cmm)throws ClassNotFoundException, SQLException;
 	
+	//알림보낼 사람 선택하기
+	public List<CommonBoard> boardalramlist(String url) throws ClassNotFoundException, SQLException;
+	
+	
 	
 }

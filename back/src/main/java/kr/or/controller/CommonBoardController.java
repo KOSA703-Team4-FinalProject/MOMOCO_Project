@@ -20,7 +20,7 @@ import kr.or.vo.CommonBoard;
 @RequestMapping("/board")
 public class CommonBoardController {
 
-	//게시판 전체 목록 
+	
 	private CommonBoardService commonboardservice;
 	
 	@Autowired
@@ -107,7 +107,6 @@ public class CommonBoardController {
 	    commonboard.setUrl(url);
 	    commonboard.setTitle(title);
 	    commonboard.setNickname(nickname);
-	   
 	    commonboard.setContent(content);
 	    commonboard.setVolume(filesize);
 	    commonboard.setB_code(b_code);
@@ -124,4 +123,15 @@ public class CommonBoardController {
 		return result;
 		
 	}
+	
+	//알림보낼 사람 선택하기
+	@RequestMapping(value="boardalramlist" ,method=RequestMethod.POST)
+	public List<CommonBoard>boardalramlist(@RequestBody CommonBoard url){
+
+		List<CommonBoard> alarmlist = commonboardservice.boardalramlist(url.getUrl());
+	
+		return alarmlist;
+	}
+	
+
 }
