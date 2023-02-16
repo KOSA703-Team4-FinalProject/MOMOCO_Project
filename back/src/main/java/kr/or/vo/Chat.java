@@ -1,5 +1,7 @@
 package kr.or.vo;
 
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -15,5 +17,7 @@ public class Chat {
 	private int u_idx;				//작성자 깃헙 키
 	
 	private String url;				//워크스페이스 주소
+	
+	private CommonsMultipartFile file; //업로드한 파일을 받는 객체
 	
 }

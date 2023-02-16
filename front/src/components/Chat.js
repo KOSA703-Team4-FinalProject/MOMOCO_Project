@@ -6,10 +6,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
 import StompJs from 'stompjs'
-
-import '../scss/chatRoom.scss'
+import CryptoJS from 'crypto-js'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+
+import '../scss/chatRoom.scss'
+import { PRIMARY_KEY } from '../oauth'
 
 const Chat = () => {
   const dispatch = useDispatch()
@@ -21,6 +23,12 @@ const Chat = () => {
   const chatref = useRef()
 
   const params = useParams()
+
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
 
   const login = JSON.parse(localStorage.getItem('login'))
 
@@ -116,9 +124,30 @@ const Chat = () => {
   const fileChange = (e) => {
     console.log(e.target.files[0])
     const file = e.target.files[0]
-    if (file.type != 'image/png') {
-      console.log('넌 아니야!')
+    
+    const reqData = {
+      url: params.url,
+      content_type: 'file',
+      ref: 1,
+      nickname: login.nickname,
+      u_idx: login.u_idx,
+      r_idx: chatRoomNumber
     }
+
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("chat", JSON.stringify(reqData));
+
+    axios({
+      method: 'POST',
+      url: '/api/chat/file',
+      headers: {
+        "Content-Type": 'multipart/form-data',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: fd
+    })
+
   }
 
   //이미지가 업로드 된 경우
@@ -224,7 +253,7 @@ const Chat = () => {
       <footer>
         <textarea className="inputmessage" placeholder="Type your message"></textarea>
         <div className="row">
-          <CFormInput type="file" className="uploadfile d-none" onChange={fileChange} />
+          <CFormInput type="file" className="uploadfile d-none" onChange={fileChange} multiple="multiple" />
           <CIcon className="filebtn ms-2" icon={cilFolderOpen} size="3xl"></CIcon>
           <CFormInput
             type="file"
