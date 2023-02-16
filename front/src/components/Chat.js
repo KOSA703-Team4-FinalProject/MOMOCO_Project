@@ -146,6 +146,8 @@ const Chat = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       data: fd
+    }).then((res) => {
+      console.log(res.data)
     })
 
   }

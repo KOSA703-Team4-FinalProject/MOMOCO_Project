@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.service.ChatRoomService;
 import kr.or.service.ChatService;
@@ -73,15 +77,44 @@ public class ChatController {
 
 	// 파일 전송
 	@RequestMapping(value="/api/chat/file", method = RequestMethod.POST)
-	public void messagefile(@RequestParam(value="file") MultipartFile[] files, @RequestParam(value="chat") String chat) {
+	public int messagefile(@RequestParam(value="file") MultipartFile[] files, @RequestParam(value="chat") String chat, HttpServletRequest request) {
+		
+		Chat mychat = null;
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			//String to DTO
+			mychat = mapper.readValue(chat, Chat.class);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		mychat.setContent(files[0].getOriginalFilename());
+		
+		String filename = files[0].getOriginalFilename();
+		String path = request.getServletContext().getRealPath("/resources/upload/chat"); // 배포된 서버 경로
+		String fpath = path + "\\" + filename;
+		
+		System.out.println(path);
+		
+		FileOutputStream fs = null;
+		try {
+			fs = new FileOutputStream(fpath);
+			fs.write(files[0].getBytes());
 
-		System.out.println("------------------------------");
-		for(MultipartFile file : files) {
-			System.out.println(file.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fs.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		System.out.println(chat);
+		int result = chatservice.sendChat(mychat);
 		
+		return result;
 	}
 
 	// 채팅방 안의 유저 리스트
