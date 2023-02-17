@@ -1,9 +1,11 @@
 package kr.or.controller;
 
-import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.service.CommonBoardService;
+import kr.or.vo.Chat;
 import kr.or.vo.CommonBoard;
 
 @RestController
@@ -58,64 +63,52 @@ public class CommonBoardController {
 //		return result;
 //		
 //	}
-	//글쓰기
-	@RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
-	public int addCommonBoard(
-	    @RequestParam(value = "file", required = false) MultipartFile[] files,
-	    @RequestParam("url") String url,
-	    @RequestParam("title") String title,
-	    @RequestParam("nickname") String nickname,
-	    @RequestParam("content") String content,
-	    @RequestParam("ori_filename") String ori_filename,
-	    @RequestParam("filesize") int filesize,
-	    @RequestParam("u_idx") int u_idx,
-	    @RequestParam("b_code") int b_code
-	    
-	) {
-		System.out.println(files);
-	    String fileNames = "";
-	    String filePath = "C:/saveFolder/";
-	    File folder = new File("C:/saveFolder/");
-	    if (!folder.exists()) {
-	        folder.mkdir();
-	    }
-	   
-	    // Handle file upload
-	    if (files != null) {
-	        for (MultipartFile file : files) {
-	            String originalFileName = file.getOriginalFilename();
-	            long fileSize = file.getSize();
+	
+	
+	
+	
+	 //글쓰기
+		@RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
+		public int addCommonBoard(@RequestParam(value="file") MultipartFile[] files, @RequestParam(value="boardwrite") String boardwrite, HttpServletRequest request) {
+			
+			CommonBoard board = null;
+		      ObjectMapper mapper = new ObjectMapper();
 
-	            String safeFile = System.currentTimeMillis() + originalFileName;
-	            fileNames += "," + safeFile;
-	            System.out.println("originFileName : " + ori_filename);
-	            System.out.println("fileSize : " + fileSize);
+			 try {
+		         //String to DTO
+		         board = mapper.readValue(boardwrite, CommonBoard.class);
+		         
+		      } catch (Exception e) {
+		         e.printStackTrace();
+		      }
+		   
+		
+		      board.setOri_filename(files[0].getOriginalFilename());
+		      String filename = files[0].getOriginalFilename();
+		      String path = request.getServletContext().getRealPath("/resources/upload/board"); // 배포된 서버 경로
+		      String fpath = path + "\\" + filename;
+		      //경로 검색
+		      System.out.println(path);
+		      
+		      FileOutputStream fs = null;
+		      try {
+		         fs = new FileOutputStream(fpath);
+		         fs.write(files[0].getBytes());
 
-	           
-	            try {
-	                File f1 = new File(filePath + safeFile);
-	                file.transferTo(f1);
-	            } catch (IllegalStateException e) {
-	                e.printStackTrace();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-
-	    CommonBoard commonboard = new CommonBoard();
-	    commonboard.setUrl(url);
-	    commonboard.setTitle(title);
-	    commonboard.setNickname(nickname);
-	    commonboard.setContent(content);
-	    commonboard.setVolume(filesize);
-	    commonboard.setB_code(b_code);
-	    commonboard.setU_idx(u_idx);
-	    commonboard.setOri_filename(ori_filename); // Remove first comma
-
-	    int result = commonboardservice.addCommonBoard(commonboard);
-	    return result;
-	}
+		      } catch (Exception e) {
+		         e.printStackTrace();
+		      } finally {
+		         try {
+		            fs.close();
+		         } catch (IOException e) {
+		            e.printStackTrace();
+		         }
+		      }
+		   
+		   
+		    int result = commonboardservice.addCommonBoard(board);
+		    return result;
+		}
 	//글 삭제 
 	@RequestMapping(value="boarddelete", method =RequestMethod.POST)
 	public int deleteCommonBoard(@RequestBody CommonBoard commonboard) {

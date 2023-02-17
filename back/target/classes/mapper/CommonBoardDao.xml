@@ -21,15 +21,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 글쓰기 -->
 	<insert id="addCommonBoard" parameterType="kr.or.vo.CommonBoard">
-	insert all
-	into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
-		values (BOARD_IDX_SEQ_${url}.nextval,'${nickname}','${title}','${content}',${b_code},'${label}', ${u_idx})
-	into common_board_${url}(b_idx,ori_filename,save_filename,volume, filetype, ref, depth, step, thumb, idx)
-		values(COMMON_BOARD_B_IDX_SEQ_${url}.nextval,'${ori_filename}','${save_filename}',${volume},'${filetype}',${ref},${depth},${step},'${thumb}',board_idx_seq_${url}.CURRVAL)
-	into alarm  (ALARM_A_IDX_SEQ, idx,content,url,u_uidx) 
-		values(ALARM_A_IDX_SEQ.nextval,${idx},${title},'${title} 글을 확인하세요!',${url},${u_idx})	
-	select * from dual
-
+	INSERT ALL
+	INTO board_${url} (idx, nickname, title, content, b_code, label, u_idx)
+		VALUES (BOARD_IDX_SEQ_${url}.nextval, '${nickname}', '${title}', '${content}', ${b_code}, '${label}', ${u_idx})
+	INTO common_board_${url}(b_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, idx)
+		VALUES (COMMON_BOARD_B_IDX_SEQ_${url}.nextval, '${ori_filename}', '${save_filename}', ${volume}, '${filetype}', ${ref}, ${depth}, ${step}, '${thumb}', board_idx_seq_${url}.CURRVAL)
+		
+	SELECT * FROM dual
 	</insert>
 	<!--삭제  -->
 	<delete id="deletecommonboard" parameterType="kr.or.vo.CommonBoard">

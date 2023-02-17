@@ -21,7 +21,7 @@ import { updateIssueModal, updateissueNumber } from 'src/store'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import $, { param } from 'jquery'
+import $, { data, param } from 'jquery'
 import Swal from 'sweetalert2'
 import Boardlist from './Boardlist'
 
@@ -104,40 +104,30 @@ const Boardwirte = () => {
   //알림 보내기
   const [selectedValues, setSelectedValues] = useState([])
   const allUsers = alramlist.filter((data1) => data1.nickname !== login.nickname)
-  const allUserNicknames = allUsers.map((user) => user.nickname)
+  const allUserNicknames = allUsers.map((user) => user.u_idx)
   const allUsersSelected = selectedValues.length === allUsers.length
   console.log(selectedValues)
 
   //파일 업로드
-  const [file, setFile] = useState(null)
-  const handleChangeFile = (e) => {
-    setFile(e.target.files)
+  const [filevalues, setFilevalues] = useState('')
+  const fileChange = (e) => {
+    console.log(e.target.files[0])
+    setFilevalues(e.target.files[0])
   }
+  const fd = new FormData()
 
-  console.log('파일이들어갔나' + file)
   //파일업로드 글작성
   const send = () => {
-    const fd = new FormData()
-    Object.values(file).forEach((file) => fd.append('file', file))
-
     const write = {
       url: params.url,
       title: $('#issue').val() + ' ' + $('#title').val(),
       nickname: login.nickname,
-      ori_filename: file[0].name,
       content: content,
-      filesize: file[0].size,
       b_code: 5,
       u_idx: login.u_idx,
-      dix: selectedValues,
     }
-    if ($('#title').val() == null) {
-      Swal.fire('제목을 입력하주세요')
-    } else if (file[0].name == null) {
-      Swal.fire('파일을 첨부해주세요')
-    } else if (content == null) {
-      Swal.fire('글을 입력해주세요')
-    }
+    fd.append('file', filevalues)
+    fd.append('write1', JSON.stringify(write))
     axios({
       method: 'post',
       url: '/board/boardwrite',
@@ -146,13 +136,13 @@ const Boardwirte = () => {
         'Content-Type': `multipart/form-data; `,
       },
 
-      data: write,
+      data: fd,
     }).then((res) => {
       setBoardcontent(res.data)
     })
     console.log(write)
   }
-  console.log(file)
+
   console.log('wpahr' + $('#title').val())
   return (
     <>
@@ -222,8 +212,7 @@ const Boardwirte = () => {
                       <CCol className="mb-3">
                         <CFormInput
                           type="file"
-                          id="file"
-                          onChange={handleChangeFile}
+                          onChange={fileChange}
                           multiple="multiple"
                           value={boardcontent.ori_filename}
                         />
@@ -258,16 +247,15 @@ const Boardwirte = () => {
                               inline
                               id={`inlineCheckbox${key}`}
                               value={data1.nickname}
+                              data-idx={data1.u_idx} // data-idx 속성 추가
                               onChange={(e) => {
+                                const idx = e.target.dataset.idx // data-idx 속성 값 가져오기
                                 if (e.target.checked) {
-                                  setSelectedValues([...selectedValues, e.target.value])
+                                  setSelectedValues([...selectedValues, idx])
                                 } else {
-                                  setSelectedValues(
-                                    selectedValues.filter((value) => value !== e.target.value),
-                                  )
+                                  setSelectedValues(selectedValues.filter((value) => value !== idx))
                                 }
                               }}
-                              disabled={allUsersSelected} // "전체보내기"가 선택된 경우, 체크박스를 선택할 수 없도록 함
                             />
                             <CAvatar className="ms-2" src={data1.profilephoto} />
                             {data1.nickname}&nbsp;
