@@ -7,8 +7,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
 import StompJs from 'stompjs'
 import CryptoJS from 'crypto-js'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
@@ -21,8 +22,8 @@ const Chat = () => {
   let [chatList, setChatList] = useState([])
 
   const chatref = useRef()
-
   const params = useParams()
+  const navigate = useNavigate()
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -89,9 +90,7 @@ const Chat = () => {
 
   //채팅 기록이 늘어날때마다 스크롤 내리기
   useEffect(() => {
-
-    chatref.current.scrollTop = chatref.current.scrollHeight;
-
+    chatref.current.scrollTop = chatref.current.scrollHeight
   }, [chatList])
 
   //파일 업로드 아이콘 클릭
@@ -122,42 +121,67 @@ const Chat = () => {
 
   //파일이 업로드 된 경우
   const fileChange = (e) => {
-    console.log(e.target.files[0])
     const file = e.target.files[0]
-    
+
     const reqData = {
       url: params.url,
       content_type: 'file',
       ref: 1,
       nickname: login.nickname,
       u_idx: login.u_idx,
-      r_idx: chatRoomNumber
+      r_idx: chatRoomNumber,
     }
 
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("chat", JSON.stringify(reqData));
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('chat', JSON.stringify(reqData))
 
     axios({
       method: 'POST',
       url: '/api/chat/file',
       headers: {
-        "Content-Type": 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${accessToken}`,
       },
-      data: fd
+      data: fd,
     }).then((res) => {
       console.log(res.data)
     })
-
   }
 
   //이미지가 업로드 된 경우
   const imgChange = (e) => {
-    console.log(e.target.files[0])
     const img = e.target.files[0]
-    if (img.type != 'image/png') {
-      console.log('넌 아니야!')
+
+    if (img.type != 'image/png' && img.type != 'image/jpeg' && img.type != 'image/gif' && img.type != 'image/jpg') {
+      Swal.fire('Error', '이미지를 선택해 주세요.', 'error')
+    } else {
+
+      const reqData = {
+        url: params.url,
+        content_type: 'img',
+        ref: 1,
+        nickname: login.nickname,
+        u_idx: login.u_idx,
+        r_idx: chatRoomNumber,
+      }
+
+      const fd = new FormData()
+      fd.append('file', img)
+      fd.append('chat', JSON.stringify(reqData))
+
+      axios({
+        method: 'POST',
+        url: '/api/chat/file',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: fd,
+      }).then((res) => {
+        console.log(res.data)
+      })
+
     }
   }
 
@@ -177,6 +201,39 @@ const Chat = () => {
     stomp.send('/pub/chat/message', {}, data)
 
     $('.inputmessage').val('')
+  }
+
+  //콘텐츠를 클릭할 경우
+  const clickContent = (e) => {
+    const tag = e.target
+    const content_type = $(tag).attr('value')
+
+    if (content_type == 'file') {
+      axios({
+        method: 'GET',
+        url: '/api/token',
+        headers: {Authorization: `Bearer ${accessToken}`,},
+      }).then((res) => {
+
+        if (res.data == '') {
+          Swal.fire('Error', '잘못된 접근입니다.', 'error')
+        } else {
+          const url =
+            'http://localhost:8090/controller/api/chat/fileDown?url=' +
+            params.url +
+            '&content=' +
+            $(tag).html()
+
+          const download = document.createElement('a')
+
+          download.href = url
+          download.setAttribute('download', $(tag).html())
+          download.setAttribute('type', 'application/json')
+          download.click()
+        }
+      })
+    } else if (content_type == 'img') {
+    }
   }
 
   return (
@@ -225,12 +282,19 @@ const Chat = () => {
                 return (
                   <li className="me" key={key + data.u_idx}>
                     <div className="entete">
-                      <h3>10:12AM, Today</h3>
+                      <h3>{data.w_date}</h3>
                       <h2>{data.nickname}</h2>
                       <span className="status blue"></span>
                     </div>
                     <div className="triangle"></div>
-                    <div className="message">{data.content}</div>
+                    <div
+                      className="message"
+                      value={data.content_type}
+                      idx={data.ch_idx}
+                      onClick={clickContent}
+                    >
+                      {data.content}
+                    </div>
                   </li>
                 )
               default:
@@ -238,13 +302,17 @@ const Chat = () => {
                   <li className="you" key={key + data.u_idx}>
                     <div className="entete">
                       <span className="status green"></span>
-                      <h2>userid</h2>
-                      <h3>10:12AM, Today</h3>
+                      <h2>{data.nickname}</h2>
+                      <h3>{data.w_date}</h3>
                     </div>
                     <div className="triangle"></div>
-                    <div className="message">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-                      ligula eget dolor.
+                    <div
+                      className="message"
+                      value={data.content_type}
+                      idx={data.ch_idx}
+                      onClick={clickContent}
+                    >
+                      {data.content}
                     </div>
                   </li>
                 )
@@ -255,7 +323,12 @@ const Chat = () => {
       <footer>
         <textarea className="inputmessage" placeholder="Type your message"></textarea>
         <div className="row">
-          <CFormInput type="file" className="uploadfile d-none" onChange={fileChange} multiple="multiple" />
+          <CFormInput
+            type="file"
+            className="uploadfile d-none"
+            onChange={fileChange}
+            multiple="multiple"
+          />
           <CIcon className="filebtn ms-2" icon={cilFolderOpen} size="3xl"></CIcon>
           <CFormInput
             type="file"

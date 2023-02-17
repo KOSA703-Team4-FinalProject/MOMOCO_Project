@@ -50,19 +50,18 @@ public class DocService {
 
 		return doc;
 	}
-	
-	
+
 	public int addDoc(Doc doc, MultipartFile file) {
 		try {
 			DocDao docDao = sqlsession.getMapper(DocDao.class);
-			
+
 			String fileName = saveFile(file, doc.getUrl());
 			doc.setOri_filename(file.getOriginalFilename());
 			doc.setSafe_filename(fileName);
 			doc.setThumb("thumb_" + file.getOriginalFilename());
-			
+
 			int result = docDao.addDoc(doc, file);
-			
+
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,67 +70,65 @@ public class DocService {
 	}
 
 	private String saveFile(MultipartFile file, String url) throws IOException {
-	    // 파일이 존재하지 않으면 null을 return 한다.
-	    if (file.isEmpty()) {
-	        return null;
-	    }
+		// 파일이 존재하지 않으면 null을 return 한다.
+		if (file.isEmpty()) {
+			return null;
+		}
 
-	    String originalFileName = file.getOriginalFilename();
-	    String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-	    String onlyFileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+		String originalFileName = file.getOriginalFilename();
+		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+		String onlyFileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
 
-	    // 파일 타입 제한
-	    if (!extension.equals(".exe")) {
-	        return null;
-	    }
+		// 파일 타입 제한
+		if (!extension.equals(".exe")) {
+			return null;
+		}
 
-	    // 파일 저장
-	    String saveFileName = onlyFileName + "_" + System.currentTimeMillis() + extension;
-	    String savePath = "/docStorage_" + url + "/" + saveFileName;
+		// 파일 저장
+		String saveFileName = onlyFileName + "_" + System.currentTimeMillis() + extension;
+		String savePath = "/resources/upload/docStorage_" + url + "/" + saveFileName;
 
-	    // 이미지 일 경우
-	    byte[] bytes = file.getBytes();
-	    String formatName = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
-	    if (MediaType.IMAGE_JPEG.getSubtype().equals(formatName) ||
-	        MediaType.IMAGE_PNG.getSubtype().equals(formatName) ||
-	        MediaType.IMAGE_GIF.getSubtype().equals(formatName)) {
-	      // 썸네일 생성
-	      File thumbnail = new File(savePath);
-	      Thumbnails.of(new ByteArrayInputStream(bytes)).size(100, 100).toFile(thumbnail);
-	      return "thumb_" + originalFileName;
-	    }
-	    
-	    try {
-	        File dest = new File(savePath);
-	        file.transferTo(dest);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return null;
-	    }
+		// 이미지 일 경우
+		byte[] bytes = file.getBytes();
+		String formatName = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+		if (MediaType.IMAGE_JPEG.getSubtype().equals(formatName) || MediaType.IMAGE_PNG.getSubtype().equals(formatName)
+				|| MediaType.IMAGE_GIF.getSubtype().equals(formatName)) {
+			// 썸네일 생성
+			File thumbnail = new File(savePath);
+			Thumbnails.of(new ByteArrayInputStream(bytes)).size(100, 100).toFile(thumbnail);
+			return "thumb_" + originalFileName;
+		}
 
-	    return saveFileName;
+		try {
+			File dest = new File(savePath);
+			file.transferTo(dest);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return saveFileName;
 	}
-	
+
 	// 파일 다운로드 서비스 함수
-		public void downDoc(String url, String filename, HttpServletRequest request, HttpServletResponse response)
+	public void downDoc(String url, String filename, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
-				String fname = new String(filename.getBytes("euc-kr"), "8859_1");
-				response.setHeader("Content-Disposition", "attachment;filename=" + fname + ";");
+		String fname = new String(filename.getBytes("euc-kr"), "8859_1");
+		response.setHeader("Content-Disposition", "attachment;filename=" + fname + ";");
 
-				String fullpath = request.getServletContext().getRealPath("/docStorage_" + url + "/" + filename);
-				System.out.println(fullpath);
-				FileInputStream fin = new FileInputStream(fullpath);
+		String fullpath = request.getServletContext().getRealPath("/docStorage_" + url + "/" + filename);
+		System.out.println(fullpath);
+		FileInputStream fin = new FileInputStream(fullpath);
 
-				ServletOutputStream sout = response.getOutputStream();
-				byte[] buf = new byte[1024]; // 전체를 다읽지 않고 1204byte씩 읽어서
-				int size = 0;
-				while ((size = fin.read(buf, 0, buf.length)) != -1) {
-					sout.write(buf, 0, size);
-				}
-				fin.close();
-				sout.close();
-			}
-
+		ServletOutputStream sout = response.getOutputStream();
+		byte[] buf = new byte[1024]; // 전체를 다읽지 않고 1204byte씩 읽어서
+		int size = 0;
+		while ((size = fin.read(buf, 0, buf.length)) != -1) {
+			sout.write(buf, 0, size);
+		}
+		fin.close();
+		sout.close();
+	}
 
 }
