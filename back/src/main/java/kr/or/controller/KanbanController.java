@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.KanbanService;
+import kr.or.vo.Calendar;
 import kr.or.vo.Kanban;
 
 @RestController
@@ -85,11 +86,11 @@ public class KanbanController {
 	// 칸반 컬럼 추가
 	@RequestMapping(value = "/addKanbanColumn", method = RequestMethod.POST)
 	public int addKanbanColumn(@RequestBody Kanban kanban) {
-		System.out.println("칸반 컨트롤러");
+		
 		
 		int result = kanbanserivce.addKanbanColumn(kanban);
 		
-		System.out.println(kanban);
+		
 		
 		return result;
 	}
@@ -109,6 +110,28 @@ public class KanbanController {
 		
 		return str;
 	}
+	
+	
+
+	
+	// 칸반 컬럼의 모든 아이템 삭제 
+		@RequestMapping(value="/deleteAllKanbanItem", method=RequestMethod.POST)
+		public int deleteKanbanitem(@RequestBody Kanban kanban) {
+			
+			int result = kanbanserivce.deleteAllKanbanItem(kanban);
+			
+			return result;
+		}
+		
+    // 칸반 컬럼 삭제
+		@RequestMapping(value = "/deleteKanbanColumn", method = RequestMethod.POST)
+		public int deleteKanbancolumn(@RequestBody Kanban kanban) {
+			
+			int result = kanbanserivce.deleteKanbanColumn(kanban);
+			
+			return result;
+		}
+	
 	
 
 }
