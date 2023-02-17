@@ -1,6 +1,7 @@
 package kr.or.vo;
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import lombok.Data;
 
@@ -16,7 +17,7 @@ public class Doc extends Board {
 	private String thumb;			//썸네일
 	private int idx;				//글 번호(보드)
 	
-	private CommonsMultipartFile file;
+	private MultipartFile file;
 	
 	
 }

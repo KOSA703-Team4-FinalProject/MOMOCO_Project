@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.service.DocService;
 import kr.or.vo.Doc;
@@ -41,11 +43,9 @@ public class DocController {
 		return doc;
 	}
 	
-	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public int addDoc(@RequestBody Doc doc, @RequestPart("ori_filename") MultipartFile file) {
-		
-		System.out.println("doc 글입력");
-		int result = docservice.addDoc(doc, file);
+	@RequestMapping(value="/addDoc", method=RequestMethod.POST)
+	public int addDoc(@RequestParam(value="doc") String docJson, @RequestParam(value="file") MultipartFile file, HttpServletRequest request) throws IOException {
+		int result = docservice.addDoc(docJson, file, request);
 		System.out.println(result);
 		return result;
 	}
