@@ -9,6 +9,7 @@ import StompJs from 'stompjs'
 import CryptoJS from 'crypto-js'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
@@ -120,7 +121,6 @@ const Chat = () => {
 
   //파일이 업로드 된 경우
   const fileChange = (e) => {
-    console.log(e.target.files[0])
     const file = e.target.files[0]
 
     const reqData = {
@@ -151,10 +151,37 @@ const Chat = () => {
 
   //이미지가 업로드 된 경우
   const imgChange = (e) => {
-    console.log(e.target.files[0])
     const img = e.target.files[0]
-    if (img.type != 'image/png') {
-      console.log('넌 아니야!')
+
+    if (img.type != 'image/png' && img.type != 'image/jpeg' && img.type != 'image/gif' && img.type != 'image/jpg') {
+      Swal.fire('Error', '이미지를 선택해 주세요.', 'error')
+    } else {
+
+      const reqData = {
+        url: params.url,
+        content_type: 'img',
+        ref: 1,
+        nickname: login.nickname,
+        u_idx: login.u_idx,
+        r_idx: chatRoomNumber,
+      }
+
+      const fd = new FormData()
+      fd.append('file', img)
+      fd.append('chat', JSON.stringify(reqData))
+
+      axios({
+        method: 'POST',
+        url: '/api/chat/file',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: fd,
+      }).then((res) => {
+        console.log(res.data)
+      })
+
     }
   }
 
@@ -181,23 +208,30 @@ const Chat = () => {
     const tag = e.target
     const content_type = $(tag).attr('value')
 
-    const reqData = {
-      url: params.url,
-      content: $(tag).html(),
-    }
-
     if (content_type == 'file') {
+      axios({
+        method: 'GET',
+        url: '/api/token',
+        headers: {Authorization: `Bearer ${accessToken}`,},
+      }).then((res) => {
 
-      const url = 'http://localhost:8090/controller/api/chat/fileDown?url='+params.url+"&content="+$(tag).html()
+        if (res.data == '') {
+          Swal.fire('Error', '잘못된 접근입니다.', 'error')
+        } else {
+          const url =
+            'http://localhost:8090/controller/api/chat/fileDown?url=' +
+            params.url +
+            '&content=' +
+            $(tag).html()
 
-      const download = document.createElement('a');
+          const download = document.createElement('a')
 
-      download.href = url;
-      download.setAttribute('download', $(tag).html())
-      download.setAttribute('type', 'application/json')
-      download.click();
-
-      
+          download.href = url
+          download.setAttribute('download', $(tag).html())
+          download.setAttribute('type', 'application/json')
+          download.click()
+        }
+      })
     } else if (content_type == 'img') {
     }
   }

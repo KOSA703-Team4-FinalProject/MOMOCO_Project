@@ -100,10 +100,19 @@ public class ChatController {
 		
 		//저장할 파일 명
 		String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis())).concat(extension);
-		String savePath = request.getServletContext().getRealPath("/resources/upload/chatStorage_") + mychat.getUrl() + "/" + saveFileName;
 		
+		String savePath = "";
 		// 파일이 저장될 경로
-	    String path = request.getServletContext().getRealPath("/resources/upload/chatStorage_") + mychat.getUrl();
+		String path = "";
+		
+		if(mychat.getContent_type().equals("img")) {
+			savePath = request.getServletContext().getRealPath("/resources/upload/imgStorage_") + mychat.getUrl() + "/" + saveFileName;
+		    path = request.getServletContext().getRealPath("/resources/upload/imgStorage_") + mychat.getUrl();
+		}else {
+			savePath = request.getServletContext().getRealPath("/resources/upload/chatStorage_") + mychat.getUrl() + "/" + saveFileName;
+		    path = request.getServletContext().getRealPath("/resources/upload/chatStorage_") + mychat.getUrl();
+		}
+	
 	    // 폴더 생성
 	    File folder = new File(path);
 	    if (!folder.exists()) {
@@ -128,6 +137,13 @@ public class ChatController {
 		template.convertAndSend("/sub/chat/room/" + mychat.getR_idx(), mychat);
 		
 		return result;
+	}
+	
+	//파일 다운로드 전 사전 토큰 확인
+	@RequestMapping(value="/api/token", method = RequestMethod.GET)
+	public int isToekn() {
+		
+		return 1;
 	}
 	
 	//파일 다운로드
