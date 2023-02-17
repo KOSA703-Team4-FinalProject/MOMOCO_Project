@@ -36,7 +36,8 @@ const WriteDocStorage = () => {
   }
 
   const FileHandler = (e) => {
-    SetOrifile(e.target.file[0])
+    SetOrifile(e.target.file)
+    console.log(SetOrifile)
   }
 
   const EditorHandler = (e) => {
