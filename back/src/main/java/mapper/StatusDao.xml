@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 상태값 전체 확인  public List<Status> getStatus() -->
 	<select id="getStatus" parameterType="String" resultType="kr.or.vo.Status">
 		select s_idx, s_name from status_${url}
+		order by s_idx
 	</select>
    
 </mapper>
