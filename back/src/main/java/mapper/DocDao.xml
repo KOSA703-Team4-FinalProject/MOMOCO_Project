@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		on c.idx = e.idx
 	</select>
 	
-	<!-- 일정 추가 public int addCalendar(Map map) -->
+	<!-- 일정 추가 public int addDoc(Doc doc, MultipartFile file) -->
 	<insert id="addDoc" parameterType="kr.or.vo.Doc">
 		insert all
 			into board_${url} (idx, nickname, title, content, b_code, label, u_idx)

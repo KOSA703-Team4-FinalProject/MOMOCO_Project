@@ -36,8 +36,9 @@ const WriteDocStorage = () => {
   }
 
   const FileHandler = (e) => {
-    SetOrifile(e.target.file)
-    console.log(SetOrifile)
+    e.preventDefault()
+    SetOrifile(e.target.files[0])
+    console.log(e.target.files[0])
   }
 
   const EditorHandler = (e) => {
@@ -49,26 +50,21 @@ const WriteDocStorage = () => {
 
     const formData = new FormData()
 
-    const data = [
-      {
-        title: title,
-        content: content,
-        b_code: 3,
-        label: 'doc',
-        depth: 0,
-        step: 0,
-        u_idx: u_idx,
-        url: url,
-        nickname: nickname,
-      },
-    ]
-    formData.append('ori_filename', orifile)
-    formData.append(
-      'data',
-      new Blob([JSON.stringify(data)], {
-        type: 'application/json',
-      }),
-    )
+    const doc = {
+      idx: null,
+      nickname: nickname,
+      title: title,
+      content: content,
+      w_date: null,
+      b_code: 3,
+      label: 'doc',
+      u_idx: u_idx,
+      url: url,
+      depth: 0,
+      step: 0,
+    }
+    formData.append('file', orifile)
+    formData.append('doc', JSON.stringify(doc))
 
     try {
       axios({
@@ -78,13 +74,15 @@ const WriteDocStorage = () => {
           'Content-Type': 'multipart/form-data',
         },
         url: '/doc/addDoc',
-        data: data,
+        data: formData,
       }).then((res) => {
         if (res.data == 1) {
           alert('문서가 등록되었습니다.')
+          Navigate('/ws/' + url + '/docStorage')
         }
         if (res.data != 1) {
           alert('문서 등록에 실패하였습니다.')
+          Navigate('/ws/' + url + '/docStorage')
         }
       })
     } catch (error) {
@@ -118,10 +116,10 @@ const WriteDocStorage = () => {
           <CCol sm={10}>
             <CCol className="mb-3">
               <CFormInput
-                value={orifile}
                 onChange={FileHandler}
                 enctype="multipart/form-data"
                 type="file"
+                multiple="multiple"
                 id="formFile"
               />
             </CCol>
@@ -162,13 +160,12 @@ const WriteDocStorage = () => {
                 'alignright alignjustify | bullist numlist outdent indent | ' +
                 'removeformat | help',
               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+              forced_root_block: false,
             }}
           />
           <br></br>
           <div align="right">
-            <Link to="/boardlist">
-              <CButton type="submit">등록</CButton>
-            </Link>
+            <CButton type="submit">등록</CButton>
           </div>
         </CCardBody>
       </CForm>
