@@ -24,7 +24,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 		
 		// 로그인 하는 경우
 		if (request.getRequestURI().equals("/controller/backlogin/login")) {
-			
 			result = true;
 		}else {
 			
@@ -32,6 +31,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 				result = true;
 			}
 			
+		}
+		
+		if(request.getRequestURI().equals("/controller/api/chat/fileDown")) {
+			result = true;
 		}
 		
 		System.out.println("result : " + result);

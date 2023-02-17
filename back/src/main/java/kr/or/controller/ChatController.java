@@ -1,14 +1,17 @@
 package kr.or.controller;
 
-import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -18,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -88,33 +90,89 @@ public class ChatController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
-		mychat.setContent(files[0].getOriginalFilename());
 		
+		//파일 명
 		String filename = files[0].getOriginalFilename();
-		String path = request.getServletContext().getRealPath("/resources/upload/chat"); // 배포된 서버 경로
-		String fpath = path + "\\" + filename;
+		//확장자
+		String extension = filename.substring(filename.lastIndexOf("."));
+		//확장자를 제외한 파일 명
+		String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
 		
-		System.out.println(path);
+		//저장할 파일 명
+		String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis())).concat(extension);
+		String savePath = request.getServletContext().getRealPath("/resources/upload/chatStorage_") + mychat.getUrl() + "/" + saveFileName;
 		
-		FileOutputStream fs = null;
+		// 파일이 저장될 경로
+	    String path = request.getServletContext().getRealPath("/resources/upload/chatStorage_") + mychat.getUrl();
+	    // 폴더 생성
+	    File folder = new File(path);
+	    if (!folder.exists()) {
+	    	folder.mkdirs();
+	    }
+		
+		System.out.println(savePath);
+		
 		try {
-			fs = new FileOutputStream(fpath);
-			fs.write(files[0].getBytes());
-
-		} catch (Exception e) {
+			File dest = new File(savePath);
+			files[0].transferTo(dest);
+		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				fs.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		
+		mychat.setContent(saveFileName);
+		
+		//DB에 저장
 		int result = chatservice.sendChat(mychat);
 		
+		//채팅으로 다시 전송
+		template.convertAndSend("/sub/chat/room/" + mychat.getR_idx(), mychat);
+		
 		return result;
+	}
+	
+	//파일 다운로드
+	@RequestMapping(value="/api/chat/fileDown", method = RequestMethod.GET)
+	public void downFile(@RequestParam(value="url") String url, @RequestParam(value="content") String content, HttpServletRequest request, HttpServletResponse response) {
+		
+		File file = new File(request.getServletContext().getRealPath("/resources/upload/chatStorage_") + url + "/" + content);
+		
+		FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        ServletOutputStream sos = null;
+		
+		try {
+			
+			fis = new FileInputStream(file);
+			bis = new BufferedInputStream(fis);
+			sos = response.getOutputStream();
+			
+			String reFilename = "";
+			
+			// IE로 실행한 경우인지 -> IE는 따로 인코딩 작업을 거쳐야 한다. request헤어에 MSIE 또는 Trident가 포함되어 있는지 확인
+            boolean isMSIE = request.getHeader("user-agent").indexOf("MSIE") != -1 || request.getHeader("user-agent").indexOf("Trident") != -1;
+			
+            if(isMSIE) {
+                reFilename = URLEncoder.encode(content, "utf-8");
+                reFilename = reFilename.replaceAll("\\+", "%20");
+            }
+            else {
+                reFilename = new String(content.getBytes("utf-8"), "ISO-8859-1");
+            }
+			
+			response.setContentType("application/octet-stream;charset=utf-8");
+			response.addHeader("Content-Disposition", "attachment;filename=\""+reFilename+"\"");
+			response.setContentLength((int)file.length());
+			
+			int read = 0;
+            while((read = bis.read()) != -1) {
+                sos.write(read);
+            }
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		
 	}
 
 	// 채팅방 안의 유저 리스트
