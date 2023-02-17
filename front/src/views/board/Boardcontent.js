@@ -188,9 +188,11 @@ const Boardcontent = () => {
         </CCardBody>
 
         <div align="right" className="me-4">
-          <CButton color="primary" variant="outline">
-            수정
-          </CButton>{' '}
+          <Link to={`/ws/${params.url}/boardedit`}>
+            <CButton color="primary" variant="outline">
+              수정
+            </CButton>{' '}
+          </Link>
           &nbsp;
           <Link to={`/ws/${params.url}/boardlist`}>
             <CButton color="danger" variant="outline" onClick={deletecommon}>

@@ -1,5 +1,6 @@
 package kr.or.controller;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,22 +55,11 @@ public class CommonBoardController {
 		
 		return  common;
 	}
-//	//글쓰기
-//	@RequestMapping(value="/boardwrite",method = RequestMethod.POST)
-//	public int addCommonBoard(@RequestBody CommonBoard commonboard ) {
-//		
-//		int result = commonboardservice.addCommonBoard(commonboard);
-//		
-//		return result;
-//		
-//	}
-	
-	
-	
-	
+
+
 	 //글쓰기
 		@RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
-		public int addCommonBoard(@RequestParam(value="file") MultipartFile[] files, @RequestParam(value="boardwrite") String boardwrite, HttpServletRequest request) {
+		public int addCommonBoard(@RequestParam(value="file") MultipartFile[] files, @RequestParam(value="write1") String boardwrite, HttpServletRequest request) {
 			
 			CommonBoard board = null;
 		      ObjectMapper mapper = new ObjectMapper();
@@ -83,29 +73,40 @@ public class CommonBoardController {
 		      }
 		   
 		
-		      board.setOri_filename(files[0].getOriginalFilename());
-		      String filename = files[0].getOriginalFilename();
-		      String path = request.getServletContext().getRealPath("/resources/upload/board"); // 배포된 서버 경로
-		      String fpath = path + "\\" + filename;
-		      //경로 검색
-		      System.out.println(path);
-		      
-		      FileOutputStream fs = null;
-		      try {
-		         fs = new FileOutputStream(fpath);
-		         fs.write(files[0].getBytes());
+		  
 
-		      } catch (Exception e) {
+		      //파일 명
+		      String filename = files[0].getOriginalFilename();
+		      //확장자
+		      String extension = filename.substring(filename.lastIndexOf("."));
+		      //확장자를 제외한 파일 명
+		      String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
+		      
+		      //저장할 파일 명
+		      String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis())).concat(extension);
+		      String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/" + saveFileName;
+		      
+		      // 파일이 저장될 경로
+		       String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
+		       // 폴더 생성
+		       File folder = new File(path);
+		       if (!folder.exists()) {
+		          folder.mkdirs();
+		       }
+		      
+		      System.out.println(savePath);
+		      
+		      try {
+		         File dest = new File(savePath);
+		         files[0].transferTo(dest);
+		      } catch (IOException e) {
 		         e.printStackTrace();
-		      } finally {
-		         try {
-		            fs.close();
-		         } catch (IOException e) {
-		            e.printStackTrace();
-		         }
 		      }
-		   
-		   
+		      
+
+		      board.setOri_filename(files[0].getOriginalFilename());
+		      board.setFiletype(files[0].getContentType());
+		      board.setVolume(files[0].getSize());
 		    int result = commonboardservice.addCommonBoard(board);
 		    return result;
 		}
@@ -115,6 +116,13 @@ public class CommonBoardController {
 		int result = commonboardservice.delectCommonboard(commonboard);
 		return result;
 		
+	}
+	//수정하기
+	@RequestMapping(value="/boardedit",method =RequestMethod.POST)
+	public int updateCommonBoard(@RequestBody CommonBoard idx) {
+		
+		int common = commonboardservice.updateCommonBoard(idx);
+		return  common;
 	}
 	
 	//알림보낼 사람 선택하기

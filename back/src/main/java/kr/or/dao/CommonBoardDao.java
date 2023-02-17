@@ -22,6 +22,8 @@ public interface CommonBoardDao {
 	//알림보낼 사람 선택하기
 	public List<CommonBoard> boardalramlist(String url) throws ClassNotFoundException, SQLException;
 	
+	//글수정하기
+	public int updateCommonBoard (CommonBoard idx) throws ClassNotFoundException, SQLException;
 	
 	
 }
