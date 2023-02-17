@@ -59,13 +59,13 @@ public class KanbanService {
 		return result;
 	}
 
-	public int addKanbanColumn(String url) {
+	public int addKanbanColumn(Kanban kanban) {
 		int result = 0;
 		
 		
 		try {
 			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
-			result = kanbandao.addKanbanColumn(url);
+			result = kanbandao.addKanbanColumn(kanban);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,6 +76,27 @@ public class KanbanService {
 		
 		return result;
 	}
+
+	// 칸반 위치 수정 임시
+	public int updateLocation(Kanban kanban) {
+		int result = 0;
+		
+		
+		try {
+			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
+			result = kanbandao.updateKanbanLocation(kanban);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	
+
 	
 	
 

@@ -90,9 +90,10 @@ const KanbanItem = () => {
     })
   }, [])
 
+  // 내일 수정해야 할 부분
   useEffect(() => {
-    let draggables = document.querySelectorAll('.draggable')
-    let containers = document.querySelectorAll('.container1')
+    const draggables = document.querySelectorAll('.draggable') //nodeList 반환
+    const containers = document.querySelectorAll('.container1')
 
     draggables.forEach((draggable) => {
       draggable.addEventListener('dragstart', () => {
@@ -101,29 +102,69 @@ const KanbanItem = () => {
 
       draggable.addEventListener('dragend', () => {
         draggable.classList.remove('dragging')
-      })
-    })
 
-    containers.forEach((container1) => {
-      container1.addEventListener('dragover', (e) => {
-        e.preventDefault()
-        const afterElement = getDragAfterElement(container1, e.clientX)
-        const draggable = document.querySelector('.dragging')
-        if (afterElement === undefined) {
-          container1.appendChild(draggable)
-        } else {
-          container1.insertBefore(draggable, afterElement)
+        let target = $(event.target)
+        let children1 = $(target).children()
+        let ch = $(children1).children().eq(0)
+
+        let supertag = target.closest('.container')
+        let childtag = $(supertag).children()
+
+        let arr = []
+        let num = 0
+
+        $(childtag).each(function () {
+          let request4 = {
+            title: $(this).html().trim().split('<', 1)[0],
+            side: num,
+          }
+
+          arr.push(request4)
+
+          num += 1
+        })
+
+        let main = arr[0].s_idx
+
+        for (let i = 1; i < arr.length; i++) {
+          let request5 = {
+            title: arr[i].title,
+            side: arr[i].side,
+            content: main,
+          }
+          let data = JSON.stringify(request5)
+          axios({
+            type: 'put',
+            url: '/api/kanban/updateLocationKanban',
+            data: data,
+            dataType: 'text',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {},
+          })
         }
       })
     })
 
-    function getDragAfterElement(container1, x) {
-      const draggableElements = [...container1.querySelectorAll('.draggable:not(.dragging)')]
+    containers.forEach((container) => {
+      container.addEventListener('dragover', (e) => {
+        e.preventDefault()
+        const afterElement = getDragAfterElement(container, e.clientX)
+        const draggable = document.querySelector('.dragging')
+        if (afterElement === undefined) {
+          container.appendChild(draggable)
+        } else {
+          container.insertBefore(draggable, afterElement) //드래그 할수 있는 위치 중 옮겨진 위치에 삽입
+        }
+      })
+    })
+
+    function getDragAfterElement(container, x) {
+      const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
+
       return draggableElements.reduce(
         (closest, child) => {
           const box = child.getBoundingClientRect()
           const offset = x - box.left - box.width / 2
-          // console.log(offset);
           if (offset < 0 && offset > closest.offset) {
             return { offset: offset, element: child }
           } else {
@@ -134,6 +175,8 @@ const KanbanItem = () => {
       ).element
     }
   }, [view, view2])
+
+  // 내일 수정해야 할 부분
 
   return (
     <>

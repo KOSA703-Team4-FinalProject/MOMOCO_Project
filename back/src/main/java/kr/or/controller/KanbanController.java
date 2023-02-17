@@ -83,15 +83,32 @@ public class KanbanController {
 	
 	
 	// 칸반 컬럼 추가
-	@RequestMapping(value = "addKanbanColumn", method = RequestMethod.POST)
-	public int addKanbanColumn(@RequestBody Kanban url) {
+	@RequestMapping(value = "/addKanbanColumn", method = RequestMethod.POST)
+	public int addKanbanColumn(@RequestBody Kanban kanban) {
 		System.out.println("칸반 컨트롤러");
 		
-		int result = kanbanserivce.addKanbanColumn(url.getUrl());
+		int result = kanbanserivce.addKanbanColumn(kanban);
 		
-		System.out.println(url.getUrl());
+		System.out.println(kanban);
 		
 		return result;
 	}
+	
+	// 아이템 위치 변경 임시
+	@RequestMapping(value="/updateLocationKanban", method=RequestMethod.PUT)
+	public String updateLocation(@RequestBody Kanban kanban) {
+		String str = "";
+		System.out.println("이거 변경되는거 맞냐..");
+		int result = kanbanserivce.updateLocation(kanban);
+		
+		if(result > 0) {
+			str = "success";
+		}else {
+			str = "false";
+		}
+		
+		return str;
+	}
+	
 
 }

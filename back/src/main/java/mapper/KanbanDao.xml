@@ -7,11 +7,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 전체 일정 public List<Kanban> getKanban(String url) -->
 	<select id="getKanban" parameterType="String"
 		resultType="kr.or.vo.Kanban">
-		select b.idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, label, u_idx, b_idx, issue, side, a.idx, s_name
+		select b.idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, label, u_idx, b_idx, issue, side, s_idx, s_name
 		from board_${url} b join (select b_idx, issue, side, idx, s.s_idx, s_name
                         			from kanban_${url} k right join status_${url} s
                         			on k.s_idx = s.s_idx) a
 		on b.idx = a.idx
+		order by s_idx 
 	</select>
 	
 	
@@ -23,14 +24,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			into board_status_${url} (idx, s_idx)
 				values (board_idx_seq_${url}.currval, ${s_idx})
 			into kanban_yunseop (b_idx, issue, side, idx, s_idx)
-				values (kanban_b_idx_seq_${url}.nextval, '', '' , board_idx_seq_${url}.CURRVAL, ${s_idx})
+				values (kanban_b_idx_seq_${url}.nextval, '', (select max(b_idx)+1 from kanban_${url}), board_idx_seq_${url}.CURRVAL, ${s_idx})
 		select * from dual
 	</insert>
 	
 		<!-- 칸반 컬럼 추가  -->
 		<insert id = "addKanbanColumn" parameterType = "kr.or.vo.Kanban">
-		insert into status_${url} (s_idx, s_name) values(status_s_idx_seq_${url}.nextval, '${s_name}')
+		insert into status_${url} (s_idx, s_name) values(status_s_idx_seq_${url}.nextval, #{s_name})
 		</insert>
+		
+		
+		<update id = "updateKanbanLocation" parameterType = "kr.or.vo.Kanban">
+		update kanban_${url}
+		set k_location=#{k_location}, s_idx=#{s_idx}
+		where title=#{title}
+		
+		</update>
 	
 
 

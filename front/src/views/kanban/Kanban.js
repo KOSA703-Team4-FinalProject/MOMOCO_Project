@@ -51,6 +51,7 @@ const Kanban = () => {
 
   // 변수
   const [addKanbanItem, setAddKanbanItem] = useState([])
+  const [statusList, setStateList] = useState([])
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -84,7 +85,7 @@ const Kanban = () => {
       data: reqData,
     }).then((res) => {
       console.log(res)
-      alert('등록되었습니다.')
+
       location.reload()
     })
   }
@@ -97,7 +98,7 @@ const Kanban = () => {
 
     axios({
       method: 'POST',
-      url: '/api/kanban/addKanban',
+      url: '/api/kanban/addKanbanColumn',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -108,6 +109,23 @@ const Kanban = () => {
       location.reload()
     })
   }
+
+  useEffect(() => {
+    const params2 = {
+      url: params.url,
+    }
+
+    axios({
+      url: '/api/status/getStatus',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: params2,
+    }).then((res) => {
+      setStateList(res.data)
+    })
+  }, [])
 
   /**
    * [x] 엘리먼트의 .draggable, .container의 배열로 선택자를 지정합니다.
@@ -136,16 +154,13 @@ const Kanban = () => {
             상태 입력
             <br />
             <br />
-            <CFormSelect
-              id="status_select"
-              aria-label="상태 입력"
-              options={[
-                { label: '진행 전', value: '1' },
-                { label: '진행중', value: '2' },
-                { label: '완료', value: '3' },
-                { label: 'test', value: '4' },
-              ]}
-            />
+            <CFormSelect id="status_select" aria-label="상태 입력">
+              {statusList.map((sta) => (
+                <option value={sta.s_idx} key={sta.s_idx}>
+                  {sta.s_name}
+                </option>
+              ))}
+            </CFormSelect>
             <br />
             <div className="mb-3">
               <CFormLabel htmlFor="exampleFormControlTextarea1">내용</CFormLabel>
@@ -209,7 +224,6 @@ const Kanban = () => {
                               <div align="end">
                                 <CButton
                                   variant="outline"
-                                  type="submit"
                                   color="primary"
                                   onClick={() => {
                                     if (confirm('컬럼을 등록하시겠습니까?')) {
