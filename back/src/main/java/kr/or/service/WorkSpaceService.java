@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.dao.WorkSpaceDao;
+import kr.or.dao.WorkSpaceUserDao;
 import kr.or.vo.WorkSpace;
+import kr.or.vo.WorkSpaceUser;
 
 @Service
 public class WorkSpaceService {
@@ -73,4 +75,22 @@ public class WorkSpaceService {
 		return workspacelist;
 	}
 
+	//워크스페이스 안의 유저 탐색
+	public List<WorkSpaceUser> getWorkSpaceUser(WorkSpaceUser workspaceuser) {
+		List<WorkSpaceUser> userlist = new ArrayList<WorkSpaceUser>();
+		
+		try {
+			
+			WorkSpaceUserDao dao = sqlsession.getMapper(WorkSpaceUserDao.class);
+			userlist = dao.getWorkSpaceUserList(workspaceuser);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userlist;
+	} 
+	
 }

@@ -43,4 +43,10 @@ module.exports = function (app) {
       changeOrigin: true,
     }),
   )
+  app.use(
+    createProxyMiddleware('/chat', {
+      target: 'ws://192.168.0.30:8090/controller/chat',
+      changeOrigin: true,
+    }),
+  )
 }

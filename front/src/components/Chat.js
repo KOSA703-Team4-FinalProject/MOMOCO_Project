@@ -2,17 +2,16 @@ import { cilArrowLeft, cilFolderOpen, cilImagePlus, cilLink, cilStorage } from '
 import CIcon from '@coreui/icons-react'
 import { CFormInput, CPopover } from '@coreui/react'
 import $, { param } from 'jquery'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
+import StompJs from 'stompjs'
 import CryptoJS from 'crypto-js'
-import StompJs from "stompjs";
-import SockJS from "sockjs-client";
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
-import { useParams } from 'react-router-dom'
-import axios from 'axios'
 
 const Chat = () => {
   const dispatch = useDispatch()
@@ -20,6 +19,8 @@ const Chat = () => {
   let [initview, setInitview] = useState(false)
   let [room, setRoom] = useState({})
   let [chatList, setChatList] = useState([])
+
+  const chatref = useRef()
 
   const params = useParams()
 
@@ -31,70 +32,67 @@ const Chat = () => {
 
   const login = JSON.parse(localStorage.getItem('login'))
 
-  const sockJs = new SockJS("/api/chat")
-  const stomp = StompJs.over(sockJs)
-
-  useEffect(() => {
-
-    connect()
-
-    return () => {
-      disconnect();
-    }
-
-  }, [])
+  const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
+  const stomp = StompJs.over(websocket)
 
   const connect = () => {
+    stomp.connect({}, () => {
+      //기존 메시지 불러오기
+      stomp.subscribe('/sub/chat/postInfo/' + chatRoomNumber, (chat) => {
+        const res = JSON.parse(chat.body)
+        console.log(res)
+        setRoom(res[1])
+        res[0].map((chat) => {
+          setChatList((chatList) => [...chatList, chat])
+        })
+        setInitview(true)
+      })
 
-    stomp.connect(`Bearer ${accessToken}`, () => {
       //메시지를 받음
-      stomp.subscribe("/sub/chat/room/"+chatRoomNumber, (chat) => {
-        appendMessage(chat);
+      stomp.subscribe('/sub/chat/room/' + chatRoomNumber, (chat) => {
+        appendMessage(chat)
       })
 
       //메시지 전송
-      stomp.send('/pub/chat/enter', `Bearer ${accessToken}`, JSON.stringify({r_idx: chatRoomNumber, u_idx: login.u_idx, nickname: login.nickname}))
+      stomp.send(
+        '/pub/chat/enter',
+        {},
+        JSON.stringify({
+          r_idx: chatRoomNumber,
+          u_idx: login.u_idx,
+          nickname: login.nickname,
+          url: params.url,
+        }),
+      )
     })
-
   }
 
+  //연결 끊기
   const disconnect = () => {
-    console.log("연결 중지")
-    stomp.unsubscribe();
+    stomp.unsubscribe()
   }
 
   //서버로 부터 채팅 메시지가 도착함
-  function appendMessage(chat){
-
-    let message = JSON.parse(chat.body);
-    let userid = message.u_idx;
-
-    console.log("message");
-    console.log(message);
-
+  function appendMessage(chat) {
+    const message = JSON.parse(chat.body)
+    setChatList((chatList) => [...chatList, message])
   }
 
-  //채팅 기록 & 채팅방 정보 불러오기
+  //채팅방에 연결하기
   useEffect(() => {
-    const reqData = {
-      url: params.url,
-      r_idx: chatRoomNumber,
-    }
+    connect()
 
-    axios({
-      method: 'POST',
-      url: '/api/chat/get',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: reqData,
-    }).then((res) => {
-      console.log(res.data)
-      setChatList(res.data[0])
-      setRoom(res.data[1])
-      setInitview(true)
-    })
+    return () => {
+      disconnect()
+    }
   }, [])
+
+  //채팅 기록이 늘어날때마다 스크롤 내리기
+  useEffect(() => {
+
+    chatref.current.scrollTop = chatref.current.scrollHeight;
+
+  }, [chatList])
 
   //파일 업로드 아이콘 클릭
   useEffect(() => {
@@ -126,38 +124,59 @@ const Chat = () => {
   const fileChange = (e) => {
     console.log(e.target.files[0])
     const file = e.target.files[0]
-    if (file.type != 'image/png') {
-      console.log('넌 아니야!')
+    
+    const reqData = {
+      url: params.url,
+      content_type: 'file',
+      ref: 1,
+      nickname: login.nickname,
+      u_idx: login.u_idx,
+      r_idx: chatRoomNumber
     }
+
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("chat", JSON.stringify(reqData));
+
+    axios({
+      method: 'POST',
+      url: '/api/chat/file',
+      headers: {
+        "Content-Type": 'multipart/form-data',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: fd
+    }).then((res) => {
+      console.log(res.data)
+    })
+
   }
 
   //이미지가 업로드 된 경우
   const imgChange = (e) => {
     console.log(e.target.files[0])
     const img = e.target.files[0]
+    if (img.type != 'image/png') {
+      console.log('넌 아니야!')
+    }
   }
 
   //채팅 전송
   const sendChat = () => {
+    const reqData = {
+      url: params.url,
+      nickname: login.nickname,
+      u_idx: login.u_idx,
+      r_idx: chatRoomNumber,
+      content: $('.inputmessage').val(),
+      content_type: 'text',
+      ref: '1',
+    }
+
+    const data = JSON.stringify(reqData)
+    stomp.send('/pub/chat/message', {}, data)
+
     $('.inputmessage').val('')
-
-    let msgbox = '<li class="me">'
-    msgbox += '<div class="entete">'
-    msgbox += '<h3>10:12AM, Today</h3>'
-    msgbox += '<h2>Vincent</h2>'
-    msgbox += '<span class="status blue"></span>'
-    msgbox += '</div>'
-    msgbox += '<div class="triangle"></div>'
-    msgbox += '<div class="message">'
-    msgbox += '내용 들어갈거'
-    msgbox += '</div>'
-    msgbox += '</li>'
-
-    $('.chat').append(msgbox)
-
-    //스크롤 내리기
-    let elem = document.getElementById('chat')
-    elem.scrollTop = elem.scrollHeight
   }
 
   return (
@@ -190,42 +209,53 @@ const Chat = () => {
           </div>
         </div>
       </header>
-      <ul className="chat">
+      <ul className="chat" ref={chatref}>
         {initview == false ? (
           <li></li>
         ) : (
-          chatList.map((data) => {
-            return (
-              <li className="you" key={data.ch_idx}>
-                <div className="entete">
-                  <span className="status green"></span>
-                  <h2 data={data.u_idx}>{data.nickname}</h2>
-                  <h3>{data.w_date}</h3>
-                </div>
-                <div className="triangle"></div>
-                <div className="message">{data.content}</div>
-              </li>
-            )
+          chatList.map((data, key) => {
+            switch (data.nickname) {
+              case 'sys':
+                return (
+                  <li className="sys" key={key}>
+                    <div className="message">{data.content}</div>
+                  </li>
+                )
+              case login.nickname:
+                return (
+                  <li className="me" key={key + data.u_idx}>
+                    <div className="entete">
+                      <h3>10:12AM, Today</h3>
+                      <h2>{data.nickname}</h2>
+                      <span className="status blue"></span>
+                    </div>
+                    <div className="triangle"></div>
+                    <div className="message">{data.content}</div>
+                  </li>
+                )
+              default:
+                return (
+                  <li className="you" key={key + data.u_idx}>
+                    <div className="entete">
+                      <span className="status green"></span>
+                      <h2>userid</h2>
+                      <h3>10:12AM, Today</h3>
+                    </div>
+                    <div className="triangle"></div>
+                    <div className="message">
+                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+                      ligula eget dolor.
+                    </div>
+                  </li>
+                )
+            }
           })
         )}
-
-        <li className="me">
-          <div className="entete">
-            <h3>10:12AM, Today</h3>
-            <h2>Vincent</h2>
-            <span className="status blue"></span>
-          </div>
-          <div className="triangle"></div>
-          <div className="message">
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-            dolor.
-          </div>
-        </li>
       </ul>
       <footer>
         <textarea className="inputmessage" placeholder="Type your message"></textarea>
         <div className="row">
-          <CFormInput type="file" className="uploadfile d-none" onChange={fileChange} />
+          <CFormInput type="file" className="uploadfile d-none" onChange={fileChange} multiple="multiple" />
           <CIcon className="filebtn ms-2" icon={cilFolderOpen} size="3xl"></CIcon>
           <CFormInput
             type="file"

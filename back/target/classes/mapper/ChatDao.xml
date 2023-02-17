@@ -9,12 +9,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select ch_idx, to_char(w_date, 'HH:MI MM/DD') as w_date, content, content_type, ref, nickname, r_idx, u_idx
 		from chat_${url}
 		where r_idx = #{r_idx}
+		order by ch_idx
 	</select>
 	
 	<!-- 채팅 전송 public int sendChat(Chat chat) -->
 	<insert id="sendChat" parameterType="kr.or.vo.Chat">
 		insert into chat_${url} (ch_idx, content, content_type, ref, nickname, r_idx, u_idx)
-			values (chat_ch_idx_seq_${url}, #{content}, #{content_type}, #{ref}, #{nickname}, #{r_idx}, #{u_idx})
+			values (chat_ch_idx_seq_${url}.nextval, #{content}, #{content_type}, #{ref}, #{nickname}, #{r_idx}, #{u_idx})
 	</insert>
 
 </mapper>

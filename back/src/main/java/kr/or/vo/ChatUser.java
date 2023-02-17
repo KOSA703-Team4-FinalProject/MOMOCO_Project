@@ -9,7 +9,7 @@ public class ChatUser {
 	private int r_idx;				//채팅방 식별 번호
 	private String entrance_time;	//접속 시간
 	private String nickname;		//닉네임
-	
+	private String profilephoto; //유저 프로필 사진
 	private String url;				//워크스페이스 url
 	
 }

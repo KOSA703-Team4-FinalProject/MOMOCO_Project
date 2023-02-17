@@ -35,8 +35,8 @@
 	
 	
 	<websocket:message-broker application-destination-prefix="/pub" >
-        <websocket:stomp-endpoint path="/chat" allowed-origins="192.168.0.30:8090/controller/api/chat"> <!-- 웹소켓 핸드셰이크 커넥션을 생성할 경로 -->
-            <websocket:sockjs websocket-enabled="true" />
+        <websocket:stomp-endpoint path="/chat" allowed-origins="*"> <!-- 웹소켓 핸드셰이크 커넥션을 생성할 경로 -->
+            
         </websocket:stomp-endpoint>
         <websocket:simple-broker prefix="/sub, /one" />
     </websocket:message-broker>
@@ -66,6 +66,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/chat/**"/>
 			<bean id="loginInterceptor" class="kr.or.utils.LoginInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
