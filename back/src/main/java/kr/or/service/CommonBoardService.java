@@ -83,5 +83,20 @@ public class CommonBoardService {
 		}
 		return result;
 	}
+	//알림보낼 사람 선택하기
+	public List<CommonBoard> boardalramlist(String url){
+		List<CommonBoard> board = new ArrayList<CommonBoard>();
+		try {
+			CommonBoardDao boarddao = sqlsession.getMapper(CommonBoardDao.class);
+			board = boarddao.boardalramlist(url);
+			
+			}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			}catch (SQLException e) {
+			e.printStackTrace();
+			}
+		return board;
+	}
+	
 	
 }

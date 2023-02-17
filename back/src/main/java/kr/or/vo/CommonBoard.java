@@ -15,4 +15,8 @@ public class CommonBoard extends Board {
 	private String thumb;		//썸네일
 	private int idx;			//글번호
 	
+	private String nickname;	//닉네임 (login)
+	private String profilephoto;	//프로필 사진(avatar_url)
+	private int u_idx;			//깃헙 키 (id)
+	
 }

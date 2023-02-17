@@ -21,10 +21,11 @@ import { updateIssueModal, updateissueNumber } from 'src/store'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import $ from 'jquery'
+import $, { data, param } from 'jquery'
 import Swal from 'sweetalert2'
+import Boardlist from './Boardlist'
 
-const Boardwirte = (props) => {
+const Boardwirte = () => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
   const issueNumber = useSelector((state) => state.issueNumber)
@@ -80,35 +81,53 @@ const Boardwirte = (props) => {
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
   const [boardcontent, setBoardcontent] = useState([])
-  useEffect(() => {})
-  //파일 업로드
-  const [file, setFile] = useState(null)
-  const handleChangeFile = (e) => {
-    setFile(e.target.files)
+  const [alramlist, setAlarmlist] = useState([])
+
+  //알림보낼 사람 목록
+  const myparam1 = {
+    url: params.url,
   }
-  console.log(file)
+  useEffect(() => {
+    axios({
+      method: 'POST',
+      url: '/board/boardalramlist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: myparam1,
+    }).then((res) => {
+      console.log(res.data)
+
+      setAlarmlist(res.data)
+    })
+  }, [])
+  //알림 보내기
+  const [selectedValues, setSelectedValues] = useState([])
+  const allUsers = alramlist.filter((data1) => data1.nickname !== login.nickname)
+  const allUserNicknames = allUsers.map((user) => user.u_idx)
+  const allUsersSelected = selectedValues.length === allUsers.length
+  console.log(selectedValues)
+
+  //파일 업로드
+  const [filevalues, setFilevalues] = useState('')
+  const fileChange = (e) => {
+    console.log(e.target.files[0])
+    setFilevalues(e.target.files[0])
+  }
+  const fd = new FormData()
+
   //파일업로드 글작성
   const send = () => {
-    const fd = new FormData()
-    Object.values(file).forEach((file) => fd.append('file', file))
-
     const write = {
       url: params.url,
       title: $('#issue').val() + ' ' + $('#title').val(),
       nickname: login.nickname,
-      ori_filename: file[0].name,
       content: content,
-      filesize: file[0].size,
       b_code: 5,
       u_idx: login.u_idx,
     }
-    if ($('#title').val() == null) {
-      Swal.fire('제목을 입력하주세요')
-    } else if (file[0].name == null) {
-      Swal.fire('파일을 첨부해주세요')
-    } else if (content == null) {
-      Swal.fire('글을 입력해주세요')
-    }
+    fd.append('file', filevalues)
+    fd.append('write1', JSON.stringify(write))
     axios({
       method: 'post',
       url: '/board/boardwrite',
@@ -117,13 +136,13 @@ const Boardwirte = (props) => {
         'Content-Type': `multipart/form-data; `,
       },
 
-      data: write,
+      data: fd,
     }).then((res) => {
       setBoardcontent(res.data)
     })
     console.log(write)
   }
-  console.log(file)
+
   console.log('wpahr' + $('#title').val())
   return (
     <>
@@ -172,7 +191,7 @@ const Boardwirte = (props) => {
                     </CCol>
                     <CCol className="col-md-8 ps-1" align="left">
                       <label>
-                        <strong>{}</strong>
+                        <strong>제목</strong>
                       </label>
                       <br></br>
                       <CFormInput
@@ -193,8 +212,7 @@ const Boardwirte = (props) => {
                       <CCol className="mb-3">
                         <CFormInput
                           type="file"
-                          id="file"
-                          onChange={handleChangeFile}
+                          onChange={fileChange}
                           multiple="multiple"
                           value={boardcontent.ori_filename}
                         />
@@ -206,21 +224,43 @@ const Boardwirte = (props) => {
                       <label>
                         <strong>알림</strong>
                       </label>
-                      <br></br>&nbsp;
-                      <CFormCheck inline id="inlineCheckbox1" value="option1" label="전체보내기" />
-                      <CFormCheck inline id="inlineCheckbox2" value="option2" />
-                      <CAvatar
-                        className="ms-2"
-                        src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                      />
-                      메타몽 &nbsp;
+                      <br></br>
                       <CFormCheck
                         inline
-                        id="inlineCheckbox3"
-                        value="option3"
-                        label="오리"
-                        disabled
+                        id="inlineCheckbox1"
+                        value="all"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedValues(allUserNicknames)
+                          } else {
+                            setSelectedValues([])
+                          }
+                        }}
+                        label="전체보내기"
+                        checked={allUsersSelected} // 모든 사용자가 선택된 경우, 체크박스를 선택하도록 함
                       />
+                      {alramlist
+                        .filter((data1) => data1.nickname !== login.nickname)
+                        .map((data1, key) => (
+                          <div key={key}>
+                            <CFormCheck
+                              inline
+                              id={`inlineCheckbox${key}`}
+                              value={data1.nickname}
+                              data-idx={data1.u_idx} // data-idx 속성 추가
+                              onChange={(e) => {
+                                const idx = e.target.dataset.idx // data-idx 속성 값 가져오기
+                                if (e.target.checked) {
+                                  setSelectedValues([...selectedValues, idx])
+                                } else {
+                                  setSelectedValues(selectedValues.filter((value) => value !== idx))
+                                }
+                              }}
+                            />
+                            <CAvatar className="ms-2" src={data1.profilephoto} />
+                            {data1.nickname}&nbsp;
+                          </div>
+                        ))}
                     </CCol>
                     <CCol className="col-md-4"></CCol>
                     <CCol className="col-md-4"></CCol>
