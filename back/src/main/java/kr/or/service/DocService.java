@@ -122,7 +122,7 @@ public class DocService {
 			System.out.println("service doc : " + doc);
 			
 			int result = docDao.addDoc(doc, file);
-
+			
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -132,24 +132,25 @@ public class DocService {
 
 	
 	// 파일 다운로드 서비스 함수
-	public void downDoc(String url, String filename, HttpServletRequest request, HttpServletResponse response)
+		public void downDoc(String url, String filename, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
-		String fname = new String(filename.getBytes("euc-kr"), "8859_1");
-		response.setHeader("Content-Disposition", "attachment;filename=" + fname + ";");
+				String fname = new String(filename.getBytes("euc-kr"), "8859_1");
+				response.setHeader("Content-Disposition", "attachment;filename=" + fname + ";");
 
 				String fullpath = request.getServletContext().getRealPath("/resources/upload/docStorage_" + url + "/" + filename);
 				System.out.println(fullpath);
 				FileInputStream fin = new FileInputStream(fullpath);
 
-		ServletOutputStream sout = response.getOutputStream();
-		byte[] buf = new byte[1024]; // 전체를 다읽지 않고 1204byte씩 읽어서
-		int size = 0;
-		while ((size = fin.read(buf, 0, buf.length)) != -1) {
-			sout.write(buf, 0, size);
-		}
-		fin.close();
-		sout.close();
-	}
+				ServletOutputStream sout = response.getOutputStream();
+				byte[] buf = new byte[1024]; // 전체를 다읽지 않고 1204byte씩 읽어서
+				int size = 0;
+				while ((size = fin.read(buf, 0, buf.length)) != -1) {
+					sout.write(buf, 0, size);
+				}
+				fin.close();
+				sout.close();
+			}
+
 
 }
