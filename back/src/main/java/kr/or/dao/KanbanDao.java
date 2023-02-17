@@ -19,6 +19,13 @@ public interface KanbanDao {
 
 	// 칸반 위치 옮기기 임시
 	public int updateKanbanLocation(Kanban kanban)throws ClassNotFoundException, SQLException;
+
+	
+	// 칸반 전체삭제 
+	public int deleteAllKanbanItem(Kanban kanban)throws ClassNotFoundException, SQLException;
+
+	public int deleteKanbanColumn(Kanban kanban)throws ClassNotFoundException, SQLException;
+
 	
 	
 

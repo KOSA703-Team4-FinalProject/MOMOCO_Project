@@ -38,8 +38,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update kanban_${url}
 		set k_location=#{k_location}, s_idx=#{s_idx}
 		where title=#{title}
-		
 		</update>
+		
+		<!-- 칸반 아이템 모두 삭제 -->
+		<delete id = "deleteAllKanbanItem" parameterType= "kr.or.vo.Kanban">
+		delete from kanban_${url} where s_idx =#{s_idx}
+		</delete>
+		
+		
+		
+		<!-- 칸반 컬럼 삭제 -->
+		<delete id = "deleteKanbanColumn" parameterType= "kr.or.vo.Kanban">
+		delete from status_${url} where s_idx =#{s_idx}
+		</delete>
 	
 
 

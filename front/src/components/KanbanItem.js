@@ -9,6 +9,7 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CFormTextarea,
   CModal,
   CModalBody,
   CModalHeader,
@@ -23,6 +24,7 @@ import { PRIMARY_KEY } from '../oauth'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import KanbanDetail from 'src/views/kanban/KanbanDetail'
 import axios from 'axios'
+import $ from 'jquery'
 
 const KanbanItem = () => {
   const [visibleXL, setVisibleXL] = useState(false)
@@ -30,6 +32,7 @@ const KanbanItem = () => {
   const [conList, setConList] = useState()
   const [view, setView] = useState(false)
   const [view2, setView2] = useState(false)
+  const [action1, setAction1] = useState(false)
 
   const navigate = useNavigate()
   const param = useParams()
@@ -51,6 +54,37 @@ const KanbanItem = () => {
       <div className="sk-spinner sk-spinner-pulse"></div>
     </div>
   )
+
+  const deleteAllKanbanItem = () => {
+    const params = { s_idx: $('#s_name_delete').val(), url: param.url }
+    console.log(data)
+
+    axios({
+      url: '/api/kanban/deleteAllKanbanItem',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: params,
+    }).then((res) => {
+      console.log(res.data)
+    })
+  }
+
+  const deleteKanbanColumn = () => {
+    const params = { s_idx: $('#s_name_delete').val(), url: param.url }
+
+    axios({
+      url: '/api/kanban/deleteKanbanColumn',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: params,
+    }).then((res) => {
+      console.log(res.data)
+    })
+  }
 
   useEffect(() => {
     const params = {
@@ -87,10 +121,12 @@ const KanbanItem = () => {
       console.log(res.data)
       setConList(res.data)
       setView2(true)
+      setAction1(true)
     })
   }, [])
 
   // 내일 수정해야 할 부분
+
   useEffect(() => {
     const draggables = document.querySelectorAll('.draggable') //nodeList 반환
     const containers = document.querySelectorAll('.container1')
@@ -102,7 +138,7 @@ const KanbanItem = () => {
 
       draggable.addEventListener('dragend', () => {
         draggable.classList.remove('dragging')
-
+        console.log('뭐라도 좀 나와라' + main)
         let target = $(event.target)
         let children1 = $(target).children()
         let ch = $(children1).children().eq(0)
@@ -129,10 +165,13 @@ const KanbanItem = () => {
         for (let i = 1; i < arr.length; i++) {
           let request5 = {
             title: arr[i].title,
+
             side: arr[i].side,
             content: main,
           }
+
           let data = JSON.stringify(request5)
+          console.log(data)
           axios({
             type: 'put',
             url: '/api/kanban/updateLocationKanban',
@@ -174,7 +213,7 @@ const KanbanItem = () => {
         { offset: Number.NEGATIVE_INFINITY },
       ).element
     }
-  }, [view, view2])
+  }, [view, view2, action1])
 
   // 내일 수정해야 할 부분
 
@@ -195,6 +234,7 @@ const KanbanItem = () => {
               >
                 <CRow>
                   <CCol xs="auto" className="me-auto text-light">
+                    <input type="hidden" id="s_name_delete" value={conList[key].s_idx}></input>
                     {conList[key].s_name}
                   </CCol>
                   <CCol xs="auto">
@@ -204,8 +244,14 @@ const KanbanItem = () => {
                         <CIcon icon={icon.cilOptions} className="text-light" />
                       </CDropdownToggle>
                       <CDropdownMenu>
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
+                        <CDropdownItem
+                          onClick={() => {
+                            deleteAllKanbanItem()
+                          }}
+                        >
+                          모두 삭제
+                        </CDropdownItem>
+                        <CDropdownItem>제목 수정</CDropdownItem>
                         <CDropdownItem>Something else here...</CDropdownItem>
                         <CDropdownItem disabled>Disabled action</CDropdownItem>
                       </CDropdownMenu>
@@ -234,7 +280,13 @@ const KanbanItem = () => {
                                     <CIcon icon={icon.cilChevronBottom} />
                                   </CDropdownToggle>
                                   <CDropdownMenu>
-                                    <CDropdownItem>wlsgo</CDropdownItem>
+                                    <CDropdownItem
+                                      onClick={() => {
+                                        deleteKanbanColumn()
+                                      }}
+                                    >
+                                      컬럼 삭제
+                                    </CDropdownItem>
                                     <CDropdownItem>Another action</CDropdownItem>
                                     <CDropdownItem>Something else here...</CDropdownItem>
                                     <CDropdownItem disabled>Disabled action</CDropdownItem>
