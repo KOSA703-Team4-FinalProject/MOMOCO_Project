@@ -114,7 +114,6 @@ const Boardwirte = () => {
     console.log(e.target.files[0])
     setFilevalues(e.target.files[0])
   }
-  const fd = new FormData()
 
   //파일업로드 글작성
   const send = () => {
@@ -126,10 +125,11 @@ const Boardwirte = () => {
       b_code: 5,
       u_idx: login.u_idx,
     }
+    const fd = new FormData()
     fd.append('file', filevalues)
     fd.append('write1', JSON.stringify(write))
     axios({
-      method: 'post',
+      method: 'POST',
       url: '/board/boardwrite',
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -140,9 +140,8 @@ const Boardwirte = () => {
     }).then((res) => {
       setBoardcontent(res.data)
     })
-    console.log(write)
   }
-
+  console.log('파일' + filevalues.name)
   console.log('wpahr' + $('#title').val())
   return (
     <>

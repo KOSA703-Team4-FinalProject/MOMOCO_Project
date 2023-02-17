@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 전체 글 확인 public List<Board> getBoard() -->
 	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
-		select idx, nickname, title, content, w_date, b_code, label, u_idx from board_${url} order by idx
+		select idx, nickname, title, content, w_date, b_code, label, u_idx from board_${url} order by idx desc
 	</select>
 	
    <!-- 글읽기-->
@@ -29,6 +29,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		
 	SELECT * FROM dual
 	</insert>
+	<!-- 글수정하기 -->
+	<update id="updateCommonBoard" parameterType="kr.or.vo.CommonBoard">
+		 UPDATE board_${url}
+        SET nickname = #{nickname}, title = #{title}, content = #{content}
+        WHERE idx = #{idx};
+        
+        UPDATE common_${url}
+        SET b_idx = #{b_idx}, ori_filename = #{ori_filename}, save_filename = #{save_filename}, volume = #{volume}, filetype = #{filetype}, thumb = #{thumb}
+        WHERE idx = #{idx};
+	
+	</update>
+	
 	<!--삭제  -->
 	<delete id="deletecommonboard" parameterType="kr.or.vo.CommonBoard">
 		delete from board_${url} where idx = #{idx}
