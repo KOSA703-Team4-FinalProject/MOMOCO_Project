@@ -40,9 +40,9 @@ const tag = {
   border: '2px',
 }
 
-const Boardcontent = () => {
+const Boardcontent = (props) => {
   const [boardcontent, setBoardcontent] = useState([])
-
+  const [commentlist, setCommentlist] = useState([])
   const params = useParams()
 
   // AES알고리즘 사용 복호화
@@ -114,11 +114,7 @@ const Boardcontent = () => {
                   <br></br>
                   <div className="row">
                     <div className="col-md-1">
-                      <CAvatar
-                        className="ms-4"
-                        src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                        style={userimg}
-                      />
+                      <CAvatar className="ms-4" src={boardcontent.profilephoto} style={userimg} />
                     </div>
                     <div className="col-md-11">
                       <div className="row">
@@ -210,17 +206,19 @@ const Boardcontent = () => {
 
         <div className="p-4">
           <div className="ms-5 me-5">
-            <Comments />
-          </div>
-          <br></br>
-          <div className="ms-5 me-5">
-            <Commentwrite />
+            <Comments idx={params.idx} url={params.url} />
           </div>
           <br></br>
 
           <div className="ms-5 me-5">
-            <Commentreply />
+            <Commentwrite idx={params.idx} url={params.url} />
           </div>
+          <br></br>
+          {commentlist.map((data, key) => (
+            <div className="ms-5 me-5" key={key}>
+              <Commentreply idx={params.idx} url={params.url} />
+            </div>
+          ))}
         </div>
       </CCard>
     </div>

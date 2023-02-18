@@ -2,12 +2,8 @@ import { CAvatar, CButton, CCard, CForm, CFormTextarea } from '@coreui/react'
 const boxsize = {
   height: '130px',
 }
-// const round ={
-//     border: '1px solid black',
-//     borderRadius: '10%'
-// }
 
-const Commentreply = () => {
+const Commentreply = (props) => {
   return (
     <div>
       <div className="container-fluid">

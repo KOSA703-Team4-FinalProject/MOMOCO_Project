@@ -3,6 +3,7 @@ import CIcon from '@coreui/icons-react'
 import { CNavItem, CNavTitle } from '@coreui/react'
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 import { useParams } from 'react-router-dom'
+import state from 'sweetalert/typings/modules/state'
 
 //side bar 상태
 let sidebarShow = createSlice({
@@ -116,6 +117,7 @@ let issueNumber = createSlice({
 })
 
 export let { updateissueNumber } = issueNumber.actions
+//댓글 번호
 
 export default configureStore({
   reducer: {
