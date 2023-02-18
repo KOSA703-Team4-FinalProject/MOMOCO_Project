@@ -23,6 +23,7 @@ import Commentwrite from 'src/components/Commentwrite'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import Issues from './Issues'
 import { param } from 'jquery'
+import { useDispatch } from 'react-redux'
 const title = {
   fontSize: 25,
   border: '2px',
@@ -71,7 +72,21 @@ const Boardcontent = (props) => {
     }).then((res) => {
       setBoardcontent(res.data)
     })
+    //댓글 목록
+    axios({
+      method: 'POST',
+      url: '/comment/commentlist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: myparams,
+    }).then((res) => {
+      res.data.map((data) => {
+        setCommentlist((d) => [...commentlist, data])
+      })
+    })
   }, [])
+  setCommentlist()
   //삭제하기
   const deletecommon = () => {
     const param = {
@@ -209,16 +224,17 @@ const Boardcontent = (props) => {
             <Comments idx={params.idx} url={params.url} />
           </div>
           <br></br>
-
-          <div className="ms-5 me-5">
-            <Commentwrite idx={params.idx} url={params.url} />
-          </div>
-          <br></br>
           {commentlist.map((data, key) => (
             <div className="ms-5 me-5" key={key}>
-              <Commentreply idx={params.idx} url={params.url} />
+              <Commentwrite idx={params.idx} url={params.url} />
             </div>
           ))}
+          <br></br>
+
+          <div className="ms-5 me-5">
+            <Commentreply idx={params.idx} url={params.url} />
+            <br></br>
+          </div>
         </div>
       </CCard>
     </div>

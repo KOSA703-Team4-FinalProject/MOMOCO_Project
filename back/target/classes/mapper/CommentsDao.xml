@@ -15,6 +15,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	from comments_${url} c join member m
 	on c.u_idx = m.u_idx
 	</select>
-	
-	
+	<!-- 댓글 목록 -->
+	<select id="getComment" parameterType="kr.or.vo.Comments" resultType="kr.or.vo.Comments">
+	select co_idx, idx, content, w_date, ref, nickName, u_idx from comments_${url} where idx=#{idx}
+	</select>
 </mapper>

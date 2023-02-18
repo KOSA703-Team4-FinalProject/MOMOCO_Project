@@ -6,7 +6,9 @@ import Login from 'src/views/login/Login'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
-
+import { useDispatch } from 'react-redux'
+import { updatecommentNumber } from 'src/store'
+import { useSelect } from '@mui/base'
 const boxsize = {
   height: '130px',
 }
@@ -44,6 +46,7 @@ const Commentwrite = (props) => {
       setCommentcontent(res.data)
     })
   }, [])
+
   return (
     <div>
       <div className="container-fluid">

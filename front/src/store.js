@@ -50,8 +50,8 @@ let drawerType = createSlice({
     changeDrawerType(state, action) {
       state = action.payload
       return state
-    }
-  }
+    },
+  },
 })
 
 export let { changeDrawerType } = drawerType.actions
@@ -113,7 +113,17 @@ let issueNumber = createSlice({
 
 export let { updateissueNumber } = issueNumber.actions
 //댓글 번호
-
+let commentNumber = createSlice({
+  name: 'commentNumber',
+  initialState: [],
+  reducers: {
+    updatecommentNumber(state, action) {
+      state = action.payload
+      return state
+    },
+  },
+})
+export let { updatecommentNumber } = commentNumber.actions
 export default configureStore({
   reducer: {
     sidebarShow: sidebarShow.reducer,
@@ -124,5 +134,6 @@ export default configureStore({
     gitToken: gitToken.reducer,
     issueModal: issueModal.reducer,
     issueNumber: issueNumber.reducer,
+    commentNumber: commentNumber.reducer,
   },
 })
