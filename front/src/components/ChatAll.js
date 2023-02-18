@@ -9,8 +9,10 @@ import Chat from './Chat'
 import TalkDrawer from './TalkDrawer'
 import TalkDrawerDetail from './TalkDrawerDetail'
 
-const ChatAll = () => {
+const ChatAll = (props) => {
   let chatstate = useSelector((state) => state.chatState)
+
+  let stomp = props.stomp
 
   return (
     <>
@@ -22,7 +24,7 @@ const ChatAll = () => {
           ? <ChatRoom />
           : (
             chatstate === 'chat'
-            ? <Chat />
+            ? <Chat stomp={stomp} />
             : (
               chatstate === 'chat_drawer'
               ? <div><TalkDrawer /></div>

@@ -14,7 +14,7 @@ import Swal from 'sweetalert2'
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
 
-const Chat = () => {
+const Chat = (props) => {
   const dispatch = useDispatch()
   let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
   let [initview, setInitview] = useState(false)
@@ -33,8 +33,7 @@ const Chat = () => {
 
   const login = JSON.parse(localStorage.getItem('login'))
 
-  const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
-  const stomp = StompJs.over(websocket)
+  const stomp = props.stomp
 
   const connect = () => {
     stomp.connect({}, () => {

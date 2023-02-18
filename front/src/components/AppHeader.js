@@ -10,33 +10,27 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
-  CModal,
-  CModalBody,
   CDropdown,
   CDropdownToggle,
   CDropdownMenu,
-  CDropdownItem,
-  CDropdownItemPlain,
   CCol,
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilCommentSquare, cilMenu } from '@coreui/icons'
 
-import { AppBreadcrumb, Chat, ChatRoom } from './index'
+import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
-import { logo } from 'src/assets/brand/logo'
 import ChatAll from './ChatAll'
 import Notifications from './Notifications'
-import { width } from '@mui/system'
 import { changeChatState, changeState } from 'src/store'
 import { BsFillHouseDoorFill } from 'react-icons/bs'
 import issuelist from '../views/board/issuelist'
 import Issues from 'src/views/board/Issues'
-import { data } from 'jquery'
 import momoco from '../assets/images/momocologo.png'
 import WorkSpaceListItem from 'src/components/WorkSpaceListItem'
 import { CButton } from '@coreui/react'
+import StompJs from 'stompjs'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -45,6 +39,12 @@ const AppHeader = () => {
   const [chatState, setCahtState] = useState(false);
   const params = useParams()
   const navigate = useNavigate()
+
+  //접속한 채팅방 번호
+  let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
+  //웹 소켓 연결
+  const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
+  const stomp = StompJs.over(websocket)
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -134,7 +134,7 @@ const AppHeader = () => {
                 />
               </CDropdownToggle>
               <CDropdownMenu>
-                <ChatAll />
+                <ChatAll stomp={stomp} />
               </CDropdownMenu>
             </CDropdown>
           </CNavItem>

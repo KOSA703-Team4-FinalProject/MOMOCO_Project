@@ -35,7 +35,7 @@ export let { changeChatState } = chatState.actions
 //접속한 채팅방 관리
 let chatRoomNumber = createSlice({
   name: 'chatRoomNumber',
-  initialState: 0,
+  initialState: 1,
   reducers: {
     updateChatRoomNumber(state, action) {
       state = action.payload
