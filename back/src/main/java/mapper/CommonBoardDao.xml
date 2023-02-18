@@ -13,9 +13,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
    <!-- 글읽기-->
   	<select id="getBoardByIdx" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
-		select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-dd') as w_date, b_code, label, u_idx, ori_filename, save_filename, filetype, ref, depth, depth, step, thumb
+		 select b.idx , b.nickname, b.title, b.content, to_char(b.w_date ,'YYYY-MM-DD')as w_date, b.b_code, b.label, b.u_idx, c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth,c.step, c.thumb, m.profilephoto
 		from board_${url} b join common_board_${url} c
-		on b.idx = c.idx
+ 		on b.idx = c.idx 
+		join member m
+ 		on m.u_idx = b.u_idx
 		where c.idx = #{idx}
 	</select>
 	
@@ -53,5 +55,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from WORKSPACE_USER a join member b on a.u_idx = b.u_idx 
 		where a.url = '${url}'
 	</select>
+	
 	
 </mapper>

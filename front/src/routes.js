@@ -60,6 +60,9 @@ const Boardcontent = React.lazy(() => import('./views/board/Boardcontent'))
 const Boardwrite = React.lazy(() => import('./views/board/Boardwrite'))
 //boardedit
 const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
+//댓글 쓰기
+const Comments = React.lazy(() => import('./components/Comments'))
+
 //마이페이지
 const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
@@ -142,6 +145,7 @@ const routes = [
   { path: '/kanbandetail', name: 'KanbanDetail', element: KanbanDetail }, // 칸반 아이템 상세보기
   { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain }, //프로젝트관리 메인
   { path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent }, //프로젝트관리 메인
+  { path: '/comments', name: 'Comments', exact: true, element: Comments }, //댓글작성하기
 ]
 
 export default routes

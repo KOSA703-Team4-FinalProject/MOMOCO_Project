@@ -11,5 +11,7 @@ public class Comments {
 	private int ref;			//들여쓰기
 	private String nickname;	//닉네임
 	private int u_idx;			//유저 식별 번호
+	private String url; 		//게시판 url
+	private String profilephoto; // 프로필유저
 	
 }
