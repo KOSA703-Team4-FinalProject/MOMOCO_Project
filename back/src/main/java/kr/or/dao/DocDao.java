@@ -14,5 +14,5 @@ public interface DocDao {
 	public List<Doc> getDoc(String url) throws ClassNotFoundException, SQLException;
 	
 	//문서저장소 글쓰기
-	public int addDoc(Doc doc, Board board, MultipartFile file) throws ClassNotFoundException, SQLException;
+	public int addDoc(Doc doc) throws ClassNotFoundException, SQLException;
 }
