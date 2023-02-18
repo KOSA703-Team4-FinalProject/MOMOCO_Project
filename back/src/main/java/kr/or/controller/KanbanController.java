@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.KanbanService;
-import kr.or.vo.Calendar;
+import kr.or.service.StatusService;
+import kr.or.vo.Board;
 import kr.or.vo.Kanban;
+import kr.or.vo.Status;
 
 @RestController
 @RequestMapping("/api/kanban")
@@ -24,6 +27,13 @@ public class KanbanController {
 	public void setKanbanService(KanbanService kanbanservice) {
 		this.kanbanserivce = kanbanservice;
 	}
+	
+	private StatusService statusService;
+
+	@Autowired
+	public void setWorkspaceservice(StatusService statusService) {
+		this.statusService = statusService;
+	}
 
 	// 칸반 전체 조회
 	@RequestMapping(value = "/getKanban", method = RequestMethod.POST)
@@ -31,11 +41,12 @@ public class KanbanController {
 
 		List<Kanban> kanban = new ArrayList<Kanban>();
 
+		//칸반 전체 조회
 		kanban = kanbanserivce.getKanban(url.getUrl());
-
+		
 		HashMap<String, ArrayList<Object>> myMap = new HashMap<String, ArrayList<Object>>();
 
-		ArrayList<String> conArr = new ArrayList<String>();
+		HashMap<Integer, String> conArr = new HashMap<Integer, String>();
 
 		for (Kanban k : kanban) {
 			if (myMap.containsKey(k.getS_name())) { // 맵에 해당하는 키가 이미 존재하는 경우
@@ -47,31 +58,46 @@ public class KanbanController {
 				myMap.put(k.getS_name(), arr); // 해시맵에 추가
 
 			} else { // 맵에 해당하는 키가 이미 존재하지 않는 경우
-				conArr.add(k.getS_name());
+				conArr.put(k.getS_idx(), k.getS_name());
 				ArrayList<Object> arr = new ArrayList<Object>(); // 새로운 배열을 만들어
 				arr.add(k); // 칸반 내용을 넣고
 				myMap.put(k.getS_name(), arr); // 해시맵에 추가
 			}
 		}
 		
+		List<Status> statusList = new ArrayList<Status>();
+		statusList = statusService.getStatus(url.getUrl());
+		
 		ArrayList< ArrayList<Object>> newArr = new ArrayList< ArrayList<Object>>();
-		for(String str : conArr) {
-			newArr.add(myMap.get(str));
+				
+		for(int i=0; i<statusList.size(); i++) {
+			
+			int s_idx = statusList.get(i).getS_idx();
+			String s_name = statusList.get(i).getS_name();
+			
+			if(conArr.get(s_idx) != null) {
+				newArr.add(myMap.get(s_name));
+			}else {
+				ArrayList<Object> temp = new ArrayList<Object>();
+				newArr.add(temp);
+			}
 		}
 
 		return newArr;
 	}
 
-	// 칸반 전체 조회
-	@RequestMapping(value = "/get", method = RequestMethod.POST)
-	public List<Kanban> getKanbans(@RequestBody Kanban url) {
+	   // 상태값으로 캘린더, 칸반 아이템 리스트 불러오기
+	   @RequestMapping(value = "/get", method = RequestMethod.POST)
+	   public List<Board> getItemByStatus(@RequestParam(value="url") String url, @RequestParam(value="s_idx") String s_idx) {
+	     
+		   System.out.println("아이템 리스트");
+		   System.out.println(url);
+		   System.out.println(s_idx);
+		   List<Board> list = new ArrayList<Board>();
+	      list = kanbanserivce.getItembyStatus(url, s_idx);
 
-		List<Kanban> kanban = new ArrayList<Kanban>();
-
-		kanban = kanbanserivce.getKanban(url.getUrl());
-
-		return kanban;
-	}
+	      return list;
+	   }
 
 	// 칸반 아이템 추가
 	@RequestMapping(value = "/addKanban", method = RequestMethod.POST)
@@ -128,6 +154,15 @@ public class KanbanController {
 		public int deleteKanbancolumn(@RequestBody Kanban kanban) {
 			
 			int result = kanbanserivce.deleteKanbanColumn(kanban);
+			
+			return result;
+		}
+		
+   // 칸반 컬럼이름 수정		updateKanbanColumnName
+		@RequestMapping(value="/modifyKanbanColumnName", method=RequestMethod.POST)
+		public int modifykanbanColumnName(@RequestBody Kanban kanban) {
+			
+			int result = kanbanserivce.modifyKanbanColumnName(kanban);
 			
 			return result;
 		}

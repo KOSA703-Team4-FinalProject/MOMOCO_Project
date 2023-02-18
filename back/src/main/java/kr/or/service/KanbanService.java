@@ -8,8 +8,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import kr.or.dao.CalendarDao;
 import kr.or.dao.KanbanDao;
+import kr.or.vo.Board;
 import kr.or.vo.Kanban;
 
 @Service
@@ -125,5 +125,38 @@ public class KanbanService {
 
 		return result;
 	}
+
+	public int modifyKanbanColumnName(Kanban kanban) {
+		int result = 0;
+		
+		try {
+			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
+			result = kanbandao.modifyKanbanColumnName(kanban);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+				
+		return result;
+	}
+	
+	 // 상태값으로 쓰여진 캘린더, 칸반 아이템 모두 불러오기
+	   public List<Board> getItembyStatus(String url, String s_idx) {
+	      List<Board> itembyStatus = new ArrayList<Board>();
+
+	      try {
+	         KanbanDao kanbanDao = sqlsession.getMapper(KanbanDao.class);
+	         itembyStatus = kanbanDao.getItemByStatus(url, s_idx);
+	      } catch (ClassNotFoundException e) {
+
+	         e.printStackTrace();
+	      } catch (SQLException e) {
+
+	         e.printStackTrace();
+	      }
+
+	      return itembyStatus;
+	   }
 
 }

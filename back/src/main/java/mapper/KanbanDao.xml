@@ -45,12 +45,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from kanban_${url} where s_idx =#{s_idx}
 		</delete>
 		
+		<!-- 칸반 컬럼명 삭제 modifyKanbanColumnName -->
+		<update id = "modifyKanbanColumnName" parameterType = "kr.or.vo.Kanban">
+		update status_${url} set s_name =#{s_name} where s_idx = #{s_idx}
+		</update>
+		
 		
 		
 		<!-- 칸반 컬럼 삭제 -->
 		<delete id = "deleteKanbanColumn" parameterType= "kr.or.vo.Kanban">
 		delete from status_${url} where s_idx =#{s_idx}
 		</delete>
+		
+		   <select id="getItembyStatus" parameterType="String" resultType="kr.or.vo.Board">
+      	select idx, title, w_date, nickname from board_${url} where s_idx=#{s_idx}
+   		  </select>
 	
 
 
