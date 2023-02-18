@@ -1,6 +1,6 @@
 import { CCard, CForm } from '@coreui/react'
 import { CRow, CFormLabel, CCol, CFormInput, CInputGroup, CInputGroupText } from '@coreui/react'
-import { CCardBody, CCardTitle } from '@coreui/react'
+import { CCardBody } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
 import { CButton } from '@coreui/react'
 import { Link, useParams } from 'react-router-dom'
@@ -51,11 +51,9 @@ const WriteDocStorage = () => {
     const formData = new FormData()
 
     const doc = {
-      idx: null,
       nickname: nickname,
       title: title,
       content: content,
-      w_date: null,
       b_code: 3,
       label: 'doc',
       u_idx: u_idx,
@@ -69,18 +67,18 @@ const WriteDocStorage = () => {
     try {
       axios({
         method: 'POST',
+        url: '/doc/addDoc',
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': `multipart/form-data; `,
         },
-        url: '/doc/addDoc',
         data: formData,
       }).then((res) => {
-        if (res.data == 1) {
+        if (res.data == 2) {
           alert('문서가 등록되었습니다.')
           Navigate('/ws/' + url + '/docStorage')
         }
-        if (res.data != 1) {
+        if (res.data != 2) {
           alert('문서 등록에 실패하였습니다.')
           Navigate('/ws/' + url + '/docStorage')
         }
