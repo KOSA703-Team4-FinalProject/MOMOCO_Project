@@ -1,6 +1,15 @@
-import { cilArrowLeft, cilFolderOpen, cilImagePlus, cilLink, cilStorage } from '@coreui/icons'
+import {
+  cilArrowLeft,
+  cilFile,
+  cilFolderOpen,
+  cilImage,
+  cilImagePlus,
+  cilLink,
+  cilStorage,
+  cilWallpaper,
+} from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CFormInput, CPopover } from '@coreui/react'
+import { CFormInput, CModal, CModalBody, CPopover } from '@coreui/react'
 import $, { param } from 'jquery'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,6 +22,7 @@ import Swal from 'sweetalert2'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
+import { height, width } from '@mui/system'
 
 const Chat = (props) => {
   const dispatch = useDispatch()
@@ -20,6 +30,8 @@ const Chat = (props) => {
   let [initview, setInitview] = useState(false)
   let [room, setRoom] = useState({})
   let [chatList, setChatList] = useState([])
+  let [ImgModal, setImgModal] = useState(false)
+  let [imageURL, setImageURL] = useState('')
 
   const chatref = useRef()
   const params = useParams()
@@ -152,10 +164,14 @@ const Chat = (props) => {
   const imgChange = (e) => {
     const img = e.target.files[0]
 
-    if (img.type != 'image/png' && img.type != 'image/jpeg' && img.type != 'image/gif' && img.type != 'image/jpg') {
+    if (
+      img.type != 'image/png' &&
+      img.type != 'image/jpeg' &&
+      img.type != 'image/gif' &&
+      img.type != 'image/jpg'
+    ) {
       Swal.fire('Error', '이미지를 선택해 주세요.', 'error')
     } else {
-
       const reqData = {
         url: params.url,
         content_type: 'img',
@@ -180,7 +196,6 @@ const Chat = (props) => {
       }).then((res) => {
         console.log(res.data)
       })
-
     }
   }
 
@@ -206,14 +221,15 @@ const Chat = (props) => {
   const clickContent = (e) => {
     const tag = e.target
     const content_type = $(tag).attr('value')
+    let content = $(tag).html().split('</svg>')
+    const re_cont = content[1]
 
     if (content_type == 'file') {
       axios({
         method: 'GET',
         url: '/api/token',
-        headers: {Authorization: `Bearer ${accessToken}`,},
+        headers: { Authorization: `Bearer ${accessToken}` },
       }).then((res) => {
-
         if (res.data == '') {
           Swal.fire('Error', '잘못된 접근입니다.', 'error')
         } else {
@@ -221,7 +237,7 @@ const Chat = (props) => {
             'http://localhost:8090/controller/api/chat/fileDown?url=' +
             params.url +
             '&content=' +
-            $(tag).html()
+            re_cont
 
           const download = document.createElement('a')
 
@@ -232,6 +248,27 @@ const Chat = (props) => {
         }
       })
     } else if (content_type == 'img') {
+      setImgModal(!ImgModal)
+      const reqData = {
+        url: params.url,
+        content: re_cont,
+      }
+
+      axios({
+        method: 'GET',
+        url: '/api/chat/imgView',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        responseType: 'blob',
+        params: reqData,
+      }).then((res) => {
+        const myFile = new File([res.data], 'imageName')
+        const reader = new FileReader()
+        reader.onload = (ev) => {
+          const previewImage = String(ev.target?.result)
+          setImageURL(previewImage) // myImage라는 state에 저장
+        }
+        reader.readAsDataURL(myFile)
+      })
     }
   }
 
@@ -286,14 +323,36 @@ const Chat = (props) => {
                       <span className="status blue"></span>
                     </div>
                     <div className="triangle"></div>
-                    <div
-                      className="message"
-                      value={data.content_type}
-                      idx={data.ch_idx}
-                      onClick={clickContent}
-                    >
-                      {data.content}
-                    </div>
+                    {data.content_type == 'text' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        {data.content}
+                      </div>
+                    ) : data.content_type == 'img' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        <CIcon icon={cilImage} size="xl" className="me-2" />
+                        {data.content}
+                      </div>
+                    ) : (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        <CIcon icon={cilFile} size="xl" className="me-2" />
+                        {data.content}
+                      </div>
+                    )}
                   </li>
                 )
               default:
@@ -318,6 +377,11 @@ const Chat = (props) => {
             }
           })
         )}
+        <CModal alignment="center" visible={ImgModal} onClose={() => setImgModal(false)}>
+          <CModalBody>
+            <img src={imageURL} alt="이미지" style={{width: '100%', height: 'auto'}} />
+          </CModalBody>
+        </CModal>
       </ul>
       <footer>
         <textarea className="inputmessage" placeholder="Type your message"></textarea>

@@ -33,10 +33,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 			
 		}
 		
-		if(request.getRequestURI().equals("/controller/api/chat/fileDown")) {
-			result = true;
-		}
-		
 		System.out.println("result : " + result);
 
 		return result;
