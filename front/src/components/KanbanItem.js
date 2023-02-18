@@ -1,4 +1,5 @@
 import {
+  CButton,
   CCard,
   CCardBody,
   CCardHeader,
@@ -9,9 +10,14 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CForm,
+  CFormInput,
+  CFormLabel,
   CFormTextarea,
+  CHeader,
   CModal,
   CModalBody,
+  CModalFooter,
   CModalHeader,
   CModalTitle,
   CRow,
@@ -28,6 +34,8 @@ import $ from 'jquery'
 
 const KanbanItem = () => {
   const [visibleXL, setVisibleXL] = useState(false)
+  const [titleVisible, setTitleVisible] = useState(false)
+
   const [kanbanItemList, setKanbanItemList] = useState([])
   const [conList, setConList] = useState()
   const [view, setView] = useState(false)
@@ -55,35 +63,74 @@ const KanbanItem = () => {
     </div>
   )
 
-  const deleteAllKanbanItem = () => {
-    const params = { s_idx: $('#s_name_delete').val(), url: param.url }
-    console.log(data)
+  // 모든 아이템 삭제
+  const deleteAllKanbanItem = (e) => {
+    const tag = e.target
+    const content_type = $(tag).attr('value')
 
-    axios({
-      url: '/api/kanban/deleteAllKanbanItem',
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: params,
-    }).then((res) => {
-      console.log(res.data)
-    })
+    const params = { s_idx: content_type, url: param.url }
+    console.log('모두 삭제 : ' + params.s_idx)
+
+    if (confirm('해당 컬럼의 모든 아이템을 삭제하시겠습니까?')) {
+      alert('삭제가 완료되었습니다.')
+      axios({
+        url: '/api/kanban/deleteAllKanbanItem',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: params,
+      }).then((res) => {
+        console.log(res.data)
+        location.reload()
+      })
+    } else {
+      alert('취소했습니다.')
+    }
   }
 
-  const deleteKanbanColumn = () => {
-    const params = { s_idx: $('#s_name_delete').val(), url: param.url }
+  // 모든 컬럼 삭제
+  const deleteKanbanColumn = (e) => {
+    const tag = e.target
+    const content_type = $(tag).attr('value')
 
-    axios({
-      url: '/api/kanban/deleteKanbanColumn',
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: params,
-    }).then((res) => {
-      console.log(res.data)
-    })
+    const params = { s_idx: content_type, url: param.url }
+    console.log('컬럼 삭제 : ' + params.s_idx)
+
+    if (params.s_idx < 4) {
+      alert('기본 컬럼은 삭제할 수 없습니다.')
+    } else {
+      if (confirm('해당 컬럼을 삭제하시겠습니까?')) {
+        alert('삭제가 완료 되었습니다.')
+        axios({
+          url: '/api/kanban/deleteKanbanColumn',
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: params,
+        }).then((res) => {
+          location.reload()
+        })
+      } else {
+        alert('취소했습니다.')
+      }
+    }
+  }
+
+  // 컬럼 제목 수정
+  const editKanbanColumnName = (e) => {
+    const tag = e.target
+    const content_type = $(tag).attr('value')
+    const content_type1 = $(tag).attr('id')
+    const title = $('#ViewTitle')
+    const params = { s_idx: content_type, url: param.url }
+    console.log('컬럼 제목 수정 : ' + content_type)
+
+    if (params.s_idx < 4) {
+      alert('기본 컬럼은 제목 수정이 불가합니다.')
+    } else {
+    }
   }
 
   useEffect(() => {
@@ -138,7 +185,7 @@ const KanbanItem = () => {
 
       draggable.addEventListener('dragend', () => {
         draggable.classList.remove('dragging')
-        console.log('뭐라도 좀 나와라' + main)
+
         let target = $(event.target)
         let children1 = $(target).children()
         let ch = $(children1).children().eq(0)
@@ -234,7 +281,7 @@ const KanbanItem = () => {
               >
                 <CRow>
                   <CCol xs="auto" className="me-auto text-light">
-                    <input type="hidden" id="s_name_delete" value={conList[key].s_idx}></input>
+                    <input type="hidden"></input>
                     {conList[key].s_name}
                   </CCol>
                   <CCol xs="auto">
@@ -244,18 +291,49 @@ const KanbanItem = () => {
                         <CIcon icon={icon.cilOptions} className="text-light" />
                       </CDropdownToggle>
                       <CDropdownMenu>
-                        <CDropdownItem
-                          onClick={() => {
-                            deleteAllKanbanItem()
-                          }}
-                        >
+                        <CDropdownItem value={conList[key].s_idx} onClick={deleteKanbanColumn}>
+                          컬럼 삭제
+                        </CDropdownItem>
+                        <CDropdownItem value={conList[key].s_idx} onClick={deleteAllKanbanItem}>
                           모두 삭제
                         </CDropdownItem>
-                        <CDropdownItem>제목 수정</CDropdownItem>
-                        <CDropdownItem>Something else here...</CDropdownItem>
-                        <CDropdownItem disabled>Disabled action</CDropdownItem>
+                        <CDropdownItem
+                          value={conList[key].s_idx}
+                          onClick={() => setTitleVisible(!titleVisible)}
+                        >
+                          컬럼 제목 수정
+                        </CDropdownItem>
                       </CDropdownMenu>
                     </CDropdown>
+                    <CModal
+                      alignment="center"
+                      visible={titleVisible}
+                      onClose={() => setTitleVisible(false)}
+                    >
+                      <CModalBody>
+                        <CForm>
+                          <div className="mb-3">
+                            <CIcon icon={icon.cibGithub} className="me-2" />
+                            <CFormLabel htmlFor="exampleFormControlInput1">컬럼명 변경</CFormLabel>
+                            <hr />
+                            기존 컬럼명 : <strong>{conList[key].s_name}</strong>
+                            <br />
+                            <br />
+                            새로운 컬럼명
+                            <CFormInput type="text" placeholder={conList[key].s_name} />
+                          </div>
+                        </CForm>
+                      </CModalBody>
+                      <CModalFooter>
+                        <CButton color="secondary" onClick={() => setTitleVisible(false)}>
+                          취소
+                        </CButton>
+                        <CButton color="primary" onClick={() => {}}>
+                          변경
+                        </CButton>
+                        {/* 등록 시 알림 sweetalert2 */}
+                      </CModalFooter>
+                    </CModal>
                   </CCol>
                 </CRow>
                 {kanbanItemList[key] == null ? (
@@ -280,13 +358,13 @@ const KanbanItem = () => {
                                     <CIcon icon={icon.cilChevronBottom} />
                                   </CDropdownToggle>
                                   <CDropdownMenu>
-                                    <CDropdownItem
+                                    {/* <CDropdownItem
                                       onClick={() => {
                                         deleteKanbanColumn()
                                       }}
                                     >
                                       컬럼 삭제
-                                    </CDropdownItem>
+                                    </CDropdownItem> */}
                                     <CDropdownItem>Another action</CDropdownItem>
                                     <CDropdownItem>Something else here...</CDropdownItem>
                                     <CDropdownItem disabled>Disabled action</CDropdownItem>

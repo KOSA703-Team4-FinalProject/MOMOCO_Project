@@ -117,7 +117,7 @@ public class KanbanController {
 	// 칸반 컬럼의 모든 아이템 삭제 
 		@RequestMapping(value="/deleteAllKanbanItem", method=RequestMethod.POST)
 		public int deleteKanbanitem(@RequestBody Kanban kanban) {
-			
+			System.out.println("칸반 아이템 삭제 컨트롤러");
 			int result = kanbanserivce.deleteAllKanbanItem(kanban);
 			
 			return result;
