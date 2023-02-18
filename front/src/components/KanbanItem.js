@@ -45,6 +45,9 @@ const KanbanItem = () => {
   const navigate = useNavigate()
   const param = useParams()
   const login = JSON.parse(localStorage.getItem('login'))
+  const id = (e) => {
+    $(e.target).attr('value')
+  }
 
   let font = {
     fontSize: '1rem',
@@ -118,19 +121,36 @@ const KanbanItem = () => {
     }
   }
 
-  // 컬럼 제목 수정
-  const editKanbanColumnName = (e) => {
+  // 컬럼 제목 수정 모달 띄우기
+  const editKanbanColumnNameModal = (e) => {
     const tag = e.target
     const content_type = $(tag).attr('value')
     const content_type1 = $(tag).attr('id')
+    const editName = $('#editColumnName').val()
+    console.log(content_type)
     const title = $('#ViewTitle')
     const params = { s_idx: content_type, url: param.url }
     console.log('컬럼 제목 수정 : ' + content_type)
+    console.log(editName)
 
     if (params.s_idx < 4) {
       alert('기본 컬럼은 제목 수정이 불가합니다.')
     } else {
+      setTitleVisible(!titleVisible)
     }
+  }
+
+  const editKanbanColumnName = (e) => {
+    e.preventDefault()
+    const name = e.target.elements.editColumnName.value
+    const tag = e.target
+    const content_type = $(tag).attr('value')
+    // const tag = e.target
+    // const content_type = $(tag).attr('value')
+    // const params = { url: param.url, name: $('#editColumnName').val(), s_idx: content_type }
+
+    console.log('받아온 제목' + name)
+    console.log('글번호 : ' + content_type)
   }
 
   useEffect(() => {
@@ -299,7 +319,7 @@ const KanbanItem = () => {
                         </CDropdownItem>
                         <CDropdownItem
                           value={conList[key].s_idx}
-                          onClick={() => setTitleVisible(!titleVisible)}
+                          onClick={editKanbanColumnNameModal}
                         >
                           컬럼 제목 수정
                         </CDropdownItem>
@@ -311,28 +331,30 @@ const KanbanItem = () => {
                       onClose={() => setTitleVisible(false)}
                     >
                       <CModalBody>
-                        <CForm>
+                        <CForm onSubmit={editKanbanColumnName} value={conList[key].s_idx}>
                           <div className="mb-3">
                             <CIcon icon={icon.cibGithub} className="me-2" />
-                            <CFormLabel htmlFor="exampleFormControlInput1">컬럼명 변경</CFormLabel>
+                            <CFormLabel htmlFor="exampleFormControlInput1">
+                              <strong>컬럼명 변경</strong>
+                            </CFormLabel>
                             <hr />
-                            기존 컬럼명 : <strong>{conList[key].s_name}</strong>
-                            <br />
-                            <br />
                             새로운 컬럼명
-                            <CFormInput type="text" placeholder={conList[key].s_name} />
+                            <br />
+                            <br />
+                            <CFormInput type="text" id="editColumnName" />
                           </div>
+
+                          <CModalFooter>
+                            <CButton color="secondary" onClick={() => setTitleVisible(false)}>
+                              취소
+                            </CButton>
+                            <CButton color="primary" type="submit">
+                              변경
+                            </CButton>
+                            {/* 등록 시 알림 sweetalert2 */}
+                          </CModalFooter>
                         </CForm>
                       </CModalBody>
-                      <CModalFooter>
-                        <CButton color="secondary" onClick={() => setTitleVisible(false)}>
-                          취소
-                        </CButton>
-                        <CButton color="primary" onClick={() => {}}>
-                          변경
-                        </CButton>
-                        {/* 등록 시 알림 sweetalert2 */}
-                      </CModalFooter>
                     </CModal>
                   </CCol>
                 </CRow>
