@@ -1,24 +1,25 @@
-import { cilFolderOpen, cilImagePlus, cilInfo, cilLink, cilUserFollow } from '@coreui/icons'
+import { cilFolderOpen, cilImagePlus, cilInfo, cilLink } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CAvatar, CCard, CCloseButton, CCol, CPopover, CRow } from '@coreui/react'
 import { BsPlusCircle, BsDashCircle } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeChatState } from 'src/store'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { changeChatState, changeDrawerType } from 'src/store'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import $ from 'jquery'
 import CryptoJS from 'crypto-js'
+import axios from 'axios'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
-import axios from 'axios'
+
 
 const TalkDrawer = () => {
   const [workspaceUserList, setWorkspaceUserList] = useState([])
   const [addUserList, setAddUserList] = useState([])
   const [userListView, setUserListView] = useState(false)
   const [addUserView, setAddUserView] = useState(false)
+  let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
 
   const params = useParams()
 
@@ -35,8 +36,10 @@ const TalkDrawer = () => {
   useEffect(() => {
     const reqData = {
       url: params.url,
+      r_idx: chatRoomNumber,
     }
 
+    //유저 목록 불러오기
     axios({
       method: 'GET',
       url: '/api/chat/userList',
@@ -91,6 +94,7 @@ const TalkDrawer = () => {
               className="m-4 col"
               onClick={() => {
                 dispatch(changeChatState('chat_detail'))
+                dispatch(changeDrawerType('file'))
               }}
             >
               <CIcon className="ms-2" icon={cilFolderOpen} size="xl" />
@@ -102,6 +106,7 @@ const TalkDrawer = () => {
               className="m-4 col"
               onClick={() => {
                 dispatch(changeChatState('chat_detail'))
+                dispatch(changeDrawerType('img'))
               }}
             >
               <CIcon className="ms-2" icon={cilImagePlus} size="xl" />
@@ -113,6 +118,7 @@ const TalkDrawer = () => {
               className="m-4 col"
               onClick={() => {
                 dispatch(changeChatState('chat_detail'))
+                dispatch(changeDrawerType('link'))
               }}
             >
               <CIcon className="ms-2" icon={cilLink} size="xl" />

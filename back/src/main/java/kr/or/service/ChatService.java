@@ -59,5 +59,24 @@ public class ChatService {
 
 		return result;
 	}
+	
+	//파일 리스트 불러오기
+	public List<Chat> getFileList(Chat chat){
+		
+		List<Chat> fileList = new ArrayList<Chat>();
+		
+		try {
+			
+			ChatDao chatdao = sqlsession.getMapper(ChatDao.class);
+			fileList = chatdao.getFileList(chat);
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return fileList;
+	}
 
 }
