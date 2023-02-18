@@ -252,11 +252,12 @@ public class ChatController {
 
 	// 채팅방 안의 유저 리스트
 	@RequestMapping(value = "/api/chat/userList", method = RequestMethod.GET)
-	public List<Object> getChatUserList(@RequestParam("url") String url) {
+	public List<Object> getChatUserList(@RequestParam("url") String url, @RequestParam("r_idx") int r_idx) {
 		List<ChatUser> userList = new ArrayList<ChatUser>();
 
 		ChatUser chatuser = new ChatUser();
 		chatuser.setUrl(url);
+		chatuser.setR_idx(r_idx);
 
 		// 채팅방 안의 유저 리스트
 		userList = chatuserservice.getChatUserList(chatuser);

@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select w.u_idx, r_idx, m.nickname, profilephoto
 		from chat_user_${url} w join member m
 		on w.u_idx = m.u_idx
+		where r_idx = #{r_idx}
 	</select>
 
 </mapper>

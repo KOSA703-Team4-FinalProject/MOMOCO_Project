@@ -46,6 +46,20 @@ let chatRoomNumber = createSlice({
 
 export let { updateChatRoomNumber } = chatRoomNumber.actions
 
+//서랍 종류 관리
+let drawerType = createSlice({
+  name: 'drawerType',
+  initialState: 'none', //file, img, link
+  reducers: {
+    changeDrawerType(state, action) {
+      state = action.payload
+      return state
+    }
+  }
+})
+
+export let { changeDrawerType } = drawerType.actions
+
 //프로필 상태
 let userProfile = createSlice({
   name: 'userProfile',
@@ -108,6 +122,7 @@ export default configureStore({
     sidebarShow: sidebarShow.reducer,
     chatState: chatState.reducer,
     chatRoomNumber: chatRoomNumber.reducer,
+    drawerType: drawerType.reducer,
     userProfile: userProfile.reducer,
     gitToken: gitToken.reducer,
     issueModal: issueModal.reducer,
