@@ -105,7 +105,7 @@ const Kanban = () => {
       data: reqData,
     }).then((res) => {
       console.log(res)
-      alert('등록되었습니다.')
+
       location.reload()
     })
   }
@@ -223,6 +223,7 @@ const Kanban = () => {
                               <br />
                               <div align="end">
                                 <CButton
+                                  className="me-2"
                                   variant="outline"
                                   color="primary"
                                   onClick={() => {
@@ -235,6 +236,15 @@ const Kanban = () => {
                                   }}
                                 >
                                   등록
+                                </CButton>
+
+                                <CButton
+                                  variant="outline"
+                                  color="danger"
+                                  onClick={() => setVisibleB(!visibleB)}
+                                >
+                                  {' '}
+                                  취소
                                 </CButton>
                               </div>
                             </CForm>
