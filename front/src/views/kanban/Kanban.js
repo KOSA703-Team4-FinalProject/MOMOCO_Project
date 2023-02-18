@@ -76,18 +76,22 @@ const Kanban = () => {
       url: url,
     }
 
-    axios({
-      method: 'POST',
-      url: '/api/kanban/addKanban',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: reqData,
-    }).then((res) => {
-      console.log(res)
-
-      location.reload()
-    })
+    if (confirm('등록하시겠습니까?')) {
+      axios({
+        method: 'POST',
+        url: '/api/kanban/addKanban',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: reqData,
+      }).then((res) => {
+        console.log(res)
+        alert('등록이 완료 되었습니다.')
+        location.reload()
+      })
+    } else {
+      alert('취소되었습니다')
+    }
   }
 
   const addColumn = () => {
