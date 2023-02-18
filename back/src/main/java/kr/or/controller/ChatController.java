@@ -5,7 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,17 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +35,7 @@ import kr.or.vo.ChatRoom;
 import kr.or.vo.ChatUser;
 import kr.or.vo.WorkSpaceUser;
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @RestController
 @RequiredArgsConstructor
@@ -117,6 +114,7 @@ public class ChatController {
 			savePath = request.getServletContext().getRealPath("/resources/upload/imgStorage_") + mychat.getUrl() + "/"
 					+ saveFileName;
 			path = request.getServletContext().getRealPath("/resources/upload/imgStorage_") + mychat.getUrl();
+			
 		} else {
 			savePath = request.getServletContext().getRealPath("/resources/upload/chatStorage_") + mychat.getUrl() + "/"
 					+ saveFileName;
@@ -129,13 +127,28 @@ public class ChatController {
 			folder.mkdirs();
 		}
 
-		System.out.println(savePath);
-
 		try {
 			File dest = new File(savePath);
 			files[0].transferTo(dest);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		//이미지일 경우 섬네일 생성
+		if (mychat.getContent_type().equals("img")) {
+			String thumbnailSaveName = request.getServletContext().getRealPath("/resources/upload/imgStorage_") + mychat.getUrl() + "/s_" + saveFileName;
+			File thumbnailFile = new File(thumbnailSaveName);
+			
+			Path savePath2 = Paths.get(savePath);
+			
+			try {
+				Thumbnailator.createThumbnail(savePath2.toFile(), thumbnailFile, 100, 100);
+				
+				
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		mychat.setContent(saveFileName);

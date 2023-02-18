@@ -9,7 +9,19 @@ import {
   cilWallpaper,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CFormInput, CModal, CModalBody, CPopover } from '@coreui/react'
+import {
+  CButton,
+  CCol,
+  CFormInput,
+  CFormLabel,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CPopover,
+  CRow,
+} from '@coreui/react'
 import $, { param } from 'jquery'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,8 +44,12 @@ const Chat = (props) => {
   let [chatList, setChatList] = useState([])
   let [ImgModal, setImgModal] = useState(false)
   let [imageURL, setImageURL] = useState('')
+  let [imgSrcList, setImgSrcList] = useState([])
+  let [initview2, setInitview2] = useState(false)
+  let [linkModalView, setLinkModalView] = useState(false)
 
   const chatref = useRef()
+  const linkRef = useRef()
   const params = useParams()
   const navigate = useNavigate()
 
@@ -55,6 +71,7 @@ const Chat = (props) => {
         console.log(res)
         setRoom(res[1])
         res[0].map((chat) => {
+          loadThumnail(chat)
           setChatList((chatList) => [...chatList, chat])
         })
         setInitview(true)
@@ -79,6 +96,40 @@ const Chat = (props) => {
     })
   }
 
+  useEffect(() => {
+    chatref.current.scrollTop = chatref.current.scrollHeight
+  }, [initview2])
+
+  //타입이 이미지일 경우 섬네일 가져오기
+  function loadThumnail(file) {
+    const reqData = {
+      url: params.url,
+      content: 's_' + file.content,
+    }
+
+    if (file.content_type == 'img') {
+      axios({
+        method: 'GET',
+        url: '/api/chat/imgView',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        responseType: 'blob',
+        params: reqData,
+      }).then((res) => {
+        const myFile = new File([res.data], 'imageName')
+        const reader = new FileReader()
+        reader.onload = (ev) => {
+          const previewImage = String(ev.target?.result)
+          setImgSrcList((imgSrcList) => [...imgSrcList, previewImage])
+        }
+        reader.readAsDataURL(myFile)
+        setInitview2(true)
+      })
+    } else {
+      const previewImage = ''
+      setImgSrcList((imgSrcList) => [...imgSrcList, previewImage])
+    }
+  }
+
   //연결 끊기
   const disconnect = () => {
     stomp.unsubscribe()
@@ -87,6 +138,7 @@ const Chat = (props) => {
   //서버로 부터 채팅 메시지가 도착함
   function appendMessage(chat) {
     const message = JSON.parse(chat.body)
+
     setChatList((chatList) => [...chatList, message])
   }
 
@@ -224,6 +276,8 @@ const Chat = (props) => {
     let content = $(tag).html().split('</svg>')
     const re_cont = content[1]
 
+    console.log(content_type)
+
     if (content_type == 'file') {
       axios({
         method: 'GET',
@@ -251,8 +305,10 @@ const Chat = (props) => {
       setImgModal(!ImgModal)
       const reqData = {
         url: params.url,
-        content: re_cont,
+        content: $(tag).attr('content'),
       }
+
+      console.log(reqData)
 
       axios({
         method: 'GET',
@@ -270,6 +326,11 @@ const Chat = (props) => {
         reader.readAsDataURL(myFile)
       })
     }
+  }
+
+  //링크 전송
+  const clickLink = () => {
+    
   }
 
   return (
@@ -303,7 +364,7 @@ const Chat = (props) => {
         </div>
       </header>
       <ul className="chat" ref={chatref}>
-        {initview == false ? (
+        {initview == false || initview2 == false ? (
           <li></li>
         ) : (
           chatList.map((data, key) => {
@@ -333,14 +394,14 @@ const Chat = (props) => {
                         {data.content}
                       </div>
                     ) : data.content_type == 'img' ? (
-                      <div
-                        className="message"
-                        value={data.content_type}
-                        idx={data.ch_idx}
-                        onClick={clickContent}
-                      >
-                        <CIcon icon={cilImage} size="xl" className="me-2" />
-                        {data.content}
+                      <div className="message" value={data.content_type} content={data.content}>
+                        <img
+                          src={imgSrcList[key]}
+                          alt="이미지"
+                          onClick={clickContent}
+                          value={data.content_type}
+                          content={data.content}
+                        />
                       </div>
                     ) : (
                       <div
@@ -364,14 +425,37 @@ const Chat = (props) => {
                       <h3>{data.w_date}</h3>
                     </div>
                     <div className="triangle"></div>
-                    <div
-                      className="message"
-                      value={data.content_type}
-                      idx={data.ch_idx}
-                      onClick={clickContent}
-                    >
-                      {data.content}
-                    </div>
+                    {data.content_type == 'text' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        {data.content}
+                      </div>
+                    ) : data.content_type == 'img' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        <img src={imgSrcList[key]} alt="이미지" />
+                        <br />
+                        {data.content}
+                      </div>
+                    ) : (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        <CIcon icon={cilFile} size="xl" className="me-2" />
+                        {data.content}
+                      </div>
+                    )}
                   </li>
                 )
             }
@@ -379,7 +463,7 @@ const Chat = (props) => {
         )}
         <CModal alignment="center" visible={ImgModal} onClose={() => setImgModal(false)}>
           <CModalBody>
-            <img src={imageURL} alt="이미지" style={{width: '100%', height: 'auto'}} />
+            <img src={imageURL} alt="이미지" style={{ width: '100%', height: 'auto' }} />
           </CModalBody>
         </CModal>
       </ul>
@@ -400,11 +484,37 @@ const Chat = (props) => {
             onChange={imgChange}
           />
           <CIcon className="imgbtn" icon={cilImagePlus} size="3xl" />
-          <CIcon className="linkbtn" icon={cilLink} size="3xl" />
+          <CIcon
+            className="linkbtn"
+            icon={cilLink}
+            size="3xl"
+            onClick={() => {
+              setLinkModalView(!linkModalView)
+            }}
+          />
           <a align="right" className="sendbtn col mt-3" onClick={sendChat}>
             Send
           </a>
         </div>
+        <CModal alignment="center" visible={linkModalView} onClose={() => setLinkModalView(false)}>
+          <CModalHeader>
+            <CModalTitle>Link 업로드</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CRow className="m-3">
+              <CFormLabel htmlFor="staticEmail" className="col-sm-2 col-form-label">
+                <CIcon className="linkbtn" icon={cilLink} />
+                Link
+              </CFormLabel>
+              <CCol sm={10}>
+                <CFormInput ref={linkRef} type="text" id="staticEmail" />
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="primary" variant="outline" onClick={clickLink}>확인</CButton>
+          </CModalFooter>
+        </CModal>
       </footer>
     </main>
   )
