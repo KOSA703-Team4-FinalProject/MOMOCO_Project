@@ -10,6 +10,7 @@ import { useState } from 'react'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import axios from 'axios'
+import { CFormSelect } from '@coreui/react'
 
 const WriteDocStorage = () => {
   const [title, SetTitle] = useState('')
@@ -18,6 +19,8 @@ const WriteDocStorage = () => {
   const [orifile, SetOrifile] = useState(null)
   const [depth, SetDepth] = useState('')
   const [step, SetStep] = useState('')
+  const [upload_type, SetUpload_type] = useState('')
+  const [link, SetLink] = useState('')
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -32,7 +35,13 @@ const WriteDocStorage = () => {
   const url = params.url
 
   const titleHandler = (e) => {
+    e.preventDefault()
     SetTitle(e.target.value)
+  }
+
+  const LinkHandler = (e) => {
+    e.preventDefault()
+    SetLink(e.target.value)
   }
 
   const FileHandler = (e) => {
@@ -42,7 +51,14 @@ const WriteDocStorage = () => {
   }
 
   const EditorHandler = (e) => {
+    e.preventDefault()
     SetContent(e)
+  }
+
+  const TypeHandler = (e) => {
+    e.preventDefault()
+    SetUpload_type(e.target.value)
+    console.log(e.target.value)
   }
 
   const SubmitHandler = (e) => {
@@ -60,6 +76,7 @@ const WriteDocStorage = () => {
       url: url,
       depth: 0,
       step: 0,
+      upload_type: upload_type,
     }
     formData.append('file', orifile)
     formData.append('doc', JSON.stringify(doc))
@@ -108,18 +125,34 @@ const WriteDocStorage = () => {
           </CCol>
         </CRow>
         <CRow className="mb-3">
-          <CFormLabel className="col-sm-2 col-form-label">
-            <strong>파일/이미지/링크</strong>
-          </CFormLabel>
+          <CCol sm={2}>
+            <CFormLabel className="col-form-label">
+              <CFormSelect
+                onChange={TypeHandler}
+                name="issue"
+                aria-label="타입"
+                options={[
+                  '선택하세요',
+                  { label: '이미지', value: 'image' },
+                  { label: '파일', value: 'file' },
+                  { label: '링크', value: 'link' },
+                ]}
+              />
+            </CFormLabel>
+          </CCol>
           <CCol sm={10}>
             <CCol className="mb-3">
-              <CFormInput
-                onChange={FileHandler}
-                enctype="multipart/form-data"
-                type="file"
-                multiple="multiple"
-                id="formFile"
-              />
+              {upload_type === 'link' ? (
+                <CFormInput type="text" onChange={LinkHandler} value={link}></CFormInput>
+              ) : (
+                <CFormInput
+                  onChange={FileHandler}
+                  enctype="multipart/form-data"
+                  type="file"
+                  multiple="multiple"
+                  id="formFile"
+                />
+              )}
             </CCol>
           </CCol>
         </CRow>

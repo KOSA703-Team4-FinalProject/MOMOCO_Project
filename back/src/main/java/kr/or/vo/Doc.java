@@ -16,9 +16,8 @@ public class Doc extends Board {
 	private int step;				//표시순서
 	private String thumb;			//썸네일
 	private int idx;				//글 번호(보드)
-	private String link;			//링크
 	private String url;				//url
-	
+	private String upload_type;		//파일,이미지,링크 구별
 	private String nickname;	//닉네임 (login)
 	private String profilephoto;	//프로필 사진(avatar_url)
 	private int u_idx;			//깃헙 키 (id)

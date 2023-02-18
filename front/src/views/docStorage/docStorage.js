@@ -9,6 +9,9 @@ import {
   CCardFooter,
   CCol,
   CContainer,
+  CDropdown,
+  CDropdownMenu,
+  CDropdownToggle,
   CModal,
   CModalBody,
   CModalHeader,
@@ -19,7 +22,7 @@ import axios from 'axios'
 import { Editor } from '@tinymce/tinymce-react'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import CIcon from '@coreui/icons-react'
-import { cilCheck } from '@coreui/icons'
+import { cilBell, cilCheck } from '@coreui/icons'
 import { CForm, CFormTextarea } from '@coreui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -33,6 +36,8 @@ import { useDispatch, useSelector } from 'react-redux'
 const docStorage = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
   const [list, SetList] = useState([])
+  let [ImgModal, setImgModal] = useState(false)
+
   //워크스페이스 주소값
   const dispatch = useDispatch()
   const params = useParams()
@@ -63,6 +68,25 @@ const docStorage = (props) => {
       console.log(res.data)
     })
   }, [])
+
+  const viewImage = (e) => {
+    const reqData = {
+      content: e.traget.value,
+      url: myparams,
+    }
+    axios({
+      method: 'GET',
+      url: '/api/token',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }).then((res) => {
+      if (res.data == '') {
+        Swal.fire('Error', '잘못된 접근입니다.', 'error')
+      } else {
+        const url =
+          'http://localhost:8090/controller/doc/fileDown?url=' + params.url + '&content=' + re_cont
+      }
+    })
+  }
 
   return (
     <>
@@ -112,7 +136,36 @@ const docStorage = (props) => {
                   </CRow>
                 </CAccordionHeader>
                 <CAccordionBody>
-                  {data.thumb}
+                  <CCol align="center">
+                    <h3>
+                      <strong>{data.ori_filename}</strong>
+                      <CModal
+                        alignment="center"
+                        visible={ImgModal}
+                        onClose={() => setImgModal(false)}
+                      >
+                        <CModalBody>
+                          <img src="#" alt="이미지" style={{ width: '100%', height: 'auto' }} />
+                        </CModalBody>
+                      </CModal>
+
+                      <CButton
+                        onClick={viewImage}
+                        className="my-3 mx-1"
+                        color="dark"
+                        shape="rounded-pill"
+                        value={(data.save_filename, data.upload_type)}
+                      >
+                        {data.upload_type === 'image' ? (
+                          <strong>미리보기</strong>
+                        ) : data.upload_type === 'link' ? (
+                          <strong>바로가기</strong>
+                        ) : (
+                          <strong>파일저장</strong>
+                        )}
+                      </CButton>
+                    </h3>
+                  </CCol>
                   <CFormTextarea defaultValue={data.content} rows={5} />
                   <CRow>
                     <CCol align="end">
