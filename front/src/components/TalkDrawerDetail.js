@@ -49,6 +49,10 @@ const TalkDrawerDetail = (props) => {
       },
       params: reqData,
     }).then((res) => {
+
+      console.log(res.data)
+      console.log(res.data.length)
+
       res.data.map((file) => {
         setFileList((fileList) => [...fileList, file])
         if(file.content_type == 'img'){
@@ -137,6 +141,12 @@ const TalkDrawerDetail = (props) => {
         reader.readAsDataURL(myFile)
       })
 
+    } else if(drawerType == 'link'){
+      const link = document.createElement('a')
+
+      link.href = file_name
+      link.setAttribute('target', '_blank')
+      link.click()
     }
   }
 
@@ -161,7 +171,7 @@ const TalkDrawerDetail = (props) => {
         </CCard>
         <CCard>
           <div className="row pt-1" align="center">
-            {initview == false || initview2 == false ? (
+            {initview == false ? (
               <div className='p-3'>
                 <h4>저장된 파일이 없습니다.</h4>
               </div>
