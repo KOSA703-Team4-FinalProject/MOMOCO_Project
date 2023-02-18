@@ -1,9 +1,4 @@
-import { cilSpeedometer } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
-import { CNavItem, CNavTitle } from '@coreui/react'
 import { configureStore, createSlice } from '@reduxjs/toolkit'
-import { useParams } from 'react-router-dom'
-import state from 'sweetalert/typings/modules/state'
 
 //side bar 상태
 let sidebarShow = createSlice({
@@ -50,7 +45,7 @@ export let { updateChatRoomNumber } = chatRoomNumber.actions
 //서랍 종류 관리
 let drawerType = createSlice({
   name: 'drawerType',
-  initialState: 'none', //file, img, link
+  initialState: 'none',
   reducers: {
     changeDrawerType(state, action) {
       state = action.payload

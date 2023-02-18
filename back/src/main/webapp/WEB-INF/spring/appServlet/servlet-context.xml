@@ -38,7 +38,7 @@
         <websocket:stomp-endpoint path="/chat" allowed-origins="*"> <!-- 웹소켓 핸드셰이크 커넥션을 생성할 경로 -->
             
         </websocket:stomp-endpoint>
-        <websocket:simple-broker prefix="/sub, /one" />
+        <websocket:simple-broker prefix="/sub, /one" /> <!-- sub : 채팅 , /one : 알림 -->
     </websocket:message-broker>
 	
 	<mvc:resources mapping="/resources/**" location="/resources/" />

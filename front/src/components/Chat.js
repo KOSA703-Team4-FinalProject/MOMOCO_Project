@@ -32,6 +32,8 @@ const Chat = (props) => {
   let [chatList, setChatList] = useState([])
   let [ImgModal, setImgModal] = useState(false)
   let [imageURL, setImageURL] = useState('')
+  let [imgSrcList, setImgSrcList] = useState([])
+  let [initview2, setInitview2] = useState(false)
 
   const chatref = useRef()
   const params = useParams()
@@ -55,6 +57,7 @@ const Chat = (props) => {
         console.log(res)
         setRoom(res[1])
         res[0].map((chat) => {
+          loadThumnail(chat)
           setChatList((chatList) => [...chatList, chat])
         })
         setInitview(true)
@@ -79,6 +82,41 @@ const Chat = (props) => {
     })
   }
 
+  useEffect(()=>{
+    chatref.current.scrollTop = chatref.current.scrollHeight
+  }, [initview2])
+
+  //타입이 이미지일 경우 섬네일 가져오기
+  function loadThumnail(file){
+    const reqData = {
+      url: params.url,
+      content: 's_'+file.content,
+    }
+
+    if(file.content_type == 'img'){
+      axios({
+        method: 'GET',
+        url: '/api/chat/imgView',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        responseType: 'blob',
+        params: reqData,
+      }).then((res) => {
+        const myFile = new File([res.data], 'imageName')
+        const reader = new FileReader()
+        reader.onload = (ev) => {
+          const previewImage = String(ev.target?.result)
+          setImgSrcList((imgSrcList) => [...imgSrcList, previewImage])
+        }
+        reader.readAsDataURL(myFile)
+        setInitview2(true)
+      })
+    } else{
+      const previewImage = ''
+      setImgSrcList((imgSrcList) => [...imgSrcList, previewImage])
+    }
+    
+  }
+
   //연결 끊기
   const disconnect = () => {
     stomp.unsubscribe()
@@ -87,6 +125,7 @@ const Chat = (props) => {
   //서버로 부터 채팅 메시지가 도착함
   function appendMessage(chat) {
     const message = JSON.parse(chat.body)
+
     setChatList((chatList) => [...chatList, message])
   }
 
@@ -219,10 +258,13 @@ const Chat = (props) => {
 
   //콘텐츠를 클릭할 경우
   const clickContent = (e) => {
+
     const tag = e.target
     const content_type = $(tag).attr('value')
     let content = $(tag).html().split('</svg>')
     const re_cont = content[1]
+
+    console.log(content_type)
 
     if (content_type == 'file') {
       axios({
@@ -251,8 +293,10 @@ const Chat = (props) => {
       setImgModal(!ImgModal)
       const reqData = {
         url: params.url,
-        content: re_cont,
+        content: $(tag).attr('content'),
       }
+
+      console.log(reqData)
 
       axios({
         method: 'GET',
@@ -303,7 +347,7 @@ const Chat = (props) => {
         </div>
       </header>
       <ul className="chat" ref={chatref}>
-        {initview == false ? (
+        {initview == false || initview2 == false ? (
           <li></li>
         ) : (
           chatList.map((data, key) => {
@@ -336,11 +380,9 @@ const Chat = (props) => {
                       <div
                         className="message"
                         value={data.content_type}
-                        idx={data.ch_idx}
-                        onClick={clickContent}
+                        content={data.content}
                       >
-                        <CIcon icon={cilImage} size="xl" className="me-2" />
-                        {data.content}
+                        <img src={imgSrcList[key]} alt="이미지" onClick={clickContent} value={data.content_type} content={data.content} />
                       </div>
                     ) : (
                       <div
@@ -364,14 +406,36 @@ const Chat = (props) => {
                       <h3>{data.w_date}</h3>
                     </div>
                     <div className="triangle"></div>
-                    <div
-                      className="message"
-                      value={data.content_type}
-                      idx={data.ch_idx}
-                      onClick={clickContent}
-                    >
-                      {data.content}
-                    </div>
+                    {data.content_type == 'text' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        {data.content}
+                      </div>
+                    ) : data.content_type == 'img' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        <img src={imgSrcList[key]} alt="이미지" /><br />
+                        {data.content}
+                      </div>
+                    ) : (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        <CIcon icon={cilFile} size="xl" className="me-2" />
+                        {data.content}
+                      </div>
+                    )}
                   </li>
                 )
             }
