@@ -1,6 +1,8 @@
 package kr.or.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.stream.events.Comment;
 
@@ -52,4 +54,20 @@ public class CommentService {
 		return com;
 		
 	}
+	//댓글 리스트
+	public List<Comments> getComment(Comments  comment){
+		List<Comments> comlist = new ArrayList<Comments>();
+		try {
+			CommentDao comdao =sqlsession.getMapper(CommentDao.class);
+			comlist = comdao.getComment( comment);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return comlist;
+		
+	}
+	
 }

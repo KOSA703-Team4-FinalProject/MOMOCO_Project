@@ -1,11 +1,13 @@
 package kr.or.controller;
 
-import javax.xml.stream.events.Comment;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.CommentService;
@@ -33,5 +35,12 @@ public class CommentController {
 	public Comments contentComments(@RequestBody Comments comment) {
 		Comments  com = new Comments();
 		return com = commentservice.commentComments(comment);
+	}
+	//댓글 리스트
+	@RequestMapping(value="/commentlist", method=RequestMethod.POST)
+	public List<Comments> commentlist(@RequestBody Comments comment) {
+	    List<Comments> commlist = commentservice.getComment(comment);
+	    System.out.println(commlist);
+	    return commlist;
 	}
 }

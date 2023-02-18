@@ -25,7 +25,6 @@ import kr.or.vo.Doc;
 public class DocController {
 	
 	private DocService docservice;
-	
 	@Autowired
 	public void setDocService(DocService docservice) {
 		this.docservice = docservice;
@@ -43,12 +42,12 @@ public class DocController {
 		return doc;
 	}
 	
-	@RequestMapping(value="/addDoc", method=RequestMethod.POST)
-	public int addDoc(@RequestParam(value="doc") String docJson, @RequestParam(value="file") MultipartFile file, HttpServletRequest request) throws IOException {
-		int result = docservice.addDoc(docJson, file, request);
-		System.out.println(result);
-		return result;
-	}
+//	@RequestMapping(value="/addDoc", method=RequestMethod.POST)
+//	public int addDoc(@RequestParam(value="doc") String docJson, @RequestParam(value="file") MultipartFile file, HttpServletRequest request) throws IOException {
+//		int result = docservice.addDoc(docJson, file, request);
+//		System.out.println(result);
+//		return result;
+//	}
 	
 	@RequestMapping("/download")
 	public void downDoc(String url, String filename, HttpServletRequest request , HttpServletResponse response) throws IOException {
