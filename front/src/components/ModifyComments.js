@@ -26,42 +26,15 @@ const boxsize = {
   height: '250px',
   weight: '500px',
 }
-
-const Commentreply = (props) => {
-  const params = useParams()
-  // AES알고리즘 사용 복호화
-  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-  //인코딩, 문자열로 변환, JSON 변환
-  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-  const accessToken = decrypted.token
-  //로그인한 유저
-  const login = JSON.parse(localStorage.getItem('login'))
-  const [reply, setReply] = useState('')
-
-  const [commentContent, setCommentContent] = useState('')
-
-  const replycomment = () => {
-    const reply = {
-      url: params.url,
-      u_idx: login.u_idx,
-      content: commentContent,
-      nickname: login.nickname,
-      idx: props.idx,
-      ref: props.co_idx,
-    }
-
-    axios({
-      method: 'POST',
-      url: '/comment/replycommentwrite',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: reply,
-    }).then((res) => {
-      setReply(res.data)
-    })
-  }
-
+const params = useParams()
+// AES알고리즘 사용 복호화
+const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+//인코딩, 문자열로 변환, JSON 변환
+const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+const accessToken = decrypted.token
+//로그인한 유저
+const login = JSON.parse(localStorage.getItem('login'))
+const ModifyComment = (props) => {
   return (
     <div>
       <CCol>
@@ -71,7 +44,7 @@ const Commentreply = (props) => {
               <CCol className="row">
                 <CCol className="col-md-10 px-4">
                   <CAvatar className="ms-6" src={login.profilephoto} />
-                  <strong>닉네임: {login.nickname}</strong>
+                  <strong> {login.nickname}</strong>
                 </CCol>
                 <CCol className="col-md-2 px-4"></CCol>
               </CCol>
@@ -82,10 +55,6 @@ const Commentreply = (props) => {
                       rows={3}
                       placeholder="댓글을 작성해주세요"
                       id="commentcontent"
-                      onChange={(event) => {
-                        const value = event.target.value
-                        setCommentContent(value)
-                      }}
                     ></CFormTextarea>
                   </CForm>
                 </CCol>
@@ -94,7 +63,7 @@ const Commentreply = (props) => {
               <CRow>
                 <CCol className="col-md-12 mt-2 mb-2 px-4" align="end">
                   <CButton color="primary" variant="outline" onClick={replycomment}>
-                    작성
+                    수정하기
                   </CButton>
                   &nbsp;
                 </CCol>
@@ -106,4 +75,4 @@ const Commentreply = (props) => {
     </div>
   )
 }
-export default Commentreply
+export default ModifyComment

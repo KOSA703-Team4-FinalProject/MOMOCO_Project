@@ -111,7 +111,7 @@ public class CommonBoardController {
 		    return result;
 		}
 	//글 삭제 
-	@RequestMapping(value="boarddelete", method =RequestMethod.POST)
+	@RequestMapping(value="/boarddelete", method =RequestMethod.POST)
 	public int deleteCommonBoard(@RequestBody CommonBoard commonboard) {
 		int result = commonboardservice.delectCommonboard(commonboard);
 		return result;

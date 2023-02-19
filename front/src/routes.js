@@ -64,7 +64,8 @@ const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
 const AllBoardList = React.lazy(() => import('./views/board/AllBoardList'))
 //댓글 쓰기
 const Comments = React.lazy(() => import('./components/Comments'))
-
+//대댓글작성
+const Commentreply = React.lazy(() => import('./components/Commentreply'))
 //마이페이지
 const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
@@ -148,7 +149,8 @@ const routes = [
   { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain }, //프로젝트관리 메인
   { path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent }, //프로젝트관리 메인
   { path: '/comments', name: 'Comments', exact: true, element: Comments }, //댓글작성하기
-  { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList },
+  { path: '/replycomment', name: 'ReplyComment', exact: true, element: Commentreply }, //대댓글 작성하기
+  { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList }, //전체게시판모록
 ]
 
 export default routes

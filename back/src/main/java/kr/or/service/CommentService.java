@@ -57,6 +57,7 @@ public class CommentService {
 	//댓글 리스트
 	public List<Comments> getComment(Comments  comment){
 		List<Comments> comlist = new ArrayList<Comments>();
+		System.out.println(comment.getUrl() + comment.getIdx());
 		try {
 			CommentDao comdao =sqlsession.getMapper(CommentDao.class);
 			comlist = comdao.getComment( comment);
@@ -82,5 +83,19 @@ public class CommentService {
 		}		
 		return result;
 	}
-	
+	//댓 삭제
+	public int deletecomment(Comments co_idx) {
+		
+		int result =0; 
+		try {
+			CommentDao commentdao =sqlsession.getMapper(CommentDao.class);
+			result =commentdao.deletecomment(co_idx);
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+		
+	}
 }
