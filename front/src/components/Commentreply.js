@@ -1,9 +1,21 @@
 import { CAvatar, CButton, CCard, CForm, CFormTextarea } from '@coreui/react'
+import axios from 'axios'
+import { useEffect } from 'react'
 const boxsize = {
   height: '130px',
 }
 
 const Commentreply = (props) => {
+  useEffect(() => {
+    axios({
+      method: 'POST',
+      url: '/comment/replycommentwrite',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((res) => {})
+  }, [])
+
   return (
     <div>
       <div className="container-fluid">

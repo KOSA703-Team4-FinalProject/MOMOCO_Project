@@ -20,7 +20,6 @@ const boxsize = {
 }
 
 const Comments = (props) => {
-  console.log(props)
   const params = useParams()
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)

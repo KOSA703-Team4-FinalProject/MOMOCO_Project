@@ -21,6 +21,8 @@ import { Link, NavLink, useNavigate, useParams, useHistory } from 'react-router-
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { data, event } from 'jquery'
+import { endOfDay } from 'date-fns'
+import { current } from '@reduxjs/toolkit'
 const writedate = {}
 const title = {}
 const context = {}
@@ -39,7 +41,6 @@ const ccardsize = {
 }
 
 const Boardlist = () => {
-  const [currentPage, setActivePage] = useState(2)
   const params = useParams()
   const navigate = useNavigate()
   const [boardlist, setBoardList] = useState([])
@@ -65,6 +66,23 @@ const Boardlist = () => {
       setBoardList(res.data)
     })
   }, [])
+  //페이징 처리
+  const [currentPage, setActivePage] = useState(1)
+  const [start, setStart] = useState(0)
+  const [end, setEnd] = useState(4)
+  const pageNumber = []
+  for (let i = 1; i <= Math.ceil(data?.length / 5); i++) {
+    pageNumber.push(i)
+  }
+  useEffect(() => {
+    setStart((currentPage - 1) * 5)
+    setEnd(currentPage * 5)
+  }, [currentPage])
+  const [page, setPage] = useState(1)
+
+  const handlePageChange = (page) => {
+    setPage(page)
+  }
   //글세부내용
   const navigate1 = useNavigate()
 
@@ -75,7 +93,7 @@ const Boardlist = () => {
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                <strong>&nbsp;&nbsp;MOMOCO</strong>
+                <strong>&nbsp;&nbsp;자유게시판</strong>
               </h4>
             </CCol>
             <CCol sm={7} className="d-none d-md-block"></CCol>
@@ -85,9 +103,7 @@ const Boardlist = () => {
               <div className="col-md-12">
                 <div className="row">
                   <div className="col-md-6">
-                    <p className="mt-2">
-                      프로젝트에 관련된 글을 제공합니다 프로젝트를 하면서 모두 함께 성장해요
-                    </p>
+                    <p className="mt-2">자유롭게 프로젝트에 관한 글을 남겨주세요</p>
                   </div>
                   <div className="col-md-6" align="right">
                     <div
@@ -113,45 +129,7 @@ const Boardlist = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-9">
-                    <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
-                      <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
-                        id="btncheck1"
-                        autoComplete="off"
-                        label="전체보기"
-                        value={0}
-                      />
-                      <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
-                        id="btncheck2"
-                        autoComplete="off"
-                        label="칸반보드"
-                        value={2}
-                      />
-                      <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
-                        id="btncheck3"
-                        autoComplete="off"
-                        label="캘린더"
-                        value={4}
-                      />
-                      <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
-                        id="btncheck4"
-                        autoComplete="off"
-                        label="문서저장소"
-                        value={3}
-                      />
-                      <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
-                        id="btncheck5"
-                        autoComplete="off"
-                        label="게시판"
-                        value={1}
-                      />
-                    </CButtonGroup>
-                  </div>
+                  <div className="col-md-9"></div>
                   <div className="col-md-3" align="right">
                     <Link to={`/ws/${params.url}/boardwrite`}>
                       <CButton variant="outline">글쓰기</CButton>

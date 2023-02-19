@@ -43,4 +43,11 @@ public class CommentController {
 	    System.out.println(commlist);
 	    return commlist;
 	}
+	//대댓글 작성하기
+	@RequestMapping(value="/replycommentwrite", method =RequestMethod.POST)
+	public int replyComment(@RequestBody Comments all) {
+		int result = commentservice.replyComment(all);
+		return result;
+		
+	}
 }

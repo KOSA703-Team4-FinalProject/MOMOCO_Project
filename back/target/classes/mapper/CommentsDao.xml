@@ -19,4 +19,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getComment" parameterType="kr.or.vo.Comments" resultType="kr.or.vo.Comments">
 	select co_idx, idx, content, w_date, ref, nickName, u_idx from comments_${url} where idx=#{idx}
 	</select>
+	<!--대댓글만들기  -->
+	<insert id="replycomment" parameterType="kr.or.vo.Comments">
+	INSERT INTO comments_${url} (co_idx, idx, content, ref, nickname, u_idx) 
+	VALUES (COMMENTS_CO_IDX_SEQ_${url}.NEXTVAL, #{idx}, '${content}', ${ref}, '${nickname}', ${u_idx})
+	</insert>
 </mapper>

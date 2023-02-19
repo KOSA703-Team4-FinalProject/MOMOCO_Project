@@ -117,7 +117,7 @@ public class CalendarService {
 			System.out.println(board.toString());
 			
 			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
-			result = boarddao.modifyBoard(board);
+			//result = boarddao.modifyBoard(board);
 			
 			BoardStatus boardstatus = new BoardStatus();
 			boardstatus.setUrl(cal.getUrl());

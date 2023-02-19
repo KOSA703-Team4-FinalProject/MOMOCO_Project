@@ -51,7 +51,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 //calendar
 const Calendar = React.lazy(() => import('./views/calendar/Calendar'))
-//게시판
+//commboard게시판
 //boardlist
 const Boardlist = React.lazy(() => import('./views/board/Boardlist'))
 //boardcontent
@@ -60,6 +60,8 @@ const Boardcontent = React.lazy(() => import('./views/board/Boardcontent'))
 const Boardwrite = React.lazy(() => import('./views/board/Boardwrite'))
 //boardedit
 const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
+//게시판 전체보기
+const AllBoardList = React.lazy(() => import('./views/board/AllBoardList'))
 //댓글 쓰기
 const Comments = React.lazy(() => import('./components/Comments'))
 
@@ -130,8 +132,8 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist }, //게시판 전체 보기
-  { path: '/boardcontent/:idx', name: 'Boardcontent', exact: true, element: Boardcontent }, //게시판 내용 보기
+  { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist }, //CommonBoard게시판 보기
+  { path: '/boardcontent/:idx', name: 'Boardcontent', exact: true, element: Boardcontent }, //CommonBoard게시판 내용 보기
   { path: '/boardwrite', name: 'Boardwrite', exact: true, element: Boardwrite },
   { path: '/boardedit', name: 'Boardedit', exact: true, element: Boardedit },
   { path: '/mypage', name: 'Mypage', exact: true, element: Mypage },
@@ -146,6 +148,7 @@ const routes = [
   { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain }, //프로젝트관리 메인
   { path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent }, //프로젝트관리 메인
   { path: '/comments', name: 'Comments', exact: true, element: Comments }, //댓글작성하기
+  { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList },
 ]
 
 export default routes
