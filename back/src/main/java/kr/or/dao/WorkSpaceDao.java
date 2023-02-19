@@ -18,5 +18,8 @@ public interface WorkSpaceDao {
 
    //워크스페이스 전체 조회
    public List<WorkSpace> getWorkSpace(int u_idx) throws ClassNotFoundException, SQLException;
+ 
+   //해당하는 레포지토리가 연결된 레포지토리인지 확인
+   public int isRepo(String linked_repo) throws ClassNotFoundException, SQLException;
    
 }

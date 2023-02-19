@@ -35,5 +35,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where url in (select url from workspace_user where u_idx = #{u_idx} )
    	</select>
    
+   <!-- 해당하는 레포지토리가 연결된 레포지토리인지 확인 public int isRepo(String linked_repo) -->
+   <select id="isRepo" parameterType="String" resultType="int">
+   		select count(url) from workspace where linked_repo = #{linked_repo}
+   </select>
    
 </mapper>
