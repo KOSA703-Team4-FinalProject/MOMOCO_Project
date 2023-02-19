@@ -60,10 +60,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<delete id = "deleteKanbanColumn" parameterType= "kr.or.vo.Kanban">
 		delete from status_${url} where s_idx =#{s_idx}
 		</delete>
-		
-		   <select id="getItembyStatus" parameterType="String" resultType="kr.or.vo.Board">
-      	select idx, title, w_date, nickname from board_${url} where s_idx=#{s_idx}
-   		  </select>
 	
 
 
