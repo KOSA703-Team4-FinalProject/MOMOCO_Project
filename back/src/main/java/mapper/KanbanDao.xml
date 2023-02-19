@@ -15,6 +15,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by s_idx 
 	</select>
 	
+	<select id="getItembyStatus" parameterType="String" resultType="kr.or.vo.Board">
+		select b.idx, title, w_date, nickname from board_${url} where s_idx=${s_idx}
+	</select>
+	
 	
 		<!-- 칸반 아이템 추가 public int addKanban(Map map) -->
 	<insert id="addKanban" parameterType="kr.or.vo.Kanban">

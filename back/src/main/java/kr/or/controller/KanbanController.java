@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.KanbanService;
+import kr.or.vo.Board;
 import kr.or.vo.Calendar;
+import kr.or.vo.Doc;
 import kr.or.vo.Kanban;
 
 @RestController
@@ -62,15 +65,13 @@ public class KanbanController {
 		return newArr;
 	}
 
-	// 칸반 전체 조회
+	// 상태값으로 캘린더, 칸반 아이템 리스트 불러오기
 	@RequestMapping(value = "/get", method = RequestMethod.POST)
-	public List<Kanban> getKanbans(@RequestBody Kanban url) {
+	public List<Board> getItemByStatus(@RequestParam(value="url") String url, @RequestParam(value="s_idx") String s_idx) {
+		List<Board> list = new ArrayList<Board>();
+		list = kanbanserivce.getItembyStatus(url, s_idx);
 
-		List<Kanban> kanban = new ArrayList<Kanban>();
-
-		kanban = kanbanserivce.getKanban(url.getUrl());
-
-		return kanban;
+		return list;
 	}
 
 	// 칸반 아이템 추가

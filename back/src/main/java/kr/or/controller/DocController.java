@@ -1,11 +1,17 @@
 package kr.or.controller;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.or.service.DocService;
 import kr.or.vo.CommonBoard;
 import kr.or.vo.Doc;
+import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.Thumbnails;
 
 @RestController
@@ -37,14 +44,24 @@ public class DocController {
 	
 	//전체 일정 조회
 	@RequestMapping(value="/list", method=RequestMethod.POST)
-	public List<Doc> getDoc(@RequestBody Doc url) {
+	public List<Doc> getDoc(@RequestBody Doc doc) {
 		
 		System.out.println("doc 전체일정조회");
-		List<Doc> doc = new ArrayList<Doc>();
+		List<Doc> doclist = new ArrayList<Doc>();
 	
-		doc = docservice.getDoc(url.getUrl());
-		System.out.println(doc);
-		return doc;
+		doclist = docservice.getDoc(doc.getUrl());
+		
+		System.out.println(doclist);
+		return doclist;
+	}
+	
+	//이미지 조회
+	@RequestMapping(value="/viewImage", method=RequestMethod.POST)
+	public void viewImage(@RequestParam(value = "url") String url, @RequestParam(value = "content") String content,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		docservice.getImge(url, content, request, response);
+		
 	}
 	
 	@RequestMapping(value="/addDoc", method=RequestMethod.POST)
@@ -82,14 +99,23 @@ public class DocController {
 		
 		System.out.println(savePath);
 		
+		// 썸네일 생성
 	    byte[] bytes = files[0].getBytes();
 	    String formatName = filename.substring(filename.lastIndexOf(".") + 1);
 	    if (MediaType.IMAGE_JPEG.getSubtype().equals(formatName) ||
 	        MediaType.IMAGE_PNG.getSubtype().equals(formatName) ||
 	        MediaType.IMAGE_GIF.getSubtype().equals(formatName)) {
-	      // 썸네일 생성
-	      File thumbnail = new File(savePath);
-	      Thumbnails.of(new ByteArrayInputStream(bytes)).size(100, 100).toFile(thumbnail);
+	    	
+	    	String thumbnailSaveName = request.getServletContext().getRealPath("/resources/upload/docStorage_") + doc.getUrl() + "/thumb_" + saveFileName;
+			File thumbnailFile = new File(thumbnailSaveName);
+			Path savePath2 = Paths.get(savePath);
+			
+			try {
+				Thumbnailator.createThumbnail(savePath2.toFile(), thumbnailFile, 100, 100);
+				doc.setThumb(thumbnailSaveName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
 		
 		
@@ -102,7 +128,6 @@ public class DocController {
 		}
 		
 		doc.setOri_filename(files[0].getOriginalFilename());
-		doc.setThumb("thumb_" + files[0].getOriginalFilename());
 		doc.setSave_filename(saveFileName);
 		
 		int result = docservice.addDoc(doc);
@@ -110,10 +135,64 @@ public class DocController {
 		return result;
 	}
 	
-	@RequestMapping("/download")
-	public void downDoc(String url, String filename, HttpServletRequest request , HttpServletResponse response) throws IOException {
-		  docservice.downDoc(url, filename, request, response);
+	
+	
+	
+	
+	// 파일 다운로드 전 사전 토큰 확인
+	@RequestMapping(value = "/api/token", method = RequestMethod.GET)
+	public int isToekn() {
+
+		return 1;
 	}
+
+	// 파일 다운로드
+	@RequestMapping(value = "/fileDown", method = RequestMethod.GET)
+	public void downFile(@RequestParam(value = "url") String url, @RequestParam(value = "content") String content,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		File file = new File(
+				request.getServletContext().getRealPath("/resources/upload/docStorage_") + url + "/" + content);
+
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		ServletOutputStream sos = null;
+
+		try {
+
+			fis = new FileInputStream(file);
+			bis = new BufferedInputStream(fis);
+			sos = response.getOutputStream();
+
+			String reFilename = "";
+
+			// IE로 실행한 경우인지 -> IE는 따로 인코딩 작업을 거쳐야 한다. request헤어에 MSIE 또는 Trident가 포함되어 있는지
+			// 확인
+			boolean isMSIE = request.getHeader("user-agent").indexOf("MSIE") != -1
+					|| request.getHeader("user-agent").indexOf("Trident") != -1;
+
+			if (isMSIE) {
+				reFilename = URLEncoder.encode(content, "utf-8");
+				reFilename = reFilename.replaceAll("\\+", "%20");
+			} else {
+				reFilename = new String(content.getBytes("utf-8"), "ISO-8859-1");
+			}
+
+			response.setContentType("application/octet-stream;charset=utf-8");
+			response.addHeader("Content-Disposition", "attachment;filename=\"" + reFilename + "\"");
+			response.setContentLength((int) file.length());
+
+			int read = 0;
+			while ((read = bis.read()) != -1) {
+				sos.write(read);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	
  
  
