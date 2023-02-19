@@ -22,6 +22,9 @@ import Commentreply from './Commentreply'
 const boxsize = {
   marginleft: '200px',
 }
+const boxsize1 = {
+  marginleft: '800px',
+}
 const Comments = (props) => {
   const params = useParams()
   // AES알고리즘 사용 복호화
@@ -36,6 +39,9 @@ const Comments = (props) => {
   const [commentlist, setCommentlist] = useState([])
   const [commentlisttwo, setCommentlisttwo] = useState([])
   const [delectcomment, setDelectcomment] = useState([])
+  const [visibleLg, setVisibleLg] = useState(false)
+  const [visibleLg1, setVisibleLg1] = useState(false)
+  const [modal1, setModal1] = useState(false)
   const modalstyle = {}
   const myparams = {
     url: params.url,
@@ -84,8 +90,8 @@ const Comments = (props) => {
     })
   }
   //댓글 삭제 하기
-  const deletereply = () => {
-    const cidx = { co_idx: props.co_idx, url: myparams.url }
+  const deletereply = (e) => {
+    const cidx = { co_idx: e, url: myparams.url }
     axios({
       method: 'POST',
       url: '/comment/deletecomment',
@@ -141,60 +147,54 @@ const Comments = (props) => {
           <br></br>
 
           {commentlist.map((data, key) => (
-            <CCol className="container-fluid" key={key}>
-              <CRow className="row">
-                <CCard style={boxsize}>
-                  <CCol className="col-md-12">
-                    <CCol className="row">
-                      <CCol className="col-md-12 mt-3">
-                        <CAvatar className="ms-6" src={data.profilephoto} />
-                        &nbsp;<strong>{data.nickname}</strong>
-                      </CCol>
-                    </CCol>
-                    <CRow className="row">
-                      <CCol className="col-md-12 mt-2">{data.content}</CCol>
-                    </CRow>
-                    <CCol className="col-md-12 mt-2 mb-4" align="end">
-                      <CButton
-                        color="primary"
-                        variant="outline"
-                        onClick={() => {
-                          setModal(true)
-                        }}
-                      >
-                        수정
-                      </CButton>{' '}
-                      &nbsp;
-                      <CButton
-                        color="primary"
-                        variant="outline"
-                        onClick={() => {
-                          setModal(true)
-                        }}
-                      >
-                        대댓글작성
-                      </CButton>
-                      <CModal
-                        style={modalstyle}
-                        scrollable
-                        alignment="center"
-                        visible={modal}
-                        onClick={() => setModal(!modal)}
-                      >
-                        <CModalBody>
-                          <Commentreply idx={params.idx} co_idx={data.co_idx} />
-                        </CModalBody>
-                      </CModal>
-                      &nbsp;
-                      <CButton color="danger" variant="outline" onClick={deletereply}>
-                        삭제
-                      </CButton>
+            <CRow className="row" key={key}>
+              <CCard style={boxsize1}>
+                <CCol className="col-md-12">
+                  <CCol className="row">
+                    <CCol className="col-md-10 mt-3 p-3">
+                      <CAvatar className="ms-6" src={data.profilephoto} />
+                      &nbsp;<strong>{data.nickname}</strong>
                     </CCol>
                   </CCol>
-                </CCard>
-              </CRow>{' '}
-              <br></br>
-            </CCol>
+                  <CRow className="row">
+                    <CCol className="col-md-12 mt-2">{data.content}</CCol>
+                  </CRow>
+                  <CCol className="col-md-12 mt-2 mb-4" align="end">
+                    <CButton
+                      color="primary"
+                      variant="outline"
+                      onClick={() => {
+                        setModal1(true)
+                      }}
+                    >
+                      수정
+                    </CButton>{' '}
+                    &nbsp;
+                    <CButton
+                      color="primary"
+                      variant="outline"
+                      onClick={() => setVisibleLg(!visibleLg)}
+                    >
+                      대댓글작성
+                    </CButton>
+                    <CModal size="lg" visible={visibleLg} onClose={() => setVisibleLg(false)}>
+                      <CModalBody>
+                        {' '}
+                        <Commentreply idx={params.idx} co_idx={data.co_idx} />
+                      </CModalBody>
+                    </CModal>
+                    &nbsp;
+                    <CButton
+                      color="danger"
+                      variant="outline"
+                      onClick={() => deletereply(data.co_idx)}
+                    >
+                      삭제
+                    </CButton>
+                  </CCol>
+                </CCol>
+              </CCard>
+            </CRow>
           ))}
         </CRow>
       </CCard>

@@ -23,6 +23,7 @@ import { PRIMARY_KEY } from '../../oauth'
 import { data, event } from 'jquery'
 import { endOfDay } from 'date-fns'
 import { current } from '@reduxjs/toolkit'
+import { Pagination, PaginationItem } from '@mui/material'
 const writedate = {}
 const title = {}
 const context = {}
@@ -67,24 +68,42 @@ const Boardlist = () => {
     })
   }, [])
   //페이징 처리
-  const [currentPage, setActivePage] = useState(1)
-  const [start, setStart] = useState(0)
-  const [end, setEnd] = useState(4)
-  const pageNumber = []
-  for (let i = 1; i <= Math.ceil(data?.length / 5); i++) {
-    pageNumber.push(i)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postsPerPage] = useState(10) // 페이지당 보여줄 게시글 수
+  //글세부내용 // 현재 페이지에 해당하는 게시글 리스트
+  const indexOfLastPost = currentPage * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
+  const currentPosts = boardlist.slice(indexOfFirstPost, indexOfLastPost)
+  // 페이지 번호 목록
+  const pageNumbers = []
+  for (let i = 1; i <= Math.ceil(boardlist.length / postsPerPage); i++) {
+    pageNumbers.push(i)
   }
-  useEffect(() => {
-    setStart((currentPage - 1) * 5)
-    setEnd(currentPage * 5)
-  }, [currentPage])
-  const [page, setPage] = useState(1)
-
-  const handlePageChange = (page) => {
-    setPage(page)
+  // 페이지 번호 클릭 시 페이지 변경
+  const handleClick = (event) => {
+    setCurrentPage(Number(event.target.id))
   }
-  //글세부내용
   const navigate1 = useNavigate()
+  const items = []
+  const Paging = () => {
+    const [page, setPage] = useState(1)
+
+    const handlePageChange = (page) => {
+      setPage(page)
+    }
+
+    return (
+      <Pagination
+        activePage={page}
+        itemsCountPerPage={10}
+        totalItemsCount={boardlist}
+        pageRangeDisplayed={5}
+        prevPageText={'‹'}
+        nextPageText={'›'}
+        onChange={handlePageChange}
+      />
+    )
+  }
 
   return (
     <>
@@ -187,18 +206,11 @@ const Boardlist = () => {
                 ))}
                 {/* 게시판 목록 끝 */}
                 <br />
-
-                <CPagination align="center" aria-label="Page navigation example">
-                  <CPaginationItem aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </CPaginationItem>
-                  <CPaginationItem>1</CPaginationItem>
-                  <CPaginationItem>2</CPaginationItem>
-                  <CPaginationItem>3</CPaginationItem>
-                  <CPaginationItem aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </CPaginationItem>
-                </CPagination>
+                <div className="col-md-4" align="center"></div>
+                <div className="col-md-4" align="center">
+                  <Paging />
+                </div>
+                <div className="col-md-4" align="center"></div>
               </div>
             </div>
           </div>

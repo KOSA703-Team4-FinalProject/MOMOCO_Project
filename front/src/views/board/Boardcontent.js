@@ -24,6 +24,7 @@ import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import Issues from './Issues'
 import { param } from 'jquery'
 import { useDispatch } from 'react-redux'
+import { Editor } from '@tinymce/tinymce-react'
 const title = {
   fontSize: 25,
   border: '2px',
@@ -172,12 +173,19 @@ const Boardcontent = (props) => {
                   <CCard>
                     <div className="row">
                       <div className="col-md-12">
-                        <CForm>
-                          <CFormTextarea
-                            rows={8}
-                            defaultValue={boardcontent.content}
-                          ></CFormTextarea>
-                        </CForm>
+                        <Editor
+                          value={boardcontent.content}
+                          name="tinyEditor"
+                          apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
+                          init={{
+                            height: 300,
+                            selector: 'div.tinymce',
+                            plugins: ['quickbars'],
+                            toolbar: false,
+                            menubar: false,
+                            inline: false,
+                          }}
+                        />
                       </div>
                     </div>
                   </CCard>

@@ -44,7 +44,7 @@ const Commentreply = (props) => {
     const reply = {
       url: params.url,
       u_idx: login.u_idx,
-      content: $('#commentcontent').val(),
+      content: commentContent,
       nickname: login.nickname,
       idx: props.idx,
       ref: props.co_idx,
@@ -71,7 +71,7 @@ const Commentreply = (props) => {
               <CCol className="row">
                 <CCol className="col-md-10 px-4">
                   <CAvatar className="ms-6" src={login.profilephoto} />
-                  <strong> {login.nickname}</strong>
+                  <strong>닉네임: {login.nickname}</strong>
                 </CCol>
                 <CCol className="col-md-2 px-4"></CCol>
               </CCol>
@@ -82,6 +82,10 @@ const Commentreply = (props) => {
                       rows={3}
                       placeholder="댓글을 작성해주세요"
                       id="commentcontent"
+                      onChange={(event) => {
+                        const value = event.target.value
+                        setCommentContent(value)
+                      }}
                     ></CFormTextarea>
                   </CForm>
                 </CCol>
