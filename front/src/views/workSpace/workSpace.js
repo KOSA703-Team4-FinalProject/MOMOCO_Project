@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef } from 'react'
 import {
   CButton,
   CCard,
@@ -13,10 +12,13 @@ import {
   CInputGroupText,
   CRow,
   CCardFooter,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
-import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -24,8 +26,11 @@ import { BsFillCheckCircleFill } from 'react-icons/bs'
 import momocologo from 'src/assets/images/momocologo.png'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import { Container } from '@mui/material'
 import { Date } from 'core-js'
+import { Octokit } from 'octokit'
+import Swal from 'sweetalert2'
+import $ from 'jquery'
+import { async } from 'regenerator-runtime'
 
 const workSpace = () => {
   const [space_Name, SetSpace_Name] = useState('')
@@ -34,12 +39,18 @@ const workSpace = () => {
   const [start_Date, SetStart_Date] = useState(new Date())
   const [end_Date, SetEnd_Date] = useState(new Date())
   const [check, SetCheck] = useState('')
+  const [repListModal, setRepListModal] = useState(false)
+  const [repList, setRepList] = useState([])
+  const [mailModal, setMailModal] = useState(false)
+  const [memList, setMemList] = useState([])
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
+
+  const orgRef = useRef()
 
   const spaceNameHandler = (e) => {
     e.preventDefault()
@@ -51,11 +62,6 @@ const workSpace = () => {
     SetUrl(e.target.value)
     SetCheck('')
     console.log({ check })
-  }
-
-  const REPOHandler = (e) => {
-    e.preventDefault()
-    SetLinked_Repo(e.target.value)
   }
 
   const StartDateHandler = (e) => {
@@ -142,6 +148,82 @@ const workSpace = () => {
     }
   }
 
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`,
+  })
+
+  //GitHub에서 워크스페이스 불러오기
+  const getWorkSpace = async () => {
+    await octokit
+      .request('GET /orgs/{org}/repos', {
+        org: orgRef.current.value,
+      })
+      .then((res) => {
+        res.data.map((data) => {
+          setRepList((repList) => [...repList, data])
+        })
+
+        setRepListModal(!repListModal)
+      })
+      .catch((error) => {
+        Swal.fire(
+          '다시 시도해 주세요!',
+          orgRef.current.value + ' 팀의 레파지토리를 찾을 수 없습니다.',
+          'warning',
+        )
+      })
+
+    await octokit
+      .request('GET /users/{username}/repos', {
+        username: login.nickname,
+      })
+      .then((res) => {
+        res.data.map((data) => {
+          setRepList((repList) => [...repList, data])
+        })
+      })
+  }
+
+  //레포지토리 선택
+  const clickRepo = (e) => {
+    const repo = e.target
+    const repoName = $(repo).closest('.repo').attr('value')
+
+    //해당하는 레포지토리가 db 워크스페이스에 있는지 없는지 여부 확인
+    axios({
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      url: '/api/isRepo',
+      params: { linked_repo: repoName },
+    }).then(async (res) => {
+      if (res.data == 0) {
+        SetLinked_Repo(repoName)
+        setRepListModal(false)
+        setMailModal(true)
+
+        //팀원 조회
+        await octokit
+          .request('GET /repos/{org}/{repo}/collaborators', {
+            org: orgRef.current.value,
+            repo: repoName,
+          })
+          .then((res) => {
+            console.log(res)
+            res.data.map((mem) => {
+              if (mem.login != login.nickname) {
+                setMemList((memList) => [...memList, mem])
+              }
+            })
+          })
+      } else {
+        SetLinked_Repo('')
+        Swal.fire('다시 선택해주세요', '이미 존재하는 Repository입니다.', 'warning')
+      }
+    })
+  }
+
   return (
     <div className="md-12 min-vh-100 align-items-center mt-5 pt-5">
       <CRow md={12} className="justify-content-center">
@@ -203,13 +285,31 @@ const workSpace = () => {
                       <CIcon icon={icon.cibGithub} />
                     </CInputGroupText>
                     <CFormInput
-                      value={linked_Repo}
-                      onChange={REPOHandler}
                       type="text"
-                      placeholder="불러온 github 레파지토리 이름"
+                      placeholder="GitHub의 조직 이름"
+                      ref={orgRef}
                       required
                     />
+                    <CButton
+                      type="button"
+                      className="mx-2"
+                      color="warning"
+                      shape="rounded-pill"
+                      onClick={getWorkSpace}
+                    >
+                      불러오기
+                    </CButton>
                   </CInputGroup>
+                  {linked_Repo == '' ? (
+                    <></>
+                  ) : (
+                    <CRow className="mb-4">
+                      <div className="col-4">
+                        <strong>연결될 Repository</strong>
+                      </div>
+                      <CCol className="mx-2"> {linked_Repo}</CCol>
+                    </CRow>
+                  )}
                   <CRow>
                     <CCol md={6}>
                       <CFormInput
@@ -281,6 +381,73 @@ const workSpace = () => {
               </CCardBody>
             </CCard>
           </CCardGroup>
+          <CModal
+            backdrop="static"
+            alignment="center"
+            scrollable
+            visible={repListModal}
+            onClose={() => setRepListModal(false)}
+          >
+            <CModalHeader onClose={() => setRepListModal(false)}>
+              <CModalTitle>Repository List</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              {repList.map((repo) => {
+                return (
+                  <CCard
+                    className="m-2 p-3 repo"
+                    key={repo.id}
+                    onClick={clickRepo}
+                    value={repo.name}
+                  >
+                    <div className="row">
+                      <div className="col-4">
+                        <img
+                          className="mt-3"
+                          style={{ width: '100%', hegith: 'auto' }}
+                          src={repo.owner.avatar_url}
+                        />
+                      </div>
+                      <div className="col-8">
+                        <h3>
+                          <strong>{repo.name}</strong>
+                        </h3>
+                        <p className="mt-3">생성 : {repo.created_at}</p>
+                        <p>업데이트 : {repo.updated_at}</p>
+                      </div>
+                    </div>
+                  </CCard>
+                )
+              })}
+            </CModalBody>
+          </CModal>
+          <CModal
+            backdrop="static"
+            alignment="center"
+            scrollable
+            visible={mailModal}
+            onClick={() => setMailModal(false)}
+          >
+            <CModalHeader>팀원 추가</CModalHeader>
+            <CModalBody>
+              {memList.map((data) => {
+                return (
+                  <CCard className="mt-2 p-2">
+                    <div className="row justify-content-between ms-2">
+                      <div className="col-5 pt-2">
+                        <strong>{data.login}</strong>
+                      </div>
+                      <div className="col-4 pt-2">
+                        <CButton color="primary" variant="outline">
+                          메일 전송
+                        </CButton>
+                      </div>
+                    </div>
+                  </CCard>
+                )
+              })}
+            </CModalBody>
+          </CModal>
         </CCol>
       </CRow>
     </div>

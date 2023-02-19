@@ -93,4 +93,20 @@ public class WorkSpaceService {
 		return userlist;
 	} 
 	
+	//해당하는 레포지토리가 연결된 레포지토리인지 확인
+	public int isRepo(String linked_repo) {
+		int result = 0;
+		
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			result = workspacedao.isRepo(linked_repo);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 }

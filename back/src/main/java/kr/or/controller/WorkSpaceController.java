@@ -66,4 +66,12 @@ public class WorkSpaceController {
 		
 		return userList;
 	}
+	
+	//해당하는 레포지토리가 연결된 레포지토리인지 확인
+	@RequestMapping(value="/isRepo", method=RequestMethod.GET)
+	public int isRepo(@RequestParam String linked_repo) {
+		int result = workspaceservice.isRepo(linked_repo);
+		return result;
+	}
+	
 }

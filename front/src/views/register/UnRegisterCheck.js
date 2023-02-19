@@ -1,5 +1,4 @@
 import React from 'react'
-import swal from 'sweetalert';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom'
 import {
