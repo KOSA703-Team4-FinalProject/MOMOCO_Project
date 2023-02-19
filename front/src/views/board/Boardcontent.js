@@ -80,7 +80,7 @@ const Boardcontent = (props) => {
       data: myparams,
     }).then((res) => {
       res.data.map((data) => {
-        setCommentlist((d) => [...commentlist, data])
+        setCommentlist((commentlist) => [...commentlist, data])
       })
     })
   }, [])
@@ -219,17 +219,8 @@ const Boardcontent = (props) => {
 
         <div className="p-4">
           <div className="ms-5 me-5">
-            <Comments idx={params.idx} url={params.url} />
-          </div>
-
-          {commentlist.map((data, key) => (
-            <div className="ms-5 me-5" key={key}>
-              <Commentwrite idx={data.idx} url={data.url} />
-            </div>
-          ))}
-
-          <div className="ms-5 me-5">
-            <Commentreply idx={params.idx} url={params.url} />
+            <Comments idx={params.idx} />
+            <br></br>
           </div>
         </div>
       </CCard>

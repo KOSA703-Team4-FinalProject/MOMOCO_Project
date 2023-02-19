@@ -13,6 +13,7 @@ public interface CommentDao {
 		public List<Comments> getComment (Comments comment) throws ClassNotFoundException, SQLException;
 		//대댓글 작성
 		public int replyComment(Comments all) throws  ClassNotFoundException, SQLException;
-		
+		//댓삭제
+		public int deletecomment(Comments co_idx) throws  ClassNotFoundException, SQLException;
 
 }

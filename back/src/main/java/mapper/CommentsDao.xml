@@ -11,17 +11,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!--대댓글쓰기  -->
 	<!-- 댓글 내용-->
 	<select id="commentContent" parameterType="kr.or.vo.Comments" resultType="kr.or.vo.Comments">
-	select c.co_idx ,c.idx, c.content, to_char(c.w_date ,'YYYY-MM-DD')as w_date,c.ref,c.nickname,c.u_idx, m.profilephoto 
-	from comments_${url} c join member m
-	on c.u_idx = m.u_idx
+	SELECT c.co_idx, c.idx, c.content, TO_CHAR(c.w_date, 'YYYY-MM-DD') AS w_date, c.ref, c.nickname, c.u_idx, m.profilephoto
+	FROM comments_${url} c
+	JOIN member m ON c.u_idx = m.u_idx
+	where c.co_idx = #{co_idx}
 	</select>
 	<!-- 댓글 목록 -->
 	<select id="getComment" parameterType="kr.or.vo.Comments" resultType="kr.or.vo.Comments">
-	select co_idx, idx, content, w_date, ref, nickName, u_idx from comments_${url} where idx=#{idx}
+	select c.co_idx, c.idx, c.content,TO_CHAR(c.w_date, 'YYYY-MM-DD') AS w_date, c.ref, c.nickName, c.u_idx, m.profilephoto 
+	from comments_${url} c join member m on c.u_idx = m.u_idx
+	where idx=#{idx}
+	order by c.co_idx desc
 	</select>
 	<!--대댓글만들기  -->
-	<insert id="replycomment" parameterType="kr.or.vo.Comments">
+	<insert id="replyComment" parameterType="kr.or.vo.Comments">
 	INSERT INTO comments_${url} (co_idx, idx, content, ref, nickname, u_idx) 
-	VALUES (COMMENTS_CO_IDX_SEQ_${url}.NEXTVAL, #{idx}, '${content}', ${ref}, '${nickname}', ${u_idx})
+	VALUES (COMMENTS_CO_IDX_SEQ_${url}.NEXTVAL, #{idx}, '${content}', #{ref}, '${nickname}', ${u_idx})
 	</insert>
+	<!-- 댓삭제 -->
+	<delete id="deletecomment" parameterType="kr.or.vo.Comments">
+	delete from comments_${url} where co_idx = #{co_idx}
+	</delete>
 </mapper>

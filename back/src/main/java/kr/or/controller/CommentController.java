@@ -39,6 +39,7 @@ public class CommentController {
 	//댓글 리스트
 	@RequestMapping(value="/commentlist", method=RequestMethod.POST)
 	public List<Comments> commentlist(@RequestBody Comments comment) {
+		System.out.println(comment.getIdx() + comment.getUrl());
 	    List<Comments> commlist = commentservice.getComment(comment);
 	    System.out.println(commlist);
 	    return commlist;
@@ -50,4 +51,11 @@ public class CommentController {
 		return result;
 		
 	}
+	//댓삭제하기
+	@RequestMapping(value="/deletecomment",method =RequestMethod.POST)
+	public int deletecommen(@RequestBody Comments comment ){
+		int result = commentservice.deletecomment(comment);
+				return result;
+	}
+	
 }
