@@ -35,6 +35,7 @@ import $ from 'jquery'
 const KanbanItem = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
   const [titleVisible, setTitleVisible] = useState(false)
+  const [s_name, setS_name] = useState('')
 
   const [kanbanItemList, setKanbanItemList] = useState([])
   const [columnValue, setColumnValue] = useState([])
@@ -46,9 +47,6 @@ const KanbanItem = (props) => {
   const navigate = useNavigate()
   const param = useParams()
   const login = JSON.parse(localStorage.getItem('login'))
-  const id = (e) => {
-    $(e.target).attr('value')
-  }
 
   let font = {
     fontSize: '1rem',
@@ -110,35 +108,26 @@ const KanbanItem = (props) => {
     const tag = e.target
     const content_type = $(tag).attr('value')
 
-    const params = { s_idx: content_type, url: param.url }
-    console.log('모두 삭제 : ' + params.s_idx)
+    const params = { url: param.url, s_idx: content_type }
+    console.log('모두 삭제')
+    console.log(params.url)
 
-    axios({
-      url: '/api/kanban/get',
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: params,
-    }).then((res) => {
-      console.log(res)
-      // if (confirm('해당 컬럼의 모든 아이템을 삭제하시겠습니까?')) {
-      //   alert('삭제가 완료되었습니다.')
-      //   axios({
-      //     url: '/api/kanban/deleteAllKanbanItem',
-      //     method: 'POST',
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //     data: params,
-      //   }).then((res) => {
-      //     console.log(res.data)
-      //     getKanban()
-      //   })
-      // } else {
-      //   alert('취소했습니다.')
-      // }
-    })
+    if (confirm('해당 컬럼의 모든 아이템을 삭제하시겠습니까?')) {
+      alert('삭제가 완료되었습니다.')
+      axios({
+        url: '/api/kanban/deleteAllKanbanItem',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: params,
+      }).then((res) => {
+        console.log(res.data)
+        getKanban()
+      })
+    } else {
+      alert('취소했습니다.')
+    }
   }
 
   // 모든 컬럼 삭제
@@ -152,21 +141,54 @@ const KanbanItem = (props) => {
     if (params.s_idx < 4) {
       alert('기본 컬럼은 삭제할 수 없습니다.')
     } else {
-      if (confirm('해당 컬럼을 삭제하시겠습니까?')) {
-        alert('삭제가 완료 되었습니다.')
-        axios({
-          url: '/api/kanban/deleteKanbanColumn',
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: params,
-        }).then((res) => {
-          getKanban()
+      axios({
+        url: '/api/kanban/get',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: params,
+      }).then((res) => {
+        const data = res.data
+
+        setS_name(data.s_name)
+        const list = data.map((item) => {
+          // 각 항목에 대한 정보 출력하기
+          console.log(item.idx)
+
+          return (
+            '(글번호 : ' +
+            item.idx +
+            ' / ' +
+            '제목 : ' +
+            item.title +
+            ' / ' +
+            '작성자 : ' +
+            item.nickname +
+            ' / ' +
+            '게시판 : ' +
+            item.b_code +
+            ')  '
+          )
         })
-      } else {
-        alert('취소했습니다.')
-      }
+        if (
+          confirm('삭제시 캘린더와 칸반의 글들이 모두 삭제됩니다. 정말 지우시겠습니까?  ' + list)
+        ) {
+          alert('삭제가 완료 되었습니다.')
+          axios({
+            url: '/api/kanban/deleteKanbanColumn',
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: params,
+          }).then((res) => {
+            getKanban()
+          })
+        } else {
+          alert('취소했습니다.')
+        }
+      })
     }
   }
 
@@ -224,42 +246,46 @@ const KanbanItem = (props) => {
         draggable.classList.add('dragging')
       })
 
-      draggable.addEventListener('dragend', () => {
+      draggable.addEventListener('dragend', (event) => {
         draggable.classList.remove('dragging')
 
-        let target = $(event.target)
-        let children1 = $(target).children()
-        let ch = $(children1).children().eq(0)
+        let target = event.target
 
-        let supertag = target.closest('.container')
+        let supertag = target.closest('.container1')
+
         let childtag = $(supertag).children()
+        console.log(childtag)
 
         let arr = []
         let num = 0
 
         $(childtag).each(function () {
           let request4 = {
-            title: $(this).html().trim().split('<', 1)[0],
+            b_idx: b_idx,
             side: num,
+            s_idx: s_idx,
           }
-
           arr.push(request4)
-
+          console.log(arr)
           num += 1
         })
 
-        let main = arr[0].s_idx
+        // for (let i = 1; i < arr.length; i++) {
+        //   let request5 = {
+        //     title: arr[i].title,
 
-        for (let i = 1; i < arr.length; i++) {
+        //     side: arr[i].side,
+        //     s_idx: s_idx,
+        //   }
+
+        arr.map((item, i) => {
           let request5 = {
-            title: arr[i].title,
-
-            side: arr[i].side,
-            content: main,
+            b_idx: item[i].b_idx,
+            side: item[i].side,
+            s_idx: item[i].s_idx,
           }
-
           let data = JSON.stringify(request5)
-          console.log(data)
+
           axios({
             type: 'put',
             url: '/api/kanban/updateLocationKanban',
@@ -268,7 +294,9 @@ const KanbanItem = (props) => {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {},
           })
-        }
+        })
+
+        // }
       })
     })
 
@@ -301,7 +329,7 @@ const KanbanItem = (props) => {
         { offset: Number.NEGATIVE_INFINITY },
       ).element
     }
-  }, [view, view2, action1])
+  }, [view, view2, action1, kanbanItemList])
 
   // 내일 수정해야 할 부분
 
@@ -332,17 +360,17 @@ const KanbanItem = (props) => {
                         <CIcon icon={icon.cilOptions} className="text-light" />
                       </CDropdownToggle>
                       <CDropdownMenu>
-                        <CDropdownItem value={conList[key].s_idx} onClick={deleteKanbanColumn}>
-                          컬럼 삭제
-                        </CDropdownItem>
-                        <CDropdownItem value={conList[key].s_idx} onClick={deleteAllKanbanItem}>
-                          모두 삭제
-                        </CDropdownItem>
                         <CDropdownItem
                           value={conList[key].s_idx}
                           onClick={editKanbanColumnNameModal}
                         >
-                          컬럼 제목 수정
+                          카드 제목 수정
+                        </CDropdownItem>
+                        <CDropdownItem value={conList[key].s_idx} onClick={deleteKanbanColumn}>
+                          카드 삭제
+                        </CDropdownItem>
+                        <CDropdownItem value={conList[key].s_idx} onClick={deleteAllKanbanItem}>
+                          아이템 모두 삭제
                         </CDropdownItem>
                       </CDropdownMenu>
                     </CDropdown>

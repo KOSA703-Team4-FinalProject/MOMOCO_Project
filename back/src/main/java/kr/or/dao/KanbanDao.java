@@ -3,6 +3,8 @@ package kr.or.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import kr.or.vo.Board;
 import kr.or.vo.Kanban;
 
@@ -13,7 +15,8 @@ public interface KanbanDao {
 	public List<Kanban> getKanban(String url) throws ClassNotFoundException, SQLException;
 	
 	// 상태값으로 캘린더, 칸반 조회
-	public List<Board> getItemByStatus(String url, String s_idx) throws ClassNotFoundException, SQLException;
+	
+	public List<Board> getItembyStatus(@Param("url") String url, @Param("s_idx") int s_idx) throws ClassNotFoundException, SQLException;
 
 	// 칸반 아이템 추가
 	public int addKanban(Kanban kanban) throws ClassNotFoundException, SQLException;
