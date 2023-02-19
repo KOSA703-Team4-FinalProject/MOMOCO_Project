@@ -88,7 +88,7 @@ public class KanbanController {
 
 	   // 상태값으로 캘린더, 칸반 아이템 리스트 불러오기
 	   @RequestMapping(value = "/get", method = RequestMethod.POST)
-	   public List<Board> getItemByStatus(@RequestParam(value="url") String url, @RequestParam(value="s_idx") String s_idx) {
+	   public List<Board> getItemByStatus(@RequestParam(value="url") String url, @RequestParam(value="s_idx") int s_idx) {
 	     
 		   System.out.println("아이템 리스트");
 		   System.out.println(url);

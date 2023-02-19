@@ -7,60 +7,82 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 전체 일정 public List<Kanban> getKanban(String url) -->
 	<select id="getKanban" parameterType="String"
 		resultType="kr.or.vo.Kanban">
-		select b.idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, label, u_idx, b_idx, issue, side, s_idx, s_name
-		from board_${url} b join (select b_idx, issue, side, idx, s.s_idx, s_name
-                        			from kanban_${url} k right join status_${url} s
-                        			on k.s_idx = s.s_idx) a
+		select b.idx, title, content, to_char(w_date, 'YYYY-MM-DD')
+		as w_date, nickname, b_code, label, u_idx, b_idx, issue, side, s_idx,
+		s_name
+		from board_${url} b join (select b_idx, issue, side, idx,
+		s.s_idx, s_name
+		from kanban_${url} k right join status_${url} s
+		on k.s_idx = s.s_idx) a
 		on b.idx = a.idx
-		order by s_idx 
+		order by s_idx
 	</select>
-	
-	<select id="getItembyStatus" parameterType="String" resultType="kr.or.vo.Board">
-		select b.idx, title, w_date, nickname from board_${url} where s_idx=${s_idx}
+
+	<!-- 칸반 아이템 모두 삭제시 리스트 불러옴 -->
+	<select id="getItembyStatus" parameterType="String"
+		resultType="kr.or.vo.Board">
+		select *
+		from board_${url} b join (select s.s_idx, s_name, bs.idx
+		from status_${url} s join board_status_${url} bs
+		on s.s_idx = bs.s_idx
+		where s.s_idx = #{s_idx}) a
+		on b.idx = a.idx
+		order by b.idx
 	</select>
-	
-	
-		<!-- 칸반 아이템 추가 public int addKanban(Map map) -->
+
+
+	<!-- 칸반 아이템 추가 public int addKanban(Map map) -->
 	<insert id="addKanban" parameterType="kr.or.vo.Kanban">
 		insert all
-			into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
-				values (board_idx_seq_${url}.nextval, '${nickname}', '${title}', '${content}', ${b_code}, '${label}', ${u_idx})
-			into board_status_${url} (idx, s_idx)
-				values (board_idx_seq_${url}.currval, ${s_idx})
-			into kanban_yunseop (b_idx, issue, side, idx, s_idx)
-				values (kanban_b_idx_seq_${url}.nextval, '', (select max(b_idx)+1 from kanban_${url}), board_idx_seq_${url}.CURRVAL, ${s_idx})
-		select * from dual
+		into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
+		values (board_idx_seq_${url}.nextval, '${nickname}', '${title}',
+		'${content}', ${b_code}, '${label}', ${u_idx})
+		into board_status_${url} (idx, s_idx)
+		values (board_idx_seq_${url}.currval, ${s_idx})
+		into kanban_yunseop (b_idx, issue, side, idx, s_idx)
+		values (kanban_b_idx_seq_${url}.nextval, '', (select max(b_idx)+1 from
+		kanban_${url}), board_idx_seq_${url}.CURRVAL, ${s_idx})
+		select * from
+		dual
 	</insert>
-	
-		<!-- 칸반 컬럼 추가  -->
-		<insert id = "addKanbanColumn" parameterType = "kr.or.vo.Kanban">
-		insert into status_${url} (s_idx, s_name) values(status_s_idx_seq_${url}.nextval, #{s_name})
-		</insert>
-		
-		
-		<update id = "updateKanbanLocation" parameterType = "kr.or.vo.Kanban">
+
+	<!-- 칸반 컬럼 추가 -->
+	<insert id="addKanbanColumn" parameterType="kr.or.vo.Kanban">
+		insert into
+		status_${url} (s_idx, s_name) values(status_s_idx_seq_${url}.nextval,
+		#{s_name})
+	</insert>
+
+
+	<update id="updateKanbanLocation"
+		parameterType="kr.or.vo.Kanban">
 		update kanban_${url}
-		set k_location=#{k_location}, s_idx=#{s_idx}
+		set k_location=#{k_location},
+		s_idx=#{s_idx}
 		where title=#{title}
-		</update>
-		
-		<!-- 칸반 아이템 모두 삭제 -->
-		<delete id = "deleteAllKanbanItem" parameterType= "kr.or.vo.Kanban">
-		delete from kanban_${url} where s_idx =#{s_idx}
-		</delete>
-		
-		<!-- 칸반 컬럼명 삭제 modifyKanbanColumnName -->
-		<update id = "modifyKanbanColumnName" parameterType = "kr.or.vo.Kanban">
-		update status_${url} set s_name =#{s_name} where s_idx = #{s_idx}
-		</update>
-		
-		
-		
-		<!-- 칸반 컬럼 삭제 -->
-		<delete id = "deleteKanbanColumn" parameterType= "kr.or.vo.Kanban">
-		delete from status_${url} where s_idx =#{s_idx}
-		</delete>
-	
+	</update>
+
+	<!-- 칸반 아이템 모두 삭제 -->
+	<delete id="deleteAllKanbanItem" parameterType="kr.or.vo.Kanban">
+		delete from
+		kanban_${url} where s_idx =#{s_idx}
+	</delete>
+
+	<!-- 칸반 컬럼명 삭제 modifyKanbanColumnName -->
+	<update id="modifyKanbanColumnName"
+		parameterType="kr.or.vo.Kanban">
+		update status_${url} set s_name =#{s_name} where s_idx =
+		#{s_idx}
+	</update>
+
+
+
+	<!-- 칸반 컬럼 삭제 -->
+	<delete id="deleteKanbanColumn" parameterType="kr.or.vo.Kanban">
+		delete from
+		status_${url} where s_idx =#{s_idx}
+	</delete>
+
 
 
 

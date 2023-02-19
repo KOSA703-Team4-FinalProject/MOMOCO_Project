@@ -41,12 +41,12 @@ public class KanbanService {
 	}
 	
 	// 상태값으로 쓰여진 캘린더, 칸반 아이템 모두 불러오기
-	public List<Board> getItembyStatus(String url, String s_idx) {
+	public List<Board> getItembyStatus(String url, int s_idx) {
 		List<Board> itembyStatus = new ArrayList<Board>();
 
 		try {
 			KanbanDao kanbanDao = sqlsession.getMapper(KanbanDao.class);
-			itembyStatus = kanbanDao.getItemByStatus(url, s_idx);
+			itembyStatus = kanbanDao.getItembyStatus(url, s_idx);
 		} catch (ClassNotFoundException e) {
 
 			e.printStackTrace();
