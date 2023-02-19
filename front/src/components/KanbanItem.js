@@ -32,11 +32,12 @@ import KanbanDetail from 'src/views/kanban/KanbanDetail'
 import axios from 'axios'
 import $ from 'jquery'
 
-const KanbanItem = () => {
+const KanbanItem = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
   const [titleVisible, setTitleVisible] = useState(false)
 
   const [kanbanItemList, setKanbanItemList] = useState([])
+  const [columnValue, setColumnValue] = useState([])
   const [conList, setConList] = useState()
   const [view, setView] = useState(false)
   const [view2, setView2] = useState(false)
@@ -66,100 +67,12 @@ const KanbanItem = () => {
     </div>
   )
 
-  // 모든 아이템 삭제
-  const deleteAllKanbanItem = (e) => {
-    const tag = e.target
-    const content_type = $(tag).attr('value')
-
-    const params = { s_idx: content_type, url: param.url }
-    console.log('모두 삭제 : ' + params.s_idx)
-
-    if (confirm('해당 컬럼의 모든 아이템을 삭제하시겠습니까?')) {
-      alert('삭제가 완료되었습니다.')
-      axios({
-        url: '/api/kanban/deleteAllKanbanItem',
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: params,
-      }).then((res) => {
-        console.log(res.data)
-        location.reload()
-      })
-    } else {
-      alert('취소했습니다.')
-    }
-  }
-
-  // 모든 컬럼 삭제
-  const deleteKanbanColumn = (e) => {
-    const tag = e.target
-    const content_type = $(tag).attr('value')
-
-    const params = { s_idx: content_type, url: param.url }
-    console.log('컬럼 삭제 : ' + params.s_idx)
-
-    if (params.s_idx < 4) {
-      alert('기본 컬럼은 삭제할 수 없습니다.')
-    } else {
-      if (confirm('해당 컬럼을 삭제하시겠습니까?')) {
-        alert('삭제가 완료 되었습니다.')
-        axios({
-          url: '/api/kanban/deleteKanbanColumn',
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: params,
-        }).then((res) => {
-          location.reload()
-        })
-      } else {
-        alert('취소했습니다.')
-      }
-    }
-  }
-
-  // 컬럼 제목 수정 모달 띄우기
-  const editKanbanColumnNameModal = (e) => {
-    const tag = e.target
-    const content_type = $(tag).attr('value')
-    const content_type1 = $(tag).attr('id')
-    const editName = $('#editColumnName').val()
-    console.log(content_type)
-    const title = $('#ViewTitle')
-    const params = { s_idx: content_type, url: param.url }
-    console.log('컬럼 제목 수정 : ' + content_type)
-    console.log(editName)
-
-    if (params.s_idx < 4) {
-      alert('기본 컬럼은 제목 수정이 불가합니다.')
-    } else {
-      setTitleVisible(!titleVisible)
-    }
-  }
-
-  const editKanbanColumnName = (e) => {
-    e.preventDefault()
-    const name = e.target.elements.editColumnName.value
-    const tag = e.target
-    const content_type = $(tag).attr('value')
-    // const tag = e.target
-    // const content_type = $(tag).attr('value')
-    // const params = { url: param.url, name: $('#editColumnName').val(), s_idx: content_type }
-
-    console.log('받아온 제목' + name)
-    console.log('글번호 : ' + content_type)
-  }
-
-  useEffect(() => {
+  const getKanban = () => {
     const params = {
       u_idx: login.u_idx,
       nickname: login.nickname,
       url: param.url,
     }
-
     axios({
       url: '/api/kanban/getKanban',
       method: 'POST',
@@ -190,7 +103,115 @@ const KanbanItem = () => {
       setView2(true)
       setAction1(true)
     })
-  }, [])
+  }
+
+  // 모든 아이템 삭제
+  const deleteAllKanbanItem = (e) => {
+    const tag = e.target
+    const content_type = $(tag).attr('value')
+
+    const params = { s_idx: content_type, url: param.url }
+    console.log('모두 삭제 : ' + params.s_idx)
+
+    axios({
+      url: '/api/kanban/get',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: params,
+    }).then((res) => {
+      console.log(res)
+      // if (confirm('해당 컬럼의 모든 아이템을 삭제하시겠습니까?')) {
+      //   alert('삭제가 완료되었습니다.')
+      //   axios({
+      //     url: '/api/kanban/deleteAllKanbanItem',
+      //     method: 'POST',
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //     data: params,
+      //   }).then((res) => {
+      //     console.log(res.data)
+      //     getKanban()
+      //   })
+      // } else {
+      //   alert('취소했습니다.')
+      // }
+    })
+  }
+
+  // 모든 컬럼 삭제
+  const deleteKanbanColumn = (e) => {
+    const tag = e.target
+    const content_type = $(tag).attr('value')
+
+    const params = { s_idx: content_type, url: param.url }
+    console.log('컬럼 삭제 : ' + params.s_idx)
+
+    if (params.s_idx < 4) {
+      alert('기본 컬럼은 삭제할 수 없습니다.')
+    } else {
+      if (confirm('해당 컬럼을 삭제하시겠습니까?')) {
+        alert('삭제가 완료 되었습니다.')
+        axios({
+          url: '/api/kanban/deleteKanbanColumn',
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: params,
+        }).then((res) => {
+          getKanban()
+        })
+      } else {
+        alert('취소했습니다.')
+      }
+    }
+  }
+
+  // 컬럼 제목 수정 모달 띄우기
+  const editKanbanColumnNameModal = (e) => {
+    const tag = e.target
+    const content_type = $(tag).attr('value')
+    const content_type1 = $(tag).attr('id')
+    const editName = $('#editColumnName').val()
+    console.log(content_type)
+    const title = $('#ViewTitle')
+    const params = { s_idx: content_type, url: param.url }
+    console.log('컬럼 제목 수정 : ' + content_type)
+
+    if (params.s_idx < 4) {
+      alert('기본 컬럼은 제목 수정이 불가합니다.')
+    } else {
+      setTitleVisible(!titleVisible)
+      setColumnValue(content_type)
+    }
+  }
+
+  const editKanbanColumnName = (e) => {
+    e.preventDefault()
+    const name = e.target.elements.editColumnName.value
+    const params = { s_name: name, s_idx: columnValue, url: param.url }
+
+    axios({
+      method: 'POST',
+      url: '/api/kanban/modifyKanbanColumnName',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: params,
+    }).then((res) => {
+      console.log(res)
+      alert('수정이 완료 되었습니다.')
+      setTitleVisible(!titleVisible)
+      getKanban()
+    })
+  }
+
+  useEffect(() => {
+    getKanban()
+  }, [props])
 
   // 내일 수정해야 할 부분
 

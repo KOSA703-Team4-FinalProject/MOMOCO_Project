@@ -52,7 +52,7 @@ const Kanban = () => {
   // 변수
   const [addKanbanItem, setAddKanbanItem] = useState([])
   const [statusList, setStateList] = useState([])
-
+  const [kanbanlist, setKanbanlist] = useState('')
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -87,7 +87,9 @@ const Kanban = () => {
       }).then((res) => {
         console.log(res)
         alert('등록이 완료 되었습니다.')
-        location.reload()
+        setVisible(!visible)
+        setKanbanlist('1')
+        getStatus()
       })
     } else {
       alert('취소되었습니다')
@@ -109,12 +111,11 @@ const Kanban = () => {
       data: reqData,
     }).then((res) => {
       console.log(res)
-
-      location.reload()
+      setKanbanlist('2')
     })
   }
 
-  useEffect(() => {
+  const getStatus = () => {
     const params2 = {
       url: params.url,
     }
@@ -129,7 +130,11 @@ const Kanban = () => {
     }).then((res) => {
       setStateList(res.data)
     })
-  }, [])
+  }
+
+  useEffect(() => {
+    getStatus()
+  }, [kanbanlist])
 
   /**
    * [x] 엘리먼트의 .draggable, .container의 배열로 선택자를 지정합니다.
@@ -200,7 +205,7 @@ const Kanban = () => {
             <CRow>
               {/*  */}
               {/* 카드 + 아이템이 들어갈 곳 */}
-              <KanbanItem />
+              <KanbanItem props={kanbanlist} />
 
               <CCard style={{ width: '300px' }} className="">
                 <CHeader onClick={() => setVisibleB(!visibleB)}>
@@ -233,6 +238,7 @@ const Kanban = () => {
                                   onClick={() => {
                                     if (confirm('컬럼을 등록하시겠습니까?')) {
                                       alert('등록을 완료했습니다.')
+                                      setVisibleB(!visibleB)
                                       addColumn()
                                     } else {
                                       alert('취소했습니다.')
