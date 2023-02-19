@@ -12,6 +12,7 @@ import {
   CDropdown,
   CDropdownMenu,
   CDropdownToggle,
+  CFormInput,
   CModal,
   CModalBody,
   CModalHeader,
@@ -19,24 +20,36 @@ import {
   CRow,
 } from '@coreui/react'
 import axios from 'axios'
-import { Editor } from '@tinymce/tinymce-react'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import $ from 'jquery'
+
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilCheck } from '@coreui/icons'
+import { cilCheck } from '@coreui/icons'
 import { CForm, CFormTextarea } from '@coreui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import WriteDocStorage from './WriteDocStorage'
 import Comments from '../../components/Comments'
-import issuelist from '../board/issuelist'
+
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import Swal from 'sweetalert2'
+import {
+  BsCardImage,
+  BsFillFileEarmarkImageFill,
+  BsFillFolderFill,
+  BsFillFolderSymlinkFill,
+  BsFolderMinus,
+  BsLink,
+} from 'react-icons/bs'
 
 const docStorage = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
   const [list, SetList] = useState([])
   let [ImgModal, setImgModal] = useState(false)
+  const [file, SetFile] = useState('')
+  const [link, SetLink] = useState('')
+  let [imageURL, setImageURL] = useState('')
 
   //워크스페이스 주소값
   const dispatch = useDispatch()
@@ -69,23 +82,58 @@ const docStorage = (props) => {
     })
   }, [])
 
-  const viewImage = (e) => {
-    const reqData = {
-      content: e.traget.value,
-      url: myparams,
-    }
-    axios({
-      method: 'GET',
-      url: '/api/token',
-      headers: { Authorization: `Bearer ${accessToken}` },
-    }).then((res) => {
-      if (res.data == '') {
-        Swal.fire('Error', '잘못된 접근입니다.', 'error')
-      } else {
-        const url =
-          'http://localhost:8090/controller/doc/fileDown?url=' + params.url + '&content=' + re_cont
+  const filesubmit = (e) => {
+    e.preventDefault()
+    const type = e.target.type.value
+    const file = e.target.save.value
+    const link = e.target.link.value
+
+    if (type == 'file') {
+      axios({
+        method: 'GET',
+        url: '/api/token',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }).then((res) => {
+        if (res.data == '') {
+          Swal.fire('Error', '잘못된 접근입니다.', 'error')
+        } else {
+          const url =
+            'http://localhost:8090/controller/doc/fileDown?url=' + params.url + '&content=' + file
+
+          const link = document.createElement('a')
+          link.href = url
+          link.download = file
+
+          // 링크 클릭
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      })
+    } else if (type == 'image') {
+      setImgModal(!ImgModal)
+      const reqData = {
+        url: params.url,
+        content: file,
       }
-    })
+      axios({
+        method: 'post',
+        url: '/doc/viewImage',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        responseType: 'blob',
+        params: reqData,
+      }).then((res) => {
+        const myFile = new File([res.data], 'imageName')
+        const reader = new FileReader()
+        reader.onload = (ev) => {
+          const previewImage = String(ev.target?.result)
+          setImageURL(previewImage) // myImage라는 state에 저장
+        }
+        reader.readAsDataURL(myFile)
+      })
+    } else if (type == 'link') {
+      window.open(link)
+    }
   }
 
   return (
@@ -126,7 +174,14 @@ const docStorage = (props) => {
                       <strong>{data.title}</strong>
                     </CCol>
                     <CCol className="col-4 px-2">
-                      <strong>{data.ori_filename}</strong>
+                      {data.upload_type == 'link' ? (
+                        <BsLink />
+                      ) : data.upload_type == 'file' ? (
+                        <BsFillFolderFill />
+                      ) : (
+                        <BsCardImage />
+                      )}
+                      <strong> {data.ori_filename}</strong>
                     </CCol>
                     <CCol className="col-2 px-1">
                       <strong>{data.nickname}</strong>
@@ -137,34 +192,53 @@ const docStorage = (props) => {
                 </CAccordionHeader>
                 <CAccordionBody>
                   <CCol align="center">
-                    <h3>
-                      <strong>{data.ori_filename}</strong>
-                      <CModal
-                        alignment="center"
-                        visible={ImgModal}
-                        onClose={() => setImgModal(false)}
-                      >
-                        <CModalBody>
-                          <img src="#" alt="이미지" style={{ width: '100%', height: 'auto' }} />
-                        </CModalBody>
-                      </CModal>
-
-                      <CButton
-                        onClick={viewImage}
-                        className="my-3 mx-1"
-                        color="dark"
-                        shape="rounded-pill"
-                        value={(data.save_filename, data.upload_type)}
-                      >
-                        {data.upload_type === 'image' ? (
-                          <strong>미리보기</strong>
-                        ) : data.upload_type === 'link' ? (
-                          <strong>바로가기</strong>
+                    <CForm onSubmit={filesubmit}>
+                      <h3>
+                        <CFormInput type="hidden" name="link" value={data.ori_filename} />
+                        <CFormInput type="hidden" name="save" value={data.save_filename} />
+                        <CFormInput type="hidden" name="type" value={data.upload_type} />
+                        {data.upload_type == 'link' ? (
+                          <BsLink />
+                        ) : data.upload_type == 'file' ? (
+                          <BsFillFolderFill />
                         ) : (
-                          <strong>파일저장</strong>
+                          <BsCardImage />
                         )}
-                      </CButton>
-                    </h3>
+                        <strong> {data.ori_filename} </strong>
+                        <CButton
+                          type="submit"
+                          className="my-3 mx-1"
+                          color="dark"
+                          shape="rounded-pill"
+                          value={data.upload_type}
+                        >
+                          {data.upload_type === 'image' ? (
+                            <>
+                              <strong>미리보기</strong>
+                              <CModal
+                                alignment="center"
+                                visible={ImgModal}
+                                onClose={() => setImgModal(false)}
+                              >
+                                <CModalBody>
+                                  <img
+                                    src={imageURL}
+                                    alt="이미지"
+                                    style={{ width: '100%', height: 'auto' }}
+                                  />
+                                </CModalBody>
+                              </CModal>
+                            </>
+                          ) : data.upload_type === 'link' ? (
+                            <strong>바로가기</strong>
+                          ) : (
+                            <>
+                              <strong>파일저장</strong>
+                            </>
+                          )}
+                        </CButton>
+                      </h3>
+                    </CForm>
                   </CCol>
                   <CFormTextarea defaultValue={data.content} rows={5} />
                   <CRow>

@@ -3,7 +3,7 @@ import { CRow, CFormLabel, CCol, CFormInput, CInputGroup, CInputGroupText } from
 import { CCardBody } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
 import { CButton } from '@coreui/react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { CFormCheck } from '@coreui/react'
 import { CAvatar } from '@coreui/react'
 import { useState } from 'react'
@@ -21,6 +21,7 @@ const WriteDocStorage = () => {
   const [step, SetStep] = useState('')
   const [upload_type, SetUpload_type] = useState('')
   const [link, SetLink] = useState('')
+  const navigate = useNavigate()
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -51,7 +52,6 @@ const WriteDocStorage = () => {
   }
 
   const EditorHandler = (e) => {
-    e.preventDefault()
     SetContent(e)
   }
 
@@ -64,44 +64,82 @@ const WriteDocStorage = () => {
   const SubmitHandler = (e) => {
     e.preventDefault()
 
-    const formData = new FormData()
-
-    const doc = {
-      nickname: nickname,
-      title: title,
-      content: content,
-      b_code: 3,
-      label: 'doc',
-      u_idx: u_idx,
-      url: url,
-      depth: 0,
-      step: 0,
-      upload_type: upload_type,
-    }
-    formData.append('file', orifile)
-    formData.append('doc', JSON.stringify(doc))
-
-    try {
-      axios({
-        method: 'POST',
-        url: '/doc/addDoc',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': `multipart/form-data; `,
-        },
-        data: formData,
-      }).then((res) => {
-        if (res.data == 2) {
-          alert('문서가 등록되었습니다.')
-          Navigate('/ws/' + url + '/docStorage')
-        }
-        if (res.data != 2) {
-          alert('문서 등록에 실패하였습니다.')
-          Navigate('/ws/' + url + '/docStorage')
-        }
-      })
-    } catch (error) {
-      console.error(error)
+    if (upload_type === 'link') {
+      // 링크 등록시
+      const doc = {
+        nickname: nickname,
+        title: title,
+        content: content,
+        b_code: 3,
+        label: 'doc',
+        u_idx: u_idx,
+        url: url,
+        depth: 0,
+        step: 0,
+        upload_type: upload_type,
+        ori_filename: link,
+        save_filename: link,
+      }
+      try {
+        axios({
+          method: 'POST',
+          url: '/doc/addDocLink',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: doc,
+        }).then((res) => {
+          if (res.data == 2) {
+            alert('문서가 등록되었습니다.')
+            navigate(`/ws/${url}/docStorage`)
+          }
+          if (res.data != 2) {
+            alert('문서 등록에 실패하였습니다.')
+            navigate(`/ws/${url}/docStorage`)
+          }
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      // 파일, 이미지 등록시
+      const formData = new FormData()
+      const doc = {
+        nickname: nickname,
+        title: title,
+        content: content,
+        b_code: 3,
+        label: 'doc',
+        u_idx: u_idx,
+        url: url,
+        depth: 0,
+        step: 0,
+        upload_type: upload_type,
+      }
+      formData.append('file', orifile)
+      formData.append('doc', JSON.stringify(doc))
+      try {
+        axios({
+          method: 'POST',
+          url: '/doc/addDoc',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': `multipart/form-data; `,
+          },
+          data: formData,
+        }).then((res) => {
+          if (res.data == 2) {
+            alert('문서가 등록되었습니다.')
+            navigate(`/ws/${url}/docStorage`)
+          }
+          if (res.data != 2) {
+            alert('문서 등록에 실패하였습니다.')
+            navigate(`/ws/${url}/docStorage`)
+          }
+        })
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 

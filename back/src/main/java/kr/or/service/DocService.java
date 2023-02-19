@@ -63,6 +63,18 @@ public class DocService {
 		return result;
 	}
 
+	public int addDocLink(Doc doc) {
+		int result =0;
+		try {
+			DocDao docdao = sqlsession.getMapper(DocDao.class);
+			result=docdao.addDocLink(doc);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 
 	// 이미지 파일 보기
