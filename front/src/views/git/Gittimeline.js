@@ -1,13 +1,54 @@
-import { CAvatar, CCallout, CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react'
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { BsEmojiSmile } from "react-icons/bs";
+import CryptoJS from 'crypto-js'
 
-import Typography from '../theme/typography/Typography'
+import { PRIMARY_KEY } from '../../oauth'
+import { useParams } from 'react-router';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { Octokit } from 'octokit';
+import { async } from 'regenerator-runtime';
+
 const backgroundcolor ={
   background:'#dcdcdc'
 }
 const Gittimeline = () => {
+
+  const params = useParams()
+
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+
+  const url = params.url
+  const login = JSON.parse(localStorage.getItem('login'))
+
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`
+  })
+
+  //임시로 레파지토리 이름
+  const repos = 'TIL'
+  //임시로 레포지토리 주인
+  const owner = 'park71405'
+
+  useEffect(()=>{
+    getCommits()
+  }, [])
+
+  const getCommits = async () => {
+    await octokit.request('GET /repos/{owner}/{repo}/commits', {
+      owner: owner,
+      repo: repos
+    }).then((res) => {
+      console.log(res)
+    })
+  }
+
   return (
     <>
       <CCard className="mb-4" style={backgroundcolor}>

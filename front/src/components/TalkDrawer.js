@@ -48,7 +48,6 @@ const TalkDrawer = () => {
       },
       params: reqData,
     }).then((res) => {
-      console.log(res.data)
       res.data[0].map((user) => {
         setWorkspaceUserList((workspaceUserList) => [...workspaceUserList, user])
       })

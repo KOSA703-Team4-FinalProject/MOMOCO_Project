@@ -35,6 +35,7 @@ import Swal from 'sweetalert2'
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
 import { height, width } from '@mui/system'
+import { async } from 'regenerator-runtime'
 
 const Chat = (props) => {
   const dispatch = useDispatch()
@@ -44,8 +45,6 @@ const Chat = (props) => {
   let [chatList, setChatList] = useState([])
   let [ImgModal, setImgModal] = useState(false)
   let [imageURL, setImageURL] = useState('')
-  let [imgSrcList, setImgSrcList] = useState([])
-  let [initview2, setInitview2] = useState(false)
   let [linkModalView, setLinkModalView] = useState(false)
 
   const chatref = useRef()
@@ -71,7 +70,6 @@ const Chat = (props) => {
         console.log(res)
         setRoom(res[1])
         res[0].map((chat) => {
-          loadThumnail(chat)
           setChatList((chatList) => [...chatList, chat])
         })
         setInitview(true)
@@ -98,37 +96,7 @@ const Chat = (props) => {
 
   useEffect(() => {
     chatref.current.scrollTop = chatref.current.scrollHeight
-  }, [initview2])
-
-  //타입이 이미지일 경우 섬네일 가져오기
-  function loadThumnail(file) {
-    const reqData = {
-      url: params.url,
-      content: 's_' + file.content,
-    }
-
-    if (file.content_type == 'img') {
-      axios({
-        method: 'GET',
-        url: '/api/chat/imgView',
-        headers: { Authorization: `Bearer ${accessToken}` },
-        responseType: 'blob',
-        params: reqData,
-      }).then((res) => {
-        const myFile = new File([res.data], 'imageName')
-        const reader = new FileReader()
-        reader.onload = (ev) => {
-          const previewImage = String(ev.target?.result)
-          setImgSrcList((imgSrcList) => [...imgSrcList, previewImage])
-        }
-        reader.readAsDataURL(myFile)
-        setInitview2(true)
-      })
-    } else {
-      const previewImage = ''
-      setImgSrcList((imgSrcList) => [...imgSrcList, previewImage])
-    }
-  }
+  }, [initview])
 
   //연결 끊기
   const disconnect = () => {
@@ -325,12 +293,35 @@ const Chat = (props) => {
         }
         reader.readAsDataURL(myFile)
       })
+    } else if (content_type == 'link') {
+      const link = document.createElement('a')
+
+      link.href = re_cont
+      link.setAttribute('target', '_blank')
+      link.click()
     }
   }
 
   //링크 전송
   const clickLink = () => {
-    
+    const tag = linkRef.current
+    console.log(linkRef.current.value)
+
+    const reqData = {
+      url: params.url,
+      nickname: login.nickname,
+      u_idx: login.u_idx,
+      content_type: 'link',
+      content: linkRef.current.value,
+      r_idx: chatRoomNumber,
+      ref: 1,
+    }
+
+    const data = JSON.stringify(reqData)
+    stomp.send('/pub/chat/message', {}, data)
+
+    $(tag).val('')
+    setLinkModalView(false)
   }
 
   return (
@@ -364,7 +355,7 @@ const Chat = (props) => {
         </div>
       </header>
       <ul className="chat" ref={chatref}>
-        {initview == false || initview2 == false ? (
+        {initview == false ? (
           <li></li>
         ) : (
           chatList.map((data, key) => {
@@ -394,14 +385,24 @@ const Chat = (props) => {
                         {data.content}
                       </div>
                     ) : data.content_type == 'img' ? (
-                      <div className="message" value={data.content_type} content={data.content}>
-                        <img
-                          src={imgSrcList[key]}
-                          alt="이미지"
-                          onClick={clickContent}
-                          value={data.content_type}
-                          content={data.content}
-                        />
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        content={data.content}
+                        onClick={clickContent}
+                      >
+                        <CIcon icon={cilImage} size="xl" className="me-2" />
+                        {data.content}
+                      </div>
+                    ) : data.content_type == 'file' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
+                        idx={data.ch_idx}
+                        onClick={clickContent}
+                      >
+                        <CIcon icon={cilFile} size="xl" className="me-2" />
+                        {data.content}
                       </div>
                     ) : (
                       <div
@@ -410,7 +411,7 @@ const Chat = (props) => {
                         idx={data.ch_idx}
                         onClick={clickContent}
                       >
-                        <CIcon icon={cilFile} size="xl" className="me-2" />
+                        <CIcon icon={cilLink} size="xl" className="me-2" />
                         {data.content}
                       </div>
                     )}
@@ -438,11 +439,20 @@ const Chat = (props) => {
                       <div
                         className="message"
                         value={data.content_type}
+                        content={data.content}
+                        onClick={clickContent}
+                      >
+                        <CIcon icon={cilImage} size="xl" className="me-2" />
+                        {data.content}
+                      </div>
+                    ) : data.content_type == 'file' ? (
+                      <div
+                        className="message"
+                        value={data.content_type}
                         idx={data.ch_idx}
                         onClick={clickContent}
                       >
-                        <img src={imgSrcList[key]} alt="이미지" />
-                        <br />
+                        <CIcon icon={cilFile} size="xl" className="me-2" />
                         {data.content}
                       </div>
                     ) : (
@@ -452,7 +462,7 @@ const Chat = (props) => {
                         idx={data.ch_idx}
                         onClick={clickContent}
                       >
-                        <CIcon icon={cilFile} size="xl" className="me-2" />
+                        <CIcon icon={cilLink} size="xl" className="me-2" />
                         {data.content}
                       </div>
                     )}
@@ -512,7 +522,9 @@ const Chat = (props) => {
             </CRow>
           </CModalBody>
           <CModalFooter>
-            <CButton color="primary" variant="outline" onClick={clickLink}>확인</CButton>
+            <CButton color="primary" variant="outline" onClick={clickLink}>
+              확인
+            </CButton>
           </CModalFooter>
         </CModal>
       </footer>
