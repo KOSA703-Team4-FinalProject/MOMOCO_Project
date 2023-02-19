@@ -63,6 +63,14 @@ public class DocController {
 		docservice.getImge(url, content, request, response);
 		
 	}
+
+	//문서 저장소 링크 등록
+	@RequestMapping(value="/addDocLink", method=RequestMethod.POST)
+	public int addDocLink(@RequestBody Doc doc) {
+		System.out.println("컨트롤러 adddoclink");
+		return docservice.addDocLink(doc);
+	}
+	
 	
 	@RequestMapping(value="/addDoc", method=RequestMethod.POST)
 	public int addDoc(@RequestParam(value="doc") String docJson, @RequestParam(value="file") MultipartFile[] files, HttpServletRequest request) throws IOException {
@@ -109,6 +117,7 @@ public class DocController {
 	    	String thumbnailSaveName = request.getServletContext().getRealPath("/resources/upload/docStorage_") + doc.getUrl() + "/thumb_" + saveFileName;
 			File thumbnailFile = new File(thumbnailSaveName);
 			Path savePath2 = Paths.get(savePath);
+			doc.setUpload_type("image");
 			
 			try {
 				Thumbnailator.createThumbnail(savePath2.toFile(), thumbnailFile, 100, 100);
@@ -150,7 +159,8 @@ public class DocController {
 	@RequestMapping(value = "/fileDown", method = RequestMethod.GET)
 	public void downFile(@RequestParam(value = "url") String url, @RequestParam(value = "content") String content,
 			HttpServletRequest request, HttpServletResponse response) {
-
+		System.out.println(url);
+		System.out.println(content);
 		File file = new File(
 				request.getServletContext().getRealPath("/resources/upload/docStorage_") + url + "/" + content);
 

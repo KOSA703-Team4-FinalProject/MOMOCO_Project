@@ -37,6 +37,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 			result = true;
 		}
 		
+		if(request.getRequestURI().equals("/controller/doc/fileDown")) {
+			result = true;
+		}
+		
 		System.out.println("result : " + result);
 
 		return result;

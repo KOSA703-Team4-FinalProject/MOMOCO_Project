@@ -15,4 +15,7 @@ public interface DocDao {
 	
 	//문서저장소 글쓰기
 	public int addDoc(Doc doc) throws ClassNotFoundException, SQLException;
+	
+	//문서저장소 링크 글쓰기
+	public int addDocLink(Doc doc) throws ClassNotFoundException, SQLException;
 }
