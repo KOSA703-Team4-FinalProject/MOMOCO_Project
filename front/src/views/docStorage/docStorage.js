@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   CAccordion,
   CAccordionBody,
@@ -20,8 +21,6 @@ import {
   CRow,
 } from '@coreui/react'
 import axios from 'axios'
-import $ from 'jquery'
-
 import CIcon from '@coreui/icons-react'
 import { cilCheck } from '@coreui/icons'
 import { CForm, CFormTextarea } from '@coreui/react'
@@ -29,7 +28,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import WriteDocStorage from './WriteDocStorage'
 import Comments from '../../components/Comments'
-
+import { Editor } from '@tinymce/tinymce-react'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { useDispatch } from 'react-redux'
@@ -240,7 +239,19 @@ const docStorage = (props) => {
                       </h3>
                     </CForm>
                   </CCol>
-                  <CFormTextarea defaultValue={data.content} rows={5} />
+                  <Editor
+                    value={data.content}
+                    name="tinyEditor"
+                    apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
+                    init={{
+                      height: 300,
+                      selector: 'div.tinymce',
+                      plugins: ['quickbars'],
+                      toolbar: false,
+                      menubar: false,
+                      inline: false,
+                    }}
+                  />
                   <CRow>
                     <CCol align="end">
                       <CButton className="my-3 mx-1" color="dark" shape="rounded-pill">

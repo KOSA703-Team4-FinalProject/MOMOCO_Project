@@ -1,3 +1,4 @@
+import React from 'react'
 import { CCard, CForm } from '@coreui/react'
 import { CRow, CFormLabel, CCol, CFormInput, CInputGroup, CInputGroupText } from '@coreui/react'
 import { CCardBody } from '@coreui/react'
@@ -11,6 +12,7 @@ import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import axios from 'axios'
 import { CFormSelect } from '@coreui/react'
+import Label from 'src/components/Label'
 
 const WriteDocStorage = () => {
   const [title, SetTitle] = useState('')
@@ -148,6 +150,16 @@ const WriteDocStorage = () => {
       <CForm onSubmit={SubmitHandler}>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-2 col-form-label">
+            <strong>라벨 선택</strong>
+          </CFormLabel>
+          <CCol sm={10}>
+            <CCol className="mb-3">
+              <Label />
+            </CCol>
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel className="col-sm-2 col-form-label">
             <strong>문서 제목</strong>
           </CFormLabel>
           <CCol sm={10}>
@@ -181,7 +193,12 @@ const WriteDocStorage = () => {
           <CCol sm={10}>
             <CCol className="mb-3">
               {upload_type === 'link' ? (
-                <CFormInput type="text" onChange={LinkHandler} value={link}></CFormInput>
+                <CFormInput
+                  type="text"
+                  placeholder="링크를 입력하세요"
+                  onChange={LinkHandler}
+                  value={link}
+                ></CFormInput>
               ) : (
                 <CFormInput
                   onChange={FileHandler}
