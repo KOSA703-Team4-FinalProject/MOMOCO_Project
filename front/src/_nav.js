@@ -16,7 +16,7 @@ const _nav = [
   {
     component: CNavItem,
     name: '전체보기',
-    to: '/boardlist',
+    to: '/allboardlist',
     icon: <CIcon icon={cilClearAll} customClassName="nav-icon" />,
   },
   {

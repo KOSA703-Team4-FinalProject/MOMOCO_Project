@@ -25,7 +25,7 @@ public class CommentService {
 	}
 	
 	
-	//댓글 리스트 
+	
 	//댓글 입력하기 
 	public int addComment(Comments all) {
 		int result =0;
@@ -68,6 +68,19 @@ public class CommentService {
 		}
 		return comlist;
 		
+	}
+	//대댓글 작성
+	public int replyComment(Comments all) {
+		int result =0;
+		try {
+			CommentDao commentdao = sqlsession.getMapper(CommentDao.class);
+			result = commentdao.replyComment(all);
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return result;
 	}
 	
 }

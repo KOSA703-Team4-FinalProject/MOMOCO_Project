@@ -11,6 +11,8 @@ public interface CommentDao {
 		public Comments commentContent (Comments idx) throws ClassNotFoundException, SQLException;
 		//댓글 목록
 		public List<Comments> getComment (Comments comment) throws ClassNotFoundException, SQLException;
+		//대댓글 작성
+		public int replyComment(Comments all) throws  ClassNotFoundException, SQLException;
 		
 
 }

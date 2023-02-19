@@ -30,11 +30,12 @@ const Commentwrite = (props) => {
       u_idx: login.u_idx,
     }
   }
+  const myparams = {
+    url: props.url,
+    idx: props.idx,
+  }
+  console.log(myparams)
   useEffect(() => {
-    const myparams = {
-      url: params.url,
-      idx: params.idx,
-    }
     axios({
       method: 'POST',
       url: '/comment/commentcontent',
@@ -44,6 +45,7 @@ const Commentwrite = (props) => {
       data: myparams,
     }).then((res) => {
       setCommentcontent(res.data)
+      console.log(res.data)
     })
   }, [])
 

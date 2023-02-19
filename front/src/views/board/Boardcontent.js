@@ -55,13 +55,11 @@ const Boardcontent = (props) => {
   const navigateToboardwrite = (params) => {
     navigate(`/ws/boardwrite/${params.url}`)
   }
-
+  const myparams = {
+    url: params.url,
+    idx: params.idx,
+  }
   useEffect(() => {
-    const myparams = {
-      url: params.url,
-      idx: params.idx,
-    }
-
     axios({
       method: 'POST',
       url: '/board/boardcontent',
@@ -86,7 +84,7 @@ const Boardcontent = (props) => {
       })
     })
   }, [])
-  setCommentlist()
+
   //삭제하기
   const deletecommon = () => {
     const param = {
@@ -223,17 +221,15 @@ const Boardcontent = (props) => {
           <div className="ms-5 me-5">
             <Comments idx={params.idx} url={params.url} />
           </div>
-          <br></br>
+
           {commentlist.map((data, key) => (
             <div className="ms-5 me-5" key={key}>
-              <Commentwrite idx={params.idx} url={params.url} />
+              <Commentwrite idx={data.idx} url={data.url} />
             </div>
           ))}
-          <br></br>
 
           <div className="ms-5 me-5">
             <Commentreply idx={params.idx} url={params.url} />
-            <br></br>
           </div>
         </div>
       </CCard>
