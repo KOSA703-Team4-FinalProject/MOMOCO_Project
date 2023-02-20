@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import kr.or.vo.Board;
+import kr.or.vo.CommonBoard;
 import kr.or.vo.Kanban;
 
 //CRUD
@@ -34,6 +35,9 @@ public interface KanbanDao {
 	public int deleteKanbanColumn(Kanban kanban)throws ClassNotFoundException, SQLException;
 	// 칸반 컬럼명 수정
 	public int modifyKanbanColumnName(Kanban kanban)throws ClassNotFoundException, SQLException;
+
+	// 칸반 상세보기
+	public Kanban GetKanbanItemDetail(Kanban kanban) throws ClassNotFoundException, SQLException;
 
 
 }
