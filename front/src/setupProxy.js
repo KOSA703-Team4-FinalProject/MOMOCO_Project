@@ -61,4 +61,10 @@ module.exports = function (app) {
       changeOrigin: true,
     }),
   )
+  app.use(
+    createProxyMiddleware('/label', {
+      target: 'http://localhost:8090/controller',
+      changeOrigin: true,
+    }),
+  )
 }

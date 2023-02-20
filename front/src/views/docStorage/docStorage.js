@@ -161,7 +161,7 @@ const docStorage = (props) => {
           </CRow>
           <CAccordion alwaysOpen>
             {list.map((data, key) => (
-              <CAccordionItem itemKey={key}>
+              <CAccordionItem Key={key}>
                 <CAccordionHeader>
                   <CRow className="col-12">
                     <CCol className="col-2 px-2">

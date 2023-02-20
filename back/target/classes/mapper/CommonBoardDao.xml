@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 전체 글 확인 public List<Board> getBoard() -->
 	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
 		select a.idx, a.nickname, a.title, a.content, a.w_date, a.b_code, a.label, a.u_idx, b.b_idx, b.ori_filename, 
-		b.save_filename, b.volume, b.filetype, b.ref,b.depth,b.step,b.thumb,b.idx from board_hyehye a join common_board_hyehye b on a.idx = b.idx
+		b.save_filename, b.volume, b.filetype, b.ref,b.depth,b.step,b.thumb,b.idx from board_${url} a join common_board_${url} b on a.idx = b.idx
 		where b_code = 5 
 		order by b.b_idx desc
 		

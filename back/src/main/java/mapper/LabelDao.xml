@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dao.LabelDao">
+
+	<!-- 전체 일정 조회 public List<Calendar> getCalendar() -->
+	<select id="listLabel" parameterType="String" resultType="kr.or.vo.Label">
+		select label, style from label_${url} 
+	</select>
+	
+	<!-- 일정 추가 public int addDoc(Doc doc, MultipartFile file) -->
+	<insert id="addLabel" parameterType="kr.or.vo.Label">
+		insert label, style values ('${label}', '${style}') from label_${url}
+	</insert>
+	
+   
+</mapper>
