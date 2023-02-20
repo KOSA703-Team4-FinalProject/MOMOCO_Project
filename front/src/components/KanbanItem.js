@@ -257,9 +257,6 @@ const KanbanItem = (props) => {
 
         let arr = []
         let num = 0
-        // console.log($(childtag))
-        // console.log($(childtag[0]).attr('value')) // s_idx
-        // console.log($(childtag[2]).attr('value')) // b_idx
 
         $(childtag).each(function (data, key) {
           if (data > 1) {
@@ -272,23 +269,13 @@ const KanbanItem = (props) => {
             num += 1
           }
         })
-        // console.log(arr)
-
-        // for (let i = 1; i < arr.length; i++) {
-        //   let request5 = {
-        //     title: arr[i].title,
-
-        //     side: arr[i].side,
-        //     s_idx: s_idx,
-        //   }
 
         arr.map((item, i) => {
-          // console.log(item.b_idx)
-          // console.log(item[0].b_idx)
           let request5 = {
             b_idx: item.b_idx,
             side: item.side,
             s_idx: item.s_idx,
+            url: param.url,
           }
 
           console.log(request5)
