@@ -36,7 +36,7 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
-  const [chatState, setCahtState] = useState(false);
+  const [chatState, setCahtState] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
 

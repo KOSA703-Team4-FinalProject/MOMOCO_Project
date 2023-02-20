@@ -213,8 +213,7 @@ const workSpace = () => {
             repo: repoName,
           })
           .then((res) => {
-
-            console.log(res.data);
+            console.log(res.data)
 
             res.data.map((mem) => {
               if (mem.login != login.nickname) {
@@ -239,12 +238,11 @@ const workSpace = () => {
     const u_idx = $(profile).attr('u_idx')
 
     setMailMember((mailMember) => [...mailMember, name])
-    setSendMail((sendMail) => sendMail+','+ch)
+    setSendMail((sendMail) => sendMail + ',' + ch)
   }
 
   //메일 전송
   const clickMail = (e) => {
-
     axios({
       method: 'GET',
       headers: {
@@ -259,6 +257,21 @@ const workSpace = () => {
       Swal.fire('Error', '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/'+url+'/'+login.nickname, 'warning')
       setMailModal(false)
     })
+      .then(() => {
+        Swal.fire('', '메일 전송이 완료되었습니다.', 'success')
+        setMailModal(false)
+      })
+      .catch(() => {
+        Swal.fire(
+          'Error',
+          '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/' +
+            space_Name +
+            '/' +
+            login.nickname,
+          'warning',
+        )
+        setMailModal(false)
+      })
   }
 
   return (
@@ -470,23 +483,26 @@ const workSpace = () => {
               <div className="row justify-content-evenly">
                 {memList.map((data) => {
                   return (
-                    <div
-                      className="col-12 m-2 profile"
-                      key={data.login}
-                    >
+                    <div className="col-12 m-2 profile" key={data.login}>
                       <CCard className="mt-2 p-2">
                         <div className="row justify-content-center">
                           <div className="col-4 mt-1">
                             <strong>{data.login}</strong>
                           </div>
                           <div className="col-5">
-                            <CFormInput
-                              type="email"
-                              className="memEmail"
-                            />
+                            <CFormInput type="email" className="memEmail" />
                           </div>
-                          <div className='col-3'>
-                            <CButton align="end" color="primary" variant="outline" value={data.login} u_idx={data.u_idx} onClick={clickMember}>추가</CButton>
+                          <div className="col-3">
+                            <CButton
+                              align="end"
+                              color="primary"
+                              variant="outline"
+                              value={data.login}
+                              u_idx={data.u_idx}
+                              onClick={clickMember}
+                            >
+                              추가
+                            </CButton>
                           </div>
                         </div>
                       </CCard>
