@@ -13,11 +13,15 @@ import { PRIMARY_KEY } from '../../oauth'
 import axios from 'axios'
 import { CFormSelect } from '@coreui/react'
 import Label from 'src/components/Label'
+import { useDispatch, useSelector } from 'react-redux'
+import { chooseLabel } from 'src/store'
+import { useEffect } from 'react'
 
 const WriteDocStorage = () => {
   const [title, SetTitle] = useState('')
   const [content, SetContent] = useState('')
   const [label, SetLabel] = useState('')
+  const [style, SetStyle] = useState('')
   const [orifile, SetOrifile] = useState(null)
   const [depth, SetDepth] = useState('')
   const [step, SetStep] = useState('')
@@ -36,6 +40,9 @@ const WriteDocStorage = () => {
   const u_idx = login.u_idx
   const params = useParams()
   const url = params.url
+
+  const dispatch = useDispatch()
+  const chooseLabel = useSelector((state) => state.chooseLabel)
 
   const titleHandler = (e) => {
     e.preventDefault()
@@ -63,6 +70,10 @@ const WriteDocStorage = () => {
     console.log(e.target.value)
   }
 
+  useEffect(() => {
+    SetLabel(chooseLabel)
+  }, [chooseLabel])
+
   const SubmitHandler = (e) => {
     e.preventDefault()
 
@@ -73,7 +84,7 @@ const WriteDocStorage = () => {
         title: title,
         content: content,
         b_code: 3,
-        label: 'doc',
+        label: label,
         u_idx: u_idx,
         url: url,
         depth: 0,

@@ -58,8 +58,8 @@ public class LabelController {
 	
 
 	//라벨 추가하기
-	@RequestMapping(value="/addLabel", method=RequestMethod.POST)
-	public int addDocLink(@RequestBody Label label) {
+	@RequestMapping(value="/add", method=RequestMethod.POST)
+	public int addLabel(@RequestBody Label label) {
 		System.out.println("컨트롤러 adddoclink");
 		return labelservice.addLabel(label);
 	}

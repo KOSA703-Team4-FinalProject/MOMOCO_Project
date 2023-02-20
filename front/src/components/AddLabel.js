@@ -6,12 +6,17 @@ import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../oauth'
 import { data } from 'jquery'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateLabelList } from 'src/store'
 
 const AddLabel = (props) => {
-  const [list, SetList] = useState([])
+  const dispatch = useDispatch()
+  const labelList = useSelector((state) => state.labelList)
+
+  const [visible, setVisible] = useState(false)
   const [label, SetLabel] = useState('')
   const [style, SetStyle] = useState('')
-  const [checked, SetChecked] = useState('')
+  const [checkname, SetCheckname] = useState('')
   const params = useParams()
   const login = JSON.parse(localStorage.getItem('login'))
   const nickname = login.nickname
@@ -20,13 +25,18 @@ const AddLabel = (props) => {
 
   const LabelHandler = (e) => {
     e.preventDefault()
+    SetCheckname('true')
+    labelList.map((data) => {
+      if (e.target.value === data.label) {
+        return alert('이미 동일한 이름의 라벨이 있습니다'), SetCheckname('false')
+      }
+    })
     SetLabel(e.target.value)
   }
 
   const StyleHandler = (e) => {
     e.preventDefault()
     SetStyle(e.target.value)
-    console.log(e.target.value)
   }
 
   // AES알고리즘 사용 복호화
@@ -35,24 +45,17 @@ const AddLabel = (props) => {
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
 
-  function checkLabel(e) {
-    if (e === { label }) {
-      return SetChecked('false')
-    }
-  }
-
-  const SubmitLabelHandler = (e) => {
-    SetList([props])
-    list.map((data) => {
-      checkLabel(data.label)
-    })
-
+  const AddLabelHandler = () => {
     const add = {
       label: label,
       style: style,
       url: url,
     }
-    if (checked == 'true') {
+    const additem = {
+      label: label,
+      style: style,
+    }
+    if (checkname === 'true' && style != '') {
       axios({
         method: 'POST',
         headers: {
@@ -63,26 +66,15 @@ const AddLabel = (props) => {
       }).then((res) => {
         if (res.data == '1') {
           alert('라벨이 추가되었습니다')
+          dispatch(updateLabelList([...labelList, additem]))
         } else {
           alert('라벨 등록 실패')
         }
       })
+    } else {
+      alert('라벨 이름이 중복되었거나 색상이 선택되지 않았습니다')
     }
   }
-
-  // 라벨 목록 호출
-  //   useEffect(() => {
-  //     axios({
-  //       method: 'POST',
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //       url: '/label/list',
-  //       data: myparams,
-  //     }).then((res) => {
-  //       SetList(res.data)
-  //     })
-  //   }, [])
 
   return (
     <>
@@ -135,7 +127,7 @@ const AddLabel = (props) => {
         </CButton>
 
         <div align="right">
-          <CButton onClick={SubmitLabelHandler}>추가</CButton>
+          <CButton onClick={AddLabelHandler}>추가</CButton>
         </div>
       </CForm>
     </>
