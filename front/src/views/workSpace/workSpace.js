@@ -251,12 +251,12 @@ const workSpace = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       url: '/api/sendEmailMem',
-      params: { email: sendMail, admin: login.nickname, url: linked_Repo },
+      params: { email: sendMail, admin: login.nickname, url: url },
     }).then(()=>{
       Swal.fire('', '메일 전송이 완료되었습니다.', 'success')
       setMailModal(false)
     }).catch(()=>{
-      Swal.fire('Error', '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/'+linked_Repo+'/'+login.nickname, 'warning')
+      Swal.fire('Error', '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/'+url+'/'+login.nickname, 'warning')
       setMailModal(false)
     })
   }
