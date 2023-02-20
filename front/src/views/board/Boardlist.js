@@ -1,31 +1,23 @@
-import { cilCaretLeft, cilCheck, cilCheckCircle } from '@coreui/icons'
+import { cilCheck } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import {
   CAvatar,
   CBadge,
   CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCol,
-  CFormCheck,
   CFormInput,
   CInputGroup,
-  CPagination,
-  CPaginationItem,
   CRow,
 } from '@coreui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useNavigate, useParams, useHistory } from 'react-router-dom'
+import { Link, useNavigate, useParams, useHistory } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import { data, event } from 'jquery'
-import { endOfDay } from 'date-fns'
-import { current } from '@reduxjs/toolkit'
-import { Pagination, PaginationItem } from '@mui/material'
-import Paging from 'src/components/Pagination'
-import $ from 'jquery'
+import { Pagination } from '@mui/material'
+import { useCallback } from 'react'
 const writedate = {}
 const title = {}
 const context = {}
@@ -47,17 +39,18 @@ const Boardlist = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [boardlist, setBoardList] = useState([])
-  const [search, setSearch] = useState('')
+
+  const [searchValue, setSearchValue] = useState('') // 검색
   const myparams = {
     url: params.url,
   }
-
-  useEffect(() => {
-    // AES알고리즘 사용 복호화
-    const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-    //인코딩, 문자열로 변환, JSON 변환
-    const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-    const accessToken = decrypted.token
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+  //글목록
+  function list() {
     axios({
       method: 'POST',
       url: '/board/boardlist',
@@ -66,78 +59,59 @@ const Boardlist = () => {
       },
       data: myparams,
     }).then((res) => {
-      setBoardList(res.data)
+      reset()
+      res.data.map((data) => {
+        setBoardList((boardlist) => [...boardlist, data])
+      })
     })
+  }
+  function reset() {
+    setBoardList([])
+  }
+  //글목록
+  useEffect(() => {
+    list()
   }, [])
+  //글목록 초기화
+
   //페이징 처리
-
-  const [currentpage, setCurrentPage] = useState(1)
-  const [totalpage, setTotalPage] = useState([boardlist])
-  console.log('토탈 페이지 ' + totalpage)
-  // 페이지네이션의 버튼 클릭시 페이지 이동을 위한 setState
-  const pageClick = (e) => {
-    setCurrentPage(+e.target.id)
-  }
-
-  // 페이지네이션을 위한 페이지 배열 만들기
-  const makePageArray = (pages) => {
-    let pageArray = []
-    for (let i = 1; i <= pages; i++) {
-      pageArray.push(i)
-    }
-    setTotalPage(pageArray)
-  }
-
-  // 페이지네이션 ㅠㅠ
-  const prevPage = Math.floor((currentpage - 1) / 10) * 10
-
-  const makePageInfo = () => {
-    let pageArr = []
-    const pagination = () => {
-      for (let i = 0; i < totalpage.length; i += 10) {
-        pageArr.push(totalpage.slice(i, i + 10))
-      }
-      return pageArr
-    }
-
-    const currentGroup = pagination(pageArr)[Math.floor((currentpage - 1) / 10)]
-
-    let pageInfo = {
-      arr: currentGroup.map((el) => el),
-      perv: prevPage ? prevPage : null,
-      next: prevPage + 11 <= totalpage.length ? prevPage + 11 : null,
-    }
-
-    return pageInfo
-  }
-
-  totalpage.length > 0 && makePageInfo()
-
-  // 페이지네이션 -> 이전 페이지, 다음페이지 클릭시 페이지 이동
-  const changepage = (e) => {
-    e.target.id === 'prev'
-      ? setCurrentPage(makePageInfo()?.perv)
-      : setCurrentPage(makePageInfo()?.next)
-  }
+  const ITEMS_PER_PAGE = 10
+  const [totalPage, setTotalPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1)
+  useEffect(() => {
+    const lastPage = Math.ceil(boardlist.length / ITEMS_PER_PAGE)
+    setTotalPage(lastPage ? lastPage : 1)
+  }, [boardlist])
+  const handleOnSearch = useCallback((result) => {
+    setBoardList(result)
+  }, [])
+  const currentPageData = boardlist.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  )
   //검색 기능
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value)
+  }
   const searchChange = (e) => {
     const searchcontent = {
-      search: $('#searchs').val(),
+      url: params.url,
+      type: 'title_content',
+      keyword: searchValue,
     }
-    setSearch(searchcontent)
-    console.log(search)
+    console.log(params.url)
+    console.log(searchcontent.url + searchcontent.type, searchcontent.keyword)
     axios({
       method: 'POST',
       url: '/board/commonboardsearch',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
 
       data: searchcontent,
     }).then((res) => {
       setBoardList(res.data)
     })
   }
+
   return (
     <>
       <CCard className="mb-4">
@@ -167,7 +141,8 @@ const Boardlist = () => {
                           placeholder="검색어를 입력하세요"
                           aria-label="검색어를 입력하세요"
                           aria-describedby="button-addon2"
-                          id="searchs"
+                          value={searchValue}
+                          onChange={handleSearchChange}
                         />
                         <CButton
                           type="button"
@@ -243,15 +218,11 @@ const Boardlist = () => {
                 <br />
                 <div className="col-md-4" align="center"></div>
                 <div className="col-md-4" align="center">
-                  {totalpage.length && (
-                    <Pagination
-                      pages={makePageInfo()?.arr}
-                      pageClick={pageClick}
-                      totalPage={totalpage}
-                      currentPage={currentpage}
-                      changePage={changepage}
-                    />
-                  )}
+                  <Pagination
+                    totalPage={totalPage}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
                 </div>
                 <div className="col-md-4" align="center"></div>
               </div>

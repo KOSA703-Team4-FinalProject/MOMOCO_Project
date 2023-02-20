@@ -1,67 +1,58 @@
-import React from 'react'
-import styled from 'styled-components'
+const PAGES_PER_LIST = 5
 
-export default function Pagination({ pages, pageClick, currentPage, changePage }) {
+export default function Pagination({ totalPage, currentPage, setCurrentPage }) {
+  const [showingNum, setShowingNum] = useState({
+    start: 1,
+    end: PAGES_PER_LIST,
+  })
+
+  const changePageNumbersBackward = () => {
+    currentPage > PAGES_PER_LIST && setShowingNum((prev) => arrowHandler(prev, -1, totalPage))
+  }
+
+  const changePageNumberForward = () => {
+    showingNum.end <= totalPage && setShowingNum((prev) => arrowHandler(prev, 1, totalPage))
+  }
+
+  useEffect(() => {
+    const lessThanFive = totalPage <= PAGES_PER_LIST
+    lessThanFive
+      ? setShowingNum((prev) => ({ ...prev, start: 1, end: totalPage }))
+      : setShowingNum((prev) => ({ ...prev, start: 1, end: PAGES_PER_LIST }))
+  }, [totalPage])
+
+  useEffect(() => {
+    setCurrentPage(showingNum.start)
+  }, [showingNum, setCurrentPage])
+
+  const isFirstPage = showingNum.start === 1
+  const isLastPage = showingNum.end === totalPage
+  const pages = getEmptyArray(showingNum.start, showingNum.end)
+
   return (
-    <PageWrapper>
-      <ChangeBtn onClick={changePage} id="prev">
-        <i className="fas fa-arrow-left" />
-      </ChangeBtn>
-      <PageListBox>
-        {pages.map((page) => {
-          return (
-            <PageBtn isSelectedPage={currentPage === page} id={page} key={page} onClick={pageClick}>
-              {page}
-            </PageBtn>
-          )
-        })}
-      </PageListBox>
-
-      <ChangeBtn onClick={changePage} name="next">
-        <i className="fas fa-arrow-right" />
-      </ChangeBtn>
-    </PageWrapper>
+    <PageListContainer>
+      <ArrowButton
+        type="back"
+        inActive={isFirstPage}
+        disabled={isFirstPage}
+        changePageNumbersBackward={changePageNumbersBackward}
+      />
+      {pages.map((page, idx) => {
+        return (
+          <PageButton
+            key={`pageNumber-${idx + 1}`}
+            page={page}
+            setCurrentPage={setCurrentPage}
+            isActive={page === currentPage}
+          />
+        )
+      })}
+      <ArrowButton
+        type="next"
+        inActive={isLastPage}
+        disabled={isLastPage}
+        changePageNumberForward={changePageNumberForward}
+      />
+    </PageListContainer>
   )
 }
-
-const PageWrapper = styled.div`
-  ${({ theme }) => theme.flexMixin('center', 'center')};
-  margin: 20px 0 30px 0;
-`
-
-const PageListBox = styled.ul`
-  ${({ theme }) => theme.flexMixin('center', 'center')};
-`
-
-const PageBtn = styled.li`
-  width: 40px;
-  height: 40px;
-  padding: 10px;
-  color: ${({ isSelectedPage }) => (isSelectedPage ? 'black' : '#ccc')};
-  border: ${({ isSelectedPage }) => (isSelectedPage ? '1px solid black' : '1px solid #ccc')};
-  text-align: center;
-  cursor: pointer;
-  &:last-child {
-    border-right: 1px solid #ccc;
-  }
-  &:hover {
-    border: 1px solid black;
-    color: black;
-  }
-`
-
-const ChangeBtn = styled.button`
-  width: 40px;
-  height: 40px;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #ccc;
-  color: #ccc;
-  background: transparent;
-  text-align: center;
-  cursor: pointer;
-  &:hover {
-    border: 1px solid black;
-    color: black;
-  }
-`
