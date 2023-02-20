@@ -17,4 +17,7 @@ public class MemberAll {
 	private String location;	//위치(location)
 	private String blog;		//블로그(blog)
 	
+	private String role;		//권한
+	private String workspace;	//워크스페이스
+	
 }

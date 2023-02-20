@@ -13,4 +13,7 @@ public interface WorkSpaceUserDao {
 	//워크스페이스 안의 팀원들 조회
 	public List<WorkSpaceUser> getWorkSpaceUserList(WorkSpaceUser workspaceuser) throws ClassNotFoundException, SQLException;
 	
+	//워크스페이스에 일반 유저 삽입 
+	public int insertWorkUser(WorkSpaceUser workspaceuser) throws ClassNotFoundException, SQLException;
+	
 }

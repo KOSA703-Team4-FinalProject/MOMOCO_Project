@@ -109,4 +109,23 @@ public class WorkSpaceService {
 		return result;
 	}
 	
+	//워크스페이스에 팀원 추가
+	public int insertWorkUser(WorkSpaceUser workspaceuser) {
+		
+		int result = 0;
+		
+		try {
+			
+			WorkSpaceUserDao dao = sqlsession.getMapper(WorkSpaceUserDao.class);
+			result = dao.insertWorkUser(workspaceuser);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 }

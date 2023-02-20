@@ -16,5 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		on w.u_idx = m.u_idx
 		where url = #{url}
 	</select>
-   
+	
+	<!-- 워크스페이스에 일반 유저 삽입 public int insertWorkUser(WorkSpaceUser workspaceuser) -->
+	<insert id="insertWorkUser" parameterType="kr.or.vo.WorkSpaceUser">
+	 	insert into workspace_user(url, u_idx, role)
+	 		values (#{url}, #{u_idx}, #{role})
+	</insert>
+	
 </mapper>

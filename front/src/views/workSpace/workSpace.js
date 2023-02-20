@@ -213,6 +213,9 @@ const workSpace = () => {
             repo: repoName,
           })
           .then((res) => {
+
+            console.log(res.data);
+
             res.data.map((mem) => {
               if (mem.login != login.nickname) {
                 setMemList((memList) => [...memList, mem])
@@ -233,6 +236,7 @@ const workSpace = () => {
     const ch = $(pro).find('.memEmail').val()
 
     const name = $(profile).attr('value')
+    const u_idx = $(profile).attr('u_idx')
 
     setMailMember((mailMember) => [...mailMember, name])
     setSendMail((sendMail) => sendMail+','+ch)
@@ -247,12 +251,13 @@ const workSpace = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       url: '/api/sendEmailMem',
-      params: { email: sendMail, url: linked_Repo },
+      params: { email: sendMail, admin: login.nickname, url: linked_Repo },
     }).then(()=>{
       Swal.fire('', '메일 전송이 완료되었습니다.', 'success')
-
+      setMailModal(false)
     }).catch(()=>{
-      Swal.fire('Error', '메일 전송이 실패하였습니다.', 'warning')
+      Swal.fire('Error', '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/'+linked_Repo+'/'+login.nickname, 'warning')
+      setMailModal(false)
     })
   }
 
@@ -481,7 +486,7 @@ const workSpace = () => {
                             />
                           </div>
                           <div className='col-3'>
-                            <CButton align="end" color="primary" variant="outline" value={data.login} onClick={clickMember}>추가</CButton>
+                            <CButton align="end" color="primary" variant="outline" value={data.login} u_idx={data.u_idx} onClick={clickMember}>추가</CButton>
                           </div>
                         </div>
                       </CCard>
