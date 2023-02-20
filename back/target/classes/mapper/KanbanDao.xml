@@ -56,10 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="updateKanbanLocation"
 		parameterType="kr.or.vo.Kanban">
-		update kanban_${url}
-		set k_location=#{k_location},
-		s_idx=#{s_idx}
-		where title=#{title}
+		update kanban_${url} set side=#{side}, s_idx=#{s_idx}, where b_idx = #{b_idx}
 	</update>
 
 	<!-- 칸반 아이템 모두 삭제 -->
