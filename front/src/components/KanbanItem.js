@@ -249,7 +249,7 @@ const KanbanItem = (props) => {
       draggable.addEventListener('dragend', (event) => {
         draggable.classList.remove('dragging')
 
-        let target = event.target
+        let target = $(event.target)
 
         let supertag = target.closest('.container1')
 
@@ -261,15 +261,15 @@ const KanbanItem = (props) => {
 
         $(childtag).each(function () {
           let request4 = {
-            b_idx: b_idx,
+            // b_idx: b_idx,
             side: num,
-            s_idx: s_idx,
+            // s_idx: s_idx,
           }
           arr.push(request4)
-          console.log(arr)
+
           num += 1
         })
-
+        console.log(arr)
         // for (let i = 1; i < arr.length; i++) {
         //   let request5 = {
         //     title: arr[i].title,
@@ -280,9 +280,9 @@ const KanbanItem = (props) => {
 
         arr.map((item, i) => {
           let request5 = {
-            b_idx: item[i].b_idx,
-            side: item[i].side,
-            s_idx: item[i].s_idx,
+            // b_idx: item[i].b_idx,
+            // side: item[i].side,
+            // s_idx: item[i].s_idx,
           }
           let data = JSON.stringify(request5)
 
