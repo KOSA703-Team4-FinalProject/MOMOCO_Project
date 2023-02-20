@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-export const loginaxios = (res) => {
+export const loginaxios = (res, myrole, workspaceName) => {
 
-  console.log(res)
   const req = {
     u_idx: res.id,
     nickname: res.login,
@@ -14,9 +13,9 @@ export const loginaxios = (res) => {
     email: res.email === null ? '' : res.email,
     location: res.location === null ? '' : res.location,
     blog: res.blog === null ? '' : res.blog,
+    role: myrole,
+    workspace: workspaceName,
   }
-  
-  console.log(req)
 
   axios.post('/backlogin/login', req).then((res) => {
     console.log(res)

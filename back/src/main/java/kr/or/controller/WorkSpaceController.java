@@ -87,7 +87,7 @@ public class WorkSpaceController {
 	// 팀원에게 메일 전송하기
 	@RequestMapping(value = "/sendEmailMem", method = RequestMethod.GET)
 	@ResponseBody
-	public void sendEmailMember(@RequestParam(value = "email")String sendemail, String url) {
+	public void sendEmailMember(@RequestParam(value = "email")String sendemail, @RequestParam(value = "admin")String admin, @RequestParam(value = "url")String url) {
 
 		String[] email2 = sendemail.split(",");
 		
@@ -95,9 +95,9 @@ public class WorkSpaceController {
 		
 		// 메일 본문 템플릿
 		String text = "<div class='container' style='color: #9c9c9c;height: 100%;display: flex;flex-direction: column;align-items: center;justify-content: center;'>"
-				+ "<div class='container__item container__item--bottom'><h1 align='center'>MoMoCo</h1><p>"+url+"의 워크스페이스에 참여하세요</p></div><div class='container__item'>"
-						+ "<form class='form'><input type='email' class='form__field' placeholder='주소 링크 적힐 곳' readonly style='width: 360px; background: #fff; color: #a3a3a3; font: inherit; box-shadow: 0 6px 10px 0 rgba(0, 0, 0 , .1);border: 0;outline: 0;padding: 22px 18px;' />"
-							+ "<button type='button' class='btn btn--primary btn--inside uppercase' style='text-transform: uppercase; display: inline-block; background: transparent; color: white; font: inherit; border: 0; outline: 0; padding: 0; transition: all 200ms ease-in; cursor: pointer; background: #7f8ff4; box-shadow: 0 0 10px 2px rgba(0, 0, 0, .1); border-radius: 2px; padding: 12px 36px; margin-left: -96px;'>Go!</button>"
+				+ "<div class='container__item container__item--bottom'><h1 align='center'>MoMoCo</h1><p align='center'>"+admin+"으로 부터의 초대입니다.</p><p>"+url+"의 워크스페이스에 참여하세요</p></div><div class='container__item'>"
+						+ "<form class='form'><input type='email' class='form__field' placeholder='http://localhost:3000/joinWorkSpace/"+url+"/"+admin+"' readonly style='width: 360px; background: #fff; color: #a3a3a3; font: inherit; box-shadow: 0 6px 10px 0 rgba(0, 0, 0 , .1);border: 0;outline: 0;padding: 22px 18px;' />"
+							+ "<a href='http://localhost:3000/joinWorkSpace/"+url+"/"+admin+"' type='button' class='btn btn--primary btn--inside uppercase' style='text-transform: uppercase; display: inline-block; background: transparent; color: white; font: inherit; border: 0; outline: 0; padding: 0; transition: all 200ms ease-in; cursor: pointer; background: #7f8ff4; box-shadow: 0 0 10px 2px rgba(0, 0, 0, .1); border-radius: 2px; padding: 12px 36px; margin-left: -96px;'>Go!</a>"
 				+ "</form></div></div>";
 
 		MimeMessage message = mailSender.createMimeMessage(); // MimeMessage객체를 이용해 메시지 구성한 뒤 메일 발송

@@ -80,6 +80,5 @@ public class LoginService {
 		
 		return result; 
 	}
-	
 
 }

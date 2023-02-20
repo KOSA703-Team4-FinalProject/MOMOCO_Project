@@ -112,6 +112,7 @@ let issueNumber = createSlice({
 })
 
 export let { updateissueNumber } = issueNumber.actions
+
 //댓글 번호
 let commentNumber = createSlice({
   name: 'commentNumber',
@@ -124,6 +125,22 @@ let commentNumber = createSlice({
   },
 })
 export let { updatecommentNumber } = commentNumber.actions
+
+//워크스페이스 초대 
+let inviteMem = createSlice({
+  name: 'inviteMem',
+  initialState: {workspaceName: '', nickname: '', admin: ''},
+  reducers: {
+    updateInviteMem(state, action) {
+      state = action.payload
+      console.log(state)
+      return state
+    }
+  }
+})
+
+export let { updateInviteMem } = inviteMem.actions
+
 
 //라벨 리스트
 let labelList = createSlice({
@@ -162,6 +179,7 @@ export default configureStore({
     issueModal: issueModal.reducer,
     issueNumber: issueNumber.reducer,
     commentNumber: commentNumber.reducer,
+    inviteMem: inviteMem.reducer,
     labelList: labelList.reducer,
     chooseLabel: chooseLabel.reducer,
   },

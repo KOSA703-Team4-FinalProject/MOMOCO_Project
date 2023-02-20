@@ -22,6 +22,15 @@ import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
 import { CALLBACK_URL, CLIENT_ID, GITHUB_AUTH_CODE_SERVER } from '../../oauth.js'
 
 const Login = () => {
+  const mybutton = {
+    'background-color': '#0320fd',
+    color: '#ffffff',
+    padding: '10px 30px',
+    'border-radius': '10px',
+    'text-decoration': 'none',
+    'font-size': '20px',
+  }
+
   const navigate = useNavigate()
 
   // 로그인
@@ -55,22 +64,18 @@ const Login = () => {
                       />
                     </CInputGroup>
                     <CRow>
-                      <CCol xs={6}>
+                      <CCol xs={12} >
                         {/* 로그인 버튼 */}
-                        <a color="primary" className="px-4" href={AUTHORIZATION_CODE_URL}>
-                          Login
-                        </a>
-                      </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton
-                          color="link"
-                          className="px-0"
-                          onClick={() => {
-                            navigate('/workSpaceList')
-                          }}
-                        >
-                          비밀번호 찾기
-                        </CButton>
+                        <div className='mt-4' align="center">
+                          <a
+                            color="primary"
+                            className="px-4"
+                            href={AUTHORIZATION_CODE_URL}
+                            style={mybutton}
+                          >
+                            Login
+                          </a>
+                        </div>
                       </CCol>
                     </CRow>
                   </CForm>
