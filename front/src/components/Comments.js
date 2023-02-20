@@ -57,10 +57,14 @@ const Comments = (props) => {
       },
       data: myparams,
     }).then((res) => {
+      reset()
       res.data.map((data) => {
         setCommentlist((commentlist) => [...commentlist, data])
       })
     })
+  }
+  function reset() {
+    setCommentlist([])
   }
   //댓글 리스트
   useEffect(() => {

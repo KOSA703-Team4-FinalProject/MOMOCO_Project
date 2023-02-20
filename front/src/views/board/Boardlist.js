@@ -24,6 +24,8 @@ import { data, event } from 'jquery'
 import { endOfDay } from 'date-fns'
 import { current } from '@reduxjs/toolkit'
 import { Pagination, PaginationItem } from '@mui/material'
+import Paging from 'src/components/Pagination'
+import $ from 'jquery'
 const writedate = {}
 const title = {}
 const context = {}
@@ -45,11 +47,11 @@ const Boardlist = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [boardlist, setBoardList] = useState([])
-
+  const [search, setSearch] = useState('')
   const myparams = {
     url: params.url,
   }
-  console.log(boardlist)
+
   useEffect(() => {
     // AES알고리즘 사용 복호화
     const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -68,43 +70,74 @@ const Boardlist = () => {
     })
   }, [])
   //페이징 처리
-  const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage] = useState(10) // 페이지당 보여줄 게시글 수
-  //글세부내용 // 현재 페이지에 해당하는 게시글 리스트
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = boardlist.slice(indexOfFirstPost, indexOfLastPost)
-  // 페이지 번호 목록
-  const pageNumbers = []
-  for (let i = 1; i <= Math.ceil(boardlist.length / postsPerPage); i++) {
-    pageNumbers.push(i)
-  }
-  // 페이지 번호 클릭 시 페이지 변경
-  const handleClick = (event) => {
-    setCurrentPage(Number(event.target.id))
-  }
-  const navigate1 = useNavigate()
-  const items = []
-  const Paging = () => {
-    const [page, setPage] = useState(1)
 
-    const handlePageChange = (page) => {
-      setPage(page)
+  const [currentpage, setCurrentPage] = useState(1)
+  const [totalpage, setTotalPage] = useState([boardlist])
+  console.log('토탈 페이지 ' + totalpage)
+  // 페이지네이션의 버튼 클릭시 페이지 이동을 위한 setState
+  const pageClick = (e) => {
+    setCurrentPage(+e.target.id)
+  }
+
+  // 페이지네이션을 위한 페이지 배열 만들기
+  const makePageArray = (pages) => {
+    let pageArray = []
+    for (let i = 1; i <= pages; i++) {
+      pageArray.push(i)
+    }
+    setTotalPage(pageArray)
+  }
+
+  // 페이지네이션 ㅠㅠ
+  const prevPage = Math.floor((currentpage - 1) / 10) * 10
+
+  const makePageInfo = () => {
+    let pageArr = []
+    const pagination = () => {
+      for (let i = 0; i < totalpage.length; i += 10) {
+        pageArr.push(totalpage.slice(i, i + 10))
+      }
+      return pageArr
     }
 
-    return (
-      <Pagination
-        activePage={page}
-        itemsCountPerPage={10}
-        totalItemsCount={boardlist}
-        pageRangeDisplayed={5}
-        prevPageText={'‹'}
-        nextPageText={'›'}
-        onChange={handlePageChange}
-      />
-    )
+    const currentGroup = pagination(pageArr)[Math.floor((currentpage - 1) / 10)]
+
+    let pageInfo = {
+      arr: currentGroup.map((el) => el),
+      perv: prevPage ? prevPage : null,
+      next: prevPage + 11 <= totalpage.length ? prevPage + 11 : null,
+    }
+
+    return pageInfo
   }
 
+  totalpage.length > 0 && makePageInfo()
+
+  // 페이지네이션 -> 이전 페이지, 다음페이지 클릭시 페이지 이동
+  const changepage = (e) => {
+    e.target.id === 'prev'
+      ? setCurrentPage(makePageInfo()?.perv)
+      : setCurrentPage(makePageInfo()?.next)
+  }
+  //검색 기능
+  const searchChange = (e) => {
+    const searchcontent = {
+      search: $('#searchs').val(),
+    }
+    setSearch(searchcontent)
+    console.log(search)
+    axios({
+      method: 'POST',
+      url: '/board/commonboardsearch',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+
+      data: searchcontent,
+    }).then((res) => {
+      setBoardList(res.data)
+    })
+  }
   return (
     <>
       <CCard className="mb-4">
@@ -134,12 +167,14 @@ const Boardlist = () => {
                           placeholder="검색어를 입력하세요"
                           aria-label="검색어를 입력하세요"
                           aria-describedby="button-addon2"
+                          id="searchs"
                         />
                         <CButton
                           type="button"
                           color="secondary"
                           variant="outline"
                           id="button-addon2"
+                          onClick={searchChange}
                         >
                           검색
                         </CButton>
@@ -162,7 +197,7 @@ const Boardlist = () => {
                     className="p-3 mt-3"
                     key={key}
                     onClick={() => {
-                      navigate1(`/ws/${params.url}/boardcontent/${data.idx}`)
+                      navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
                     }}
                   >
                     <div className="col-md-12">
@@ -208,7 +243,15 @@ const Boardlist = () => {
                 <br />
                 <div className="col-md-4" align="center"></div>
                 <div className="col-md-4" align="center">
-                  <Paging />
+                  {totalpage.length && (
+                    <Pagination
+                      pages={makePageInfo()?.arr}
+                      pageClick={pageClick}
+                      totalPage={totalpage}
+                      currentPage={currentpage}
+                      changePage={changepage}
+                    />
+                  )}
                 </div>
                 <div className="col-md-4" align="center"></div>
               </div>

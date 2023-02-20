@@ -126,13 +126,19 @@ public class CommonBoardController {
 	}
 	
 	//알림보낼 사람 선택하기
-	@RequestMapping(value="boardalramlist" ,method=RequestMethod.POST)
+	@RequestMapping(value="/boardalramlist" ,method=RequestMethod.POST)
 	public List<CommonBoard>boardalramlist(@RequestBody CommonBoard url){
 
 		List<CommonBoard> alarmlist = commonboardservice.boardalramlist(url.getUrl());
 	
 		return alarmlist;
 	}
-	
+	//검색
+	@RequestMapping(value="/commonboardsearch",method=RequestMethod.POST)
+	public List<CommonBoard> commonboardSearch(@RequestBody CommonBoard search){
+		List<CommonBoard>searchlist = commonboardservice.commonboardSearch(search.getKeyword());
+		return searchlist;
+	}
+
 
 }

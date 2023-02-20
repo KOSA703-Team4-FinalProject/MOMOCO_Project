@@ -125,6 +125,7 @@ const Boardwirte = () => {
       b_code: 5,
       u_idx: login.u_idx,
     }
+    console.log(write.url)
     const fd = new FormData()
     fd.append('file', filevalues)
     fd.append('write1', JSON.stringify(write))

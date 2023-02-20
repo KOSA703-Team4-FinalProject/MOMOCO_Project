@@ -112,6 +112,20 @@ public class CommonBoardService {
 			}
 		return board;
 	}
-	
+	//검색
+	public List<CommonBoard>commonboardSearch(String string){
+		List<CommonBoard> board = new ArrayList<CommonBoard>();
+		try {
+			CommonBoardDao boarddao = sqlsession.getMapper(CommonBoardDao.class);
+			board =boarddao.commonboardSearch(string);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			}catch (SQLException e) {
+			e.printStackTrace();
+			}
+		return board;
+		
+	}
 	
 }
