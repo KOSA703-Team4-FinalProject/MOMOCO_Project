@@ -36,6 +36,7 @@ const KanbanItem = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
   const [titleVisible, setTitleVisible] = useState(false)
   const [s_name, setS_name] = useState('')
+  const [jquery, setJquery] = useState('')
 
   const [kanbanItemList, setKanbanItemList] = useState([])
   const [columnValue, setColumnValue] = useState([])
@@ -217,7 +218,6 @@ const KanbanItem = (props) => {
     const params = { s_name: name, s_idx: columnValue, url: param.url }
 
     axios({
-      method: 'POST',
       url: '/api/kanban/modifyKanbanColumnName',
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -254,22 +254,26 @@ const KanbanItem = (props) => {
         let supertag = target.closest('.container1')
 
         let childtag = $(supertag).children()
-        console.log(childtag)
 
         let arr = []
         let num = 0
+        // console.log($(childtag))
+        // console.log($(childtag[0]).attr('value')) // s_idx
+        // console.log($(childtag[2]).attr('value')) // b_idx
 
-        $(childtag).each(function () {
-          let request4 = {
-            // b_idx: b_idx,
-            side: num,
-            // s_idx: s_idx,
+        $(childtag).each(function (data, key) {
+          if (data > 1) {
+            let request4 = {
+              b_idx: $(childtag[data]).attr('value'),
+              side: num,
+              s_idx: $(childtag[0]).attr('value'),
+            }
+            arr.push(request4)
+            num += 1
           }
-          arr.push(request4)
-
-          num += 1
         })
-        console.log(arr)
+        // console.log(arr)
+
         // for (let i = 1; i < arr.length; i++) {
         //   let request5 = {
         //     title: arr[i].title,
@@ -279,20 +283,26 @@ const KanbanItem = (props) => {
         //   }
 
         arr.map((item, i) => {
+          // console.log(item.b_idx)
+          // console.log(item[0].b_idx)
           let request5 = {
-            // b_idx: item[i].b_idx,
-            // side: item[i].side,
-            // s_idx: item[i].s_idx,
+            b_idx: item.b_idx,
+            side: item.side,
+            s_idx: item.s_idx,
           }
-          let data = JSON.stringify(request5)
 
+          console.log(request5)
+
+          // 위치 업데이트 axios
           axios({
-            type: 'put',
+            method: 'PUT',
             url: '/api/kanban/updateLocationKanban',
-            data: data,
-            dataType: 'text',
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {},
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: request5,
+          }).then((res) => {
+            console.log(res)
           })
         })
 
@@ -300,21 +310,21 @@ const KanbanItem = (props) => {
       })
     })
 
-    containers.forEach((container) => {
-      container.addEventListener('dragover', (e) => {
+    containers.forEach((container1) => {
+      container1.addEventListener('dragover', (e) => {
         e.preventDefault()
-        const afterElement = getDragAfterElement(container, e.clientX)
+        const afterElement = getDragAfterElement(container1, e.clientX)
         const draggable = document.querySelector('.dragging')
         if (afterElement === undefined) {
-          container.appendChild(draggable)
+          container1.appendChild(draggable)
         } else {
-          container.insertBefore(draggable, afterElement) //드래그 할수 있는 위치 중 옮겨진 위치에 삽입
+          container1.insertBefore(draggable, afterElement) //드래그 할수 있는 위치 중 옮겨진 위치에 삽입
         }
       })
     })
 
-    function getDragAfterElement(container, x) {
-      const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
+    function getDragAfterElement(container1, x) {
+      const draggableElements = [...container1.querySelectorAll('.draggable:not(.dragging)')]
 
       return draggableElements.reduce(
         (closest, child) => {
@@ -348,119 +358,115 @@ const KanbanItem = (props) => {
                 className="bg-dark py-3 me-2 container1"
                 key={conList[key].s_name}
               >
-                <CRow>
-                  <CCol xs="auto" className="me-auto text-light">
-                    <input type="hidden"></input>
-                    {conList[key].s_name}
-                  </CCol>
-                  <CCol xs="auto">
-                    {' '}
-                    <CDropdown alignment="end">
-                      <CDropdownToggle color="transparent" caret={false} className="p-0">
-                        <CIcon icon={icon.cilOptions} className="text-light" />
-                      </CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem
-                          value={conList[key].s_idx}
-                          onClick={editKanbanColumnNameModal}
-                        >
-                          카드 제목 수정
-                        </CDropdownItem>
-                        <CDropdownItem value={conList[key].s_idx} onClick={deleteKanbanColumn}>
-                          카드 삭제
-                        </CDropdownItem>
-                        <CDropdownItem value={conList[key].s_idx} onClick={deleteAllKanbanItem}>
-                          아이템 모두 삭제
-                        </CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                    <CModal
-                      alignment="center"
-                      visible={titleVisible}
-                      onClose={() => setTitleVisible(false)}
+                <CCol xs="auto" className="me-auto text-light" value={conList[key].s_idx}>
+                  {conList[key].s_name}
+                </CCol>
+                <CCol xs="auto">
+                  {' '}
+                  <CDropdown alignment="end">
+                    <CDropdownToggle
+                      color="transparent"
+                      caret={false}
+                      className="p-0"
+                      alignment="right"
                     >
-                      <CModalBody>
-                        <CForm onSubmit={editKanbanColumnName} value={conList[key].s_idx}>
-                          <div className="mb-3">
-                            <CIcon icon={icon.cibGithub} className="me-2" />
-                            <CFormLabel htmlFor="exampleFormControlInput1">
-                              <strong>컬럼명 변경</strong>
-                            </CFormLabel>
-                            <hr />
-                            새로운 컬럼명
-                            <br />
-                            <br />
-                            <CFormInput type="text" id="editColumnName" />
-                          </div>
+                      <CIcon icon={icon.cilOptions} className="text-light" />
+                    </CDropdownToggle>
+                    <CDropdownMenu>
+                      <CDropdownItem value={conList[key].s_idx} onClick={editKanbanColumnNameModal}>
+                        카드 제목 수정
+                      </CDropdownItem>
+                      <CDropdownItem value={conList[key].s_idx} onClick={deleteKanbanColumn}>
+                        카드 삭제
+                      </CDropdownItem>
+                      <CDropdownItem value={conList[key].s_idx} onClick={deleteAllKanbanItem}>
+                        아이템 모두 삭제
+                      </CDropdownItem>
+                    </CDropdownMenu>
+                  </CDropdown>
+                  <CModal
+                    alignment="center"
+                    visible={titleVisible}
+                    onClose={() => setTitleVisible(false)}
+                  >
+                    <CModalBody>
+                      <CForm onSubmit={editKanbanColumnName} value={conList[key].s_idx}>
+                        <div className="mb-3">
+                          <CIcon icon={icon.cibGithub} className="me-2" />
+                          <CFormLabel htmlFor="exampleFormControlInput1">
+                            <strong>컬럼명 변경</strong>
+                          </CFormLabel>
+                          <hr />
+                          새로운 컬럼명
+                          <br />
+                          <br />
+                          <CFormInput type="text" id="editColumnName" />
+                        </div>
 
-                          <CModalFooter>
-                            <CButton color="secondary" onClick={() => setTitleVisible(false)}>
-                              취소
-                            </CButton>
-                            <CButton color="primary" type="submit">
-                              변경
-                            </CButton>
-                            {/* 등록 시 알림 sweetalert2 */}
-                          </CModalFooter>
-                        </CForm>
-                      </CModalBody>
-                    </CModal>
-                  </CCol>
-                </CRow>
+                        <CModalFooter>
+                          <CButton color="secondary" onClick={() => setTitleVisible(false)}>
+                            취소
+                          </CButton>
+                          <CButton color="primary" type="submit">
+                            변경
+                          </CButton>
+                          {/* 등록 시 알림 sweetalert2 */}
+                        </CModalFooter>
+                      </CForm>
+                    </CModalBody>
+                  </CModal>
+                </CCol>
+
                 {kanbanItemList[key] == null ? (
                   <></>
                 ) : (
                   <Suspense fallback={loading}>
                     {kanbanItemList[key].map((data2) => {
                       return (
-                        <div className="" key={data2.idx}>
-                          <CCard className="draggable" draggable="true">
-                            <CRow>
-                              <CCol xs="auto" className="me-auto">
-                                <CCardHeader>{data2.title}</CCardHeader>
-                              </CCol>
-                              <CCol xs="auto">
-                                <CDropdown alignment="end">
-                                  <CDropdownToggle
-                                    color="transparent"
-                                    caret={false}
-                                    className="p-0"
-                                  >
-                                    <CIcon icon={icon.cilChevronBottom} />
-                                  </CDropdownToggle>
-                                  <CDropdownMenu>
-                                    {/* <CDropdownItem
+                        <CCard
+                          className="draggable"
+                          value={data2.b_idx}
+                          draggable="true"
+                          key={data2.idx}
+                        >
+                          <CRow>
+                            <CCol xs="auto" className="me-auto">
+                              <CCardHeader>{data2.title}</CCardHeader>
+                              {/* <input type="text" value={data2.b_idx} /> */}
+                            </CCol>
+                            <CCol xs="auto">
+                              <CDropdown alignment="end">
+                                <CDropdownToggle color="transparent" caret={false} className="p-0">
+                                  <CIcon icon={icon.cilChevronBottom} />
+                                </CDropdownToggle>
+                                <CDropdownMenu>
+                                  {/* <CDropdownItem
                                       onClick={() => {
                                         deleteKanbanColumn()
                                       }}
                                     >
                                       컬럼 삭제
                                     </CDropdownItem> */}
-                                    <CDropdownItem>Another action</CDropdownItem>
-                                    <CDropdownItem>Something else here...</CDropdownItem>
-                                    <CDropdownItem disabled>Disabled action</CDropdownItem>
-                                  </CDropdownMenu>
-                                </CDropdown>
-                              </CCol>
-                            </CRow>
-                            <CCardBody>
-                              <CCardTitle>
-                                <a onClick={() => setVisibleXL(!visibleXL)} style={font}>
-                                  {data2.content}
-                                </a>
-                              </CCardTitle>
-                            </CCardBody>
-                            <CModal
-                              size="xl"
-                              visible={visibleXL}
-                              onClose={() => setVisibleXL(false)}
-                            >
-                              <CModalBody>
-                                <KanbanDetail />
-                              </CModalBody>
-                            </CModal>
-                          </CCard>
-                        </div>
+                                  <CDropdownItem>Another action</CDropdownItem>
+                                  <CDropdownItem>Something else here...</CDropdownItem>
+                                  <CDropdownItem disabled>Disabled action</CDropdownItem>
+                                </CDropdownMenu>
+                              </CDropdown>
+                            </CCol>
+                          </CRow>
+                          <CCardBody>
+                            <CCardTitle>
+                              <a onClick={() => setVisibleXL(!visibleXL)} style={font}>
+                                {data2.content}
+                              </a>
+                            </CCardTitle>
+                          </CCardBody>
+                          <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
+                            <CModalBody>
+                              <KanbanDetail />
+                            </CModalBody>
+                          </CModal>
+                        </CCard>
                       )
                     })}
                   </Suspense>
