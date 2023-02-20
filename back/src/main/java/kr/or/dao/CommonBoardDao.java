@@ -25,5 +25,6 @@ public interface CommonBoardDao {
 	//글수정하기
 	public int updateCommonBoard (CommonBoard idx) throws ClassNotFoundException, SQLException;
 	
-	
+	//검색
+	public List<CommonBoard> commonboardSearch (String search) throws ClassNotFoundException, SQLException;
 }

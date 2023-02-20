@@ -52,13 +52,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from board_${url} where idx = #{idx}
 	</delete>
 	<!-- 검색-->
-	
+	<select id="commonboardSearch" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
+		select b.idx , b.nickname, b.title, b.content, to_char(b.w_date ,'YYYY-MM-DD')as w_date, b.b_code, b.label, b.u_idx, c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth,c.step, c.thumb, m.profilephoto
+		from board_${url} b join common_board_${url} c
+ 		on b.idx = c.idx 
+		join member m
+ 		on m.u_idx = b.u_idx
+ 		<choose>
+ 		<when test='type !=null and equals("title_content")'>
+ 				where b.title concat('%',#{keyword},'%')
+ 				 or content Like concat('%', #{keyword},'%')
+ 		</when>
+ 		</choose>
+ 		order by b.b_idx desc
+	</select>
 	<!--알림보낼사람 선택하기-->
 	<select id="boardalramlist" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
 		select a.url , a.u_idx,b.nickname , b.profilephoto
 		from WORKSPACE_USER a join member b on a.u_idx = b.u_idx 
 		where a.url = '${url}'
 	</select>
-	
+
 	
 </mapper>
