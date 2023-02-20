@@ -113,7 +113,7 @@ public class CommonBoardService {
 		return board;
 	}
 	//검색
-	public List<CommonBoard>commonboardSearch(String string){
+	public List<CommonBoard>commonboardSearch(CommonBoard string){
 		List<CommonBoard> board = new ArrayList<CommonBoard>();
 		try {
 			CommonBoardDao boarddao = sqlsession.getMapper(CommonBoardDao.class);
@@ -127,5 +127,7 @@ public class CommonBoardService {
 		return board;
 		
 	}
+
+	
 	
 }

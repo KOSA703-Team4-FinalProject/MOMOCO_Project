@@ -51,20 +51,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deletecommonboard" parameterType="kr.or.vo.CommonBoard">
 		delete from board_${url} where idx = #{idx}
 	</delete>
+	
 	<!-- 검색-->
 	<select id="commonboardSearch" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
-		select b.idx , b.nickname, b.title, b.content, to_char(b.w_date ,'YYYY-MM-DD')as w_date, b.b_code, b.label, b.u_idx, c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth,c.step, c.thumb, m.profilephoto
-		from board_${url} b join common_board_${url} c
- 		on b.idx = c.idx 
-		join member m
- 		on m.u_idx = b.u_idx
- 		<choose>
- 		<when test='type !=null and equals("title_content")'>
- 				where b.title concat('%',#{keyword},'%')
- 				 or content Like concat('%', #{keyword},'%')
- 		</when>
- 		</choose>
- 		order by b.b_idx desc
+    SELECT b.idx, b.nickname, b.title, b.content, to_char(b.w_date, 'YYYY-MM-DD') as w_date, b.b_code, b.label, b.u_idx, c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth, c.step, c.thumb, m.profilephoto
+    FROM board_${url} b
+    JOIN common_board_${url} c ON b.idx = c.idx
+    JOIN member m ON m.u_idx = b.u_idx
+    <if test="type != null and type == 'title_content'">
+        WHERE b.title LIKE '%' || #{keyword} || '%' OR b.content LIKE '%' || #{keyword} || '%'
+    </if>
+    ORDER BY b.idx DESC
 	</select>
 	<!--알림보낼사람 선택하기-->
 	<select id="boardalramlist" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">

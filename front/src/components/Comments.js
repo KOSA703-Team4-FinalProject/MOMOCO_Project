@@ -8,6 +8,7 @@ import {
   CFormTextarea,
   CModal,
   CModalBody,
+  CModalFooter,
   CRow,
 } from '@coreui/react'
 import { Link, useParams } from 'react-router-dom'
@@ -42,6 +43,7 @@ const Comments = (props) => {
   const [visibleLg, setVisibleLg] = useState(false)
   const [visibleLg1, setVisibleLg1] = useState(false)
   const [modal1, setModal1] = useState(false)
+  const [commentContent, setCommentContent] = useState('')
   const modalstyle = {}
   const myparams = {
     url: params.url,
@@ -109,7 +111,33 @@ const Comments = (props) => {
   }
   //대댓글
   let [modal, setModal] = useState(false)
+  //답글
+  const [reply, setReply] = useState('')
+  const replycomment = () => {
+    const reply = {
+      url: params.url,
+      u_idx: login.u_idx,
+      content: commentContent,
+      nickname: login.nickname,
+      idx: props.idx,
+      ref: props.co_idx,
+    }
 
+    axios({
+      method: 'POST',
+      url: '/comment/replycommentwrite',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reply,
+    }).then((res) => {
+      setReply(res.data)
+      setVisibleLg(false)
+      list()
+    })
+  }
+  //모달 창닫기
+  const close = {}
   return (
     <CCol>
       <CCard style={boxsize}>
@@ -168,11 +196,51 @@ const Comments = (props) => {
                       color="primary"
                       variant="outline"
                       onClick={() => {
-                        setModal1(true)
+                        setVisibleLg(visibleLg)
                       }}
                     >
                       수정
-                    </CButton>{' '}
+                    </CButton>
+                    <CModal size="lg" visible={visibleLg} onClose={() => setVisibleLg(false)}>
+                      <CModalBody>
+                        <CCol className="col-md-12 px-3 py-3">
+                          <CCol className="row">
+                            <CCol className="col-md-10 px-4">
+                              <CAvatar className="ms-6" src={login.profilephoto} />
+                              <strong>닉네임: {login.nickname}</strong>
+                            </CCol>
+                            <CCol className="col-md-2 px-4"></CCol>
+                          </CCol>
+                          <CCol className="row" align="center">
+                            <CCol className="col-md-12 py-3 px-4">
+                              <CForm>
+                                <CFormTextarea
+                                  rows={3}
+                                  id="commentcontent"
+                                  onChange={(event) => {
+                                    const value = event.target.value
+                                    setCommentContent(value)
+                                  }}
+                                ></CFormTextarea>
+                              </CForm>
+                            </CCol>
+                          </CCol>
+                        </CCol>
+                      </CModalBody>
+                      <CModalFooter>
+                        <CButton
+                          color="secondary"
+                          onClick={() => {
+                            setVisibleLg(!visibleLg)
+                          }}
+                        >
+                          취소
+                        </CButton>
+                        <CButton color="primary" onClick={replycomment}>
+                          작성
+                        </CButton>
+                      </CModalFooter>
+                    </CModal>
                     &nbsp;
                     <CButton
                       color="primary"
@@ -183,9 +251,44 @@ const Comments = (props) => {
                     </CButton>
                     <CModal size="lg" visible={visibleLg} onClose={() => setVisibleLg(false)}>
                       <CModalBody>
-                        {' '}
-                        <Commentreply idx={params.idx} co_idx={data.co_idx} />
+                        <CCol className="col-md-12 px-3 py-3">
+                          <CCol className="row">
+                            <CCol className="col-md-10 px-4">
+                              <CAvatar className="ms-6" src={login.profilephoto} />
+                              <strong>닉네임: {login.nickname}</strong>
+                            </CCol>
+                            <CCol className="col-md-2 px-4"></CCol>
+                          </CCol>
+                          <CCol className="row" align="center">
+                            <CCol className="col-md-12 py-3 px-4">
+                              <CForm>
+                                <CFormTextarea
+                                  rows={3}
+                                  placeholder="답글을 작성해주세요"
+                                  id="commentcontent"
+                                  onChange={(event) => {
+                                    const value = event.target.value
+                                    setCommentContent(value)
+                                  }}
+                                ></CFormTextarea>
+                              </CForm>
+                            </CCol>
+                          </CCol>
+                        </CCol>
                       </CModalBody>
+                      <CModalFooter>
+                        <CButton
+                          color="secondary"
+                          onClick={() => {
+                            setVisibleLg(tru)
+                          }}
+                        >
+                          취소
+                        </CButton>
+                        <CButton color="primary" onClick={replycomment}>
+                          작성
+                        </CButton>
+                      </CModalFooter>
                     </CModal>
                     &nbsp;
                     <CButton

@@ -135,10 +135,14 @@ public class CommonBoardController {
 	}
 	//검색
 	@RequestMapping(value="/commonboardsearch",method=RequestMethod.POST)
-	public List<CommonBoard> commonboardSearch(@RequestBody CommonBoard search){
-		List<CommonBoard>searchlist = commonboardservice.commonboardSearch(search.getKeyword());
-		return searchlist;
+	public List<CommonBoard> commonboardSearch(@RequestBody(required = false) CommonBoard search){
+		System.out.println("아니이건 뭐지"+search.toString());
+			List<CommonBoard> searchlist = commonboardservice.commonboardSearch(search);
+			
+			return searchlist;
+		
+	
+		
+
 	}
-
-
 }
