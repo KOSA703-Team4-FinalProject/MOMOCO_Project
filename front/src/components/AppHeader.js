@@ -36,14 +36,14 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
-  const [chatState, setCahtState] = useState(false);
+  const [chatState, setCahtState] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
 
   //접속한 채팅방 번호
   let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
   //웹 소켓 연결
-  const websocket = new WebSocket('ws://192.168.20.162:8090/controller/chat')
+  const websocket = new WebSocket('ws://192.168.0.34:8090/controller/chat')
   const stomp = StompJs.over(websocket)
 
   return (
