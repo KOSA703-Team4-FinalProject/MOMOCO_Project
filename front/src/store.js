@@ -124,6 +124,33 @@ let commentNumber = createSlice({
   },
 })
 export let { updatecommentNumber } = commentNumber.actions
+
+//라벨 리스트
+let labelList = createSlice({
+  name: 'labelList',
+  initialState: [],
+  reducers: {
+    updateLabelList(state, action) {
+      state = action.payload
+      return state
+    },
+  },
+})
+export let { updateLabelList } = labelList.actions
+
+//라벨 선택
+let chooseLabel = createSlice({
+  name: 'chooseLabel',
+  initialState: [],
+  reducers: {
+    selectLabel(state, action) {
+      state = action.payload
+      return state
+    },
+  },
+})
+export let { selectLabel } = chooseLabel.actions
+
 export default configureStore({
   reducer: {
     sidebarShow: sidebarShow.reducer,
@@ -135,5 +162,7 @@ export default configureStore({
     issueModal: issueModal.reducer,
     issueNumber: issueNumber.reducer,
     commentNumber: commentNumber.reducer,
+    labelList: labelList.reducer,
+    chooseLabel: chooseLabel.reducer,
   },
 })
