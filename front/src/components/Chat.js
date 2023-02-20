@@ -411,7 +411,7 @@ const Chat = (props) => {
                         idx={data.ch_idx}
                         onClick={clickContent}
                       >
-                        <CIcon icon={cilLink} size="xl" className="me-2" />
+                        <CIcon icon={cilLink} size="xl"     className="me-2" />
                         {data.content}
                       </div>
                     )}
