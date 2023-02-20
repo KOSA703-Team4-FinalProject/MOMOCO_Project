@@ -16,6 +16,7 @@ import {
   CModalHeader,
   CModalTitle,
   CModalBody,
+  CModalFooter,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -43,6 +44,8 @@ const workSpace = () => {
   const [repList, setRepList] = useState([])
   const [mailModal, setMailModal] = useState(false)
   const [memList, setMemList] = useState([])
+  const [mailMember, setMailMember] = useState([])
+  const [sendMail, setSendMail] = useState('')
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -210,7 +213,6 @@ const workSpace = () => {
             repo: repoName,
           })
           .then((res) => {
-            console.log(res)
             res.data.map((mem) => {
               if (mem.login != login.nickname) {
                 setMemList((memList) => [...memList, mem])
@@ -221,6 +223,36 @@ const workSpace = () => {
         SetLinked_Repo('')
         Swal.fire('다시 선택해주세요', '이미 존재하는 Repository입니다.', 'warning')
       }
+    })
+  }
+
+  //메일 보낼 팀원 이메일 추가
+  const clickMember = (e) => {
+    const profile = e.target
+    const pro = $(profile).closest('.profile')
+    const ch = $(pro).find('.memEmail').val()
+
+    const name = $(profile).attr('value')
+
+    setMailMember((mailMember) => [...mailMember, name])
+    setSendMail((sendMail) => sendMail+','+ch)
+  }
+
+  //메일 전송
+  const clickMail = (e) => {
+
+    axios({
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      url: '/api/sendEmailMem',
+      params: { email: sendMail, url: linked_Repo },
+    }).then(()=>{
+      Swal.fire('', '메일 전송이 완료되었습니다.', 'success')
+
+    }).catch(()=>{
+      Swal.fire('Error', '메일 전송이 실패하였습니다.', 'warning')
     })
   }
 
@@ -423,29 +455,56 @@ const workSpace = () => {
           </CModal>
           <CModal
             backdrop="static"
-            alignment="center"
             scrollable
+            alignment="center"
             visible={mailModal}
-            onClick={() => setMailModal(false)}
+            onClose={() => setMailModal(false)}
           >
             <CModalHeader>팀원 추가</CModalHeader>
             <CModalBody>
-              {memList.map((data) => {
-                return (
-                  <CCard className="mt-2 p-2">
-                    <div className="row justify-content-between ms-2">
-                      <div className="col-5 pt-2">
-                        <strong>{data.login}</strong>
-                      </div>
-                      <div className="col-4 pt-2">
-                        <CButton color="primary" variant="outline">
-                          메일 전송
-                        </CButton>
-                      </div>
+              <div className="row justify-content-evenly">
+                {memList.map((data) => {
+                  return (
+                    <div
+                      className="col-12 m-2 profile"
+                      key={data.login}
+                    >
+                      <CCard className="mt-2 p-2">
+                        <div className="row justify-content-center">
+                          <div className="col-4 mt-1">
+                            <strong>{data.login}</strong>
+                          </div>
+                          <div className="col-5">
+                            <CFormInput
+                              type="email"
+                              className="memEmail"
+                            />
+                          </div>
+                          <div className='col-3'>
+                            <CButton align="end" color="primary" variant="outline" value={data.login} onClick={clickMember}>추가</CButton>
+                          </div>
+                        </div>
+                      </CCard>
                     </div>
-                  </CCard>
-                )
-              })}
+                  )
+                })}
+              </div>
+            </CModalBody>
+            <hr />
+            <CModalBody>
+              <div className="row justify-content-evenly">
+                <div className="col-8">
+                  초대 멤버 :{' '}
+                  {mailMember.map((res) => {
+                    return res + ' '
+                  })}
+                </div>
+                <div className="col-3">
+                  <CButton color="primary" variant="outline" onClick={clickMail}>
+                    확인
+                  </CButton>
+                </div>
+              </div>
             </CModalBody>
           </CModal>
         </CCol>
