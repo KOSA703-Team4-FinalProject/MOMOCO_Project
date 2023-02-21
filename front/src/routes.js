@@ -1,4 +1,5 @@
 import React from 'react'
+
 import Viewchat from './views/viewchat/Viewchat'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
@@ -75,6 +76,8 @@ const IssueTimeLine = React.lazy(()=>import('./views/git/IssueList'))
 const Gittime = React.lazy(() => import('./views/git/Gittime'))
 //깃차트
 const Gitchart = React.lazy(() => import('./views/git/Gitchart'))
+// 깃레포지토리랭귀지
+const Gitrepolanguages = React.lazy(() => import('./views/git/Gitrepolanguages'))
 //화상채팅
 const videochat = React.lazy(() => import('./views/viewchat/Viewchat'))
 // kanban 보드
@@ -144,6 +147,7 @@ const routes = [
   { path: '/gittimeline', name: 'Gittimeline', exact: true, element: Gittimeline }, //깃타임라인
   { path: '/gitchart', name: 'GitChart', exact: true, element: Gitchart }, //깃차트
   { path: '/gittime', name: 'Gittime', exact: true, element: Gittime }, //깃타임라인임시
+  { path: '/gitrepolanguages', name: 'Gitrepolanguages', exact: true, element: Gitrepolanguages }, //깃타임라인
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소
