@@ -37,6 +37,8 @@ const workSpace = () => {
   const [space_Name, SetSpace_Name] = useState('')
   const [url, SetUrl] = useState('')
   const [linked_Repo, SetLinked_Repo] = useState('')
+  const [owner, setOwner] = useState('')
+  const [profile, setProfile] = useState('')
   const [start_Date, SetStart_Date] = useState(new Date())
   const [end_Date, SetEnd_Date] = useState(new Date())
   const [check, SetCheck] = useState('')
@@ -122,6 +124,8 @@ const workSpace = () => {
       url: url,
       space_name: space_Name,
       linked_repo: linked_Repo,
+      owner: owner,
+      ownerphoto: profile,
       start_date: start_Date,
       end_date: end_Date,
       admin: admin,
@@ -162,6 +166,9 @@ const workSpace = () => {
         org: orgRef.current.value,
       })
       .then((res) => {
+
+        console.log(res.data)
+
         res.data.map((data) => {
           setRepList((repList) => [...repList, data])
         })
@@ -191,6 +198,8 @@ const workSpace = () => {
   const clickRepo = (e) => {
     const repo = e.target
     const repoName = $(repo).closest('.repo').attr('value')
+    const owner1 = $(repo).closest('.repo').attr('owner')
+    const profile1 = $(repo).closest('.repo').attr('profile')
 
     //해당하는 레포지토리가 db 워크스페이스에 있는지 없는지 여부 확인
     axios({
@@ -203,6 +212,8 @@ const workSpace = () => {
     }).then(async (res) => {
       if (res.data == 0) {
         SetLinked_Repo(repoName)
+        setOwner(owner1)
+        setProfile(profile1)
         setRepListModal(false)
         setMailModal(true)
 
@@ -449,6 +460,8 @@ const workSpace = () => {
                     key={repo.id}
                     onClick={clickRepo}
                     value={repo.name}
+                    owner={repo.owner.login}
+                    profile={repo.owner.avatar_url}
                   >
                     <div className="row">
                       <div className="col-4">

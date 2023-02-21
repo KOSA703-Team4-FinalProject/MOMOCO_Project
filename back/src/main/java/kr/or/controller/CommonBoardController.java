@@ -1,7 +1,6 @@
 package kr.or.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,10 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.service.CommonBoardService;
-import kr.or.vo.Chat;
 import kr.or.vo.CommonBoard;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/board")
 public class CommonBoardController {
 
@@ -105,6 +106,7 @@ public class CommonBoardController {
 		      board.setFiletype(files[0].getContentType());
 		      board.setVolume(files[0].getSize());
 		    int result = commonboardservice.addCommonBoard(board);
+		    
 		    return result;
 		}
 	//글 삭제 

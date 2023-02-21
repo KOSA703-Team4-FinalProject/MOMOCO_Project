@@ -22,4 +22,13 @@ public interface WorkSpaceDao {
    //해당하는 레포지토리가 연결된 레포지토리인지 확인
    public int isRepo(String linked_repo) throws ClassNotFoundException, SQLException;
    
+   //워크스페이스 정보 불러오기
+   public WorkSpace getWorkSpaceByUrl(String url) throws ClassNotFoundException, SQLException;
+   
+   //워크스페이스 소유자 저장
+   public int insertWorkSpaceOwner(WorkSpace workspace) throws ClassNotFoundException, SQLException;
+
+   //워크스페이스 소유자 불러오기
+   public WorkSpace getWorkSpaceOwner(String url) throws ClassNotFoundException, SQLException;
+
 }
