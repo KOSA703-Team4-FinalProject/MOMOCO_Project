@@ -254,7 +254,7 @@ const workSpace = () => {
       Swal.fire('', '메일 전송이 완료되었습니다.', 'success')
       setMailModal(false)
     }).catch(()=>{
-      Swal.fire('Error', '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/'+url+'/'+login.nickname, 'warning')
+      Swal.fire('Error', '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://192.168.0.30:3000/joinWorkSpace/'+url+'/'+login.nickname, 'warning')
       setMailModal(false)
     })
       .then(() => {
@@ -264,7 +264,7 @@ const workSpace = () => {
       .catch(() => {
         Swal.fire(
           'Error',
-          '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/' +
+          '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://192.168.0.30:3000/joinWorkSpace/' +
             space_Name +
             '/' +
             login.nickname,

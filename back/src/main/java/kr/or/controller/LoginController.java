@@ -76,8 +76,6 @@ public class LoginController {
 		
 		if(memberAll.getRole().equals("user")) {	//권한이 user일 경우 워크스페이스에 추가해주기
 			
-			System.out.println(workuser.toString());
-			
 			result2 = workspaceservice.insertWorkUser(workuser);
 		}
 		
