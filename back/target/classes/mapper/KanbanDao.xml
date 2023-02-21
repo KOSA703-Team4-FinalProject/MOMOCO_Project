@@ -13,7 +13,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from board_${url} b join (select b_idx, issue, side, idx,
 		s.s_idx, s_name
 		from kanban_${url} k right join status_${url} s
-		on k.s_idx = s.s_idx) a
+		on
+		k.s_idx = s.s_idx) a
 		on b.idx = a.idx
 		order by a.side
 	</select>
@@ -22,9 +23,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getItembyStatus" parameterType="String"
 		resultType="kr.or.vo.Board">
 		select *
-		from board_${url} b join (select s.s_idx, s_name, bs.idx
+		from board_${url} b join (select s.s_idx, s_name,
+		bs.idx
 		from status_${url} s join board_status_${url} bs
-		on s.s_idx = bs.s_idx
+		on s.s_idx =
+		bs.s_idx
 		where s.s_idx = #{s_idx}) a
 		on b.idx = a.idx
 		order by b.idx
@@ -34,13 +37,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 칸반 아이템 추가 public int addKanban(Map map) -->
 	<insert id="addKanban" parameterType="kr.or.vo.Kanban">
 		insert all
-		into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
-		values (board_idx_seq_${url}.nextval, '${nickname}', '${title}',
+		into board_${url}
+		(idx, nickname, title, content, b_code, label, u_idx)
+		values
+		(board_idx_seq_${url}.nextval, '${nickname}', '${title}',
 		'${content}', ${b_code}, '${label}', ${u_idx})
-		into board_status_${url} (idx, s_idx)
+		into board_status_${url}
+		(idx, s_idx)
 		values (board_idx_seq_${url}.currval, ${s_idx})
-		into kanban_${url} (b_idx, issue, side, idx, s_idx)
-		values (kanban_b_idx_seq_${url}.nextval, '', (select max(b_idx)+1 from
+		into
+		kanban_${url} (b_idx, issue, side, idx, s_idx)
+		values
+		(kanban_b_idx_seq_${url}.nextval, '', (select max(b_idx)+1 from
 		kanban_${url}), board_idx_seq_${url}.CURRVAL, ${s_idx})
 		select * from
 		dual
@@ -53,10 +61,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{s_name})
 	</insert>
 
-
+	<!-- 칸반 아이템 위치 변경 -->
 	<update id="updateKanbanLocation"
 		parameterType="kr.or.vo.Kanban">
-		
+
 		UPDATE kanban_${url} SET side=#{side}, s_idx=#{s_idx} WHERE b_idx=#{b_idx}
 	</update>
 
@@ -64,6 +72,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteAllKanbanItem" parameterType="kr.or.vo.Kanban">
 		delete from
 		kanban_${url} where s_idx =#{s_idx}
+	</delete>
+	
+	<!-- 칸반 아이템 개별 삭제 -->
+	
+	<delete id="KanbanItemDelete" parameterType="kr.or.vo.Kanban">
+		delete from
+		kanban_${url} where b_idx =#{b_idx}
 	</delete>
 
 	<!-- 칸반 컬럼명 삭제 modifyKanbanColumnName -->
@@ -80,19 +95,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from
 		status_${url} where s_idx =#{s_idx}
 	</delete>
-	
-	
+
+
 	<!-- 칸반 아이템 상세보기 GetKanbanItemDetail -->
-	<select id="GetKanbanItemDetail" parameterType="String" resultType="kr.or.vo.Kanban">
-		select b.idx, title, content, to_char(w_date, 'YYYY-MM-DD')
-		as w_date, nickname, b_code, label, u_idx, b_idx, issue, side, s_idx,
-		s_name
-		from board_${url} b join (select b_idx, issue, side, idx,
-		s.s_idx, s_name
-		from kanban_${url} k right join status_${url} s
-		on k.s_idx = s.s_idx) a
-		on b.idx = a.idx
-        where b.idx = #{b_idx}
+	<select id="GetKanbanItemDetail" parameterType="String"
+		resultType="kr.or.vo.Kanban">
+		select s.s_idx, s_name, idx, nickname, title, content,
+		w_date,b_code, label, u_idx, b_idx, issue, side
+		from status_${url} s join (select b.idx, b.nickname, b.title, b.content,
+		to_char(b.w_date,'YYYY-MM-DD') as
+		w_date,b.b_code,b.label,b.u_idx,k.b_idx,k.issue,k.side,s_idx
+		from board_${url} b join kanban_${url} k
+		on b.idx = k.idx
+		where k.b_idx = #{b_idx}) a
+		on s.s_idx = a.s_idx
 	</select>
 
 

@@ -111,7 +111,7 @@ public class KanbanService {
 		}
 		return 0;
 	}
-
+	// 칸반 모든 아이템 삭제
 	public int deleteAllKanbanItem(Kanban kanban) {
 		int result = 0;
 
@@ -126,6 +126,24 @@ public class KanbanService {
 			e.printStackTrace();
 		}
 
+		return result;
+	}
+	
+	// 칸반 아이템 삭제
+	public int KanbanItemDelete(Kanban kanban) {
+		int result = 0;
+		
+		
+		try {
+			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
+			result = kanbandao.KanbanItemDelete(kanban);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return result;
 	}
 
@@ -163,7 +181,7 @@ public class KanbanService {
 
 	public Kanban GetKanbanItemDetail(Kanban kanban) {
 		Kanban kanbandetail = new Kanban();
-
+		
 		try {
 			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
 			kanbandetail = kanbandao.GetKanbanItemDetail(kanban);
@@ -177,6 +195,26 @@ public class KanbanService {
 
 		return kanbandetail;
 	}
+	
+	// 글읽기
+	public CommonBoard getBoardByIdx(CommonBoard commonboard) {
+		CommonBoard cmm = new CommonBoard();
+
+		try {
+
+			CommonBoardDao commonboarddao = sqlsession.getMapper(CommonBoardDao.class);
+			cmm = commonboarddao.getBoardByIdx(commonboard);
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return cmm;
+	}
+
+	
 	
 	
 		

@@ -33,11 +33,16 @@ public interface KanbanDao {
 	public int deleteAllKanbanItem(Kanban kanban)throws ClassNotFoundException, SQLException;
 	// 칸반 컬럼 삭제
 	public int deleteKanbanColumn(Kanban kanban)throws ClassNotFoundException, SQLException;
+	
+	// 칸반 아이템 개별 삭제
+	public int KanbanItemDelete(Kanban kanban)throws ClassNotFoundException, SQLException;
 	// 칸반 컬럼명 수정
 	public int modifyKanbanColumnName(Kanban kanban)throws ClassNotFoundException, SQLException;
 
 	// 칸반 상세보기
 	public Kanban GetKanbanItemDetail(Kanban kanban) throws ClassNotFoundException, SQLException;
+
+	
 
 
 }
