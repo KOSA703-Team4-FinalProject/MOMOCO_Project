@@ -141,7 +141,9 @@ public class CommonBoardService {
 			board.setContent(all.getContent());
 			board.setLabel(all.getLabel());
 			board.setU_idx(all.getU_idx());
-			System.out.println(board.toString());
+			board.setTitle(all.getTitle());
+			
+			System.out.println("이거뭐임"+board.toString());
 			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
 			CommonBoard cmb = new CommonBoard();
 			cmb.setOri_filename(all.getOri_filename());
