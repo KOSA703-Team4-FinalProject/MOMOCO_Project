@@ -29,7 +29,6 @@ const Callback = () => {
     axiosAccessToken()
       .then((data) => {
         //로컬스토리지에 access toeken 저장
-        window.localStorage.removeItem('token');
         const mydata = {
           token: data.data.access_token
         }
