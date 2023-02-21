@@ -129,7 +129,7 @@ const AppHeader = () => {
                 <CIcon icon={cilBell} size="lg" />
               </CDropdownToggle>
               <CDropdownMenu>
-                <Notifications />
+                <Notifications stomp={stomp} />
               </CDropdownMenu>
             </CDropdown>
           </CNavItem>

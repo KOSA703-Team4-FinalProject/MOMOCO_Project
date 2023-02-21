@@ -5,15 +5,14 @@ import { GITHUB_API_SERVER, PRIMARY_KEY } from '../../oauth'
 import { loginaxios } from './backlogin'
 import { useNavigate } from 'react-router';
 import CryptoJS from 'crypto-js'
-import { useSelector } from 'react-redux';
 import { Cookies } from 'react-cookie'
+import { useSelector } from 'react-redux';
 
 
 const Profile = () => {
 
   const navigate = useNavigate()
   const cookies = new Cookies()
-  const join = JSON.parse(window.localStorage.getItem('join'))
 
   useEffect(() => {
     const fetchGithubUser = () => {
@@ -41,6 +40,8 @@ const Profile = () => {
           nickname: response.data.login
         }
 
+        const workname = localStorage.getItem('workName')
+
         //cookie저장
         cookies.remove('u_idx', { sameSite: 'strict', path: '/' })
         
@@ -52,10 +53,14 @@ const Profile = () => {
         })
 
         localStorage.setItem("login", JSON.stringify(data)) //로컬 스토리지에 저장
-        {join == null ? loginaxios(response.data, 'admin', '') : loginaxios(response.data, 'user', join.workspaceName)}
-         //백서버에 회원 정보 전달
-      })
-      .then(()=>{ navigate('/workSpaceList') })
+
+        //백서버에 회원 정보 전달
+        if(workname == '' || workname == null){
+          loginaxios(response.data, 'admin', '')
+        }else{
+          loginaxios(response.data, 'user', workname)
+        }
+      }).then(()=>{ navigate('/workSpaceList') })
       .catch((err) => console.log(err))
   })
 

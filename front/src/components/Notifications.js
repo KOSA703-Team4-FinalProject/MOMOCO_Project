@@ -1,32 +1,20 @@
 import {
   CCard,
   CCardBody,
-  CCardHeader,
-  CCardText,
-  CCardTitle,
   CCol,
-  CContainer,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CListGroup,
   CListGroupItem,
-  CNav,
-  CNavItem,
-  CNavLink,
   CRow,
-  CTabContent,
-  CTabPane,
 } from '@coreui/react'
 import React from 'react'
-import CIcon from '@coreui/icons-react'
-import * as icon from '@coreui/icons'
-import { useState } from 'react'
-import { classNames } from 'classnames'
-import { width } from '@mui/system'
-import { CFormCheck } from '@coreui/react'
 import { CAvatar } from '@coreui/react'
+import { useEffect } from 'react'
+import StompJs from 'stompjs'
+import CryptoJS from 'crypto-js'
+
+import { PRIMARY_KEY } from '../oauth'
+import { useDispatch } from 'react-redux'
+import { useParams } from 'react-router'
 
 const NotisStyle = {
   width: '400px',
@@ -34,7 +22,34 @@ const NotisStyle = {
   overflowY: 'scroll',
 }
 
-const Notifications = () => {
+const Notifications = (props) => {
+
+  const dispatch = useDispatch()
+  const params = useParams()
+
+  let stomp = props.stomp
+
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+
+  const login = JSON.parse(localStorage.getItem('login'))
+
+  //웹 소켓 연결
+  const connect = () => {
+    stomp.connect({}, () => {
+      //기존 알람 내용 불러오기
+    })
+  }
+
+  useEffect(()=>{
+
+    
+
+  }, [])
+
   return (
     <CCard style={NotisStyle}>
       <CCardBody>

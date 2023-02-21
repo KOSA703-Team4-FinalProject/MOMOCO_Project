@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.dao.CommonBoardDao;
 import kr.or.vo.CommonBoard;
@@ -128,6 +129,18 @@ public class CommonBoardService {
 		
 	}
 
-	
+	//글 수정하기
+//	@Transactional 
+//	public CommonBoard editcommonboard(CommonBoard all) {
+//		CommonBoard cmb = new CommonBoard();
+//		try {
+//			CommonBoard boarddao =sqlsession.getMapper(CommonBoardDao.class);
+//			cmb = boarddao.getComments(all);
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 }
