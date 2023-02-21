@@ -24,4 +24,6 @@ public class Doc extends Board {
 	private String label;
 	private String style;
 	
+	private String u_idxList;		//메일 전달할 유저 식별키 리스트
+	
 }
