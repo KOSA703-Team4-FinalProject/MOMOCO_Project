@@ -13,6 +13,7 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CFormTextarea,
   CHeader,
   CModal,
@@ -36,7 +37,7 @@ const KanbanItem = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
   const [titleVisible, setTitleVisible] = useState(false)
   const [s_name, setS_name] = useState('')
-  const [jquery, setJquery] = useState('')
+  const [itemvisible, setItemVisible] = useState(false)
 
   const [kanbanItemList, setKanbanItemList] = useState([])
   const [columnValue, setColumnValue] = useState([])
@@ -65,7 +66,7 @@ const KanbanItem = (props) => {
       <div className="sk-spinner sk-spinner-pulse"></div>
     </div>
   )
-
+  // 칸반 전체 불러오기
   const getKanban = () => {
     const params = {
       u_idx: login.u_idx,
@@ -228,6 +229,27 @@ const KanbanItem = (props) => {
       alert('수정이 완료 되었습니다.')
       setTitleVisible(!titleVisible)
       getKanban()
+    })
+  }
+
+  // 아이템 상세보기
+
+  const KanbanItemDetail = (e) => {
+    setVisibleXL(!visibleXL)
+
+    const tag = e.target
+    const content_type = $(tag).attr('value')
+    const params = { b_idx: content_type, url: param.url }
+
+    axios({
+      url: '/api/kanban/GetKanbanItemDetail',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: params,
+    }).then((res) => {
+      console.log(res.data)
     })
   }
 
@@ -411,7 +433,7 @@ const KanbanItem = (props) => {
                     {kanbanItemList[key].map((data2) => {
                       return (
                         <CCard
-                          className="draggable"
+                          className="draggable "
                           value={data2.b_idx}
                           draggable="true"
                           key={data2.idx}
@@ -434,7 +456,9 @@ const KanbanItem = (props) => {
                                     >
                                       컬럼 삭제
                                     </CDropdownItem> */}
-                                  <CDropdownItem>Another action</CDropdownItem>
+                                  <CDropdownItem value={data2.b_idx} onClick={KanbanItemDetail}>
+                                    아이템 상세보기
+                                  </CDropdownItem>
                                   <CDropdownItem>Something else here...</CDropdownItem>
                                   <CDropdownItem disabled>Disabled action</CDropdownItem>
                                 </CDropdownMenu>
@@ -442,15 +466,50 @@ const KanbanItem = (props) => {
                             </CCol>
                           </CRow>
                           <CCardBody>
-                            <CCardTitle>
-                              <a onClick={() => setVisibleXL(!visibleXL)} style={font}>
-                                {data2.content}
-                              </a>
-                            </CCardTitle>
+                            <CCardTitle>{data2.content}</CCardTitle>
                           </CCardBody>
+                          <br />
                           <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
                             <CModalBody>
-                              <KanbanDetail />
+                              <CCard className="col-md-12 container-fluid" visible={itemvisible}>
+                                <CIcon icon={icon.cibGithub} className="me-2" />
+                                <CFormLabel htmlFor="exampleFormControlInput1">Item</CFormLabel>
+                                <CFormInput
+                                  type="title"
+                                  id="exampleFormControlInput1"
+                                  placeholder="받아온 제목"
+                                ></CFormInput>
+
+                                <hr />
+                                <CFormSelect
+                                  aria-label="받아온 상태"
+                                  options={[
+                                    '받아온 상태',
+                                    { label: '상태1', value: '1' },
+                                    { label: '상태2', value: '2' },
+                                    { label: '상태3', value: '3' },
+                                  ]}
+                                />
+                                <br />
+
+                                <CFormTextarea
+                                  id="exampleFormControlTextarea1"
+                                  rows={4}
+                                  placeholder="내용을 입력해주세요"
+                                ></CFormTextarea>
+
+                                <br />
+
+                                <div align="right">
+                                  <CButton
+                                    variant="outline"
+                                    onClick={() => setItemVisible(!itemvisible)}
+                                  >
+                                    닫기
+                                  </CButton>
+                                  <br />
+                                </div>
+                              </CCard>
                             </CModalBody>
                           </CModal>
                         </CCard>

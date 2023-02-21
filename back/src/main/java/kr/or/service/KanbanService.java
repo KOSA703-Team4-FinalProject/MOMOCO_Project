@@ -8,8 +8,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.or.dao.CommonBoardDao;
 import kr.or.dao.KanbanDao;
 import kr.or.vo.Board;
+import kr.or.vo.CommonBoard;
 import kr.or.vo.Kanban;
 
 @Service
@@ -158,6 +160,28 @@ public class KanbanService {
 				
 		return result;
 	}
+
+	public Kanban GetKanbanItemDetail(Kanban kanban) {
+		Kanban kanbandetail = new Kanban();
+
+		try {
+			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
+			kanbandetail = kanbandao.GetKanbanItemDetail(kanban);
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return kanbandetail;
+	}
+	
+	
+		
+
+	
 	
 
 }

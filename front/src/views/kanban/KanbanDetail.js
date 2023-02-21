@@ -27,41 +27,7 @@ const KanbanDetail = () => {
     width: '300px',
   }
 
-  return (
-    <>
-      <CCard className="col-md-12 container-fluid" visible={visible}>
-        <CIcon icon={icon.cibGithub} className="me-2" />
-        <CFormLabel htmlFor="exampleFormControlInput1">Item</CFormLabel>
-        <CFormInput type="title" id="exampleFormControlInput1" placeholder="받아온 제목" />
-
-        <hr />
-        <CFormSelect
-          aria-label="받아온 상태"
-          options={[
-            '받아온 상태',
-            { label: '상태1', value: '1' },
-            { label: '상태2', value: '2' },
-            { label: '상태3', value: '3' },
-          ]}
-        />
-        <br />
-
-        <CFormTextarea
-          id="exampleFormControlTextarea1"
-          rows={4}
-          placeholder="내용을 입력해주세요"
-        ></CFormTextarea>
-
-        <br />
-
-        <div align="right">
-          <CButton variant="outline" onClick={() => setVisible(!visible)}>
-            Edit
-          </CButton>
-        </div>
-      </CCard>
-    </>
-  )
+  return <></>
 }
 
 const TagBox = styled.div`

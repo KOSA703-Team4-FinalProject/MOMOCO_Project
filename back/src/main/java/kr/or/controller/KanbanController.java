@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.or.service.KanbanService;
 import kr.or.service.StatusService;
 import kr.or.vo.Board;
+import kr.or.vo.CommonBoard;
 import kr.or.vo.Kanban;
 import kr.or.vo.Status;
 
@@ -166,6 +167,22 @@ public class KanbanController {
 			
 			return result;
 		}
+		
+		
+  // 칸반 아이템 상세보기  GetKanbanItemDetail
+		@RequestMapping(value="/GetKanbanItemDetail",method =RequestMethod.POST)
+		public Kanban getBoardByIdx(@RequestBody Kanban kanban) {
+			
+			Kanban kanbandetail = new Kanban();
+			
+			kanbandetail = kanbanserivce.GetKanbanItemDetail(kanban);
+			
+			
+			return  kanbandetail;
+			
+		}
+
+		
 	
 	
 
