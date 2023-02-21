@@ -40,6 +40,7 @@ const KanbanItem = (props) => {
   const [titleVisible, setTitleVisible] = useState(false)
   const [visiblemodify, setVisibleModify] = useState(false)
   const [s_name, setS_name] = useState('')
+  const [getidx, setGetIdx] = useState('')
   const [value, setValue] = useState('')
   const [inputtitle1, setInputTitle1] = useState('')
   const [inputtitle2, setInputTitle2] = useState('')
@@ -235,10 +236,7 @@ const KanbanItem = (props) => {
   const editKanbanColumnNameModal = (e) => {
     const tag = e.target
     const content_type = $(tag).attr('value')
-    const content_type1 = $(tag).attr('id')
-    const editName = $('#editColumnName').val()
 
-    const title = $('#ViewTitle')
     const params = { s_idx: content_type, url: param.url }
 
     if (params.s_idx < 4) {
@@ -274,7 +272,9 @@ const KanbanItem = (props) => {
 
     const tag = e.target
     const content_type = $(tag).attr('value')
-    const params = { b_idx: content_type, url: param.url }
+    const params = { idx: content_type, url: param.url }
+
+    setGetIdx(content_type)
 
     axios({
       url: '/api/kanban/GetKanbanItemDetail',
@@ -316,40 +316,35 @@ const KanbanItem = (props) => {
     setVisibleModify(!visiblemodify)
   }
   // 수정 모달에서 완료 버튼 눌렀을 때 실행되는 메소드
-  const modifyButtonClick = (e) => {
-    const tag = e.target.value
-
-    console.log(tag)
+  const modifyButtonClick = () => {
     // 내용
-    console.log(modifyModal.current)
 
     const reqData = {
-      s_idx: $('#status_select option:selected').val(),
-      title: $('.modifyTitle').val(),
-      content: $('#modifyContent').val(),
-      b_idx: content_type,
+      title: inputtitle1,
+      content: inputtitle2,
+      idx: getidx,
       url: param.url,
     }
 
     console.log(reqData)
 
-    // if (confirm('등록하시겠습니까?')) {
-    //   axios({
-    //     method: 'POST',
-    //     url: '/api/kanban/addKanban',
-    //     headers: {
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //     data: reqData,
-    //   }).then((res) => {
-    //     console.log(res)
-    //     alert('등록이 완료 되었습니다.')
-    //     getStatus()
-    //        setVisibleModify(!visiblemodify)
-    //   })
-    // } else {
-    //   alert('취소되었습니다')
-    // }
+    if (confirm('수정하시겠습니까?')) {
+      axios({
+        method: 'POST',
+        url: '/api/kanban/modifyKanbanItem',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: reqData,
+      }).then((res) => {
+        console.log(res)
+        alert('수정이 완료 되었습니다.')
+        getKanban()
+        setVisibleModify(!visiblemodify)
+      })
+    } else {
+      alert('취소되었습니다')
+    }
   }
 
   const onChange1 = (e) => {
@@ -478,10 +473,17 @@ const KanbanItem = (props) => {
                 key={conList[key].s_name}
               >
                 <CCol xs="auto" className="me-auto text-light" value={conList[key].s_idx}>
-                  {conList[key].s_name}
+                  {conList[key].s_name.length > 15
+                    ? conList[key].s_name.substr(0, 15) + '...    '
+                    : conList[key].s_name + '      '}
+
                   <CDropdown>
                     <CDropdownToggle color="transparent" caret={false} className="p-0">
-                      <CIcon icon={icon.cilOptions} className="text-light align-content-end" />
+                      {'        '}
+                      <CIcon
+                        icon={icon.cilCaretBottom}
+                        className="text-light align-content-right"
+                      />
                     </CDropdownToggle>
                     <CDropdownMenu>
                       <CDropdownItem value={conList[key].s_idx} onClick={editKanbanColumnNameModal}>
@@ -545,7 +547,12 @@ const KanbanItem = (props) => {
                         >
                           <CRow>
                             <CCol xs="auto" className="me-auto">
-                              <CCardHeader className="bg-light">{data2.title}</CCardHeader>
+                              <CCardHeader className="bg-light">
+                                {' '}
+                                {data2.title.length > 10
+                                  ? data2.title.substr(0, 10) + '...'
+                                  : data2.title}
+                              </CCardHeader>
                               {/* <input type="text" value={data2.b_idx} /> */}
                             </CCol>
                             <CCol xs="auto">
@@ -554,7 +561,7 @@ const KanbanItem = (props) => {
                                   <CIcon icon={icon.cilChevronBottom} />
                                 </CDropdownToggle>
                                 <CDropdownMenu>
-                                  <CDropdownItem value={data2.b_idx} onClick={KanbanItemDetail}>
+                                  <CDropdownItem value={data2.idx} onClick={KanbanItemDetail}>
                                     아이템 상세보기
                                   </CDropdownItem>
                                   <CDropdownItem value={data2.b_idx} onClick={KanbanItemDelete}>
@@ -566,9 +573,14 @@ const KanbanItem = (props) => {
                             </CCol>
                           </CRow>
                           <CCardBody>
-                            <CCardText>{data2.content}</CCardText>
+                            <CCardText>
+                              {data2.content.length > 10
+                                ? data2.content.substr(0, 10) + '...'
+                                : data2.content}
+                            </CCardText>
                           </CCardBody>
                           <br />
+
                           <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
                             <CModalBody>
                               <CCard className="col-md-12 container-fluid">
@@ -626,20 +638,10 @@ const KanbanItem = (props) => {
                                   <CFormInput
                                     type="text"
                                     className="modifyTitle"
-                                    placeholder={itemDetail.title}
                                     onChange={onChange1}
-                                    maxLength={11}
-                                  />
+                                    placeholder={itemDetail.title}
+                                  ></CFormInput>
                                   <hr />
-                                  <b>상태</b>
-                                  <br />
-                                  <CFormSelect id="status_select" aria-label="상태 입력">
-                                    {statusList.map((sta) => (
-                                      <option value={sta.s_idx} key={sta.s_idx}>
-                                        {sta.s_name}
-                                      </option>
-                                    ))}
-                                  </CFormSelect>
 
                                   <br />
                                   <b>내용</b>
@@ -667,7 +669,6 @@ const KanbanItem = (props) => {
                                       color="danger"
                                       variant="outline"
                                       onClick={modifyButtonClick}
-                                      value={data2.b_idx}
                                     >
                                       완료
                                     </CButton>

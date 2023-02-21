@@ -158,12 +158,7 @@ const Kanban = () => {
             <div className="mb-3">
               <CIcon icon={icon.cibGithub} className="me-2" />
               <CFormLabel htmlFor="exampleFormControlInput1">Add Item</CFormLabel>
-              <CFormInput
-                type="text"
-                id="kanbantitle"
-                placeholder="제목을 입력해주세요"
-                maxLength={11}
-              />
+              <CFormInput type="text" id="kanbantitle" placeholder="제목을 입력해주세요" />
             </div>
             <hr />
             상태 입력

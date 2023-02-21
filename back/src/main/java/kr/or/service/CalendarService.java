@@ -98,7 +98,7 @@ public class CalendarService {
 	}
 	
 	//일정 수정
-	@Transactional
+	 
 	public int modifyCalendar(Calendar cal) {
 		int result = 0;
 		
