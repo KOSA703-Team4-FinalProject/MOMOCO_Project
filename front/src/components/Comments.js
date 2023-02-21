@@ -73,12 +73,14 @@ const Comments = (props) => {
   }, [])
 
   //댓글 작성
+  ////////////////////////////////////전체리스트
   const commentsend = () => {
     const write = {
       url: params.url,
       u_idx: login.u_idx,
       content: $('#commentcontent').val(),
       nickname: login.nickname,
+
       idx: props.idx,
     }
     axios({
@@ -112,6 +114,8 @@ const Comments = (props) => {
   let [modal, setModal] = useState(false)
   //답글
   const [reply, setReply] = useState('')
+  const [commentIdx, setCommentIdx] = useState('')
+  const [commentRef, setCommentRef] = useState('')
   const replycomment = () => {
     const reply = {
       url: params.url,
@@ -119,9 +123,9 @@ const Comments = (props) => {
       content: commentContent,
       nickname: login.nickname,
       idx: props.idx,
-      ref: $('#coidx').val(),
+      ref: commentIdx,
     }
-
+    console.log('이건 ref' + reply.ref)
     axios({
       method: 'POST',
       url: '/comment/replycommentwrite',
@@ -136,12 +140,14 @@ const Comments = (props) => {
     })
   }
   //답글 수정
+
   const updatecomment = () => {
     const update = {
       url: params.url,
       co_idx: $('#coidx').val(),
       content: commentContent,
     }
+
     axios({
       method: 'POST',
       url: '/comment/updatecomment',
@@ -151,11 +157,16 @@ const Comments = (props) => {
       data: update,
     }).then((res) => {
       setCommentContent(res.data)
-      setVisibleLg(false)
+      setVisibleLg1(false)
       list()
-      console.log(res.data)
     })
   }
+  const handleEditComment = (data) => {
+    const commentContent = data.content
+    setCommentContent(commentContent)
+    setVisibleLg1(true)
+  }
+
   //모달 창닫기
   const close = {}
   return (
@@ -212,18 +223,15 @@ const Comments = (props) => {
                 <CCol className="col-md-12 mt-2">{data.content}</CCol>
               </CRow>
               <CCol className="col-md-12 mt-2 mb-4" align="end">
-                <CButton
-                  color="primary"
-                  variant="outline"
-                  onClick={() => setVisibleLg1(!visibleLg)}
-                  onChange={() => {
-                    const value = `${data.content}`
-                    setCommentContent(value)
-                  }}
-                >
+                <CButton color="primary" variant="outline" onClick={() => handleEditComment(data)}>
                   수정
                 </CButton>
-                <CModal size="lg" visible={visibleLg1} onClose={() => setVisibleLg1(false)}>
+                <CModal
+                  size="lg"
+                  visible={visibleLg1}
+                  onClose={() => setVisibleLg1(false)}
+                  key={key}
+                >
                   <CModalBody>
                     <CCol className="col-md-12 px-3 py-3">
                       <CCol className="row">
@@ -239,8 +247,7 @@ const Comments = (props) => {
                             <CFormTextarea
                               rows={3}
                               id="commentcontent"
-                              value={commentlist.content}
-                              placeholder={`${data.content}`}
+                              value={commentContent}
                               onChange={(event) => {
                                 const value = event.target.value
                                 setCommentContent(value)
@@ -256,6 +263,7 @@ const Comments = (props) => {
                       color="secondary"
                       onClick={() => {
                         setVisibleLg1(visibleLg)
+                        setCommentContent(data.content)
                       }}
                     >
                       취소
@@ -267,7 +275,13 @@ const Comments = (props) => {
                   </CModalFooter>
                 </CModal>
                 &nbsp;
-                <CButton color="primary" variant="outline" onClick={() => setVisibleLg(!visibleLg)}>
+                <CButton
+                  color="primary"
+                  variant="outline"
+                  onClick={() => {
+                    setVisibleLg(!visibleLg), setCommentIdx(data.co_idx)
+                  }}
+                >
                   대댓글작성
                 </CButton>
                 <CModal size="lg" visible={visibleLg} onClose={() => setVisibleLg(false)}>
@@ -318,6 +332,7 @@ const Comments = (props) => {
               </CCol>
             </CCol>
           </CCard>
+          <br></br>
         </CRow>
       ))}
     </CCol>

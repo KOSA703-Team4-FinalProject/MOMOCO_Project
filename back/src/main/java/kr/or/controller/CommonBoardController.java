@@ -118,7 +118,7 @@ public class CommonBoardController {
 	}
 	//수정하기
 	@RequestMapping(value="/boardedit",method =RequestMethod.POST)
-	public int updateCommonBoard(@RequestParam(value="file")MultipartFile[] files, @RequestParam(value="edit") String boardedit, HttpServletRequest request) {
+	public int updateCommonBoard(@RequestParam(value="file1")MultipartFile[] files, @RequestParam(value="edit") String boardedit, HttpServletRequest request) {
 		CommonBoard board = null;
 	      ObjectMapper mapper = new ObjectMapper();
 	      try {

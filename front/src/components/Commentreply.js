@@ -64,44 +64,30 @@ const Commentreply = (props) => {
 
   return (
     <div>
-      <CCol>
-        <CCard style={boxsize}>
-          <CRow>
-            <CCol className="col-md-12 px-3 py-3">
-              <CCol className="row">
-                <CCol className="col-md-10 px-4">
-                  <CAvatar className="ms-6" src={login.profilephoto} />
-                  <strong>닉네임: {login.nickname}</strong>
-                </CCol>
-                <CCol className="col-md-2 px-4"></CCol>
-              </CCol>
-              <CCol className="row" align="center">
-                <CCol className="col-md-12 py-3 px-4">
-                  <CForm>
-                    <CFormTextarea
-                      rows={3}
-                      placeholder="댓글을 작성해주세요"
-                      id="commentcontent"
-                      onChange={(event) => {
-                        const value = event.target.value
-                        setCommentContent(value)
-                      }}
-                    ></CFormTextarea>
-                  </CForm>
-                </CCol>
-              </CCol>
-
-              <CRow>
-                <CCol className="col-md-12 mt-2 mb-2 px-4" align="end">
-                  <CButton color="primary" variant="outline" onClick={replycomment}>
-                    작성
-                  </CButton>
-                  &nbsp;
-                </CCol>
-              </CRow>
-            </CCol>
-          </CRow>
-        </CCard>
+      <CCol className="col-md-12 px-3 py-3">
+        <CCol className="row">
+          <CCol className="col-md-10 px-4">
+            <CAvatar className="ms-6" src={data.profilephoto} />
+            <strong>닉네임: {data.nickname}</strong>
+          </CCol>
+          <CCol className="col-md-2 px-4"></CCol>
+        </CCol>
+        <CCol className="row" align="center">
+          <CCol className="col-md-12 py-3 px-4">
+            <CForm>
+              <CFormTextarea
+                rows={3}
+                id="commentcontent"
+                value={commentlist.content}
+                placeholder={`${data.content}`}
+                onChange={(event) => {
+                  const value = event.target.value
+                  setCommentContent(value)
+                }}
+              ></CFormTextarea>
+            </CForm>
+          </CCol>
+        </CCol>
       </CCol>
     </div>
   )
