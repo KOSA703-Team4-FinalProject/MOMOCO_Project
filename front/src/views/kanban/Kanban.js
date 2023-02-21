@@ -75,6 +75,7 @@ const Kanban = () => {
       u_idx: login.u_idx,
       url: url,
     }
+    console.log(reqData)
 
     if (confirm('등록하시겠습니까?')) {
       axios({
@@ -157,7 +158,12 @@ const Kanban = () => {
             <div className="mb-3">
               <CIcon icon={icon.cibGithub} className="me-2" />
               <CFormLabel htmlFor="exampleFormControlInput1">Add Item</CFormLabel>
-              <CFormInput type="text" id="kanbantitle" placeholder="제목을 입력해주세요" />
+              <CFormInput
+                type="text"
+                id="kanbantitle"
+                placeholder="제목을 입력해주세요"
+                maxLength={11}
+              />
             </div>
             <hr />
             상태 입력
