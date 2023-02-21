@@ -9,6 +9,8 @@ import {
   CCol,
   CFormInput,
   CInputGroup,
+  CPagination,
+  CPaginationItem,
   CRow,
 } from '@coreui/react'
 import axios from 'axios'
@@ -16,7 +18,6 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useHistory } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import { Pagination } from '@mui/material'
 import { useCallback } from 'react'
 import $ from 'jquery'
 const writedate = {}
@@ -42,9 +43,7 @@ const Boardlist = () => {
   const [boardlist, setBoardList] = useState([])
   const [check, setCheck] = useState([])
   const [searchValue, setSearchValue] = useState('') // 검색
-  const myparams = {
-    url: params.url,
-  }
+
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -52,6 +51,10 @@ const Boardlist = () => {
   const accessToken = decrypted.token
   //글목록
   function list() {
+    const myparams = {
+      url: params.url,
+    }
+
     axios({
       method: 'POST',
       url: '/board/boardlist',
@@ -75,21 +78,6 @@ const Boardlist = () => {
   }, [])
   //글목록 초기화
 
-  //페이징 처리
-  const ITEMS_PER_PAGE = 10
-  const [totalPage, setTotalPage] = useState(1)
-  const [currentPage, setCurrentPage] = useState(1)
-  useEffect(() => {
-    const lastPage = Math.ceil(boardlist.length / ITEMS_PER_PAGE)
-    setTotalPage(lastPage ? lastPage : 1)
-  }, [boardlist])
-  const handleOnSearch = useCallback((result) => {
-    setBoardList(result)
-  }, [])
-  const currentPageData = boardlist.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  )
   //검색 기능
   const handleSearchChange = (event) => {
     setSearchValue(event.target.value)
@@ -118,7 +106,7 @@ const Boardlist = () => {
       idx: e.target.idx.value,
       nickname: e.target.nickname.value,
       u_idx: e.target.u_idx.value,
-      url: myparams.url,
+      url: params.url,
     }
     console.log(check.idx, check.nickname, check.u_idx)
     axios({
@@ -228,15 +216,15 @@ const Boardlist = () => {
                 ))}
                 {/* 게시판 목록 끝 */}
                 <br />
-                <div className="col-md-4" align="center"></div>
-                <div className="col-md-4" align="center">
-                  <Pagination
-                    totalPage={totalPage}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                  />
+                <div className="col-md-12" align="center">
+                  <CPagination size="sm" aria-label="Page navigation example" align="center">
+                    <CPaginationItem>Previous</CPaginationItem>
+                    <CPaginationItem>1</CPaginationItem>
+                    <CPaginationItem>2</CPaginationItem>
+                    <CPaginationItem>3</CPaginationItem>
+                    <CPaginationItem>Next</CPaginationItem>
+                  </CPagination>
                 </div>
-                <div className="col-md-4" align="center"></div>
               </div>
             </div>
           </div>
