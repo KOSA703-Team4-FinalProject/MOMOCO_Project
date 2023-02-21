@@ -81,7 +81,32 @@ const KanbanItem = (props) => {
       },
       data: params,
     }).then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
+
+      // setKanbanItemList(res.data)
+      // setView(true)
+      const data = $(res.data).attr('title')
+
+      console.log(data)
+
+      // $(childtag).each(function (data, key) {
+      //   if (data > 1) {
+      //     let request4 = {
+      //       b_idx: $(childtag[data]).attr('value'),
+      //       side: num,
+      //       s_idx: $(childtag[0]).attr('value'),
+      //     }
+      //     arr.push(request4)
+      //     num += 1
+      //   }
+      // })
+
+      // const modifiedData = data.map((item, i) => ({
+      //   ...item,
+      //   title: item[i].attr('title').length > 10 ? item.title.substring(0, 10) + '...' : item.title,
+      //   content: item[i].attr('title').length > 10 ? item.content.substring(0, 10) + '...' : item.content,
+      // }))
+
       setKanbanItemList(res.data)
       setView(true)
     })
@@ -98,7 +123,7 @@ const KanbanItem = (props) => {
       },
       data: params2,
     }).then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       setConList(res.data)
       setView2(true)
       setAction1(true)
@@ -124,7 +149,6 @@ const KanbanItem = (props) => {
         },
         data: params,
       }).then((res) => {
-        console.log(res.data)
         getKanban()
       })
     } else {
@@ -138,7 +162,6 @@ const KanbanItem = (props) => {
     const content_type = $(tag).attr('value')
 
     const params = { s_idx: content_type, url: param.url }
-    console.log('컬럼 삭제 : ' + params.s_idx)
 
     if (params.s_idx < 4) {
       alert('기본 컬럼은 삭제할 수 없습니다.')
@@ -200,10 +223,9 @@ const KanbanItem = (props) => {
     const content_type = $(tag).attr('value')
     const content_type1 = $(tag).attr('id')
     const editName = $('#editColumnName').val()
-    console.log(content_type)
+
     const title = $('#ViewTitle')
     const params = { s_idx: content_type, url: param.url }
-    console.log('컬럼 제목 수정 : ' + content_type)
 
     if (params.s_idx < 4) {
       alert('기본 컬럼은 제목 수정이 불가합니다.')
@@ -225,7 +247,6 @@ const KanbanItem = (props) => {
       },
       data: params,
     }).then((res) => {
-      console.log(res)
       alert('수정이 완료 되었습니다.')
       setTitleVisible(!titleVisible)
       getKanban()
@@ -250,8 +271,6 @@ const KanbanItem = (props) => {
       data: params,
     }).then((res) => {
       setItemDetail(res.data)
-      console.log(itemDetail)
-      console.log(itemDetail.title)
     })
   }
 
@@ -270,7 +289,6 @@ const KanbanItem = (props) => {
         },
         data: params,
       }).then((res) => {
-        console.log(res)
         getKanban()
       })
     } else {
@@ -388,23 +406,15 @@ const KanbanItem = (props) => {
           {conList.map((data, key) => {
             return (
               <CCard
-                style={{ width: '300px' }}
+                style={{ width: '300px', height: '500px', overflowY: 'scroll' }}
                 className="bg-dark py-3 me-2 container1"
                 key={conList[key].s_name}
               >
                 <CCol xs="auto" className="me-auto text-light" value={conList[key].s_idx}>
                   {conList[key].s_name}
-                </CCol>
-                <CCol xs="auto">
-                  {' '}
-                  <CDropdown alignment="end">
-                    <CDropdownToggle
-                      color="transparent"
-                      caret={false}
-                      className="p-0"
-                      alignment="right"
-                    >
-                      <CIcon icon={icon.cilOptions} className="text-light" />
+                  <CDropdown>
+                    <CDropdownToggle color="transparent" caret={false} className="p-0">
+                      <CIcon icon={icon.cilOptions} className="text-light align-content-end" />
                     </CDropdownToggle>
                     <CDropdownMenu>
                       <CDropdownItem value={conList[key].s_idx} onClick={editKanbanColumnNameModal}>
@@ -418,6 +428,9 @@ const KanbanItem = (props) => {
                       </CDropdownItem>
                     </CDropdownMenu>
                   </CDropdown>
+                </CCol>
+                <CCol xs="auto">
+                  {' '}
                   <CModal
                     alignment="center"
                     visible={titleVisible}
@@ -458,14 +471,14 @@ const KanbanItem = (props) => {
                     {kanbanItemList[key].map((data2) => {
                       return (
                         <CCard
-                          className="draggable "
+                          className="draggable my-2"
                           value={data2.b_idx}
                           draggable="true"
                           key={data2.idx}
                         >
                           <CRow>
                             <CCol xs="auto" className="me-auto">
-                              <CCardHeader>{data2.title}</CCardHeader>
+                              <CCardHeader className="bg-light">{data2.title}</CCardHeader>
                               {/* <input type="text" value={data2.b_idx} /> */}
                             </CCol>
                             <CCol xs="auto">
@@ -474,13 +487,6 @@ const KanbanItem = (props) => {
                                   <CIcon icon={icon.cilChevronBottom} />
                                 </CDropdownToggle>
                                 <CDropdownMenu>
-                                  {/* <CDropdownItem
-                                      onClick={() => {
-                                        deleteKanbanColumn()
-                                      }}
-                                    >
-                                      컬럼 삭제
-                                    </CDropdownItem> */}
                                   <CDropdownItem value={data2.b_idx} onClick={KanbanItemDetail}>
                                     아이템 상세보기
                                   </CDropdownItem>
@@ -493,7 +499,7 @@ const KanbanItem = (props) => {
                             </CCol>
                           </CRow>
                           <CCardBody>
-                            <CCardTitle>{data2.content}</CCardTitle>
+                            <CCardText>{data2.content}</CCardText>
                           </CCardBody>
                           <br />
                           <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
@@ -522,7 +528,7 @@ const KanbanItem = (props) => {
                                     { label: '상태3', value: '3' },
                                   ]}
                                 /> */}
-                                <CFormInput type="text"></CFormInput>
+
                                 <br />
 
                                 <CFormTextarea
@@ -534,15 +540,13 @@ const KanbanItem = (props) => {
 
                                 <br />
 
-                                <div align="right">
-                                  <CButton
-                                    variant="outline"
-                                    onClick={() => setItemVisible(!itemvisible)}
-                                  >
-                                    닫기
-                                  </CButton>
-                                  <br />
-                                </div>
+                                <CButton
+                                  variant="outline"
+                                  onClick={() => setItemVisible(!itemvisible)}
+                                >
+                                  닫기
+                                </CButton>
+                                <br />
                               </CCard>
                             </CModalBody>
                           </CModal>
