@@ -32,4 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deletecomment" parameterType="kr.or.vo.Comments">
 	delete from comments_${url} where co_idx = #{co_idx}
 	</delete>
+	<!-- 답글 수정 -->
+	<update id="updatecomment" parameterType="kr.or.vo.Comments" >
+	update comments_${url} set content='${content}' where co_idx = #{co_idx}
+	</update>
 </mapper>

@@ -5,6 +5,7 @@ import {
   CCol,
   CContainer,
   CForm,
+  CFormInput,
   CFormTextarea,
   CModal,
   CModalBody,
@@ -20,6 +21,8 @@ import { useState } from 'react'
 import $ from 'jquery'
 import { useEffect } from 'react'
 import Commentreply from './Commentreply'
+import { lightGreen } from '@mui/material/colors'
+import Boardlist from 'src/views/board/Boardlist'
 const boxsize = {
   marginleft: '200px',
 }
@@ -35,14 +38,10 @@ const Comments = (props) => {
   const accessToken = decrypted.token
   //로그인한 유저
   const login = JSON.parse(localStorage.getItem('login'))
-
   const [comment, setComment] = useState('')
   const [commentlist, setCommentlist] = useState([])
-  const [commentlisttwo, setCommentlisttwo] = useState([])
-  const [delectcomment, setDelectcomment] = useState([])
   const [visibleLg, setVisibleLg] = useState(false)
-  const [visibleLg1, setVisibleLg1] = useState(false)
-  const [modal1, setModal1] = useState(false)
+
   const [commentContent, setCommentContent] = useState('')
   const modalstyle = {}
   const myparams = {
@@ -120,7 +119,7 @@ const Comments = (props) => {
       content: commentContent,
       nickname: login.nickname,
       idx: props.idx,
-      ref: props.co_idx,
+      ref: $('#coidx').val(),
     }
 
     axios({
@@ -132,6 +131,26 @@ const Comments = (props) => {
       data: reply,
     }).then((res) => {
       setReply(res.data)
+      setVisibleLg(false)
+      list()
+    })
+  }
+  //답글 수정
+  const updatecomment = () => {
+    const update = {
+      url: params.url,
+      co_idx: $('#coidx').val(),
+      content: commentContent,
+    }
+    axios({
+      method: 'POST',
+      url: '/comment/updatecomment',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: update,
+    }).then((res) => {
+      setCommentContent(res.data)
       setVisibleLg(false)
       list()
     })
@@ -195,10 +214,9 @@ const Comments = (props) => {
                     <CButton
                       color="primary"
                       variant="outline"
-                      onClick={() => {
-                        setVisibleLg(visibleLg)
-                      }}
+                      onClick={() => setVisibleLg(!visibleLg)}
                     >
+                      <CFormInput type="hidden" id="coidx2" value={data.co_idx} />
                       수정
                     </CButton>
                     <CModal size="lg" visible={visibleLg} onClose={() => setVisibleLg(false)}>
@@ -206,8 +224,8 @@ const Comments = (props) => {
                         <CCol className="col-md-12 px-3 py-3">
                           <CCol className="row">
                             <CCol className="col-md-10 px-4">
-                              <CAvatar className="ms-6" src={login.profilephoto} />
-                              <strong>닉네임: {login.nickname}</strong>
+                              <CAvatar className="ms-6" src={data.profilephoto} />
+                              <strong>닉네임: {data.nickname}</strong>
                             </CCol>
                             <CCol className="col-md-2 px-4"></CCol>
                           </CCol>
@@ -217,6 +235,8 @@ const Comments = (props) => {
                                 <CFormTextarea
                                   rows={3}
                                   id="commentcontent"
+                                  value={commentContent}
+                                  placeholder={data.content}
                                   onChange={(event) => {
                                     const value = event.target.value
                                     setCommentContent(value)
@@ -231,12 +251,13 @@ const Comments = (props) => {
                         <CButton
                           color="secondary"
                           onClick={() => {
-                            setVisibleLg(!visibleLg)
+                            setVisibleLg(visibleLg)
                           }}
                         >
                           취소
                         </CButton>
-                        <CButton color="primary" onClick={replycomment}>
+                        <CButton color="primary" onClick={updatecomment}>
+                          <CFormInput type="hidden" id="coidx" value={data.co_idx} />
                           작성
                         </CButton>
                       </CModalFooter>
@@ -280,7 +301,7 @@ const Comments = (props) => {
                         <CButton
                           color="secondary"
                           onClick={() => {
-                            setVisibleLg(tru)
+                            setVisibleLg(!visibleLg)
                           }}
                         >
                           취소

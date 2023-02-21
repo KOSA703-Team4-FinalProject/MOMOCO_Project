@@ -98,4 +98,17 @@ public class CommentService {
 		return result;
 		
 	}
+	//댓글 수정하기
+	public int updatecomment(Comments co_idx) {
+		int result =0;
+		try {
+			CommentDao commentdao =sqlsession.getMapper(CommentDao.class);
+			result = commentdao.updatecomment(co_idx);
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }
