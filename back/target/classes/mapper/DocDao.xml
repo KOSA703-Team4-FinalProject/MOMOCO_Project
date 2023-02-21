@@ -6,9 +6,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 전체 일정 조회 public List<Calendar> getCalendar() -->
 	<select id="getDoc" parameterType="String" resultType="kr.or.vo.Doc">
-		select e.idx, e.nickname, e.title, e.content, to_char(e.w_date, 'YYYY-MM-DD') as w_date, e.b_code, e.label, e.u_idx, c.b_idx, c.ori_filename, c.save_filename, c.ref, c.depth, c.step, c.thumb, c.idx, c.upload_type
-		from board_${url} e join doc_storage_${url} c
-		on c.idx = e.idx
+		select d.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, style, b_idx, ori_filename, save_filename, ref, depth, step, thumb, upload_type
+		from doc_storage_${url} d join (select idx, nickname, title, content, w_date, b_code, b.label, u_idx, style
+                                 	from board_${url} b join label_${url} l
+                                     on b.label = l.label 
+                                     order by idx) a
+		on d.idx = a.idx
 	</select>
 	
 	<!-- 일정 추가 public int addDoc(Doc doc, MultipartFile file) -->

@@ -59,7 +59,15 @@ const Label = () => {
       {labelList.map((data, key) => {
         return (
           <>
-            <CButton key={key} color={data.style} shape="rounded-pill" size="sm">
+            <CButton
+              onClick={() => {
+                dispatch(selectLabel({ label: data.label, style: data.style }))
+              }}
+              key={data.label}
+              color={data.style}
+              shape="rounded-pill"
+              size="sm"
+            >
               {data.label}
             </CButton>{' '}
           </>
