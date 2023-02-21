@@ -31,6 +31,8 @@ import momoco from '../assets/images/momocologo.png'
 import WorkSpaceListItem from 'src/components/WorkSpaceListItem'
 import { CButton } from '@coreui/react'
 import StompJs from 'stompjs'
+import { useEffect } from 'react'
+import { Cookies } from 'react-cookie'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -45,6 +47,19 @@ const AppHeader = () => {
   //웹 소켓 연결
   const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
   const stomp = StompJs.over(websocket)
+
+  useEffect(()=>{
+
+    const cookies = new Cookies()
+    const date = new Date()
+    
+    cookies.set('url', params.url, {
+      path: '/',
+      expires: date.setHours(date.getHours + 8),
+      sameSite: 'strict',
+    })
+
+  }, [])
 
   return (
     <CHeader position="sticky" className="mb-4">

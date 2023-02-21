@@ -9,6 +9,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select url, u_idx, role from workspace_user where u_idx = #{u_idx} and url = #{url} 
 	</select>
 	
+	<!-- 해당 유저가 해당 워크스페이스의 멤버인지 확인 public int isWorkSpaceUser(WorkSpaceUser workspaceuser) -->
+	<select id="isWorkSpaceUser" parameterType="kr.or.vo.WorkSpaceUser" resultType="int">
+		select count(u_idx) from workspace_user where u_idx = #{u_idx} and url = #{url} 
+	</select>
+	
 	<!-- 워크스페이스 안의 팀원 탐색 public List<WorkSpaceUser> getWorkSpaceUserList(WorkSpaceUser workspaceuser) -->
 	<select id="getWorkSpaceUserList" parameterType="kr.or.vo.WorkSpaceUser" resultType="kr.or.vo.WorkSpaceUser">
 		select url, w.u_idx, role, nickname, profilephoto
