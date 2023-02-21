@@ -126,21 +126,20 @@ let commentNumber = createSlice({
 })
 export let { updatecommentNumber } = commentNumber.actions
 
-//워크스페이스 초대 
+//워크스페이스 초대
 let inviteMem = createSlice({
   name: 'inviteMem',
-  initialState: {workspaceName: '', nickname: '', admin: ''},
+  initialState: { workspaceName: '', nickname: '', admin: '' },
   reducers: {
     updateInviteMem(state, action) {
       state = action.payload
       console.log(state)
       return state
-    }
-  }
+    },
+  },
 })
 
 export let { updateInviteMem } = inviteMem.actions
-
 
 //라벨 리스트
 let labelList = createSlice({
@@ -158,7 +157,7 @@ export let { updateLabelList } = labelList.actions
 //라벨 선택
 let chooseLabel = createSlice({
   name: 'chooseLabel',
-  initialState: [],
+  initialState: { label: '', style: '' },
   reducers: {
     selectLabel(state, action) {
       state = action.payload

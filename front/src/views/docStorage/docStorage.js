@@ -166,7 +166,10 @@ const docStorage = (props) => {
                   <CRow className="col-12">
                     <CCol className="col-2 px-2">
                       <strong>
-                        <CIcon icon={cilCheck} /> #{data.idx}
+                        <CIcon icon={cilCheck} /> #{data.idx}{' '}
+                        <CButton color={data.style} shape="rounded-pill" size="sm">
+                          {data.label}
+                        </CButton>
                       </strong>
                     </CCol>
                     <CCol className="col-4 px-2">

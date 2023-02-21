@@ -67,11 +67,11 @@ const WriteDocStorage = () => {
   const TypeHandler = (e) => {
     e.preventDefault()
     SetUpload_type(e.target.value)
-    console.log(e.target.value)
   }
 
   useEffect(() => {
-    SetLabel(chooseLabel)
+    SetLabel(chooseLabel.label)
+    SetStyle(chooseLabel.style)
   }, [chooseLabel])
 
   const SubmitHandler = (e) => {
@@ -161,7 +161,12 @@ const WriteDocStorage = () => {
       <CForm onSubmit={SubmitHandler}>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-2 col-form-label">
-            <strong>라벨 선택</strong>
+            <strong>
+              라벨 선택{' '}
+              <CButton color={style} shape="rounded-pill" size="sm">
+                {label}
+              </CButton>
+            </strong>
           </CFormLabel>
           <CCol sm={10}>
             <CCol className="mb-3">
@@ -171,7 +176,7 @@ const WriteDocStorage = () => {
         </CRow>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-2 col-form-label">
-            <strong>문서 제목</strong>
+            <strong> 문서 제목</strong>
           </CFormLabel>
           <CCol sm={10}>
             <CCol className="mb-3">

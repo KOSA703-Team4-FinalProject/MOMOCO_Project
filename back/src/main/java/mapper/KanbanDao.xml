@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		'${content}', ${b_code}, '${label}', ${u_idx})
 		into board_status_${url} (idx, s_idx)
 		values (board_idx_seq_${url}.currval, ${s_idx})
-		into kanban_yunseop (b_idx, issue, side, idx, s_idx)
+		into kanban_${url} (b_idx, issue, side, idx, s_idx)
 		values (kanban_b_idx_seq_${url}.nextval, '', (select max(b_idx)+1 from
 		kanban_${url}), board_idx_seq_${url}.CURRVAL, ${s_idx})
 		select * from
