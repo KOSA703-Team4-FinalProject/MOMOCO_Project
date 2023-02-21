@@ -128,4 +128,40 @@ public class WorkSpaceService {
 		return result;
 	}
 	
+	//해당 워크스페이스 해당 유저의 권한 탐색
+	public WorkSpaceUser getWorkSpaceUserByUser(WorkSpaceUser workspaceuser) {
+		WorkSpaceUser work = new WorkSpaceUser();
+		
+		try {
+			
+			WorkSpaceUserDao dao = sqlsession.getMapper(WorkSpaceUserDao.class);
+			work = dao.getWorkSpaceUser(workspaceuser);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return work;
+	}
+	
+	//해당 워크스페이스 해당 유저가 있는지 탐색
+	public int isWorkSpaceUser(WorkSpaceUser workspaceuser) {
+		int result = 0;
+		
+		try {
+			
+			WorkSpaceUserDao dao = sqlsession.getMapper(WorkSpaceUserDao.class);
+			result = dao.isWorkSpaceUser(workspaceuser);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 }

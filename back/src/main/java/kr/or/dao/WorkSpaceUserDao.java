@@ -7,6 +7,9 @@ import kr.or.vo.WorkSpaceUser;
 
 public interface WorkSpaceUserDao {
 	
+	//해당 유저가 해당 워크스페이스의 멤버인지 확인
+	public int isWorkSpaceUser(WorkSpaceUser workspaceuser) throws ClassNotFoundException, SQLException;
+	
 	//유저가 가진 워크스페이스 권한 탐색
 	public WorkSpaceUser getWorkSpaceUser(WorkSpaceUser workspaceuser) throws ClassNotFoundException, SQLException;
 
