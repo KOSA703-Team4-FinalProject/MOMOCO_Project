@@ -18,6 +18,7 @@ import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { Pagination } from '@mui/material'
 import { useCallback } from 'react'
+import $ from 'jquery'
 const writedate = {}
 const title = {}
 const context = {}
@@ -39,7 +40,7 @@ const Boardlist = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [boardlist, setBoardList] = useState([])
-
+  const [check, setCheck] = useState([])
   const [searchValue, setSearchValue] = useState('') // 검색
   const myparams = {
     url: params.url,
@@ -111,7 +112,24 @@ const Boardlist = () => {
       setBoardList(res.data)
     })
   }
-
+  //읽음 테이블에 insert
+  const checked = () => {
+    const check = {
+      idx: e.target.idx.value,
+      nickname: e.target.nickname.value,
+      u_idx: e.target.u_idx.value,
+      url: myparams.url,
+    }
+    console.log(check.idx, check.nickname, check.u_idx)
+    axios({
+      method: 'POST',
+      url: '/api/check/add',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: check,
+    }).then((res) => {})
+  }
   return (
     <>
       <CCard className="mb-4">
@@ -179,6 +197,7 @@ const Boardlist = () => {
                       <div className="row">
                         <div className="col-md-1" style={number}>
                           <CIcon icon={cilCheck} />
+                          <CFormInput type="hidden" id="idx" value={data.idx} />
                           <strong>{data.idx}.</strong>
                         </div>
                         <div className="col-md-8">
@@ -189,21 +208,14 @@ const Boardlist = () => {
                             <div className="col-md-12" style={context}>
                               {data.content.replace(/(<([^>]+)>)/gi, '')}
                             </div>
-                            <div className="col-md-12">
-                              <CBadge color="dark" shape="rounded-pill" style={boardname}>
-                                {data.idx}
-                              </CBadge>
-                            </div>
                           </div>
                         </div>
                         <div className="col-md-3">
                           <div className="col-md-12" align="end">
-                            <CAvatar
-                              className="ms-3"
-                              src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                            />{' '}
-                            &nbsp;
+                            <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
                             {data.nickname}
+                            <CFormInput type="hidden" id="nickname" value={data.nickname} />
+                            <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
                           </div>
 
                           <div className="col-md-12" align="end" style={writedate}>
