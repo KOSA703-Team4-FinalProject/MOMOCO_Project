@@ -20,6 +20,8 @@ import CryptoJS from 'crypto-js'
 import { useEffect } from 'react'
 import { PRIMARY_KEY } from 'src/oauth'
 import axios from 'axios'
+import Boardlist from './Boardlist'
+import { param } from 'jquery'
 
 const Boardedit = () => {
   const labelselect = {
@@ -31,7 +33,10 @@ const Boardedit = () => {
     url: params.url,
     idx: params.idx,
   }
-
+  const [newTitle, setNewTitle] = useState('') // 제목수정
+  const handleTitleChange = (e) => {
+    setNewTitle(e.target.value)
+  }
   useEffect(() => {
     axios({
       method: 'POST',
@@ -45,25 +50,42 @@ const Boardedit = () => {
       console.log(res.data)
     })
   }, [])
-  console.log('이건뭐냐' + boardcontent)
+
   const [content, setContent] = useState('')
   const handleEditorChange = (content) => {
     setBoardcontent(content)
   }
+  //파일 업로드
+  const [filevalues, setFilevalues] = useState('')
+  const fileChange = (e) => {
+    console.log(e.target.files[0])
+    setFilevalues(e.target.files[0])
+  }
+  //수정 글작성
   const editcontent = () => {
-    const edit = {}
+    const edit = {
+      idx: params.idx,
+      content: boardcontent.content,
+      title: newTitle,
+      label: '.',
+    }
+    const fd = new FormData()
+    fd.append('file', filevalues)
+    fd.append('edit', JSON.stringify(edit))
     axios({
       method: 'POST',
       url: '/board/boardedit',
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        'Content-Type': `multipart/form-data; `,
       },
-      data: myparams,
+      data: fd,
     }).then((res) => {
-      setBoardcontent(res.data)
       console.log(res.data)
     })
   }
+  console.log('파일' + filevalues.name)
+
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -105,9 +127,10 @@ const Boardedit = () => {
                       <br></br>
                       <CFormInput
                         type="text"
-                        placeholder="제목을 입력하세요"
+                        placeholder={boardcontent.title}
                         aria-label="default input example"
-                        value={boardcontent.title}
+                        value={newTitle}
+                        onChange={handleTitleChange} // 입력 값이 변경될 때마다 호출
                       />
                     </CCol>
                   </CCol>
@@ -119,7 +142,7 @@ const Boardedit = () => {
                       </label>
                       <br></br>
                       <CCol className="mb-3">
-                        <CFormInput type="file" id="formFile" />
+                        <CFormInput type="file" onChange={fileChange} multiple="multiple" />
                       </CCol>
                     </CCol>
                   </CRow>
@@ -247,4 +270,5 @@ const TagInput = styled.input`
   outline: none;
   cursor: text;
 `
+
 export default Boardedit

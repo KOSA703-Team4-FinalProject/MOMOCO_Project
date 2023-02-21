@@ -72,9 +72,6 @@ public class CommonBoardController {
 		         e.printStackTrace();
 		      }
 		   
-		
-		  
-
 		      //파일 명
 		      String filename = files[0].getOriginalFilename();
 		      //확장자
@@ -119,9 +116,46 @@ public class CommonBoardController {
 	}
 	//수정하기
 	@RequestMapping(value="/boardedit",method =RequestMethod.POST)
-	public int updateCommonBoard(@RequestBody CommonBoard idx) {
+	public int updateCommonBoard(@RequestParam(value="file")MultipartFile[] files, @RequestParam(value="edit") String boardedit, HttpServletRequest request) {
+		CommonBoard board = null;
+	      ObjectMapper mapper = new ObjectMapper();
+	      try {
+			board = mapper.readValue(boardedit, CommonBoard.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	      //파일명
+	      String filename = files[0].getOriginalFilename();
+	      //확장자
+	      String extension = filename.substring(filename.lastIndexOf("."));
+	      //확장자를 제외한 파일 명
+	      String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
+	      
+	      //저장할 파일 명
+	      String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis())).concat(extension);
+	      String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/" + saveFileName;
+	      // 파일이 저장될 경로
+	       String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
+	       // 폴더 생성
+	       File folder = new File(path);
+	       if (!folder.exists()) {
+	          folder.mkdirs();
+	       }
+	      
+	      System.out.println(savePath);
+	      
+	      try {
+	         File dest = new File(savePath);
+	         files[0].transferTo(dest);
+	      } catch (IOException e) {
+	         e.printStackTrace();
+	      }
+	      board.setOri_filename(files[0].getOriginalFilename());
+	      board.setFiletype(files[0].getContentType());
+	      board.setVolume(files[0].getSize());
+	      
+		int common = commonboardservice.updateCommonBoard(board);
 		
-		int common = commonboardservice.updateCommonBoard(idx);
 		return  common;
 	}
 	
@@ -141,8 +175,8 @@ public class CommonBoardController {
 			
 			return searchlist;
 		
-	
-		
 
 	}
+	
+	
 }

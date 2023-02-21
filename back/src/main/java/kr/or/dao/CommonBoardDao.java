@@ -28,6 +28,8 @@ public interface CommonBoardDao {
 	public int updateBoard (CommonBoard idx) throws ClassNotFoundException, SQLException;
 	//검색
 	public List<CommonBoard> commonboardSearch (CommonBoard search) throws ClassNotFoundException, SQLException;
+
+	
 	
 	
 	

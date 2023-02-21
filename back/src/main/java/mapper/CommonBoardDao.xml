@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 글수정하기board 테이블 -->
 	<update id="updateBoard" parameterType="kr.or.vo.CommonBoard">
 		 UPDATE board_${url}
-        SET  title = #{title}, content = #{content}
+        SET  title = #{title}, content = #{content}, label= #{label}
         WHERE idx = #{idx};
 	</update>
 	<!-- 글수정하기commonboard 테이블 -->
@@ -73,6 +73,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from WORKSPACE_USER a join member b on a.u_idx = b.u_idx 
 		where a.url = '${url}'
 	</select>
-	
+	<!--전체리스트 갯수-->
+	<select id="listCount" resultType="int">
+	select count(idx) from board_${url} where b_code =5
+	</select>
 	
 </mapper>

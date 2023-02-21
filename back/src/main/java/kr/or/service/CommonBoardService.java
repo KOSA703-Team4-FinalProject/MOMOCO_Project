@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.dao.BoardDao;
 import kr.or.dao.CommonBoardDao;
+import kr.or.vo.Board;
 import kr.or.vo.CommonBoard;
 
 @Service
@@ -130,17 +132,32 @@ public class CommonBoardService {
 	}
 
 	//글 수정하기
-//	@Transactional 
-//	public CommonBoard editcommonboard(CommonBoard all) {
-//		CommonBoard cmb = new CommonBoard();
-//		try {
-//			CommonBoard boarddao =sqlsession.getMapper(CommonBoardDao.class);
-//			cmb = boarddao.getComments(all);
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	@Transactional 
+	public int editcommonboard(CommonBoard all) {
+		int result =0;
+		try {
+			Board board = new Board();
+			board.setIdx(all.getIdx());
+			board.setContent(all.getContent());
+			board.setLabel(all.getLabel());
+			board.setU_idx(all.getU_idx());
+			System.out.println(board.toString());
+			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
+			CommonBoard cmb = new CommonBoard();
+			cmb.setOri_filename(all.getOri_filename());
+			cmb.setVolume(all.getVolume());
+			cmb.setFiletype(all.getFiletype());
+				
+			CommonBoardDao commboard = sqlsession.getMapper(CommonBoardDao.class);
+			result =commboard.updateCommonBoard(all);
+			result = commboard.updateBoard(all);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	
+	}
 }

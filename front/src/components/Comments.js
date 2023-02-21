@@ -216,8 +216,11 @@ const Comments = (props) => {
                   color="primary"
                   variant="outline"
                   onClick={() => setVisibleLg1(!visibleLg)}
+                  onChange={() => {
+                    const value = `${data.content}`
+                    setCommentContent(value)
+                  }}
                 >
-                  <CFormInput type="hidden" id="coidx2" value={data.co_idx} />
                   수정
                 </CButton>
                 <CModal size="lg" visible={visibleLg1} onClose={() => setVisibleLg1(false)}>
@@ -236,7 +239,7 @@ const Comments = (props) => {
                             <CFormTextarea
                               rows={3}
                               id="commentcontent"
-                              value={commentContent}
+                              value={commentlist.content}
                               placeholder={`${data.content}`}
                               onChange={(event) => {
                                 const value = event.target.value
