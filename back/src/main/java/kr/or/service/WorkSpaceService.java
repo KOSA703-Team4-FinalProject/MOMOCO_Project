@@ -48,6 +48,9 @@ public class WorkSpaceService {
 			result = workspacedao.makeWorkSpace(workspace);
 			workspacedao.createTable(workspace.getUrl());
 			result = workspacedao.isDomain(workspace.getUrl());
+			
+			result = workspacedao.insertWorkSpaceOwner(workspace);
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -162,6 +165,42 @@ public class WorkSpaceService {
 		}
 		
 		return result;
+	}
+	
+	//워크스페이스의 정보 불러오기
+	public WorkSpace getWorkSpaceByUrl(String url) {
+		WorkSpace workspace = new WorkSpace();
+		
+		try {
+			
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			workspace = workspacedao.getWorkSpaceByUrl(url);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return workspace;
+	}
+	
+	//워크스페이스 소유자 확인
+	public WorkSpace getWorkSpaceOwner(String url) {
+		WorkSpace workspace = new WorkSpace();
+		
+		try {
+			
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			workspace = workspacedao.getWorkSpaceOwner(url);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return workspace; 
 	}
 	
 }

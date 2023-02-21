@@ -18,6 +18,5 @@ export const loginaxios = (res, myrole, workspaceName) => {
   }
 
   axios.post('/backlogin/login', req).then((res) => {
-    console.log(res)
   })
 }

@@ -35,9 +35,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where url in (select url from workspace_user where u_idx = #{u_idx} )
    	</select>
    
-   <!-- 해당하는 레포지토리가 연결된 레포지토리인지 확인 public int isRepo(String linked_repo) -->
-   <select id="isRepo" parameterType="String" resultType="int">
+   	<!-- 해당하는 레포지토리가 연결된 레포지토리인지 확인 public int isRepo(String linked_repo) -->
+   	<select id="isRepo" parameterType="String" resultType="int">
    		select count(url) from workspace where linked_repo = #{linked_repo}
-   </select>
+   	</select>
+   
+   	<!-- 워크스페이스 정보 불러오기 public WorkSpace getWorkSpaceByUrl(String url) -->
+   	<select id="getWorkSpaceByUrl" parameterType="String" resultType="kr.or.vo.WorkSpace">
+   		select url, space_name, linked_repo, to_char(start_date, 'YYYY-MM-DD') as start_date,  to_char(end_date, 'YYYY-MM-DD') as end_date, admin
+		from workspace 
+		where url = #{url}
+   	</select>
+   	
+   	<!-- 워크스페이스 소유자 저장 public int insertWorkSpaceOwner(WorkSpace workspace) -->
+   	<insert id="insertWorkSpaceOwner" parameterType="kr.or.vo.WorkSpace">
+   		insert into workspace_owner(url, ownerphoto, owner)
+   			values (#{url}, #{ownerphoto}, #{owner})
+   	</insert>
+   	
+   	<!-- 워크스페이스 소유자 불러오기 public WorkSpace getWorkSpaceOwner(String url) -->
+   	<select id="getWorkSpaceOwner" parameterType="String" resultType="kr.or.vo.WorkSpace">
+   		select w.url, ownerphoto, owner, linked_repo 
+		from workspace w join workspace_owner o
+		on w.url = o.url
+		where w.url = #{url}
+   	</select> 
    
 </mapper>
