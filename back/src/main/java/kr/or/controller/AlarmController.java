@@ -29,7 +29,7 @@ public class AlarmController {
 	private final SimpMessagingTemplate template;
 
 	//알림 내용 불러오기
-	@RequestMapping(value = "/api/alarm/alarmList", method = RequestMethod.post)
+	@RequestMapping(value = "/api/alarm/alarmList", method = RequestMethod.POST)
 	public List<Alarm> getAlarmList(@RequestParam(value = "u_idx") int u_idx){
 		
 		List<Alarm> alarmList = new ArrayList<Alarm>();
