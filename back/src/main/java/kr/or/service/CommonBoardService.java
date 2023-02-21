@@ -132,7 +132,7 @@ public class CommonBoardService {
 	}
 
 	//글 수정하기
-	@Transactional 
+	@Transactional
 	public int editcommonboard(CommonBoard all) {
 		int result =0;
 		try {

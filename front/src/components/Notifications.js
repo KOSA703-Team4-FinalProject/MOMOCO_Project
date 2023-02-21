@@ -72,7 +72,7 @@ const Notifications = (props) => {
                   <div align="center">전체삭제</div>
                 </CRow>
               </CListGroupItem>
-              {list.map((list, index) => (
+              {/* {list.map((list, index) => (
                 <CListGroupItem
                   component="a"
                   href="#"
@@ -93,7 +93,7 @@ const Notifications = (props) => {
                     <CCol sm={2}>삭제</CCol>
                   </CRow>
                 </CListGroupItem>
-              ))}
+              ))} */}
             </CListGroup>
           </CCol>
         </CRow>

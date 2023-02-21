@@ -8,6 +8,7 @@ import {
   CForm,
   CFormCheck,
   CFormInput,
+  CFormLabel,
   CFormSelect,
   CFormTextarea,
   CRow,
@@ -70,7 +71,7 @@ const Boardedit = () => {
       label: '.',
     }
     const fd = new FormData()
-    fd.append('file', filevalues)
+    fd.append('file1', filevalues)
     fd.append('edit', JSON.stringify(edit))
     axios({
       method: 'POST',
@@ -142,7 +143,8 @@ const Boardedit = () => {
                       </label>
                       <br></br>
                       <CCol className="mb-3">
-                        <CFormInput type="file" onChange={fileChange} multiple="multiple" />
+                        <CFormInput type="file" id="file-input" onChange={fileChange} multiple />
+                        {boardcontent.file && <div>파일명: {boardcontent.file.name}</div>}
                       </CCol>
                     </CCol>
                   </CRow>
