@@ -70,6 +70,8 @@ const Commentreply = React.lazy(() => import('./components/Commentreply'))
 const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
 const Gittimeline = React.lazy(() => import('./views/git/Gittimeline'))
+//이슈 타임라인
+const IssueTimeLine = React.lazy(()=>import('./views/git/IssueList'))
 const Gittime = React.lazy(() => import('./views/git/Gittime'))
 //깃차트
 const Gitchart = React.lazy(() => import('./views/git/Gitchart'))
@@ -151,6 +153,7 @@ const routes = [
   { path: '/comments', name: 'Comments', exact: true, element: Comments }, //댓글작성하기
   { path: '/replycomment', name: 'ReplyComment', exact: true, element: Commentreply }, //대댓글 작성하기
   { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList }, //전체게시판모록
+  { path: '/IssueTimeLine', name: 'IssueTimeLine', exact: true, element: IssueTimeLine}, //이슈 타임 라인 
 ]
 
 export default routes

@@ -7,6 +7,7 @@ import {
   cilClearAll,
   cilCopy,
   cilListRich,
+  cilScrubber,
   cilTask,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
@@ -57,9 +58,15 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Git 타임라인',
+    name: 'Commit 로그',
     to: '/gittimeline',
     icon: <CIcon icon={cilListRich} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'GitHub Issue',
+    to: '/IssueTimeLine',
+    icon: <CIcon icon={cilScrubber} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

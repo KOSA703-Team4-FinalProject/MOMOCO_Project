@@ -6,12 +6,7 @@ import momocologo from '../assets/images/momocologo.png'
 import { useDispatch } from 'react-redux'
 import { changeUserProfile } from 'src/store'
 
-const profileCss = {
-  position: 'absolute',
-  top: '200px',
-  left: '500px',
-  margin: '0 auto',
-}
+
 
 const divProfile = {
   radius: '4px',
@@ -24,7 +19,7 @@ const imgProfile = {
   display: 'block',
 }
 
-const Profile = () => {
+const Profile = (props) => {
   const dispatch = useDispatch()
 
   //프로필 닫기
@@ -32,11 +27,14 @@ const Profile = () => {
     dispatch( changeUserProfile(false) )
   })
 
+  const user = props.user
+  console.log(user)
+
   return (
-    <div className="row px-3" style={profileCss}>
+    <div className="row px-3">
       <CCard className="col">
-        <div>
-          <img src={momocologo} style={imgProfile} />
+        <div className='m-1 pt-1'>
+          <img src={user.avatar_url} style={imgProfile} />
         </div>
       </CCard>
       <CCard className="p-4 col">
@@ -44,22 +42,21 @@ const Profile = () => {
           <div className="col-md-12">
             <div className="row">
               <h4 className="col-10">
-                <strong>사용자 닉네임!</strong>
+                <strong>{user.nickname}</strong>
               </h4>
-              <BsFillXSquareFill size="35px" className="profileclosebtn col-2 mb-1" align="end" />
             </div>
-            <h5 className="ps-1">test@test.com</h5>
+            <h6 className="ps-1">{user.email}</h6>
           </div>
         </div>
         <div className="row mt-5">
           <div className="col-md-12">
             <div className="row">
-              <div className="col-md-8">
+              <div className="col-md-7">
                 <CButton color="primary" variant="outline">
-                  <BsGithub size="25" /> GitHub
+                  <BsGithub size="21" /> GitHub
                 </CButton>
               </div>
-              <div className="col-md-4 pe-3" align="end">
+              <div className="col-md-5">
                 <CButton color="primary" variant="outline">
                   채팅
                 </CButton>
