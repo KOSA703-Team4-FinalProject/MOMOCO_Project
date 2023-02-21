@@ -42,12 +42,27 @@ const Boardedit = () => {
       data: myparams,
     }).then((res) => {
       setBoardcontent(res.data)
+      console.log(res.data)
     })
   }, [])
   console.log('이건뭐냐' + boardcontent)
   const [content, setContent] = useState('')
   const handleEditorChange = (content) => {
     setBoardcontent(content)
+  }
+  const editcontent = () => {
+    const edit = {}
+    axios({
+      method: 'POST',
+      url: '/board/boardedit',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: myparams,
+    }).then((res) => {
+      setBoardcontent(res.data)
+      console.log(res.data)
+    })
   }
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -104,7 +119,7 @@ const Boardedit = () => {
                       </label>
                       <br></br>
                       <CCol className="mb-3">
-                        <CFormInput type="file" id="formFile" value={boardcontent.ori_filename} />
+                        <CFormInput type="file" id="formFile" />
                       </CCol>
                     </CCol>
                   </CRow>
@@ -138,7 +153,7 @@ const Boardedit = () => {
                     <CCol className="col-md-12">
                       <Editor
                         onEditorChange={handleEditorChange}
-                        value={content.content}
+                        value={boardcontent.content}
                         id="tinyEditor"
                         apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
                         init={{
@@ -161,7 +176,10 @@ const Boardedit = () => {
                       />
                       <br></br>
                       <CCol align="right">
-                        <CButton variant="outline">수정하기</CButton> &nbsp;
+                        <CButton variant="outline" onClick={editcontent}>
+                          수정하기
+                        </CButton>{' '}
+                        &nbsp;
                         <Link to={`/ws/${params.url}/boardlist`}>
                           <CButton variant="outline">목록으로</CButton>
                         </Link>

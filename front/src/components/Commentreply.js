@@ -40,7 +40,7 @@ const Commentreply = (props) => {
 
   const [commentContent, setCommentContent] = useState('')
 
-  const replycomment = () => {
+  const replycomment = (props) => {
     const reply = {
       url: params.url,
       u_idx: login.u_idx,

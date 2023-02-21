@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { PRIMARY_KEY } from '../oauth'
 import { CCardBody } from '@coreui/react'
+import { Cookies } from 'react-cookie'
 
 const WorkSpaceListItem = (props) => {
   const [workspacelist, setWorkspacelist] = useState([])
@@ -17,6 +18,8 @@ const WorkSpaceListItem = (props) => {
     u_idx: login.u_idx,
     nickname: login.nickname,
   }
+
+  const cookies = new Cookies()
 
   useEffect(() => {
     // AES알고리즘 사용 복호화
@@ -45,6 +48,12 @@ const WorkSpaceListItem = (props) => {
           <CCardBody
             key={data.url}
             onClick={() => {
+              const date = new Date()
+              cookies.set('url', data.url, {
+                path: '/',
+                expires: date.setHours(date.getHours + 8),
+                sameSite: 'strict',
+              })
               navigate(`/ws/${data.url}/dashboard`)
             }}
           >

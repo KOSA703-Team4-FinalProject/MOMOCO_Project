@@ -15,5 +15,6 @@ public interface CommentDao {
 		public int replyComment(Comments all) throws  ClassNotFoundException, SQLException;
 		//댓삭제
 		public int deletecomment(Comments co_idx) throws  ClassNotFoundException, SQLException;
-
+		//댓글 수정
+		public int updatecomment(Comments co_idx ) throws  ClassNotFoundException, SQLException;
 }

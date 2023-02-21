@@ -1,4 +1,5 @@
 import React, { Component, Suspense } from 'react'
+import CookiesProvider from 'react-cookie/cjs/CookiesProvider'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 
@@ -19,16 +20,17 @@ const Register = React.lazy(() => import('./views/register/Register')) // 회원
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
-
 class App extends Component {
   render() {
     return (
       <>
         <Suspense fallback={loading}>
-          <Routes>
-            <Route path="*" element={<TopLayout />} />
-            <Route path="/ws/:url/*" name="Home" element={<DefaultLayout />} />
-          </Routes>
+          <CookiesProvider>
+            <Routes>
+              <Route path="*" element={<TopLayout />} />
+              <Route path="/ws/:url/*" name="Home" element={<DefaultLayout />} />
+            </Routes>
+          </CookiesProvider>
         </Suspense>
       </>
     )

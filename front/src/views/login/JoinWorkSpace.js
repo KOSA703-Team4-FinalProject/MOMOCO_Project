@@ -5,7 +5,7 @@ import { CALLBACK_URL, CLIENT_ID, GITHUB_AUTH_CODE_SERVER } from '../../oauth.js
 import momocologo from 'src/assets/images/momocologo.png'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
-import { updateInviteMem } from 'src/store.js'
+import { updateInviteMem, updateName } from 'src/store.js'
 import Cookies from 'universal-cookie'
 
 const JoinWorkSpace = () => {
@@ -15,13 +15,8 @@ const JoinWorkSpace = () => {
   const params = useParams()
 
   useEffect(() => {
-    const data = {
-      workspaceName: params.workspaceName,
-      admin: params.admin,
-    }
 
-    window.localStorage.clear();
-    window.localStorage.setItem('join', JSON.stringify(data))
+    localStorage.setItem('workName', params.workspaceName)
 
   }, [])
 

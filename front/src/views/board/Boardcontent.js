@@ -205,7 +205,7 @@ const Boardcontent = (props) => {
         </CCardBody>
 
         <div align="right" className="me-4">
-          <Link to={`/ws/${params.url}/boardedit`}>
+          <Link to={`/ws/${params.url}/boardedit/${boardcontent.idx}`}>
             <CButton color="primary" variant="outline">
               수정
             </CButton>{' '}

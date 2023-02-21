@@ -136,7 +136,7 @@ const routes = [
   { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist }, //CommonBoard게시판 보기
   { path: '/boardcontent/:idx', name: 'Boardcontent', exact: true, element: Boardcontent }, //CommonBoard게시판 내용 보기
   { path: '/boardwrite', name: 'Boardwrite', exact: true, element: Boardwrite },
-  { path: '/boardedit', name: 'Boardedit', exact: true, element: Boardedit },
+  { path: '/boardedit/:idx', name: 'Boardedit', exact: true, element: Boardedit },
   { path: '/mypage', name: 'Mypage', exact: true, element: Mypage },
   { path: '/viewchat', name: 'Viewchat', exact: true, element: Viewchat },
   { path: '/gittimeline', name: 'Gittimeline', exact: true, element: Gittimeline }, //깃타임라인

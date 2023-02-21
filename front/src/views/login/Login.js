@@ -1,24 +1,22 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
   CCardBody,
   CCardGroup,
   CCol,
-  CContainer,
   CForm,
   CFormInput,
   CInputGroup,
   CInputGroupText,
   CRow,
-  CCardFooter,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
-import axios from 'axios'
+import { useEffect } from 'react'
+import { Cookies } from 'react-cookie'
 
-import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
 import { CALLBACK_URL, CLIENT_ID, GITHUB_AUTH_CODE_SERVER } from '../../oauth.js'
 
 const Login = () => {
@@ -32,9 +30,15 @@ const Login = () => {
   }
 
   const navigate = useNavigate()
+  const cookies = new Cookies()
 
   // 로그인
   const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?scope=repo read:org gist user user:email project&client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`
+
+  useEffect(()=>{
+    cookies.remove('url', { sameSite: 'strict', path: '/' })
+    cookies.remove('u_idx', { sameSite: 'strict', path: '/' })
+  }, [])
 
   return (
     <>

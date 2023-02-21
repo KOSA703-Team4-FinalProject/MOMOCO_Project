@@ -53,9 +53,15 @@ public class CommentController {
 	}
 	//댓삭제하기
 	@RequestMapping(value="/deletecomment",method =RequestMethod.POST)
-	public int deletecommen(@RequestBody Comments comment ){
+	public int deletecomment(@RequestBody Comments comment ){
 		int result = commentservice.deletecomment(comment);
 				return result;
+	}
+	//댓글 수정하기
+	@RequestMapping(value="/updatecomment", method=RequestMethod.POST)
+	public int updatecomment(@RequestBody Comments comment) {
+		int result = commentservice.updatecomment(comment);
+		return result;
 	}
 	
 	
