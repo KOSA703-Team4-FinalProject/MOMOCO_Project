@@ -41,6 +41,12 @@ public interface KanbanDao {
 
 	// 칸반 상세보기
 	public Kanban GetKanbanItemDetail(Kanban kanban) throws ClassNotFoundException, SQLException;
+	// 칸반 아이템 수정
+	public int modifyKanbanItem(Kanban kanban)throws ClassNotFoundException, SQLException;
+
+
+
+	
 
 	
 

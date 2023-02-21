@@ -184,5 +184,14 @@ public class KanbanController {
 		return kanbandetail;
 
 	}
+	
+	// 아이템 수정
+		@RequestMapping(value="/modifyKanbanItem", method=RequestMethod.POST)
+		public int modifykanbanItem(@RequestBody Kanban kanban) {
+			
+			int result = kanbanservice.modifyKanbanItem(kanban);
+			
+			return result;
+		}
 
 }

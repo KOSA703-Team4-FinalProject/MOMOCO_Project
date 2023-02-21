@@ -7,10 +7,16 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.dao.BoardDao;
+import kr.or.dao.BoardStatusDao;
+import kr.or.dao.CalendarDao;
 import kr.or.dao.CommonBoardDao;
 import kr.or.dao.KanbanDao;
+import kr.or.dao.WorkSpaceDao;
 import kr.or.vo.Board;
+import kr.or.vo.BoardStatus;
 import kr.or.vo.CommonBoard;
 import kr.or.vo.Kanban;
 
@@ -41,7 +47,7 @@ public class KanbanService {
 
 		return kanban;
 	}
-	
+
 	// 상태값으로 쓰여진 캘린더, 칸반 아이템 모두 불러오기
 	public List<Board> getItembyStatus(String url, int s_idx) {
 		List<Board> itembyStatus = new ArrayList<Board>();
@@ -111,6 +117,7 @@ public class KanbanService {
 		}
 		return 0;
 	}
+
 	// 칸반 모든 아이템 삭제
 	public int deleteAllKanbanItem(Kanban kanban) {
 		int result = 0;
@@ -128,12 +135,11 @@ public class KanbanService {
 
 		return result;
 	}
-	
+
 	// 칸반 아이템 삭제
 	public int KanbanItemDelete(Kanban kanban) {
 		int result = 0;
-		
-		
+
 		try {
 			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
 			result = kanbandao.KanbanItemDelete(kanban);
@@ -166,7 +172,7 @@ public class KanbanService {
 
 	public int modifyKanbanColumnName(Kanban kanban) {
 		int result = 0;
-		
+
 		try {
 			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
 			result = kanbandao.modifyKanbanColumnName(kanban);
@@ -175,13 +181,13 @@ public class KanbanService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-				
+
 		return result;
 	}
 
 	public Kanban GetKanbanItemDetail(Kanban kanban) {
 		Kanban kanbandetail = new Kanban();
-		
+
 		try {
 			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
 			kanbandetail = kanbandao.GetKanbanItemDetail(kanban);
@@ -195,31 +201,23 @@ public class KanbanService {
 
 		return kanbandetail;
 	}
-	
-	// 글읽기
-	public CommonBoard getBoardByIdx(CommonBoard commonboard) {
-		CommonBoard cmm = new CommonBoard();
+
+
+
+	// 칸반 아이템 수정
+	public int modifyKanbanItem(Kanban kanban) {
+		int result = 0;
 
 		try {
-
-			CommonBoardDao commonboarddao = sqlsession.getMapper(CommonBoardDao.class);
-			cmm = commonboarddao.getBoardByIdx(commonboard);
-
+			KanbanDao kanbandao = sqlsession.getMapper(KanbanDao.class);
+			result = kanbandao.modifyKanbanItem(kanban);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return cmm;
+		return result;
 	}
-
-	
-	
-	
-		
-
-	
-	
 
 }

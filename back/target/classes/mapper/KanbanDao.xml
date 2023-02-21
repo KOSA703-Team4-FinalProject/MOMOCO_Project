@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		kanban_${url} where b_idx =#{b_idx}
 	</delete>
 
-	<!-- 칸반 컬럼명 삭제 modifyKanbanColumnName -->
+	<!-- 칸반 컬럼명 변경 modifyKanbanColumnName -->
 	<update id="modifyKanbanColumnName"
 		parameterType="kr.or.vo.Kanban">
 		update status_${url} set s_name =#{s_name} where s_idx =
@@ -107,10 +107,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		w_date,b.b_code,b.label,b.u_idx,k.b_idx,k.issue,k.side,s_idx
 		from board_${url} b join kanban_${url} k
 		on b.idx = k.idx
-		where k.b_idx = #{b_idx}) a
+		where k.idx = #{idx}) a
 		on s.s_idx = a.s_idx
 	</select>
-
-
+	
+	<!-- 칸반 아이템 수정 -->
+	<update id ="modifyKanbanItem"  parameterType = "kr.or.vo.Kanban">
+	 update board_${url} set title = #{title}, content = #{content} where idx = #{idx}
+	</update>
+	
 
 </mapper>
