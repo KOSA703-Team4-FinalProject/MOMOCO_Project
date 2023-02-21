@@ -20,6 +20,8 @@ import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { useCallback } from 'react'
 import $ from 'jquery'
+import Pagination from 'react-js-pagination'
+import styled from 'styled-components'
 const writedate = {}
 const title = {}
 const context = {}
@@ -118,6 +120,17 @@ const Boardlist = () => {
       data: check,
     }).then((res) => {})
   }
+  //페이징 처리
+  const [items, setItems] = useState(5)
+  const [page, setPage] = useState(1)
+  const handlePageChange = (page) => {
+    setPage(page)
+  }
+  const itemChange = (e) => {
+    setItems(Number(e.target.value))
+  }
+
+  console.log(items * (page - 1), items * (page - 1) + items)
   return (
     <>
       <CCard className="mb-4">
@@ -173,57 +186,61 @@ const Boardlist = () => {
                 </div>
 
                 {/* 게시판 목록 시작 */}
-                {boardlist.map((data, key) => (
-                  <CCard
-                    className="p-3 mt-3"
-                    key={key}
-                    onClick={() => {
-                      navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
-                    }}
-                  >
-                    <div className="col-md-12">
-                      <div className="row">
-                        <div className="col-md-1" style={number}>
-                          <CIcon icon={cilCheck} />
-                          <CFormInput type="hidden" id="idx" value={data.idx} />
-                          <strong>{data.idx}.</strong>
-                        </div>
-                        <div className="col-md-8">
-                          <div className="row">
-                            <div className="col-md-12" style={title}>
-                              <strong> {data.title}</strong>
-                            </div>
-                            <div className="col-md-12" style={context}>
-                              {data.content.replace(/(<([^>]+)>)/gi, '')}
+                {boardlist
+                  .slice(items * (page - 1), items * (page - 1) + items)
+                  .map((data, key) => (
+                    <CCard
+                      className="p-3 mt-3"
+                      key={key}
+                      onClick={() => {
+                        navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+                      }}
+                    >
+                      <div className="col-md-12">
+                        <div className="row">
+                          <div className="col-md-1" style={number}>
+                            <CIcon icon={cilCheck} />
+                            <CFormInput type="hidden" id="idx" value={data.idx} />
+                            <strong>{data.idx}.</strong>
+                          </div>
+                          <div className="col-md-8">
+                            <div className="row">
+                              <div className="col-md-12" style={title}>
+                                <strong> {data.title}</strong>
+                              </div>
+                              <div className="col-md-12" style={context}>
+                                {data.content.replace(/(<([^>]+)>)/gi, '')}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="col-md-12" align="end">
-                            <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
-                            {data.nickname}
-                            <CFormInput type="hidden" id="nickname" value={data.nickname} />
-                            <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
-                          </div>
+                          <div className="col-md-3">
+                            <div className="col-md-12" align="end">
+                              <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
+                              {data.nickname}
+                              <CFormInput type="hidden" id="nickname" value={data.nickname} />
+                              <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
+                            </div>
 
-                          <div className="col-md-12" align="end" style={writedate}>
-                            {data.w_date}
+                            <div className="col-md-12" align="end" style={writedate}>
+                              {data.w_date}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </CCard>
-                ))}
+                    </CCard>
+                  ))}
                 {/* 게시판 목록 끝 */}
                 <br />
                 <div className="col-md-12" align="center">
-                  <CPagination size="sm" aria-label="Page navigation example" align="center">
-                    <CPaginationItem>Previous</CPaginationItem>
-                    <CPaginationItem>1</CPaginationItem>
-                    <CPaginationItem>2</CPaginationItem>
-                    <CPaginationItem>3</CPaginationItem>
-                    <CPaginationItem>Next</CPaginationItem>
-                  </CPagination>
+                  <PaginationBox>
+                    <Pagination
+                      activePage={page}
+                      itemsCountPerPage={items}
+                      totalItemsCount={boardlist.length - 1}
+                      pageRangeDisplayed={5}
+                      onChange={handlePageChange}
+                    ></Pagination>
+                  </PaginationBox>
                 </div>
               </div>
             </div>
@@ -233,5 +250,46 @@ const Boardlist = () => {
     </>
   )
 }
-
+const PaginationBox = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+  ul.pagination li.active a {
+    color: white;
+  }
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+`
 export default Boardlist
