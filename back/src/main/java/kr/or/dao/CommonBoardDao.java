@@ -27,4 +27,5 @@ public interface CommonBoardDao {
 	
 	//검색
 	public List<CommonBoard> commonboardSearch (CommonBoard search) throws ClassNotFoundException, SQLException;
+	
 }
