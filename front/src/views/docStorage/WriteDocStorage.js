@@ -92,6 +92,7 @@ const WriteDocStorage = () => {
         upload_type: upload_type,
         ori_filename: link,
         save_filename: link,
+        u_idxList: '112244603',
       }
       try {
         axios({

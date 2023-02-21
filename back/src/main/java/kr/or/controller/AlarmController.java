@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.or.service.AlarmService;
 import kr.or.vo.Alarm;
 import kr.or.vo.CommonBoard;
+import kr.or.vo.Doc;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,11 +31,11 @@ public class AlarmController {
 
 	//알림 내용 불러오기
 	@RequestMapping(value = "/api/alarm/alarmList", method = RequestMethod.POST)
-	public List<Alarm> getAlarmList(@RequestParam(value = "u_idx") int u_idx){
-		
+	public List<Alarm> getAlarmList(@RequestBody Alarm alarm){
+		System.out.println(alarm.getU_idx());
 		List<Alarm> alarmList = new ArrayList<Alarm>();
-		alarmList = alarmservice.getAlarmList(u_idx);
-
+		alarmList = alarmservice.getAlarmList(alarm.getU_idx());
+		System.out.println(alarmList);
 		return alarmList;
 	}
 	

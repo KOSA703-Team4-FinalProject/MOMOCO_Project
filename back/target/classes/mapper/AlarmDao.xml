@@ -6,17 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 알람 리스트 불러오기 public List<Alarm> getAlarmList(Alarm alarm) -->
 	<select id="getAlarmList" parameterType="int" resultType="kr.or.vo.Alarm" >
-		select m.u_idx, nickname, profilephoto, a_idx, idx, content, check_alarm, url
-		from member m right join (select a_idx, idx, content, check_alarm, url, u_idx, link
-	    		                    from alarm where u_idx = ${u_idx}) a
-		on m.u_idx = a.u_idx
-		order by a_idx
+		select a_idx, idx, content, check_alarm, url, a.u_idx, link, m.profilephoto 
+		from alarm a join member m on a.u_idx = m.u_idx where a.u_idx = ${u_idx} order by a_idx desc
 	</select>
 	
-	<!-- 일정 추가 public int addDoc(Doc doc, MultipartFile file) -->
+	<!-- 알람 추가 public int addDoc(Doc doc, MultipartFile file) -->
 	<insert id="addAlarm" parameterType="kr.or.vo.Alarm">
 		insert into alarm (a_idx, idx, content, check_alarm, url, u_idx, link)
-					values(alarm_a_idx_seq.nextval, '${idx}', '${content}', 0, '${url}', '${u_idx}, '${link})
+					values(alarm_a_idx_seq.nextval, '${idx}', '${content}', 0, '${url}', #{u_idx}, '${link}')
 	</insert>
 	
 	<!-- 워크스페이스 유저 검색 -->
