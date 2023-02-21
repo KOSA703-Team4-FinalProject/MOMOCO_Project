@@ -1,10 +1,23 @@
-import { CCard, CCardBody, CCardFooter, CCol, CRow } from '@coreui/react'
+import {
+  CAvatar,
+  CCard,
+  CCardBody,
+  CCardFooter,
+  CCol,
+  CFormSelect,
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalTitle,
+  CRow,
+} from '@coreui/react'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
 import { BsEmojiSmile } from 'react-icons/bs'
 import CryptoJS from 'crypto-js'
 
 import { PRIMARY_KEY } from '../../oauth'
+import Profile from '../../components/Profile'
 import { useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -12,8 +25,9 @@ import { Octokit } from 'octokit'
 import { async } from 'regenerator-runtime'
 
 const backgroundcolor = {
-  background: '#dcdcdc',
+  background: '#EEEEEE',
 }
+
 const Gittimeline = () => {
   const params = useParams()
 
@@ -33,6 +47,9 @@ const Gittimeline = () => {
   //타임라인 데이터
   const [commitsList, setCommitsList] = useState([])
   const [listview, setListView] = useState(false)
+  const [profileMoal, setProfileModal] = useState(false)
+  const [profile, setProfile] = useState({})
+  const [option, setOption] = useState('commit')
 
   useEffect(() => {
     axios({
@@ -43,15 +60,15 @@ const Gittimeline = () => {
       },
       params: { url: params.url },
     }).then((res) => {
+      setListView(false)
       getCommits(res.data)
     })
   }, [])
 
   const getCommits = async (data) => {
-
-    //임시로 레파지토리 이름
+    //레파지토리 이름
     const repos = data.linked_repo
-    //임시로 레포지토리 주인
+    //레포지토리 주인
     const owner = data.owner
 
     await octokit
@@ -60,13 +77,77 @@ const Gittimeline = () => {
         repo: repos,
       })
       .then((res) => {
-
         console.log(res.data)
-
+        setCommitsList([])
         res.data.map((d) => {
           setCommitsList((commitsList) => [...commitsList, d])
         })
         setListView(true)
+      })
+  }
+
+  const getIssue = async (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    await octokit
+      .request('GET /repos/{owner}/{repo}/issues', {
+        owner: owner,
+        repo: repos,
+      })
+      .then((res) => {
+        console.log(res.data)
+        setCommitsList(() => [])
+        res.data.map((d) => {
+          setCommitsList((commitsList) => [...commitsList, d])
+        })
+        setListView(true)
+      })
+  }
+
+  const getAssignedIssue = async (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    await octokit.request('GET /issues', {}).then((res) => {
+      console.log(res.data)
+      setCommitsList(() => [])
+      res.data.map((d) => {
+        setCommitsList((commitsList) => [...commitsList, d])
+      })
+      setListView(true)
+    })
+  }
+
+  const changeOption = (e) => {
+    let op = e.target.value
+
+    axios({
+      method: 'GET',
+      url: '/api/workspaceowner',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { url: params.url },
+    })
+      .then((res) => {
+        if (op == 'commit') {
+          setListView(false)
+          getCommits(res.data)
+        } else if (op == 'unresolvedissue') {
+          setListView(false)
+          getIssue(res.data)
+        } else if (op == 'assignedissue') {
+          setListView(false)
+          getAssignedIssue(res.data)
+        }
+      })
+      .then(() => {
+        setOption(e.target.value)
       })
   }
 
@@ -75,31 +156,256 @@ const Gittimeline = () => {
       <CCard className="mb-4" style={backgroundcolor}>
         <CCardBody>
           <CRow>
-            <CCol sm={5}></CCol>
-            <CCol sm={7} className="d-none d-md-block"></CCol>
+            <CCol sm={3}>
+              <CFormSelect onChange={changeOption}>
+                <option value="commit">Commit 이력</option>
+                <option value="unresolvedissue">미해결 Issue 이력</option>
+                <option value="assignedissue">할당된 Issue List</option>
+              </CFormSelect>
+            </CCol>
+            <CCol sm={9} className="d-none d-md-block"></CCol>
           </CRow>
 
-          <VerticalTimeline>
-            {commitsList.map((commit) => {
-              return (
-                <VerticalTimelineElement
-                  className="vertical-timeline-element--work"
-                  date={commit.updated_at}
-                  iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-                  key={commit.sha}
-                >
-                  <h2 className="vertical-timeline-element-title">{commit.id}</h2>
+          {listview == false ? (
+            <div className="pt-3 text-center">
+              <div className="sk-spinner sk-spinner-pulse"></div>
+            </div>
+          ) : (
+            <VerticalTimeline layout="2-columns">
+              {option == 'commit' ? (
+                commitsList.map((commit) => {
+                  if (commit.committer.login == login.nickname) {
+                    return (
+                      <VerticalTimelineElement
+                        className="vertical-timeline-element--work"
+                        date={commit.commit.author.date}
+                        iconStyle={{ background: '#000CB7', color: '#fff' }}
+                        key={commit.sha}
+                        position="left"
+                        iconOnClick={() => {
+                          setProfile({
+                            u_idx: commit.committer.id,
+                            avatar_url: commit.committer.avatar_url,
+                            nickname: commit.committer.login,
+                            email: commit.commit.author.email,
+                            github: commit.committer.html_url,
+                          })
+                          setProfileModal(!profileMoal)
+                        }}
+                      >
+                        <h6
+                          className="mb-2"
+                          u_idx={commit.committer.id}
+                          onClick={() => {
+                            setProfile({
+                              u_idx: commit.committer.id,
+                              avatar_url: commit.committer.avatar_url,
+                              nickname: commit.committer.login,
+                              email: commit.commit.author.email,
+                              github: commit.committer.html_url,
+                            })
+                            setProfileModal(!profileMoal)
+                          }}
+                        >
+                          <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
+                        </h6>
+                        <CCard className="p-3" style={{ background: '#D9E5FF' }}>
+                          {commit.commit.message}
+                        </CCard>
+                      </VerticalTimelineElement>
+                    )
+                  } else {
+                    return (
+                      <VerticalTimelineElement
+                        className="vertical-timeline-element--work"
+                        date={commit.commit.author.date}
+                        iconStyle={{ background: '#514200', color: '#fff' }}
+                        key={commit.sha}
+                        position="right"
+                        iconOnClick={() => {
+                          setProfile({
+                            u_idx: commit.committer.id,
+                            avatar_url: commit.committer.avatar_url,
+                            nickname: commit.committer.login,
+                            email: commit.commit.author.email,
+                            github: commit.committer.html_url,
+                          })
+                          setProfileModal(!profileMoal)
+                        }}
+                      >
+                        <h6
+                          className="mb-2"
+                          u_idx={commit.committer.id}
+                          onClick={() => {
+                            setProfile({
+                              u_idx: commit.committer.id,
+                              avatar_url: commit.committer.avatar_url,
+                              nickname: commit.committer.login,
+                              email: commit.commit.author.email,
+                              github: commit.committer.html_url,
+                            })
+                            setProfileModal(!profileMoal)
+                          }}
+                        >
+                          <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
+                        </h6>
+                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                          {commit.commit.message}
+                        </CCard>
+                      </VerticalTimelineElement>
+                    )
+                  }
+                })
+              ) : option == 'unresolvedissue' ? (
+                commitsList.map((data) => {
+                  if (data.user.login == login.nickname) {
+                    return (
+                      <VerticalTimelineElement
+                        className="vertical-timeline-element--work"
+                        date={data.updated_at}
+                        iconStyle={{ background: '#000CB7', color: '#fff' }}
+                        key={data.id}
+                        iconOnClick={() => {
+                          setProfileModal(!profileMoal)
+                        }}
+                      >
+                        <h6
+                          className="mb-2 row"
+                          onClick={() => {
+                            setProfileModal(!profileMoal)
+                          }}
+                        >
+                          <div align="start" className="col-9">
+                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                          </div>
+                          <div className="col-3" align="end">
+                            <strong># {data.number}</strong>
+                          </div>
+                        </h6>
+                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                          <h5>
+                            <strong>{data.title}</strong>
+                          </h5>
+                          {data.body}
+                        </CCard>
+                      </VerticalTimelineElement>
+                    )
+                  } else {
+                    return (
+                      <VerticalTimelineElement
+                        className="vertical-timeline-element--work"
+                        date={data.updated_at}
+                        iconStyle={{ background: '#514200', color: '#fff' }}
+                        key={data.id}
+                        iconOnClick={() => {
+                          setProfileModal(!profileMoal)
+                        }}
+                      >
+                        <h6
+                          className="mb-2 row"
+                          onClick={() => {
+                            setProfileModal(!profileMoal)
+                          }}
+                        >
+                          <div align="start" className="col-9">
+                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                          </div>
 
-                  <p>
-                    Creative Direction, User Experience, Visual Design, Project Management, Team
-                    Leading
-                  </p>
-                </VerticalTimelineElement>
-              )
-            })}
-          </VerticalTimeline>
+                          <div className="col-3" align="end">
+                            <strong># {data.number}</strong>
+                          </div>
+                        </h6>
+                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                          <h5>
+                            <strong>{data.title}</strong>
+                          </h5>
+                          {data.body}
+                        </CCard>
+                      </VerticalTimelineElement>
+                    )
+                  }
+                })
+              ) : option == 'assignedissue' ? (
+                commitsList.map((data) => {
+                  if (data.user.login == login.nickname) {
+                    return (
+                      <VerticalTimelineElement
+                        className="vertical-timeline-element--work"
+                        date={data.updated_at}
+                        iconStyle={{ background: '#000CB7', color: '#fff' }}
+                        key={data.id}
+                        iconOnClick={() => {
+                          setProfileModal(!profileMoal)
+                        }}
+                      >
+                        <h6
+                          className="mb-2 row"
+                          onClick={() => {
+                            setProfileModal(!profileMoal)
+                          }}
+                        >
+                          <div align="start" className="col-9">
+                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                          </div>
+                          <div className="col-3" align="end">
+                            <strong># {data.number}</strong>
+                          </div>
+                        </h6>
+                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                          <h5>
+                            <strong>{data.title}</strong>
+                          </h5>
+                          {data.body}
+                        </CCard>
+                      </VerticalTimelineElement>
+                    )
+                  } else {
+                    return (
+                      <VerticalTimelineElement
+                        className="vertical-timeline-element--work"
+                        date={data.updated_at}
+                        iconStyle={{ background: '#514200', color: '#fff' }}
+                        key={data.id}
+                        iconOnClick={() => {
+                          setProfileModal(!profileMoal)
+                        }}
+                      >
+                        <h6
+                          className="mb-2 row"
+                          onClick={() => {
+                            setProfileModal(!profileMoal)
+                          }}
+                        >
+                          <div align="start" className="col-9">
+                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                          </div>
+
+                          <div className="col-3" align="end">
+                            <strong># {data.number}</strong>
+                          </div>
+                        </h6>
+                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                          <h5>
+                            <strong>{data.title}</strong>
+                          </h5>
+                          {data.body}
+                        </CCard>
+                      </VerticalTimelineElement>
+                    )
+                  }
+                })
+              ) : (
+                <></>
+              )}
+            </VerticalTimeline>
+          )}
         </CCardBody>
-        <CCardFooter></CCardFooter>
+        <CModal alignment="center" visible={profileMoal} onClose={() => setProfileModal(false)}>
+          <CModalHeader onClose={() => setVisible(false)}></CModalHeader>
+          <CModalBody>
+            <Profile user={profile} />
+          </CModalBody>
+        </CModal>
       </CCard>
     </>
   )
