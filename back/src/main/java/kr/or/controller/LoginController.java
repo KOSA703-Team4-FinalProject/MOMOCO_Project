@@ -57,12 +57,6 @@ public class LoginController {
 		userDetail.setLocation(memberAll.getLocation());
 		userDetail.setBlog(memberAll.getBlog());
 		
-		
-		WorkSpaceUser workuser = new WorkSpaceUser();
-		workuser.setUrl(memberAll.getWorkspace());
-		workuser.setU_idx(member.getU_idx());
-		workuser.setRole(memberAll.getRole());
-		
 		//신규유저인지 기존 유저 인지 판별
 		int result = loginservice.isMember(member.getU_idx());
 		
@@ -75,6 +69,14 @@ public class LoginController {
 		}
 		
 		if(memberAll.getRole().equals("user")) {	//권한이 user일 경우 워크스페이스에 추가해주기
+			
+			WorkSpaceUser workuser = new WorkSpaceUser();
+			workuser.setUrl(memberAll.getWorkspace());
+			workuser.setU_idx(member.getU_idx());
+			workuser.setRole(memberAll.getRole());
+			
+			System.out.println("haha");
+			System.out.println(workuser.toString());
 			
 			result2 = workspaceservice.insertWorkUser(workuser);
 		}

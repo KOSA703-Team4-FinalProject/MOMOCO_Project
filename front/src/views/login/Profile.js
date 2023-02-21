@@ -42,7 +42,6 @@ const Profile = () => {
 
         const workname = localStorage.getItem('workName')
 
-
         //cookie저장
         cookies.remove('u_idx', { sameSite: 'strict', path: '/' })
         
@@ -56,7 +55,7 @@ const Profile = () => {
         localStorage.setItem("login", JSON.stringify(data)) //로컬 스토리지에 저장
 
         //백서버에 회원 정보 전달
-        if(workname == ''){
+        if(workname == '' || workname == null){
           loginaxios(response.data, 'admin', '')
         }else{
           loginaxios(response.data, 'user', workname)

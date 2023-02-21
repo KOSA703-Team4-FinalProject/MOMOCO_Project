@@ -14,7 +14,7 @@ export const loginaxios = (res, myrole, workspaceName) => {
     'location': res.location === null ? '' : res.location,
     'blog': res.blog === null ? '' : res.blog,
     'role': myrole,
-    'workspace': workspaceName
+    'workspace': workspaceName,
   }
 
   axios.post('/backlogin/login', req).then((res) => {
