@@ -159,9 +159,9 @@ const docStorage = (props) => {
               </CModal>
             </CCol>
           </CRow>
-          <CAccordion alwaysOpen>
-            {list.map((data, key) => (
-              <CAccordionItem Key={key}>
+          <CAccordion alwaysOpen activeItemKey={1}>
+            {list.map((data) => (
+              <CAccordionItem itemKey={data.idx}>
                 <CAccordionHeader>
                   <CRow className="col-12">
                     <CCol className="col-2 px-2">

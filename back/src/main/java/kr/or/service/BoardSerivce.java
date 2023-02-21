@@ -1,8 +1,13 @@
 package kr.or.service;
 
+import java.sql.SQLException;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import kr.or.dao.BoardDao;
+import kr.or.vo.Board;
 
 @Service
 public class BoardSerivce {
@@ -12,8 +17,25 @@ public class BoardSerivce {
 		this.sqlsession =sqlsession;
 		
 	}
-	//전제 게시판 목록 출력
-	//검색
-	//페이징 처리
+	
+	//알람에서 사용, 해당 알람이 발생할 게시글 찾기
+	public Board getBoardByTitle(Board board) {
+		
+		Board reboard = new Board();
+		
+		try {
+			
+			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
+			reboard = boarddao.getBoardByTitle(board);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return reboard;
+	}
+	
 	
 }

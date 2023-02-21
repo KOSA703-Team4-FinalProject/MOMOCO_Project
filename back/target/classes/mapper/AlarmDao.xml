@@ -5,12 +5,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="kr.or.dao.AlarmDao">
 
 	<!-- 알람 리스트 불러오기 public List<Alarm> getAlarmList(Alarm alarm) -->
-	<select id="getAlarmList" parameterType="kr.or.vo.Alarm" resultType="kr.or.vo.Alarm" >
+	<select id="getAlarmList" parameterType="int" resultType="kr.or.vo.Alarm" >
 		select m.u_idx, nickname, profilephoto, a_idx, idx, content, check_alarm, url
-		from member m right join (select a_idx, idx, content, check_alarm, url, u_idx
-	    		                    from alarm where u_idx = 8349037) a
+		from member m right join (select a_idx, idx, content, check_alarm, url, u_idx, link
+	    		                    from alarm where u_idx = ${u_idx}) a
 		on m.u_idx = a.u_idx
 		order by a_idx
+	</select>
+	
+	<!-- 일정 추가 public int addDoc(Doc doc, MultipartFile file) -->
+	<insert id="addAlarm" parameterType="kr.or.vo.Alarm">
+		insert into alarm (a_idx, idx, content, check_alarm, url, u_idx, link)
+					values(alarm_a_idx_seq.nextval, '${idx}', '${content}', 0, '${url}', '${u_idx}, '${link})
+	</insert>
+	
+	<!-- 워크스페이스 유저 검색 -->
+	<select id="u_idxList" parameterType="string" resultType="kr.or.vo.Alarm">
+		select a.url , a.u_idx, b.nickname , b.profilephoto
+		from WORKSPACE_USER a join member b on a.u_idx = b.u_idx 
+		where a.url = '${url}'
 	</select>
 
 </mapper>
