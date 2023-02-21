@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.service.DocService;
+import kr.or.utils.AlarmSocket;
 import kr.or.vo.CommonBoard;
 import kr.or.vo.Doc;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -40,6 +41,12 @@ public class DocController {
 	@Autowired
 	public void setDocService(DocService docservice) {
 		this.docservice = docservice;
+	}
+	
+	private AlarmSocket alarmsocket;
+	@Autowired
+	public void setAlarmSocket(AlarmSocket alarmsocket) {
+		this.alarmsocket = alarmsocket;
 	}
 	
 	//전체 일정 조회
@@ -68,7 +75,15 @@ public class DocController {
 	@RequestMapping(value="/addDocLink", method=RequestMethod.POST)
 	public int addDocLink(@RequestBody Doc doc) {
 		System.out.println("컨트롤러 adddoclink");
-		return docservice.addDocLink(doc);
+		
+		int result = docservice.addDocLink(doc);
+		
+		String[] u_idxList = doc.getU_idxList().split(",");
+		
+		System.out.println("addDocLink1 : " + result);
+		alarmsocket.sendAlarm(doc, u_idxList);
+		System.out.println("addDocLink2 : " + result);
+		return result;
 	}
 	
 	

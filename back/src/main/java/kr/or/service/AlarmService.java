@@ -28,9 +28,9 @@ public class AlarmService {
 	public int addAlarm(Alarm alarm) {
 		
 		int result = 0;
-		
+		System.out.println("addalarm1");
 		try {
-
+			System.out.println("addalarm2");
 			AlarmDao alarmdao = sqlsession.getMapper(AlarmDao.class);
 			result = alarmdao.addAlarm(alarm);
 

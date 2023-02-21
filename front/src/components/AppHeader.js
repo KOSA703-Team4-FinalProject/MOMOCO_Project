@@ -45,20 +45,19 @@ const AppHeader = () => {
   //접속한 채팅방 번호
   let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
   //웹 소켓 연결
-  const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
+  const websocket = new WebSocket('ws://192.168.0.32:8090/controller/chat')
+
   const stomp = StompJs.over(websocket)
 
-  useEffect(()=>{
-
+  useEffect(() => {
     const cookies = new Cookies()
     const date = new Date()
-    
+
     cookies.set('url', params.url, {
       path: '/',
       expires: date.setHours(date.getHours + 8),
       sameSite: 'strict',
     })
-
   }, [])
 
   return (
