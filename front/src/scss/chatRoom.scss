@@ -21,8 +21,7 @@ aside{
 	font-size:15px;
 	vertical-align:top;
 	border-radius: 5px;
-	background-color: #5B5A65;
-	color: white;
+	background-color: #D6E4E5;
 }
 main{
 	width:467px;
@@ -30,7 +29,7 @@ main{
 	display:inline-block;
 	font-size:15px;
 	vertical-align:top;
-	background-color: #101526;
+	background-color: #D6E4E5;
 }
 
 .main2{
@@ -38,7 +37,7 @@ main{
 	display:inline-block;
 	font-size:15px;
 	vertical-align:top;
-	background-color: #12172D;
+	background-color: #DDDDDD;
 }
 aside header{
 	padding:30px 20px;
@@ -48,7 +47,7 @@ aside input{
 	height:50px;
 	line-height:50px;
 	padding:0 20px 0 20px;
-	background-color:#12172D;
+	background-color:#497174;
 	border:none;
 	border-radius:3px;
 	color:#d8dbe0;
@@ -64,7 +63,7 @@ aside button{
 	height:50px;
 	line-height:50px;
 	padding:0 20px 0 20px;
-	background-color:#12172D;
+	background-color:#497174;
 	border:none;
 	border-radius:3px;
 	color:#d8dbe0;
@@ -86,16 +85,14 @@ aside ul{
 	height:690px;
 }
 aside li{
-	
 	padding:10px 0;
 }
 aside li:hover{
-	background-color:#12172D;
+	background-color:#497174;
 	border-radius: 5px;
 }
 h2,h3{
 	margin:0;
-	color: white;
 }
 aside li img{
 	border-radius:50%;
@@ -108,8 +105,8 @@ aside li div{
 	margin-top:12px;
 }
 aside li h2{
-	font-size:15px;
-	color: white;
+	font-size:14px;
+	color:#3b3e49;
 	font-weight:normal;
 	margin-bottom:5px;
 }
@@ -141,7 +138,6 @@ aside li h3{
 main header{
 	height:90px;
 	padding:20px;
-	color: white;
 }
 main header > *{
 	display:inline-block;
@@ -164,7 +160,7 @@ main header h2{
 main header h3{
 	font-size:14px;
 	font-weight:normal;
-	color:#ffffff;
+	color:#7e818a;
 }
 
 .chat{
@@ -185,7 +181,9 @@ main header h3{
 	font-weight:normal;
 }
 .chat h3{
-	color:#bbb;
+	color:#3C4B64;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 .chat .entete{
 	margin-bottom:5px;
@@ -200,23 +198,19 @@ main header h3{
 	border-radius:5px;
 }
 .chat .me{
-	color: white;
 	text-align:right;
-}
-.chat .you{
-	color: white;
 }
 .chat .sys{
 	text-align:center;
 }
 .chat .sys .message{
-	background-color:#F2B33D;
+	background-color:#6D9886;
 }
 .chat .you .message{
-	background-color:#51658C;
+	background-color:#497174;
 }
 .chat .me .message{
-	background-color:#85AAF2;
+	background-color:#497174;
 }
 .chat .triangle{
 	width: 0;
@@ -225,18 +219,18 @@ main header h3{
 	border-width: 0 10px 10px 10px;
 }
 .chat .you .triangle{
-		border-color: transparent transparent #51658C transparent;
+		border-color: transparent transparent #497174 transparent;
 		margin-left:15px;
 }
 .chat .me .triangle{
-		border-color: transparent transparent #85AAF2 transparent;
+		border-color: transparent transparent #497174 transparent;
 		margin-left:355px;
 }
 
 main footer{
-	height:155px;
+	height:183px;
 	padding:20px 20px 20px 20px;
-	color: white;
+	background-color: #D6E4E5;
 }
 main footer textarea{
 	resize:none;
@@ -248,10 +242,9 @@ main footer textarea{
 	padding:20px;
 	font-size:13px;
 	margin-bottom:13px;
-	background-color: #d8dbe0;
 }
 main footer textarea::placeholder{
-	color:#12172D;
+	color:#3C4B64;
 }
 main footer img{
 	height:30px;
@@ -261,10 +254,12 @@ main footer a{
 	text-decoration:none;
 	text-transform:uppercase;
 	font-weight:bold;
-	color:#6fbced;
+	color:#3C4B64;
 	vertical-align:top;
 	margin-top:5px;
 	display:inline-block;
 }
 
-
+.drawerstyle {
+	background-color: #D6E4E5;
+}
