@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.or.dao.AlarmDao;
 import kr.or.dao.LabelDao;
 import kr.or.vo.Label;
 
@@ -46,6 +47,21 @@ public class LabelService {
 		try {
 			LabelDao labeldao = sqlsession.getMapper(LabelDao.class);
 			result=labeldao.addLabel(label);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	public int deleteLabel(Label label) {
+		int result = 0;
+
+		try {
+			LabelDao labeldao = sqlsession.getMapper(LabelDao.class);
+			result = labeldao.deleteLabel(label);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

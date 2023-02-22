@@ -63,5 +63,11 @@ public class LabelController {
 		System.out.println("컨트롤러 adddoclink");
 		return labelservice.addLabel(label);
 	}
+	
+	@RequestMapping(value="/delete", method=RequestMethod.POST)
+	public int deleteLabel(@RequestBody Label label) {
+		System.out.println(label);
+		return labelservice.deleteLabel(label);
+	}
 		
 }

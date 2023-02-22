@@ -29,7 +29,7 @@ const backgroundcolor = {
 }
 
 const IssueList = () => {
-const params = useParams()
+  const params = useParams()
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -154,7 +154,8 @@ const params = useParams()
                       <VerticalTimelineElement
                         className="vertical-timeline-element--work"
                         date={data.updated_at}
-                        iconStyle={{ background: '#000CB7', color: '#fff' }}
+                        icon={<CAvatar size="xl" src={data.user.avatar_url} />}
+                        iconStyle={{ background: 'white', color: 'white' }}
                         key={data.id}
                         iconOnClick={() => {
                           setProfileModal(!profileMoal)
@@ -186,7 +187,8 @@ const params = useParams()
                       <VerticalTimelineElement
                         className="vertical-timeline-element--work"
                         date={data.updated_at}
-                        iconStyle={{ background: '#514200', color: '#fff' }}
+                        icon={<CAvatar size="xl" src={data.user.avatar_url} />}
+                        iconStyle={{ background: 'white', color: 'white' }}
                         key={data.id}
                         iconOnClick={() => {
                           setProfileModal(!profileMoal)
@@ -223,7 +225,8 @@ const params = useParams()
                       <VerticalTimelineElement
                         className="vertical-timeline-element--work"
                         date={data.updated_at}
-                        iconStyle={{ background: '#000CB7', color: '#fff' }}
+                        icon={<CAvatar size="xl" src={data.user.avatar_url} />}
+                        iconStyle={{ background: 'white', color: 'white' }}
                         key={data.id}
                         iconOnClick={() => {
                           setProfileModal(!profileMoal)

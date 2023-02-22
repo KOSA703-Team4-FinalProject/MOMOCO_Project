@@ -13,4 +13,6 @@ public interface LabelDao {
 	//라벨 추가
 	public int addLabel(Label label) throws ClassNotFoundException, SQLException;
 	
+	//라벨 삭제
+	public int deleteLabel(Label label) throws ClassNotFoundException, SQLException;
 }
