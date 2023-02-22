@@ -145,13 +145,13 @@ const WriteDocStorage = () => {
         title: title,
         content: content,
         b_code: 3,
-        label: 'doc',
+        label: label,
         u_idx: u_idx,
         url: url,
         depth: 0,
         step: 0,
         upload_type: upload_type,
-        u_idxlist: '',
+        u_idxlist: alarmlist,
       }
       formData.append('file', orifile)
       formData.append('doc', JSON.stringify(doc))
@@ -205,8 +205,8 @@ const WriteDocStorage = () => {
           <CFormLabel className="col-sm-2 col-form-label">
             <strong>
               라벨 선택{' '}
-              <CButton color={style} shape="rounded-pill" size="sm">
-                {label}
+              <CButton color={chooseLabel.style} shape="rounded-pill" size="sm">
+                {chooseLabel.label}
               </CButton>
             </strong>
           </CFormLabel>

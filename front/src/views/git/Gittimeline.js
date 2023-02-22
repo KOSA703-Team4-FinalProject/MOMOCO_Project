@@ -111,7 +111,8 @@ const Gittimeline = () => {
                     <VerticalTimelineElement
                       className="vertical-timeline-element--work"
                       date={commit.commit.author.date}
-                      iconStyle={{ background: '#000CB7', color: '#fff' }}
+                      icon={<CAvatar size="xl" src={commit.committer.avatar_url} />}
+                      iconStyle={{ background: 'white', color: 'white' }}
                       key={commit.sha}
                       position="left"
                       iconOnClick={() => {
@@ -151,7 +152,8 @@ const Gittimeline = () => {
                     <VerticalTimelineElement
                       className="vertical-timeline-element--work"
                       date={commit.commit.author.date}
-                      iconStyle={{ background: '#514200', color: '#fff' }}
+                      icon={<CAvatar size="xl" src={commit.committer.avatar_url} />}
+                      iconStyle={{ background: 'white', color: 'white' }}
                       key={commit.sha}
                       position="right"
                       iconOnClick={() => {
