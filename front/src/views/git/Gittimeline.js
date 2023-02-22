@@ -48,7 +48,6 @@ const Gittimeline = () => {
   }, [])
 
   const getCommits = async (data) => {
-
     //임시로 레파지토리 이름
     const repos = data.linked_repo
     //임시로 레포지토리 주인
@@ -60,13 +59,14 @@ const Gittimeline = () => {
         repo: repos,
       })
       .then((res) => {
-
         console.log(res.data)
 
         res.data.map((d) => {
           setCommitsList((commitsList) => [...commitsList, d])
         })
         setListView(true)
+
+        console.log(commitsList)
       })
   }
 
