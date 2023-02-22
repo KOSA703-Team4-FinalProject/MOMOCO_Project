@@ -133,33 +133,27 @@ public class CommonBoardService {
 
 	//글 수정하기
 	@Transactional
-	public int editcommonboard(CommonBoard all) {
-		int result =0;
-		try {
-			Board board = new Board();
-			board.setIdx(all.getIdx());
-			board.setContent(all.getContent());
-			board.setLabel(all.getLabel());
-			board.setU_idx(all.getU_idx());
-			board.setTitle(all.getTitle());
-			
-			System.out.println("이거뭐임"+board.toString());
-			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
-			CommonBoard cmb = new CommonBoard();
-			cmb.setOri_filename(all.getOri_filename());
-			cmb.setVolume(all.getVolume());
-			cmb.setFiletype(all.getFiletype());
-				
-			CommonBoardDao commboard = sqlsession.getMapper(CommonBoardDao.class);
-			result =commboard.updateCommonBoard(all);
-			result = commboard.updateBoard(all);
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	
+	public int modifyCommonBoard( CommonBoard all) {
+	    int result = 0;
+	    try {
+	        Board board = new Board();
+	        board.setIdx(all.getIdx());
+	        board.setContent(all.getContent());
+	        board.setLabel(all.getLabel());
+	        board.setU_idx(all.getU_idx());
+	        board.setTitle(all.getTitle());
+
+	        System.out.println("이거뭐임" + board.toString());
+
+	        CommonBoardDao commboard = sqlsession.getMapper(CommonBoardDao.class);
+	        result = commboard.updateCommonBoard(all);
+	        result = commboard.updateBoard(all);
+
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
 	}
 }

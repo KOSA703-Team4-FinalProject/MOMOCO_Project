@@ -6,6 +6,7 @@ import {
   CCol,
   CFormCheck,
   CFormInput,
+  CFormLabel,
   CFormSelect,
   CFormTextarea,
   CRow,
@@ -29,7 +30,7 @@ const Boardwirte = () => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
   const issueNumber = useSelector((state) => state.issueNumber)
-
+  const [u_idxlist, SetU_idxlist] = useState([]) //알림
   //워크스페이스 주소값
   const params = useParams()
   console.log(params.url + 'hahah')
@@ -81,7 +82,6 @@ const Boardwirte = () => {
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
   const [boardcontent, setBoardcontent] = useState([])
-  const [alramlist, setAlarmlist] = useState([])
 
   //알림보낼 사람 목록
   const myparam1 = {
@@ -90,23 +90,22 @@ const Boardwirte = () => {
   useEffect(() => {
     axios({
       method: 'POST',
-      url: '/board/boardalramlist',
+      url: '/api/alarm/teamlist',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      data: myparam1,
+      data: {
+        url: url,
+      },
     }).then((res) => {
-      console.log(res.data)
-
-      setAlarmlist(res.data)
+      console.log(res)
+      SetU_idxlist([])
+      res.data.mpa((data) => {
+        SetU_idxlist((u_idxlist) => [...u_idxlist, data])
+      })
     })
   }, [])
   //알림 보내기
-  const [selectedValues, setSelectedValues] = useState([])
-  const allUsers = alramlist.filter((data1) => data1.nickname !== login.nickname)
-  const allUserNicknames = allUsers.map((user) => user.u_idx)
-  const allUsersSelected = selectedValues.length === allUsers.length
-  console.log(selectedValues)
 
   //파일 업로드
   const [filevalues, setFilevalues] = useState('')
@@ -221,51 +220,34 @@ const Boardwirte = () => {
                   </CCol>
                   <CCol className="row">
                     <CCol className="col-md-4">
-                      <label>
-                        <strong>알림</strong>
-                      </label>
-                      <br></br>
-                      <CFormCheck
-                        inline
-                        id="inlineCheckbox1"
-                        value="all"
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedValues(allUserNicknames)
-                          } else {
-                            setSelectedValues([])
-                          }
-                        }}
-                        label="전체보내기"
-                        checked={allUsersSelected} // 모든 사용자가 선택된 경우, 체크박스를 선택하도록 함
-                      />
-                      {alramlist
-                        .filter((data1) => data1.nickname !== login.nickname)
-                        .map((data1, key) => (
-                          <div key={key}>
-                            <CFormCheck
-                              inline
-                              id={`inlineCheckbox${key}`}
-                              value={data1.nickname}
-                              data-idx={data1.u_idx} // data-idx 속성 추가
-                              onChange={(e) => {
-                                const idx = e.target.dataset.idx // data-idx 속성 값 가져오기
-                                if (e.target.checked) {
-                                  setSelectedValues([...selectedValues, idx])
-                                } else {
-                                  setSelectedValues(selectedValues.filter((value) => value !== idx))
-                                }
-                              }}
-                            />
-                            <CAvatar className="ms-2" src={data1.profilephoto} />
-                            {data1.nickname}&nbsp;
-                          </div>
-                        ))}
+                      <CRow>
+                        <CFormLabel className="col-sm-2 col-form-label">
+                          <strong>알림</strong>
+                        </CFormLabel>
+                        <CCol sm={10}>
+                          <CFormCheck
+                            inline
+                            id="inlineCheckbox1"
+                            value="option1"
+                            label="전체보내기"
+                          />
+                          <CFormCheck inline id="inlineCheckbox2" value="option2" />
+                          <CAvatar
+                            className="ms-2"
+                            src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
+                          />{' '}
+                          메타몽
+                          <CFormCheck
+                            inline
+                            id="inlineCheckbox3"
+                            value="option3"
+                            label="오리"
+                            disabled
+                          />
+                        </CCol>
+                      </CRow>
                     </CCol>
-                    <CCol className="col-md-4"></CCol>
-                    <CCol className="col-md-4"></CCol>
                   </CCol>
-
                   <br></br>
                   <CCol className="row">
                     <CCol className="col-md-12">

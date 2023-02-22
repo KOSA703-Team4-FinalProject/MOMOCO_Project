@@ -65,19 +65,15 @@ const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
 const AllBoardList = React.lazy(() => import('./views/board/AllBoardList'))
 //댓글 쓰기
 const Comments = React.lazy(() => import('./components/Comments'))
-//대댓글작성
-const Commentreply = React.lazy(() => import('./components/Commentreply'))
 //마이페이지
 const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
 const Gittimeline = React.lazy(() => import('./views/git/Gittimeline'))
 //이슈 타임라인
-const IssueTimeLine = React.lazy(()=>import('./views/git/IssueList'))
+const IssueTimeLine = React.lazy(() => import('./views/git/IssueList'))
 const Gittime = React.lazy(() => import('./views/git/Gittime'))
 //깃차트
 const Gitchart = React.lazy(() => import('./views/git/Gitchart'))
-// 깃레포지토리랭귀지
-const Gitrepolanguages = React.lazy(() => import('./views/git/Gitrepolanguages'))
 //화상채팅
 const videochat = React.lazy(() => import('./views/viewchat/Viewchat'))
 // kanban 보드
@@ -147,7 +143,6 @@ const routes = [
   { path: '/gittimeline', name: 'Gittimeline', exact: true, element: Gittimeline }, //깃타임라인
   { path: '/gitchart', name: 'GitChart', exact: true, element: Gitchart }, //깃차트
   { path: '/gittime', name: 'Gittime', exact: true, element: Gittime }, //깃타임라인임시
-  { path: '/gitrepolanguages', name: 'Gitrepolanguages', exact: true, element: Gitrepolanguages }, //깃타임라인
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소
@@ -155,9 +150,8 @@ const routes = [
   { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain }, //프로젝트관리 메인
   { path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent }, //프로젝트관리 메인
   { path: '/comments', name: 'Comments', exact: true, element: Comments }, //댓글작성하기
-  { path: '/replycomment', name: 'ReplyComment', exact: true, element: Commentreply }, //대댓글 작성하기
-  { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList }, //전체게시판모록
-  { path: '/IssueTimeLine', name: 'IssueTimeLine', exact: true, element: IssueTimeLine}, //이슈 타임 라인 
+  { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList }, //전체게시판목록
+  { path: '/IssueTimeLine', name: 'IssueTimeLine', exact: true, element: IssueTimeLine }, //이슈 타임 라인
 ]
 
 export default routes

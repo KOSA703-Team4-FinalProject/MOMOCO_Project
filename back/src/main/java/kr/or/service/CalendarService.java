@@ -106,7 +106,7 @@ public class CalendarService {
 			
 			Board board = new Board();
 			board.setIdx(cal.getIdx());
-			board.setNickname(cal.getNickname());
+			
 			board.setTitle(cal.getTitle());
 			board.setContent(cal.getContent());
 			board.setB_code(cal.getB_code());

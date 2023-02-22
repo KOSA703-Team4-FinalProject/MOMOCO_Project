@@ -14,16 +14,9 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import Commentreply from 'src/components/Commentreply'
 import CryptoJS from 'crypto-js'
-
 import { PRIMARY_KEY } from '../../oauth'
 import Comments from 'src/components/Comments'
-import Commentwrite from 'src/components/Commentwrite'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import Issues from './Issues'
-import { param } from 'jquery'
-import { useDispatch } from 'react-redux'
 import { Editor } from '@tinymce/tinymce-react'
 const title = {
   fontSize: 25,
@@ -46,7 +39,8 @@ const Boardcontent = (props) => {
   const [boardcontent, setBoardcontent] = useState([])
   const [commentlist, setCommentlist] = useState([])
   const params = useParams()
-
+  //로그인한 유저
+  const login = JSON.parse(localStorage.getItem('login'))
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -205,17 +199,21 @@ const Boardcontent = (props) => {
         </CCardBody>
 
         <div align="right" className="me-4">
-          <Link to={`/ws/${params.url}/boardedit/${boardcontent.idx}`}>
-            <CButton color="primary" variant="outline">
-              수정
-            </CButton>{' '}
-          </Link>
+          {login.nickname === boardcontent.nickname && (
+            <Link to={`/ws/${params.url}/boardedit/${boardcontent.idx}`}>
+              <CButton color="primary" variant="outline">
+                수정
+              </CButton>{' '}
+            </Link>
+          )}
           &nbsp;
-          <Link to={`/ws/${params.url}/boardlist`}>
-            <CButton color="danger" variant="outline" onClick={deletecommon}>
-              삭제
-            </CButton>
-          </Link>
+          {login.nickname === boardcontent.nickname && (
+            <Link to={`/ws/${params.url}/boardlist`}>
+              <CButton color="danger" variant="outline" onClick={deletecommon}>
+                삭제
+              </CButton>
+            </Link>
+          )}
           &nbsp;
           <Link to={`/ws/${params.url}/boardlist`}>
             <CButton color="primary" variant="outline">

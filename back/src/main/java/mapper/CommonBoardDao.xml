@@ -42,13 +42,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateBoard" parameterType="kr.or.vo.CommonBoard">
 		 UPDATE board_${url}
         SET  title = #{title}, content = #{content}, label= #{label}
-        WHERE idx = #{idx};
+        WHERE idx = #{idx}
 	</update>
 	<!-- 글수정하기commonboard 테이블 -->
 	<update id="updateCommonBoard" parameterType="kr.or.vo.CommonBoard">
 	  UPDATE common_board_${url}
-        SET ori_filename = #{ori_filename}, save_filename = #{save_filename}, volume = #{volume}, filetype = #{filetype}, thumb = #{thumb}
-        WHERE idx = #{idx};
+        SET ori_filename = #{ori_filename},  volume = #{volume}, filetype = #{filetype}
+        WHERE idx = #{idx}
 	</update>
 	
 	<!--삭제  -->
