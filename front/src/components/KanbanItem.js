@@ -34,6 +34,7 @@ import KanbanDetail from 'src/views/kanban/KanbanDetail'
 import axios from 'axios'
 import $ from 'jquery'
 import { useRef } from 'react'
+import Comments from './Comments'
 
 const KanbanItem = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
@@ -549,8 +550,10 @@ const KanbanItem = (props) => {
                             <CCol xs="auto" className="me-auto">
                               <CCardHeader className="bg-light">
                                 {' '}
-                                {data2.title.length > 10
-                                  ? data2.title.substr(0, 10) + '...'
+                                {'#'}
+                                {data2.idx}{' '}
+                                {data2.title.length > 8
+                                  ? data2.title.substr(0, 8) + '...'
                                   : data2.title}
                               </CCardHeader>
                               {/* <input type="text" value={data2.b_idx} /> */}
@@ -613,6 +616,9 @@ const KanbanItem = (props) => {
                                     수정
                                   </CButton>
                                 </CCol>
+                                <br />
+                                <Comments idx={getidx} />
+
                                 <br />
                               </CCard>
                             </CModalBody>

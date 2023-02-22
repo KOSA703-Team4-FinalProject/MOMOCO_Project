@@ -55,6 +55,7 @@ const Comments = (props) => {
     url: params.url,
     idx: props.idx,
   }
+  console.log('코멘트 컴포넌트에서 idx값 받아온거 : ' + props.idx)
   function list() {
     axios({
       method: 'POST',
@@ -77,19 +78,25 @@ const Comments = (props) => {
   //댓글 리스트
   useEffect(() => {
     list()
-  }, [])
+  }, [props.idx])
 
   //댓글 작성
   ////////////////////////////////////전체리스트
+  const onChangeHandler = (e) => {
+    console.log(e.target.value)
+    setComment(e.target.value)
+  }
+
   const commentsend = () => {
     const write = {
       url: params.url,
       u_idx: login.u_idx,
-      content: $('#commentcontent').val(),
+      content: comment,
       nickname: login.nickname,
 
       idx: props.idx,
     }
+    console.log(write.content)
     axios({
       method: 'POST',
       url: '/comment/commentwrite',
@@ -192,7 +199,7 @@ const Comments = (props) => {
                 <CFormTextarea
                   rows={3}
                   placeholder="댓글을 작성해주세요"
-                  id="commentcontent"
+                  onChange={onChangeHandler}
                 ></CFormTextarea>
               </CForm>
             </CCol>
