@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.CalendarService;
+import kr.or.utils.AlarmSocket;
 import kr.or.vo.Calendar;
 
 @RestController
@@ -21,6 +22,13 @@ public class CalendarController {
 	@Autowired
 	public void setCalendarService(CalendarService calendarservice) {
 		this.calendarservice = calendarservice;
+	}
+	
+	private AlarmSocket alarmsocket;
+	
+	@Autowired
+	public void setAlarmSocket(AlarmSocket alarmsocket) {
+		this.alarmsocket = alarmsocket;
 	}
 	
 	//전체 일정 조회
@@ -41,6 +49,10 @@ public class CalendarController {
 	public int addCalendar(@RequestBody Calendar calendarAll) {
 		
 		int result = calendarservice.addCalendar(calendarAll);
+		
+		String[] u_idxList = calendarAll.getU_idxList().split(",");
+		
+		alarmsocket.sendAlarm(calendarAll, u_idxList);
 	
 		return result;
 	}

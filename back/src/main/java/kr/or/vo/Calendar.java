@@ -12,5 +12,7 @@ public class Calendar extends Board {
 	private int s_idx;				//상태 순번
 	
 	private String s_name;			//상태 이름
+	
+	private String u_idxList;		//메일 전달할 유저 식별키 리스트
 
 }

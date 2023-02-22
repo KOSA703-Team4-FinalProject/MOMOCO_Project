@@ -76,11 +76,7 @@ const Notifications = (props) => {
       data: myparams,
     }).then((res) => {
       SetList(res.data)
-      if (res.data.length != null) {
-        SetCount(res.data.length)
-      } else {
-        SetCount(0)
-      }
+      
     })
   }
 
@@ -166,7 +162,6 @@ const Notifications = (props) => {
       data: myparams,
     }).then((res) => {
       SetList([])
-      SetCount(0)
     })
   }
 
@@ -178,7 +173,7 @@ const Notifications = (props) => {
             <strong>미확인({getAlarmCount(list)})</strong>
           </CCol>
           <CCol align="end" sm={7}>
-            <CButton color="light" onClickl={() => checkAllAlarm()}>
+            <CButton color="light" onClick={() => checkAllAlarm()}>
               전체읽음으로 표시
             </CButton>
           </CCol>

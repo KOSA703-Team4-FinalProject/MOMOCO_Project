@@ -24,7 +24,6 @@ import axios from 'axios'
 import $ from 'jquery'
 
 import { PRIMARY_KEY } from '../../oauth'
-import { minHeight } from '@mui/system'
 
 const Calendar = () => {
   let [view, setView] = useState('')
@@ -34,7 +33,8 @@ const Calendar = () => {
   const [start_date, setStart_date] = useState('')
   const [checkList, setCheckList] = useState([])
 
-  const [u_idxlist, SetU_idxlist] = useState([]) //알람보낼 유저 id 리스트
+  const [u_idxlist, SetU_idxlist] = useState([]) //워크스페이스 유저 id 리스트
+  const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
 
   const params = useParams()
 
@@ -87,29 +87,27 @@ const Calendar = () => {
     })
 
     axios({
-      method: 'POST',
+      method: 'GET',
       url: '/api/alarm/teamlist',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      data: {
+      params: {
         url: url,
       },
-    }).then((res)=>{
-
+    }).then((res) => {
       console.log(res)
       SetU_idxlist([])
-      
-      res.data.mpa((data)=>{
+
+      res.data.map((data) => {
         SetU_idxlist((u_idxlist) => [...u_idxlist, data])
       })
-
     })
-
   }, [])
 
   //전체 일정 추가
   const addCal = () => {
+
     const reqData = {
       start_date: $('#calstart_date').val(),
       end_date: $('#calend_date').val(),
@@ -121,6 +119,7 @@ const Calendar = () => {
       label: '.',
       u_idx: login.u_idx,
       url: url,
+      u_idxList: alarmList,
     }
 
     axios({
@@ -225,6 +224,28 @@ const Calendar = () => {
     })
   }
 
+  //알림 전송할 u_idx List 생성
+  const checkAList = (e) => {
+
+    const result = e.target.checked
+    const u_idx = e.target.value
+
+    if(result == true){
+
+      setAlarmList(alarmList+","+u_idx)
+
+    }else{
+     const str = alarmList.split(',')
+      setAlarmList([])
+
+      str.map((res)=>{
+        if(res != u_idx){
+          setAlarmList(alarmList+","+u_idx)
+        }
+      })
+    }
+  }
+
   function Component() {
     switch (view) {
       case 'add':
@@ -235,9 +256,6 @@ const Calendar = () => {
                 <CCol className="h4">
                   <div className="d-grid gap-2 d-md-flex justify-content-md-between">
                     <strong className="ms-2 mt-2">일정 추가</strong>
-                    <CButton color="primary" variant="outline" className="me-2 mt-2">
-                      KanBan에서 불러오기
-                    </CButton>
                   </div>
                 </CCol>
                 <CCol className="mt-3">
@@ -288,20 +306,24 @@ const Calendar = () => {
                       <CRow>
                         <div className="col-sm-12 col-form-label ms-2">
                           <strong>알림</strong>
-                          <CFormCheck
-                            inline
-                            className='ms-3'
-                            value="option1"
-                            label="전체보내기"
-                          />
                         </div>
-                        <CCol md={12} className="mx-5 ps-3">
-                          <CFormCheck inline id="inlineCheckbox2" value="option2" />
-                          <CAvatar
-                            className="ms-2"
-                            src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                          />{' '}
-                          메타몽
+                        <CCol md={12} className="mx-3">
+                          <CRow className='me-2'>
+                            {u_idxlist.map((data) => {
+                              return (
+                                <CCol md={4} className='mb-3' key={data.u_idx}>
+                                  <CFormCheck inline 
+                                  onChange={checkAList}
+                                  className="inlineCheckbox2" value={data.u_idx} />
+                                  <CAvatar
+                                    className="ms-2"
+                                    src={data.profilephoto}
+                                  />{' '}
+                                  {data.nickname}
+                                </CCol>
+                              )
+                            })}
+                          </CRow>
                         </CCol>
                       </CRow>
                     </CCol>

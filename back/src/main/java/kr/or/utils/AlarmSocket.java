@@ -48,16 +48,17 @@ public class AlarmSocket {
 		alarm.setLink("/ws/" + board.getUrl() + "/"+ reboard.getB_name() + "/" + reboard.getIdx());
 		
 		//전송받을 사람
-		for(String u : u_idx) {
+		for(int i=1; i<u_idx.length; i++) {
+			
 			//알람 DB에 insert
 			System.out.println("u_idx : " + u_idx);
-			System.out.println("u : " + Integer.parseInt(u));
-			alarm.setU_idx(Integer.parseInt(u));
+			System.out.println("u : " + Integer.parseInt(u_idx[i]));
+			alarm.setU_idx(Integer.parseInt(u_idx[i]));
 			alarmservice.addAlarm(alarm);
 			
 			//알람 메시지 userIdx 기준으로 전송
-			template.convertAndSend("/sub/one/alarm/" + u, alarm);
-			System.out.println("useridx : " + u);
+			template.convertAndSend("/sub/one/alarm/" + u_idx[i], alarm);
+			System.out.println("useridx : " + u_idx[i]);
 		}
 	}
 	
