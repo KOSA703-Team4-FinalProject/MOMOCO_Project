@@ -155,6 +155,10 @@ public class DocController {
 		doc.setSave_filename(saveFileName);
 		
 		int result = docservice.addDoc(doc);
+		
+		String[] u_idxList = doc.getU_idxList().split(",");
+		alarmsocket.sendAlarm(doc, u_idxList);
+		
 		System.out.println(result);
 		return result;
 	}

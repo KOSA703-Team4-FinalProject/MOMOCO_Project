@@ -27,7 +27,8 @@ const WriteDocStorage = () => {
   const [step, SetStep] = useState('')
   const [upload_type, SetUpload_type] = useState('')
   const [link, SetLink] = useState('')
-  const [u_idxlist, SetU_idxlist] = useState([])
+  const [u_idxlist, SetU_idxlist] = useState([]) //워크스페이스 유저
+  const [alarmlist, SetAlarmList] = useState('') //알람 보낼 리스트
   const navigate = useNavigate()
 
   // AES알고리즘 사용 복호화
@@ -72,18 +73,19 @@ const WriteDocStorage = () => {
 
   useEffect(() => {
     axios({
-      method: 'POST',
+      method: 'GET',
       url: '/api/alarm/teamlist',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      data: {
+      params: {
         url: url,
       },
     }).then((res) => {
       console.log(res)
       SetU_idxlist([])
-      res.data.mpa((data) => {
+
+      res.data.map((data) => {
         SetU_idxlist((u_idxlist) => [...u_idxlist, data])
       })
     })
@@ -112,7 +114,7 @@ const WriteDocStorage = () => {
         upload_type: upload_type,
         ori_filename: link,
         save_filename: link,
-        u_idxList: '112244603',
+        u_idxList: alarmlist,
       }
       try {
         axios({
@@ -175,6 +177,24 @@ const WriteDocStorage = () => {
       } catch (error) {
         console.error(error)
       }
+    }
+  }
+  //알림 전송할 u_idx List 생성
+  const checkAList = (e) => {
+    const result = e.target.checked
+    const u_idx = e.target.value
+
+    if (result == true) {
+      SetAlarmList(alarmlist + ',' + u_idx)
+    } else {
+      const str = alarmlist.split(',')
+      SetAlarmList([])
+
+      str.map((res) => {
+        if (res != u_idx) {
+          SetAlarmList(alarmlist + ',' + u_idx)
+        }
+      })
     }
   }
 
@@ -251,22 +271,18 @@ const WriteDocStorage = () => {
         </CRow>
         <CRow>
           <CFormLabel className="col-sm-2 col-form-label">
-            <strong>알림</strong>
+            <strong>알림 전송</strong>
           </CFormLabel>
           <CCol sm={10}>
-            <CFormCheck inline id="inlineCheckbox1" value="option1" label="전체보내기" />
-            <CFormCheck inline id="inlineCheckbox2" value="option2" />
-            <CAvatar
-              className="ms-2"
-              src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-            />{' '}
-            메타몽
-            <CFormCheck inline id="inlineCheckbox2" value="option2" />
-            <CAvatar
-              className="ms-2"
-              src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-            />{' '}
-            메타몽
+            {u_idxlist.map((data) => {
+              return (
+                <>
+                  <CFormCheck inline name="u_idx" value={data.u_idx} onChange={checkAList} />
+                  <CAvatar className="ms-2" src={data.profilephoto} />
+                  {data.nickname}{' '}
+                </>
+              )
+            })}
           </CCol>
         </CRow>
         <CCardBody>

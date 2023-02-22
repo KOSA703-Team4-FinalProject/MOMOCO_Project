@@ -76,11 +76,6 @@ const Notifications = (props) => {
       data: myparams,
     }).then((res) => {
       SetList(res.data)
-      if (res.data.length != null) {
-        SetCount(res.data.length)
-      } else {
-        SetCount(0)
-      }
     })
   }
 
@@ -166,7 +161,6 @@ const Notifications = (props) => {
       data: myparams,
     }).then((res) => {
       SetList([])
-      SetCount(0)
     })
   }
 

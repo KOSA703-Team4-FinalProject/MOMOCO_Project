@@ -41,7 +41,7 @@ public class AlarmController {
 	}
 	
 	//워크스페이스 팀원 불러오기(알림 대상자)
-	@RequestMapping(value = "/api/alarm/teamlist", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/alarm/teamlist", method = RequestMethod.GET)
 	public List<Alarm> u_idxList(@RequestParam(value = "url") String url){
 	
 		List<Alarm> alarmlist = alarmservice.u_idxList(url);
