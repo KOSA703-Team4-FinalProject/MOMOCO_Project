@@ -1,12 +1,12 @@
 import { CButton, CCard, CCardBody, CCardGroup, CCol, CRow } from '@coreui/react'
 import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 
 import { CALLBACK_URL, CLIENT_ID, GITHUB_AUTH_CODE_SERVER } from '../../oauth.js'
 import momocologo from 'src/assets/images/momocologo.png'
-import { useDispatch } from 'react-redux'
-import { useEffect } from 'react'
-import { updateInviteMem, updateName } from 'src/store.js'
-import Cookies from 'universal-cookie'
+
+
+
 
 const JoinWorkSpace = () => {
   // 로그인
