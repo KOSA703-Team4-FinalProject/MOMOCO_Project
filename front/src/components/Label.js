@@ -69,12 +69,12 @@ const Label = () => {
       url: params.url,
       label: label,
     }
-    if (label == null || label == '') {
+    if (chooseLabel == null || label == '') {
       alert('선택한 라벨이 없습니다')
     } else {
       Swal.fire({
         title: '라벨 삭제',
-        text: label + '을 삭제하시겠습니까?',
+        text: label + ' 라벨을 삭제하시겠습니까?',
         icon: 'warning',
 
         showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음

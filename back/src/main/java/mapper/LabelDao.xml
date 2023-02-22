@@ -9,7 +9,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select label, style from label_${url} 
 	</select>
 	
-
 	<insert id="addLabel" parameterType="kr.or.vo.Label">
 		insert into label_${url} (label, style) values ('${label}', '${style}')
 	</insert>

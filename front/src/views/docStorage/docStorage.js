@@ -182,7 +182,11 @@ const docStorage = (props) => {
                       ) : (
                         <BsCardImage />
                       )}
-                      <strong> {data.ori_filename}</strong>
+                      {data.ori_filename.length > 25 ? (
+                        <strong>{data.ori_filename.substr(0, 25) + '...'}</strong>
+                      ) : (
+                        <strong>{data.ori_filename}</strong>
+                      )}
                     </CCol>
                     <CCol className="col-2 px-1">
                       <strong>{data.nickname}</strong>
@@ -265,7 +269,7 @@ const docStorage = (props) => {
                     </CCol>
                   </CRow>
                   <CRow>
-                    <Comments />
+                    <Comments idx={data.idx} />
                   </CRow>
                 </CAccordionBody>
               </CAccordionItem>
