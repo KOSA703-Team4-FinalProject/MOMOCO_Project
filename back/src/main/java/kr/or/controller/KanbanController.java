@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.KanbanService;
 import kr.or.service.StatusService;
+import kr.or.utils.AlarmSocket;
 import kr.or.vo.Board;
-import kr.or.vo.Calendar;
-import kr.or.vo.CommonBoard;
 import kr.or.vo.Kanban;
 import kr.or.vo.Status;
 
@@ -35,6 +34,12 @@ public class KanbanController {
 	@Autowired
 	public void setWorkspaceservice(StatusService statusService) {
 		this.statusService = statusService;
+	}
+	
+	private AlarmSocket alarmsocket;
+	@Autowired
+	public void setAlarmSocket(AlarmSocket alarmsocket) {
+		this.alarmsocket = alarmsocket;
 	}
 
 	// 칸반 전체 조회
@@ -105,9 +110,14 @@ public class KanbanController {
 	// 칸반 아이템 추가
 	@RequestMapping(value = "/addKanban", method = RequestMethod.POST)
 	public int addKanban(@RequestBody Kanban kanban) {
+		
+		
 
 		int result = kanbanservice.addKanban(kanban);
-
+		
+		String[] u_idxList = kanban.getU_idxList().split(",");
+		alarmsocket.sendAlarm(kanban, u_idxList);
+		
 		return result;
 	}
 
