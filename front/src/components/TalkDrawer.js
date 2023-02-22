@@ -63,7 +63,7 @@ const TalkDrawer = () => {
       <div className="main2">
         <CCard>
           <header className="pt-2 m-2 px-4">
-            <CRow>
+            <CRow className='mydrawer'>
               <CCol xs="auto" className="me-auto pt-1">
                 <div className="h4 col">
                   <strong>채팅방 서랍</strong>{' '}
