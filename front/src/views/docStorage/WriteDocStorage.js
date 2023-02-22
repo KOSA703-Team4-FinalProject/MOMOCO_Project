@@ -27,6 +27,7 @@ const WriteDocStorage = () => {
   const [step, SetStep] = useState('')
   const [upload_type, SetUpload_type] = useState('')
   const [link, SetLink] = useState('')
+  const [u_idxlist, SetU_idxlist] = useState([])
   const navigate = useNavigate()
 
   // AES알고리즘 사용 복호화
@@ -68,6 +69,25 @@ const WriteDocStorage = () => {
     e.preventDefault()
     SetUpload_type(e.target.value)
   }
+
+  useEffect(() => {
+    axios({
+      method: 'POST',
+      url: '/api/alarm/teamlist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        url: url,
+      },
+    }).then((res) => {
+      console.log(res)
+      SetU_idxlist([])
+      res.data.mpa((data) => {
+        SetU_idxlist((u_idxlist) => [...u_idxlist, data])
+      })
+    })
+  }, [])
 
   useEffect(() => {
     SetLabel(chooseLabel.label)
@@ -240,8 +260,13 @@ const WriteDocStorage = () => {
               className="ms-2"
               src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
             />{' '}
-            메타몽 ;
-            <CFormCheck inline id="inlineCheckbox3" value="option3" label="오리" disabled />
+            메타몽
+            <CFormCheck inline id="inlineCheckbox2" value="option2" />
+            <CAvatar
+              className="ms-2"
+              src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
+            />{' '}
+            메타몽
           </CCol>
         </CRow>
         <CCardBody>

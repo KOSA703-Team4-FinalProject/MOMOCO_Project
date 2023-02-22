@@ -15,6 +15,7 @@ import kr.or.service.AlarmService;
 import kr.or.vo.Alarm;
 import kr.or.vo.CommonBoard;
 import kr.or.vo.Doc;
+import kr.or.vo.Kanban;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -46,6 +47,42 @@ public class AlarmController {
 		List<Alarm> alarmlist = alarmservice.u_idxList(url);
 		
 		return alarmlist;
+	}
+	
+	//알림 체크
+	@RequestMapping(value="/api/alarm/check", method=RequestMethod.PUT)
+	public int checkAlarm(@RequestBody Alarm alarm) {
+		
+		int result = alarmservice.checkAlarm(alarm.getA_idx());
+		
+		return result;
+	}
+	
+	//알림 전부 체크
+	@RequestMapping(value="/api/alarm/checkAll", method=RequestMethod.PUT)
+	public int checkAllAlarm(@RequestBody Alarm alarm) {
+		
+		int result = alarmservice.checkAllAlarm(alarm.getU_idx());
+		
+		return result;
+	}
+	
+	// 칸반 컬럼의 모든 아이템 삭제
+	@RequestMapping(value = "/api/alarm/deleteAll", method = RequestMethod.POST)
+	public int deleteAllAlarm(@RequestBody Alarm alarm) {
+		
+		int result = alarmservice.deleteAll(alarm.getU_idx());
+
+		return result;
+	}
+
+	// 칸반 아이템 삭제
+	@RequestMapping(value = "/api/alarm/delete", method = RequestMethod.POST)
+	public int deleteAlarm(@RequestBody Alarm alarm) {
+		
+		int result = alarmservice.delete(alarm.getA_idx());
+				
+		return result;
 	}
 	
 }

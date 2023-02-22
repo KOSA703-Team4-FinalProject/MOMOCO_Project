@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import kr.or.dao.AlarmDao;
 import kr.or.dao.CommonBoardDao;
+import kr.or.dao.KanbanDao;
 import kr.or.vo.Alarm;
 import kr.or.vo.CommonBoard;
+import kr.or.vo.Kanban;
 
 @Service
 public class AlarmService {
@@ -64,15 +66,15 @@ public class AlarmService {
 		return alarmList;
 	}
 	
-	//알림 체크
-	public int checkAlarm(Alarm alarm) {
-		
+	
+	// 알람 모든 아이템 삭제
+	public int deleteAll(int u_idx) {
 		int result = 0;
-		
+
 		try {
 
 			AlarmDao alarmdao = sqlsession.getMapper(AlarmDao.class);
-			result = alarmdao.checkAlarm(alarm);
+			result = alarmdao.deleteAll(u_idx);
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -80,7 +82,53 @@ public class AlarmService {
 			e.printStackTrace();
 		}
 
-		
+		return result;
+	}
+	
+	// 알람 삭제
+	public int delete(int a_idx) {
+		int result = 0;
+
+		try {
+			AlarmDao alarmdao = sqlsession.getMapper(AlarmDao.class);
+			result = alarmdao.delete(a_idx);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// 알람 체크
+	public int checkAlarm(int a_idx) {
+		int result = 0;
+
+		try {
+			AlarmDao alarmdao = sqlsession.getMapper(AlarmDao.class);
+			result = alarmdao.checkAlarm(a_idx);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
+	// 알람 체크
+	public int checkAllAlarm(int u_idx) {
+		int result = 0;
+
+		try {
+			AlarmDao alarmdao = sqlsession.getMapper(AlarmDao.class);
+			result = alarmdao.checkAllAlarm(u_idx);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return result;
 	}
 	

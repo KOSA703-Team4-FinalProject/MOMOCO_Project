@@ -53,8 +53,7 @@ const docStorage = (props) => {
   //워크스페이스 주소값
   const dispatch = useDispatch()
   const params = useParams()
-  // const issueModal = useSelector((state) => state.issueModal)
-  // const issueNumber = useSelector((state) => state.issueNumber)
+  const url = params.url
 
   const myparams = {
     url: params.url,
@@ -159,9 +158,9 @@ const docStorage = (props) => {
               </CModal>
             </CCol>
           </CRow>
-          <CAccordion alwaysOpen activeItemKey={1}>
+          <CAccordion alwaysOpen activeItemKey={parseInt(params.idx)}>
             {list.map((data) => (
-              <CAccordionItem itemKey={data.idx}>
+              <CAccordionItem itemKey={parseInt(data.idx)}>
                 <CAccordionHeader>
                   <CRow className="col-12">
                     <CCol className="col-2 px-2">

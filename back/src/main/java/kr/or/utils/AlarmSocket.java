@@ -45,7 +45,7 @@ public class AlarmSocket {
 		alarm.setContent("(WS: " + board.getUrl() + ") " + reboard.getNickname() + "님께서 " + reboard.getTitle() + " 글을 " + reboard.getB_name() + "에 등록했어요.");
 		alarm.setCheck_alarm(0);
 		alarm.setUrl(board.getUrl());
-		alarm.setLink("/ws/" + board.getUrl() + "/" + reboard.getIdx());
+		alarm.setLink("/ws/" + board.getUrl() + "/"+ reboard.getB_name() + "/" + reboard.getIdx());
 		
 		//전송받을 사람
 		for(String u : u_idx) {

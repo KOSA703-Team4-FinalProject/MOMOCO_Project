@@ -22,5 +22,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from WORKSPACE_USER a join member b on a.u_idx = b.u_idx 
 		where a.url = '${url}'
 	</select>
+	
+	<!-- 알림 아이템 모두 삭제 -->
+	<delete id="deleteAll" parameterType="kr.or.vo.Alarm">
+		delete from
+		alarm where u_idx =#{u_idx}
+	</delete>
+	
+	<!-- 선택 알람 삭제 -->
+	<delete id="delete" parameterType="kr.or.vo.Alarm">
+		delete from
+		alarm where a_idx =#{a_idx}
+	</delete>
 
+	<!-- 알림 체크 -->
+	<update id="checkAlarm" parameterType="kr.or.vo.Alarm">
+		UPDATE alarm SET check_alarm=1 WHERE a_idx=#{a_idx}
+	</update>
+	
+	<!-- 알림 전부 체크 -->
+	<update id="checkAllAlarm" parameterType="kr.or.vo.Alarm">
+		UPDATE alarm SET check_alarm=1 WHERE u_idx=#{u_idx}
+	</update>
 </mapper>
