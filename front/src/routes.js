@@ -89,8 +89,8 @@ const Projectmain = React.lazy(() => import('./views/project/Projectmain'))
 const Projectcontent = React.lazy(() => import('./views/project/Projectcontent'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home', element: Dashboard },
-  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
+  { path: '/', exact: true, name: 'Home', element: AllBoardList },
+  { path: '/dashboard', name: 'Dashboard', element: AllBoardList },
   { path: '/calendar', name: 'calendar', exact: true, element: Calendar },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
@@ -153,6 +153,7 @@ const routes = [
   { path: '/comments', name: 'Comments', exact: true, element: Comments }, //댓글작성하기
   { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList }, //전체게시판목록
   { path: '/IssueTimeLine', name: 'IssueTimeLine', exact: true, element: IssueTimeLine }, //이슈 타임 라인
+  
 ]
 
 export default routes

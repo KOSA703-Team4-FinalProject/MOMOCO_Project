@@ -37,7 +37,8 @@ const Profile = () => {
       .then( (response) => {
         const data = {
           u_idx: response.data.id,
-          nickname: response.data.login
+          nickname: response.data.login,
+          profilephoto: response.data.avatar_url
         }
 
         const workname = localStorage.getItem('workName')

@@ -1,8 +1,7 @@
-import { CButton, CCard, CCardBody, CCloseButton } from '@coreui/react'
-import { BsGithub, BsFillXSquareFill } from 'react-icons/bs'
+import { CButton, CCard  } from '@coreui/react'
+import { BsGithub } from 'react-icons/bs'
 import $ from 'jquery'
 
-import momocologo from '../assets/images/momocologo.png'
 import { useDispatch } from 'react-redux'
 import { changeUserProfile } from 'src/store'
 

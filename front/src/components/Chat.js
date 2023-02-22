@@ -19,14 +19,12 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
-  CPopover,
   CRow,
 } from '@coreui/react'
 import $, { param } from 'jquery'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeChatState } from 'src/store'
-import StompJs from 'stompjs'
 import CryptoJS from 'crypto-js'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
@@ -34,12 +32,11 @@ import Swal from 'sweetalert2'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
-import { height, width } from '@mui/system'
-import { async } from 'regenerator-runtime'
 
 const Chat = (props) => {
   const dispatch = useDispatch()
   let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
+  
   let [initview, setInitview] = useState(false)
   let [room, setRoom] = useState({})
   let [chatList, setChatList] = useState([])
@@ -78,6 +75,7 @@ const Chat = (props) => {
       //메시지를 받음
       stomp.subscribe('/sub/chat/room/' + chatRoomNumber, (chat) => {
         appendMessage(chat)
+        dispatch( updateChatRead(true) )
       })
 
       //메시지 전송
