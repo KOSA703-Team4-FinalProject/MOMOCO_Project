@@ -76,7 +76,6 @@ const Notifications = (props) => {
       data: myparams,
     }).then((res) => {
       SetList(res.data)
-      
     })
   }
 
