@@ -82,30 +82,45 @@ const Boardwirte = () => {
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
   const [boardcontent, setBoardcontent] = useState([])
+  const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
 
-  //알림보낼 사람 목록
-  const myparam1 = {
-    url: params.url,
+  //알림 전송할 u_idx List 생성
+  const checkAList = (e) => {
+    const result = e.target.checked
+    const u_idx = e.target.value
+
+    if (result == true) {
+      setAlarmList(alarmList + ',' + u_idx)
+    } else {
+      const str = alarmList.split(',')
+      setAlarmList([])
+
+      str.map((res) => {
+        if (res != u_idx) {
+          setAlarmList(alarmList + ',' + u_idx)
+        }
+      })
+    }
   }
   useEffect(() => {
     axios({
-      method: 'POST',
+      method: 'GET',
       url: '/api/alarm/teamlist',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      data: {
-        url: url,
+      params: {
+        url: params.url,
       },
     }).then((res) => {
       console.log(res)
       SetU_idxlist([])
-      res.data.mpa((data) => {
+
+      res.data.map((data) => {
         SetU_idxlist((u_idxlist) => [...u_idxlist, data])
       })
     })
   }, [])
-  //알림 보내기
 
   //파일 업로드
   const [filevalues, setFilevalues] = useState('')
@@ -123,6 +138,7 @@ const Boardwirte = () => {
       content: content,
       b_code: 5,
       u_idx: login.u_idx,
+      u_idxList: alarmList,
     }
     console.log(write.url)
     const fd = new FormData()
@@ -141,8 +157,7 @@ const Boardwirte = () => {
       setBoardcontent(res.data)
     })
   }
-  console.log('파일' + filevalues.name)
-  console.log('wpahr' + $('#title').val())
+  console.log(u_idxlist)
   return (
     <>
       <CCard className="mb-4">
@@ -219,7 +234,7 @@ const Boardwirte = () => {
                     </CCol>
                   </CCol>
                   <CCol className="row">
-                    <CCol className="col-md-4">
+                    <CCol className="col-md-12">
                       <CRow>
                         <CFormLabel className="col-sm-2 col-form-label">
                           <strong>알림</strong>
@@ -231,19 +246,23 @@ const Boardwirte = () => {
                             value="option1"
                             label="전체보내기"
                           />
-                          <CFormCheck inline id="inlineCheckbox2" value="option2" />
-                          <CAvatar
-                            className="ms-2"
-                            src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                          />{' '}
-                          메타몽
-                          <CFormCheck
-                            inline
-                            id="inlineCheckbox3"
-                            value="option3"
-                            label="오리"
-                            disabled
-                          />
+                          <CRow>
+                            {u_idxlist.map((data, key) => (
+                              <div className="col" key={data.u_idx}>
+                                <CFormCheck
+                                  inline
+                                  name="u_idx"
+                                  value={data.u_idx}
+                                  label={
+                                    <div>
+                                      <CAvatar className="ms-2" src={data.profilephoto} />
+                                      {data.nickname}
+                                    </div>
+                                  }
+                                />
+                              </div>
+                            ))}
+                          </CRow>
                         </CCol>
                       </CRow>
                     </CCol>

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/all")
+@RequestMapping("/allboard")
 public class BoardController {
 		
 	private BoardSerivce boardservice;
@@ -25,9 +25,11 @@ public class BoardController {
 		this.boardservice = boardservice;
 	}
 	//전체글 조회
-	@RequestMapping(value="/allboard",method =RequestMethod.POST)
+	@RequestMapping(value="/allboardlist",method =RequestMethod.POST)
 	public List<Board> allboardlist(@RequestBody Board url){
+
 		 List<Board> boardlist = new ArrayList<Board>();
+			
 		 boardlist = boardservice.allBoardList(url.getUrl());
 		 return boardlist;
 	}

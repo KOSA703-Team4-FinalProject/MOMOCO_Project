@@ -16,12 +16,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!--전체 보드 리스트 -->
 	<select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
 	SELECT *
-	FROM board_${url} a
-	JOIN doc_storage_${url} b ON a.idx = b.idx
-	JOIN common_board_${url} c ON a.idx = c.idx
-	JOIN board_status_${url} d ON a.idx = d.idx
-	JOIN calendar_${url} e ON e.idx = a.idx
-	JOIN kanban_${url} f ON f.idx = d.idx
+	FROM board_momoco a
+	left outer JOIN doc_storage_momoco b ON a.idx = b.idx
+	 left outer JOIN common_board_momoco c ON a.idx = c.idx
+	left outer JOIN board_status_momoco d ON a.idx = d.idx
+	left outer JOIN calendar_momoco e ON e.idx = a.idx
+	left outer JOIN kanban_momoco f ON f.idx = d.idx
+    left outer join label g on a.label = g.label
+    left outer JOIN member h on a.u_idx =h.u_idx 
 	</select>
 	
 	<!-- b_code 검색 -->

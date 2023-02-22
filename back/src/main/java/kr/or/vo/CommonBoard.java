@@ -22,6 +22,6 @@ public class CommonBoard extends Board {
 	private String type;//검색 타입
 	private String keyword;//검색 내용
 	
-	
+	private String u_idxList;      //메일 전달할 유저 식별키 리스트
 	
 }

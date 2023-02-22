@@ -20,6 +20,9 @@ import { PRIMARY_KEY } from '../../oauth'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+const writedate = {}
+const title = {}
+const context = {}
 const number = {
   fontSize: 20,
   border: '8px',
@@ -48,7 +51,7 @@ const AllBoardList = () => {
   useEffect(() => {
     axios({
       method: 'POST',
-      url: '/api/all/allboard',
+      url: '/allboard/allboardlist',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
