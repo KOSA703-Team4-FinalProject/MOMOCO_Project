@@ -34,7 +34,7 @@ const Profile = (props) => {
     <div className="row px-3">
       <CCard className="col">
         <div className='m-1 pt-1'>
-          <img src={user.avatar_url} style={imgProfile} />
+          <img src={user.profilephoto} style={imgProfile} />
         </div>
       </CCard>
       <CCard className="p-4 col">
@@ -53,7 +53,7 @@ const Profile = (props) => {
             <div className="row">
               <div className="col-md-7">
                 <CButton color="primary" variant="outline">
-                  <BsGithub size="21" /> GitHub
+                  <BsGithub size="20" /> GitHub
                 </CButton>
               </div>
               <div className="col-md-5">

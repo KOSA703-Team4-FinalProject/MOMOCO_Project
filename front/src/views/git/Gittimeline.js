@@ -116,7 +116,7 @@ const Gittimeline = () => {
                       iconOnClick={() => {
                         setProfile({
                           u_idx: commit.committer.id,
-                          avatar_url: commit.committer.avatar_url,
+                          profilephoto: commit.committer.avatar_url,
                           nickname: commit.committer.login,
                           email: commit.commit.author.email,
                           github: commit.committer.html_url,
@@ -130,7 +130,7 @@ const Gittimeline = () => {
                         onClick={() => {
                           setProfile({
                             u_idx: commit.committer.id,
-                            avatar_url: commit.committer.avatar_url,
+                            profilephoto: commit.committer.avatar_url,
                             nickname: commit.committer.login,
                             email: commit.commit.author.email,
                             github: commit.committer.html_url,
@@ -157,7 +157,7 @@ const Gittimeline = () => {
                       iconOnClick={() => {
                         setProfile({
                           u_idx: commit.committer.id,
-                          avatar_url: commit.committer.avatar_url,
+                          profilephoto: commit.committer.avatar_url,
                           nickname: commit.committer.login,
                           email: commit.commit.author.email,
                           github: commit.committer.html_url,
@@ -171,7 +171,7 @@ const Gittimeline = () => {
                         onClick={() => {
                           setProfile({
                             u_idx: commit.committer.id,
-                            avatar_url: commit.committer.avatar_url,
+                            profilephoto: commit.committer.avatar_url,
                             nickname: commit.committer.login,
                             email: commit.commit.author.email,
                             github: commit.committer.html_url,
