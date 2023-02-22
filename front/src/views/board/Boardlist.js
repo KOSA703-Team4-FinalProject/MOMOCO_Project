@@ -2,15 +2,12 @@ import { cilCheck } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import {
   CAvatar,
-  CBadge,
   CButton,
   CCard,
   CCardBody,
   CCol,
   CFormInput,
   CInputGroup,
-  CPagination,
-  CPaginationItem,
   CRow,
 } from '@coreui/react'
 import axios from 'axios'
@@ -18,8 +15,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useHistory } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import { useCallback } from 'react'
-import $ from 'jquery'
+
 import Pagination from 'react-js-pagination'
 import styled from 'styled-components'
 const writedate = {}

@@ -22,6 +22,8 @@ public class Board {
 	private List<Comments> comments; //댓글
 	private List<Checked> checked;	//확인
 	
+	private String profilephoto;	//프로필 사진(avatar_url)
+	
 	//검색 필터
 	private String type; 			//검색타입
 	private String keyword ; 		//검색내용
