@@ -1,4 +1,4 @@
-import { CCard, CCardBody, CCol, CListGroup, CListGroupItem, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCol, CListGroup, CListGroupItem, CRow, CButton } from '@coreui/react'
 import React from 'react'
 import { CAvatar } from '@coreui/react'
 import { useEffect, useState } from 'react'
@@ -7,7 +7,9 @@ import CryptoJS from 'crypto-js'
 import axios from 'axios'
 import { PRIMARY_KEY } from '../oauth'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
+import { Swal } from 'sweetalert2'
+import { BsFillTrashFill } from 'react-icons/bs'
 
 const NotisStyle = {
   width: '400px',
@@ -17,10 +19,8 @@ const NotisStyle = {
 
 const Notifications = (props) => {
   const [list, SetList] = useState([])
-  const [count, SetCount] = useState('')
-  const dispatch = useDispatch()
-  const [refresh, SetRefresh] = useState(false)
   const params = useParams()
+  const navigate = useNavigate()
 
   let stomp = props.stomp
 
@@ -65,8 +65,8 @@ const Notifications = (props) => {
     u_idx: u_idx,
   }
 
-  useEffect(() => {
-    //기존 알람 내용 불러오기
+  //기존 알람 내용 불러오기
+  function listFromDb() {
     axios({
       method: 'POST',
       headers: {
@@ -76,9 +76,54 @@ const Notifications = (props) => {
       data: myparams,
     }).then((res) => {
       SetList(res.data)
-      SetCount(res.data.length)
+      if (res.data.length != null) {
+        SetCount(res.data.length)
+      } else {
+        SetCount(0)
+      }
     })
+  }
+
+  useEffect(() => {
+    //기존 알람 내용 불러오기
+    listFromDb()
   }, [])
+
+  function checkAlarm(a_idx, link) {
+    const data = {
+      a_idx: a_idx,
+    }
+    axios({
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      url: '/api/alarm/check',
+      data: data,
+    }).then((res) => {
+      if (res.data == 1) {
+        listFromDb()
+        navigate(link)
+      } else alert('유효하지 않은 접근')
+    })
+  }
+
+  function checkAllAlarm() {
+    axios({
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      url: '/api/alarm/checkAll',
+      data: myparams,
+    }).then((res) => {
+      if (res.data == 0) {
+        alert('유효하지 않은 접근')
+      } else {
+        listFromDb()
+      }
+    })
+  }
 
   function getAlarmCount(objects) {
     let alarmCount = 0
@@ -87,7 +132,42 @@ const Notifications = (props) => {
         alarmCount++
       }
     }
-    return objects.length - alarmCount
+    let noncheck = objects.length - alarmCount
+    return noncheck
+  }
+
+  function deleteAlarm(a_idx) {
+    const idx = {
+      a_idx: a_idx,
+    }
+    console.log(a_idx)
+    axios({
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      url: '/api/alarm/delete',
+      data: idx,
+    }).then((res) => {
+      if (res.data != '1') {
+        alert('삭제 실패')
+      } else {
+      }
+    })
+  }
+
+  const deleteAll = () => {
+    axios({
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      url: '/api/alarm/deleteAll',
+      data: myparams,
+    }).then((res) => {
+      SetList([])
+      SetCount(0)
+    })
   }
 
   return (
@@ -98,7 +178,9 @@ const Notifications = (props) => {
             <strong>미확인({getAlarmCount(list)})</strong>
           </CCol>
           <CCol align="end" sm={7}>
-            전체읽음으로 표시
+            <CButton color="light" onClickl={() => checkAllAlarm()}>
+              전체읽음으로 표시
+            </CButton>
           </CCol>
         </CRow>
         <CRow>
@@ -106,7 +188,13 @@ const Notifications = (props) => {
             <CListGroup>
               <CListGroupItem component="a" href="#">
                 <CRow>
-                  <div align="center">전체삭제</div>
+                  {list.length == 0 ? (
+                    <strong>알림이 없습니다</strong>
+                  ) : (
+                    <CButton color="warning" onClick={deleteAll}>
+                      전체삭제
+                    </CButton>
+                  )}
                 </CRow>
               </CListGroupItem>
               {list.map((data) => {
@@ -121,10 +209,18 @@ const Notifications = (props) => {
                       <CCol sm={2}>
                         <CAvatar className="ms-1" src={data.profilephoto} />
                       </CCol>
-                      <CCol sm={8}>
+                      <CCol sm={8} onClick={() => checkAlarm(data.a_idx, data.link)}>
                         <strong>{data.content}</strong>
                       </CCol>
-                      <CCol sm={2}>삭제</CCol>
+                      <CCol sm={2}>
+                        <CButton
+                          color="info"
+                          value={data.a_idx}
+                          onClick={() => deleteAlarm(data.a_idx)}
+                        >
+                          <BsFillTrashFill />
+                        </CButton>
+                      </CCol>
                     </CRow>
                   </CListGroupItem>
                 )

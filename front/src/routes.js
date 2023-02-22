@@ -146,6 +146,7 @@ const routes = [
   { path: '/kanban', name: 'Kanban', element: Kanban }, // 칸반보드
   { path: '/unregistercheck', name: 'UnRegisterCheck', element: UnRegisterCheck }, // 회원탈퇴 체크
   { path: '/docStorage', name: 'docStorage', element: docStorage }, // 문서저장소
+  { path: '/docStorage/:idx', name: 'docStorage', element: docStorage }, // 문서저장소 글내용
   { path: '/kanbandetail', name: 'KanbanDetail', element: KanbanDetail }, // 칸반 아이템 상세보기
   { path: '/projectmain', name: 'ProjectManagement', exact: true, element: Projectmain }, //프로젝트관리 메인
   { path: '/projectcontent', name: 'ProjectContent', exact: true, element: Projectcontent }, //프로젝트관리 메인
