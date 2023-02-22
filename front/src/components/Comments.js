@@ -15,14 +15,12 @@ import {
 import { Link, useParams } from 'react-router-dom'
 import { PRIMARY_KEY } from 'src/oauth'
 import CryptoJS from 'crypto-js'
-import Login from 'src/views/login/Login'
+
 import axios from 'axios'
 import { useState } from 'react'
 import $ from 'jquery'
 import { useEffect } from 'react'
-import Commentreply from './Commentreply'
-import { lightGreen } from '@mui/material/colors'
-import Boardlist from 'src/views/board/Boardlist'
+
 const boxsize = {
   marginleft: '200px',
 }
@@ -95,6 +93,7 @@ const Comments = (props) => {
 
       console.log(res.data)
     })
+    document.getElementById('commentcontent').value = ''
   }
   //댓글 삭제 하기
   const deletereply = (e) => {
@@ -167,8 +166,6 @@ const Comments = (props) => {
     setVisibleLg1(true)
   }
 
-  //모달 창닫기
-  const close = {}
   return (
     <CCol>
       <CCard style={boxsize}>
@@ -198,11 +195,15 @@ const Comments = (props) => {
                 작성
               </CButton>
               &nbsp;
-              <Link to={`/ws/${params.url}/boardcontent/${props.idx}`}>
-                <CButton color="danger" variant="outline">
-                  취소
-                </CButton>
-              </Link>
+              <CButton
+                color="danger"
+                variant="outline"
+                onClick={() => {
+                  document.getElementById('commentcontent').value = ''
+                }}
+              >
+                취소
+              </CButton>
             </CCol>
           </CRow>
         </CCol>
@@ -223,9 +224,15 @@ const Comments = (props) => {
                 <CCol className="col-md-12 mt-2">{data.content}</CCol>
               </CRow>
               <CCol className="col-md-12 mt-2 mb-4" align="end">
-                <CButton color="primary" variant="outline" onClick={() => handleEditComment(data)}>
-                  수정
-                </CButton>
+                {login.nickname === data.nickname && (
+                  <CButton
+                    color="primary"
+                    variant="outline"
+                    onClick={() => handleEditComment(data)}
+                  >
+                    수정
+                  </CButton>
+                )}
                 <CModal
                   size="lg"
                   visible={visibleLg1}
@@ -326,9 +333,15 @@ const Comments = (props) => {
                   </CModalFooter>
                 </CModal>
                 &nbsp;
-                <CButton color="danger" variant="outline" onClick={() => deletereply(data.co_idx)}>
-                  삭제
-                </CButton>
+                {login.nickname === data.nickname && (
+                  <CButton
+                    color="danger"
+                    variant="outline"
+                    onClick={() => deletereply(data.co_idx)}
+                  >
+                    삭제
+                  </CButton>
+                )}
               </CCol>
             </CCol>
           </CCard>

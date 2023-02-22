@@ -1,6 +1,8 @@
 package kr.or.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +39,19 @@ public class BoardSerivce {
 		return reboard;
 	}
 	
+	//allboardlist
+	public List<Board>allBoardList(String url){
+		List<Board> board = new ArrayList<Board>();
+		
+		try {
+			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
+			board = boarddao.allBoardList(url);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return board;
+	}
 	
 }

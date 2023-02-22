@@ -21,23 +21,33 @@ import CryptoJS from 'crypto-js'
 import { useEffect } from 'react'
 import { PRIMARY_KEY } from 'src/oauth'
 import axios from 'axios'
-import Boardlist from './Boardlist'
-import { param } from 'jquery'
 
 const Boardedit = () => {
   const labelselect = {
     width: '300px',
   }
-  const [boardcontent, setBoardcontent] = useState([])
+
   const params = useParams()
   const myparams = {
     url: params.url,
     idx: params.idx,
   }
+
+  const [boardcontent, setBoardcontent] = useState({}) //비동기로 불러온 기존
+  const [content, setContent] = useState('') //수정에 들어갈 글 내용
+  const [newFile, setNewFile] = useState('') // 파일 수정
   const [newTitle, setNewTitle] = useState('') // 제목수정
+
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+
   const handleTitleChange = (e) => {
     setNewTitle(e.target.value)
   }
+
   useEffect(() => {
     axios({
       method: 'POST',
@@ -48,34 +58,38 @@ const Boardedit = () => {
       data: myparams,
     }).then((res) => {
       setBoardcontent(res.data)
-      console.log(res.data)
+      setNewTitle(res.data.title)
+      setContent(res.data.content)
     })
   }, [])
 
-  const [content, setContent] = useState('')
-  const handleEditorChange = (content) => {
-    setBoardcontent(content)
+  //글 내용 업데이트
+  const handleEditorChange = (data) => {
+    setContent(data)
   }
-  //파일 업로드
-  const [filevalues, setFilevalues] = useState('')
-  const fileChange = (e) => {
-    console.log(e.target.files[0])
-    setFilevalues(e.target.files[0])
+
+  //파일수정
+  const fileChange1 = (event) => {
+    const files = event.target.files
+    setNewFile(files[0])
   }
+
   //수정 글작성
   const editcontent = () => {
     const edit = {
+      url: params.url,
       idx: params.idx,
-      content: boardcontent.content,
+      content: content,
       title: newTitle,
       label: '.',
     }
+    console.log(edit)
     const fd = new FormData()
-    fd.append('file1', filevalues)
+    fd.append('file', newFile)
     fd.append('edit', JSON.stringify(edit))
     axios({
       method: 'POST',
-      url: '/board/boardedit',
+      url: '/board/boardmodify',
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': `multipart/form-data; `,
@@ -85,13 +99,7 @@ const Boardedit = () => {
       console.log(res.data)
     })
   }
-  console.log('파일' + filevalues.name)
 
-  // AES알고리즘 사용 복호화
-  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-  //인코딩, 문자열로 변환, JSON 변환
-  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-  const accessToken = decrypted.token
   return (
     <>
       <CCard className="mb-4">
@@ -128,7 +136,6 @@ const Boardedit = () => {
                       <br></br>
                       <CFormInput
                         type="text"
-                        placeholder={boardcontent.title}
                         aria-label="default input example"
                         value={newTitle}
                         onChange={handleTitleChange} // 입력 값이 변경될 때마다 호출
@@ -143,8 +150,16 @@ const Boardedit = () => {
                       </label>
                       <br></br>
                       <CCol className="mb-3">
-                        <CFormInput type="file" id="file-input" onChange={fileChange} multiple />
-                        {boardcontent.file && <div>파일명: {boardcontent.file.name}</div>}
+                        <CFormInput
+                          type="file"
+                          id="file-input"
+                          onChange={fileChange1}
+                          multiple="multiple"
+                        />
+                        {boardcontent.ori_filename && (
+                          <div>파일명: {boardcontent.ori_filename}</div>
+                        )}
+                        {newFile && <div>새로운 파일명: {newFile.name}</div>}
                       </CCol>
                     </CCol>
                   </CRow>
@@ -178,7 +193,7 @@ const Boardedit = () => {
                     <CCol className="col-md-12">
                       <Editor
                         onEditorChange={handleEditorChange}
-                        value={boardcontent.content}
+                        value={content}
                         id="tinyEditor"
                         apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
                         init={{
@@ -201,9 +216,11 @@ const Boardedit = () => {
                       />
                       <br></br>
                       <CCol align="right">
-                        <CButton variant="outline" onClick={editcontent}>
-                          수정하기
-                        </CButton>{' '}
+                        <Link to={`/ws/${params.url}/boardlist`}>
+                          <CButton variant="outline" onClick={editcontent}>
+                            수정하기
+                          </CButton>{' '}
+                        </Link>
                         &nbsp;
                         <Link to={`/ws/${params.url}/boardlist`}>
                           <CButton variant="outline">목록으로</CButton>

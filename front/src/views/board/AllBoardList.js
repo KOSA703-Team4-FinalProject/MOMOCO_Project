@@ -2,60 +2,64 @@ import { cilCaretLeft, cilCheck } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import {
   CAvatar,
-  CBadge,
   CButton,
   CButtonGroup,
-  CButtonToolbar,
   CCard,
   CCardBody,
-  CCardFooter,
   CCol,
-  CContainer,
-  CForm,
   CFormCheck,
   CFormInput,
-  CFormSelect,
   CInputGroup,
-  CInputGroupText,
   CPagination,
   CPaginationItem,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
+import axios from 'axios'
+import CryptoJS from 'crypto-js'
+import { PRIMARY_KEY } from '../../oauth'
+import { useEffect } from 'react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
-const writedate = {
-  fontSize: 15,
-  border: '2px',
-}
-const title = {
-  fontSize: 30,
-  border: '8px',
-}
-const context = {
-  fontSize: 20,
-  border: '2px',
-}
+import { Link, useParams } from 'react-router-dom'
 const number = {
-  fontSize: 30,
+  fontSize: 20,
   border: '8px',
+  mt: '-30px',
 }
-const boardname = {
-  fontSize: 13,
-  border: '3px',
-}
+const boardname = {}
 const check = {
   width: '45px',
   height: '45px',
 }
+const ccardsize = {
+  height: '45px',
+}
 const AllBoardList = () => {
-  const [currentPage, setActivePage] = useState(2)
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+  const params = useParams()
+  const myparams = {
+    url: params.url,
+  }
+  const [allboardlist, setallBoardlist] = useState([])
+  //모든 게시판 목록
+  useEffect(() => {
+    axios({
+      method: 'POST',
+      url: '/api/all/allboard',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: myparams,
+    }).then((res) => {
+      res.data.map((data) => {
+        setallBoardlist((allboardlist) => [...allboardlist, data])
+      })
+    })
+  }, [])
+
   return (
     <>
       <CCard className="mb-4">
@@ -137,7 +141,7 @@ const AllBoardList = () => {
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck5"
                         autoComplete="off"
-                        label="게시판"
+                        label="자유게시판"
                       />
                     </CButtonGroup>
                   </div>
@@ -149,50 +153,47 @@ const AllBoardList = () => {
                 </div>
 
                 {/* 게시판 목록 시작 */}
-                <CCard className="p-5 mt-3">
-                  <div className="row">
+                {allboardlist.map((data, key) => (
+                  <CCard
+                    className="p-3 mt-3"
+                    key={key}
+                    onClick={() => {
+                      navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+                    }}
+                  >
                     <div className="col-md-12">
                       <div className="row">
-                        <div className="col-md-1" align="center" style={number}>
-                          <strong>NO.</strong>
+                        <div className="col-md-1" style={number}>
+                          <CIcon icon={cilCheck} />
+                          <CFormInput type="hidden" id="idx" value={data.idx} />
+                          <strong>{data.idx}.</strong>
                         </div>
-                        <div className="col-md-11">
+                        <div className="col-md-8">
                           <div className="row">
-                            <div className="col-md-10" style={title}>
-                              <strong> 글제목</strong>
-                              <CIcon icon={cilCheck} />
+                            <div className="col-md-12" style={title}>
+                              <strong> {data.title}</strong>
                             </div>
-                          </div>
-                          <div className="row">
                             <div className="col-md-12" style={context}>
-                              글내용
+                              {data.content.replace(/(<([^>]+)>)/gi, '')}
                             </div>
                           </div>
-                          <div className="row">
-                            <div className="col-md-12">
-                              <CBadge color="dark" shape="rounded-pill" style={boardname}>
-                                게시판이름
-                              </CBadge>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-12" align="right">
-                              작성자이름
-                              <CAvatar
-                                className="ms-3"
-                                src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                              />
-                            </div>
+                        </div>
+                        <div className="col-md-3">
+                          <div className="col-md-12" align="end">
+                            <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
+                            {data.nickname}
+                            <CFormInput type="hidden" id="nickname" value={data.nickname} />
+                            <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
                           </div>
 
-                          <div className="col-md-12 ms-6 p-2" style={writedate} align="right">
-                            2023.01.31
+                          <div className="col-md-12" align="end" style={writedate}>
+                            {data.w_date}
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CCard>
+                  </CCard>
+                ))}
                 {/* 게시판 목록 끝 */}
                 <br />
 

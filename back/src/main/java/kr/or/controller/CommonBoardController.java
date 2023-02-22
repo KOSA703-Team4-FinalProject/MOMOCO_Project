@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -116,49 +117,57 @@ public class CommonBoardController {
 		return result;
 		
 	}
-	//수정하기
-	@RequestMapping(value="/boardedit",method =RequestMethod.POST)
-	public int updateCommonBoard(@RequestParam(value="file1")MultipartFile[] files, @RequestParam(value="edit") String boardedit, HttpServletRequest request) {
-		CommonBoard board = null;
-	      ObjectMapper mapper = new ObjectMapper();
-	      try {
-			board = mapper.readValue(boardedit, CommonBoard.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	      //파일명
-	      String filename = files[0].getOriginalFilename();
-	      //확장자
-	      String extension = filename.substring(filename.lastIndexOf("."));
-	      //확장자를 제외한 파일 명
-	      String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
-	      
-	      //저장할 파일 명
-	      String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis())).concat(extension);
-	      String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/" + saveFileName;
-	      // 파일이 저장될 경로
-	       String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
-	       // 폴더 생성
-	       File folder = new File(path);
-	       if (!folder.exists()) {
-	          folder.mkdirs();
-	       }
-	      
-	      System.out.println(savePath);
-	      
-	      try {
-	         File dest = new File(savePath);
-	         files[0].transferTo(dest);
-	      } catch (IOException e) {
-	         e.printStackTrace();
-	      }
-	      board.setOri_filename(files[0].getOriginalFilename());
-	      board.setFiletype(files[0].getContentType());
-	      board.setVolume(files[0].getSize());
-	      
-		int common = commonboardservice.updateCommonBoard(board);
-		
-		return  common;
+	
+	//글수정
+
+	@RequestMapping(value ="/boardmodify", method = RequestMethod.POST)
+	public int modifyCommonBoard(@RequestParam(value="file", required=false) MultipartFile[] files, @RequestParam(value="edit") String boardwrite, HttpServletRequest request) {
+	    CommonBoard board = null;
+	    ObjectMapper mapper = new ObjectMapper();
+
+	    try {
+	        //String to DTO
+	        board = mapper.readValue(boardwrite, CommonBoard.class);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    // 새로운 파일이 업로드되었는지 확인
+	    if (files.length > 0 && !files[0].isEmpty()) {
+	        //파일 명
+	        String filename = files[0].getOriginalFilename();
+	        //확장자
+	        String extension = filename.substring(filename.lastIndexOf("."));
+	        //확장자를 제외한 파일 명
+	        String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
+
+	        //저장할 파일 명
+	        String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis())).concat(extension);
+	        String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/" + saveFileName;
+
+	        // 파일이 저장될 경로
+	        String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
+	        // 폴더 생성
+	        File folder = new File(path);
+	        if (!folder.exists()) {
+	            folder.mkdirs();
+	        }
+
+	        try {
+	            File dest = new File(savePath);
+	            files[0].transferTo(dest);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+
+	        board.setOri_filename(files[0].getOriginalFilename());
+	        board.setFiletype(files[0].getContentType());
+	        board.setVolume(files[0].getSize());
+	    }
+
+	    int result = commonboardservice.modifyCommonBoard(board);
+
+	    return result;
 	}
 	
 	//알림보낼 사람 선택하기

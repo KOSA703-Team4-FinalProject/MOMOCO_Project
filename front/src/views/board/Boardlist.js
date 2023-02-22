@@ -209,7 +209,7 @@ const Boardlist = () => {
                                 <strong> {data.title}</strong>
                               </div>
                               <div className="col-md-12" style={context}>
-                                {data.content.replace(/(<([^>]+)>)/gi, '')}
+                                {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
                               </div>
                             </div>
                           </div>

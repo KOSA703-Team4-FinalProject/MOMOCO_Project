@@ -104,15 +104,29 @@ const Gittimeline = () => {
           ) : (
             <VerticalTimeline layout="2-columns">
               {commitsList.map((commit) => {
-                  if (commit.committer.login == login.nickname) {
-                    return (
-                      <VerticalTimelineElement
-                        className="vertical-timeline-element--work"
-                        date={commit.commit.author.date}
-                        iconStyle={{ background: '#000CB7', color: '#fff' }}
-                        key={commit.sha}
-                        position="left"
-                        iconOnClick={() => {
+                if (commit.committer.login == login.nickname) {
+                  return (
+                    <VerticalTimelineElement
+                      className="vertical-timeline-element--work"
+                      date={commit.commit.author.date}
+                      iconStyle={{ background: '#000CB7', color: '#fff' }}
+                      key={commit.sha}
+                      position="left"
+                      iconOnClick={() => {
+                        setProfile({
+                          u_idx: commit.committer.id,
+                          avatar_url: commit.committer.avatar_url,
+                          nickname: commit.committer.login,
+                          email: commit.commit.author.email,
+                          github: commit.committer.html_url,
+                        })
+                        setProfileModal(!profileMoal)
+                      }}
+                    >
+                      <h6
+                        className="mb-2"
+                        u_idx={commit.committer.id}
+                        onClick={() => {
                           setProfile({
                             u_idx: commit.committer.id,
                             avatar_url: commit.committer.avatar_url,
@@ -123,36 +137,36 @@ const Gittimeline = () => {
                           setProfileModal(!profileMoal)
                         }}
                       >
-                        <h6
-                          className="mb-2"
-                          u_idx={commit.committer.id}
-                          onClick={() => {
-                            setProfile({
-                              u_idx: commit.committer.id,
-                              avatar_url: commit.committer.avatar_url,
-                              nickname: commit.committer.login,
-                              email: commit.commit.author.email,
-                              github: commit.committer.html_url,
-                            })
-                            setProfileModal(!profileMoal)
-                          }}
-                        >
-                          <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
-                        </h6>
-                        <CCard className="p-3" style={{ background: '#D9E5FF' }}>
-                          {commit.commit.message}
-                        </CCard>
-                      </VerticalTimelineElement>
-                    )
-                  } else {
-                    return (
-                      <VerticalTimelineElement
-                        className="vertical-timeline-element--work"
-                        date={commit.commit.author.date}
-                        iconStyle={{ background: '#514200', color: '#fff' }}
-                        key={commit.sha}
-                        position="right"
-                        iconOnClick={() => {
+                        <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
+                      </h6>
+                      <CCard className="p-3" style={{ background: '#D9E5FF' }}>
+                        {commit.commit.message}
+                      </CCard>
+                    </VerticalTimelineElement>
+                  )
+                } else {
+                  return (
+                    <VerticalTimelineElement
+                      className="vertical-timeline-element--work"
+                      date={commit.commit.author.date}
+                      iconStyle={{ background: '#514200', color: '#fff' }}
+                      key={commit.sha}
+                      position="right"
+                      iconOnClick={() => {
+                        setProfile({
+                          u_idx: commit.committer.id,
+                          avatar_url: commit.committer.avatar_url,
+                          nickname: commit.committer.login,
+                          email: commit.commit.author.email,
+                          github: commit.committer.html_url,
+                        })
+                        setProfileModal(!profileMoal)
+                      }}
+                    >
+                      <h6
+                        className="mb-2"
+                        u_idx={commit.committer.id}
+                        onClick={() => {
                           setProfile({
                             u_idx: commit.committer.id,
                             avatar_url: commit.committer.avatar_url,
@@ -163,29 +177,15 @@ const Gittimeline = () => {
                           setProfileModal(!profileMoal)
                         }}
                       >
-                        <h6
-                          className="mb-2"
-                          u_idx={commit.committer.id}
-                          onClick={() => {
-                            setProfile({
-                              u_idx: commit.committer.id,
-                              avatar_url: commit.committer.avatar_url,
-                              nickname: commit.committer.login,
-                              email: commit.commit.author.email,
-                              github: commit.committer.html_url,
-                            })
-                            setProfileModal(!profileMoal)
-                          }}
-                        >
-                          <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
-                        </h6>
-                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
-                          {commit.commit.message}
-                        </CCard>
-                      </VerticalTimelineElement>
-                    )
-                  }
-                })}
+                        <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
+                      </h6>
+                      <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                        {commit.commit.message}
+                      </CCard>
+                    </VerticalTimelineElement>
+                  )
+                }
+              })}
             </VerticalTimeline>
           )}
         </CCardBody>

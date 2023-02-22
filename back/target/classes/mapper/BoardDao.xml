@@ -12,4 +12,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where title = #{title} and u_idx = #{u_idx} and content = #{content} and label = #{label}
 	</select>
 
+
+	<!--전체 보드 리스트 -->
+	<select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
+	SELECT *
+	FROM board_${url} a
+	JOIN doc_storage_${url} b ON a.idx = b.idx
+	JOIN common_board_${url} c ON a.idx = c.idx
+	JOIN board_status_${url} d ON a.idx = d.idx
+	JOIN calendar_${url} e ON e.idx = a.idx
+	JOIN kanban_${url} f ON f.idx = d.idx
+	</select>
+	
+	<!-- b_code 검색 -->
+	<select id="searchboard" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard"> 
+	SELECT *
+	FROM board_${url} a
+	JOIN doc_storage_${url} b ON a.idx = b.idx
+	JOIN common_board_${url} c ON a.idx = c.idx
+	JOIN board_status_${url} d ON a.idx = d.idx
+	JOIN calendar_${url} e ON e.idx = a.idx
+	JOIN kanban_${url} f ON f.idx = d.idx
+	<if test="type ! = null and type == 1 and type == 2 and type== 3 and type== 4  and type=5 and type=6">
+ 		where a.b_code like #{type}
+	</if>
+	</select>
+	
+	<!-- 검색창-->
+	
+	
 </mapper>
