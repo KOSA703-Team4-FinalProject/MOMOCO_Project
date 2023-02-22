@@ -91,10 +91,8 @@ const Gittimeline = () => {
       <CCard className="mb-4" style={backgroundcolor}>
         <CCardBody>
           <CRow>
-            <CCol sm={3}>
-              <CFormSelect disabled>
-                <option value="commit">Commit 이력</option>
-              </CFormSelect>
+            <CCol sm={3} className="mx-3 mt-2">
+              <h5><strong>Commit 이력</strong></h5>
             </CCol>
             <CCol sm={9} className="d-none d-md-block"></CCol>
           </CRow>
