@@ -75,7 +75,11 @@ const Gitchart = () => {
         const languageEntries = Object.entries(res.data)
         console.log(languageEntries)
         setLanguageList(languageEntries.map(([key, value]) => ({ key, value })))
-        console.log(languageList)
+        console.log(languageList[0].key)
+
+        languageList.map((data, i) => {
+          console.log(i)
+        })
       })
   }
   return (

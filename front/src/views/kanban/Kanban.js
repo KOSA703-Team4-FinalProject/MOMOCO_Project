@@ -53,9 +53,11 @@ const Kanban = () => {
 
   // 변수
   const [addKanbanItem, setAddKanbanItem] = useState([])
+
   const [statusList, setStateList] = useState([])
   const [kanbanlist, setKanbanlist] = useState('')
   const [u_idxlist, SetU_idxlist] = useState([]) // 알람보낼 유저 아이디 리스트
+  const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -77,6 +79,7 @@ const Kanban = () => {
       label: '.',
       u_idx: login.u_idx,
       url: url,
+      u_idxList: alarmList,
     }
     console.log(reqData.title)
     if (!reqData.title || !reqData.content) {
@@ -142,7 +145,7 @@ const Kanban = () => {
       },
       data: reqData,
     }).then((res) => {
-      console.log(res)
+      console.log(res.data)
       setKanbanlist('2')
     })
   }
@@ -168,18 +171,18 @@ const Kanban = () => {
     getStatus()
 
     axios({
-      method: 'POST',
+      method: 'GET',
       url: '/api/alarm/teamlist',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      data: {
+      params: {
         url: url,
       },
     }).then((res) => {
       console.log(res)
       SetU_idxlist([])
-      res.data.mpa((data) => {
+      res.data.map((data) => {
         SetU_idxlist((u_idxlist) => [...u_idxlist, data])
       })
     })
@@ -191,6 +194,25 @@ const Kanban = () => {
    * [x] dragstart, dragend 이벤트를 발생할때 .dragging라는 클래스를 토글시킨다.
    * [x] dragover 이벤트가 발생하는 동안 마우스 드래그하고 마지막 위치해놓은 Element를 리턴하는 함수를 만듭니다.
    */
+
+  //알림 전송할 u_idx List 생성
+  const checkAList = (e) => {
+    const result = e.target.checked
+    const u_idx = e.target.value
+
+    if (result == true) {
+      setAlarmList(alarmList + ',' + u_idx)
+    } else {
+      const str = alarmList.split(',')
+      setAlarmList([])
+
+      str.map((res) => {
+        if (res != u_idx) {
+          setAlarmList(alarmList + ',' + u_idx)
+        }
+      })
+    }
+  }
 
   return (
     <>
@@ -224,14 +246,15 @@ const Kanban = () => {
               <strong>알림</strong>
             </CFormLabel>
             <CCol sm={10}>
-              <CFormCheck inline id="inlineCheckbox1" value="option1" label="전체보내기" />
-              <CFormCheck inline id="inlineCheckbox2" value="option2" />
-              <CAvatar
-                className="ms-2"
-                src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-              />{' '}
-              메타몽
-              <CFormCheck inline id="inlineCheckbox3" value="option3" label="오리" disabled />
+              {u_idxlist.map((data) => {
+                return (
+                  <>
+                    <CFormCheck inline className="u_idx" value={data.u_idx} onChange={checkAList} />
+                    <CAvatar className="ms-2" src={data.profilephoto} />
+                    {data.nickname}
+                  </>
+                )
+              })}
             </CCol>
             <br />
             <div className="mb-3">

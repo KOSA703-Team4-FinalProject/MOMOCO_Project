@@ -12,4 +12,6 @@ public class Kanban extends Board{
 	private int s_idx;
 	
 	private String s_name;
+	
+	private String u_idxList;      //메일 전달할 유저 식별키 리스트
 }
