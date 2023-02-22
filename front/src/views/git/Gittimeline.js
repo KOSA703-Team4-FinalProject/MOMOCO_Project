@@ -81,6 +81,8 @@ const Gittimeline = () => {
           setCommitsList((commitsList) => [...commitsList, d])
         })
         setListView(true)
+
+        console.log(commitsList)
       })
   }
 

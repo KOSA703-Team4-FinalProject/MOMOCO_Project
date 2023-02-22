@@ -30,10 +30,12 @@ import {
   CFormSelect,
   CCollapse,
   CHeader,
+  CFormCheck,
+  CAvatar,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
-
+import Swal from 'sweetalert2'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import KanbanItem from '../../components/KanbanItem'
 import { useEffect, useRef, useState } from 'react'
@@ -53,6 +55,7 @@ const Kanban = () => {
   const [addKanbanItem, setAddKanbanItem] = useState([])
   const [statusList, setStateList] = useState([])
   const [kanbanlist, setKanbanlist] = useState('')
+  const [u_idxlist, SetU_idxlist] = useState([]) // 알람보낼 유저 아이디 리스트
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -75,25 +78,53 @@ const Kanban = () => {
       u_idx: login.u_idx,
       url: url,
     }
-    console.log(reqData)
-
-    if (confirm('등록하시겠습니까?')) {
-      axios({
-        method: 'POST',
-        url: '/api/kanban/addKanban',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: reqData,
-      }).then((res) => {
-        console.log(res)
-        alert('등록이 완료 되었습니다.')
-        setVisible(!visible)
-        setKanbanlist('1')
-        getStatus()
+    console.log(reqData.title)
+    if (!reqData.title || !reqData.content) {
+      Swal.fire({
+        icon: 'warning', // 여기다가 아이콘 종류를 쓰면 됩니다.
+        title: '제목, 내용을 모두 입력해주세요',
       })
     } else {
-      alert('취소되었습니다')
+      Swal.fire({
+        title: '등록하시겠습니까?',
+        text: '',
+        icon: 'warning',
+
+        showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+        confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+        cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+        confirmButtonText: '등록', // confirm 버튼 텍스트 지정
+        cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+        reverseButtons: true, // 버튼 순서 거꾸로
+      }).then((result) => {
+        // 만약 Promise리턴을 받으면,
+        if (result.isConfirmed) {
+          // 만약 모달창에서 confirm 버튼을 눌렀다면
+          axios({
+            method: 'POST',
+            url: '/api/kanban/addKanban',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: reqData,
+          }).then((res) => {
+            console.log(res)
+            Swal.fire({
+              icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+              title: '등록이 완료 되었습니다',
+            })
+            setVisible(!visible)
+            setKanbanlist('1')
+            getStatus()
+          })
+        } else {
+          Swal.fire({
+            icon: 'error', // 여기다가 아이콘 종류를 쓰면 됩니다.
+            title: '취소되었습니다',
+          })
+        }
+      })
     }
   }
 
@@ -135,6 +166,23 @@ const Kanban = () => {
 
   useEffect(() => {
     getStatus()
+
+    axios({
+      method: 'POST',
+      url: '/api/alarm/teamlist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        url: url,
+      },
+    }).then((res) => {
+      console.log(res)
+      SetU_idxlist([])
+      res.data.mpa((data) => {
+        SetU_idxlist((u_idxlist) => [...u_idxlist, data])
+      })
+    })
   }, [kanbanlist])
 
   /**
@@ -161,7 +209,7 @@ const Kanban = () => {
               <CFormInput type="text" id="kanbantitle" placeholder="제목을 입력해주세요" />
             </div>
             <hr />
-            상태 입력
+            <strong>상태 입력</strong>
             <br />
             <br />
             <CFormSelect id="status_select" aria-label="상태 입력">
@@ -171,6 +219,20 @@ const Kanban = () => {
                 </option>
               ))}
             </CFormSelect>
+            <br />
+            <CFormLabel className="col-sm-2 col-form-label">
+              <strong>알림</strong>
+            </CFormLabel>
+            <CCol sm={10}>
+              <CFormCheck inline id="inlineCheckbox1" value="option1" label="전체보내기" />
+              <CFormCheck inline id="inlineCheckbox2" value="option2" />
+              <CAvatar
+                className="ms-2"
+                src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
+              />{' '}
+              메타몽
+              <CFormCheck inline id="inlineCheckbox3" value="option3" label="오리" disabled />
+            </CCol>
             <br />
             <div className="mb-3">
               <CFormLabel htmlFor="exampleFormControlTextarea1">내용</CFormLabel>
