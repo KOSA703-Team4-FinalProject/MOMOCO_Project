@@ -276,8 +276,6 @@ const Chat = (props) => {
         content: $(tag).attr('content'),
       }
 
-      console.log(reqData)
-
       axios({
         method: 'GET',
         url: '/api/chat/imgView',
