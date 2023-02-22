@@ -34,6 +34,8 @@ const Calendar = () => {
   const [start_date, setStart_date] = useState('')
   const [checkList, setCheckList] = useState([])
 
+  const [u_idxlist, SetU_idxlist] = useState([]) //알람보낼 유저 id 리스트
+
   const params = useParams()
 
   // AES알고리즘 사용 복호화
@@ -83,6 +85,27 @@ const Calendar = () => {
     }).then((res) => {
       setStateList(res.data)
     })
+
+    axios({
+      method: 'POST',
+      url: '/api/alarm/teamlist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        url: url,
+      },
+    }).then((res)=>{
+
+      console.log(res)
+      SetU_idxlist([])
+      
+      res.data.mpa((data)=>{
+        SetU_idxlist((u_idxlist) => [...u_idxlist, data])
+      })
+
+    })
+
   }, [])
 
   //전체 일정 추가
@@ -260,6 +283,27 @@ const Calendar = () => {
                         placeholder="상세 일정"
                         style={{ height: '100px' }}
                       ></CFormTextarea>
+                    </CCol>
+                    <CCol md={12}>
+                      <CRow>
+                        <div className="col-sm-12 col-form-label ms-2">
+                          <strong>알림</strong>
+                          <CFormCheck
+                            inline
+                            className='ms-3'
+                            value="option1"
+                            label="전체보내기"
+                          />
+                        </div>
+                        <CCol md={12} className="mx-5 ps-3">
+                          <CFormCheck inline id="inlineCheckbox2" value="option2" />
+                          <CAvatar
+                            className="ms-2"
+                            src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
+                          />{' '}
+                          메타몽
+                        </CCol>
+                      </CRow>
                     </CCol>
                     <CCol className="text-center">
                       <CButton
