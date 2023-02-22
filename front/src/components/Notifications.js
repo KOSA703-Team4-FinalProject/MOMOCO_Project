@@ -178,7 +178,7 @@ const Notifications = (props) => {
             <strong>미확인({getAlarmCount(list)})</strong>
           </CCol>
           <CCol align="end" sm={7}>
-            <CButton color="light" onClickl={() => checkAllAlarm()}>
+            <CButton color="light" onClick={() => checkAllAlarm()}>
               전체읽음으로 표시
             </CButton>
           </CCol>

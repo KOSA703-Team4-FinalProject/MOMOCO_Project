@@ -37,7 +37,8 @@ const Boardedit = () => {
   const [content, setContent] = useState('') //수정에 들어갈 글 내용
   const [newFile, setNewFile] = useState('') // 파일 수정
   const [newTitle, setNewTitle] = useState('') // 제목수정
-
+  const [u_idxlist, SetU_idxlist] = useState([]) //알림
+  const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -47,7 +48,24 @@ const Boardedit = () => {
   const handleTitleChange = (e) => {
     setNewTitle(e.target.value)
   }
+  //알림 전송할 u_idx List 생성
+  const checkAList = (e) => {
+    const result = e.target.checked
+    const u_idx = e.target.value
 
+    if (result == true) {
+      setAlarmList(alarmList + ',' + u_idx)
+    } else {
+      const str = alarmList.split(',')
+      setAlarmList([])
+
+      str.map((res) => {
+        if (res != u_idx) {
+          setAlarmList(alarmList + ',' + u_idx)
+        }
+      })
+    }
+  }
   useEffect(() => {
     axios({
       method: 'POST',
@@ -60,6 +78,24 @@ const Boardedit = () => {
       setBoardcontent(res.data)
       setNewTitle(res.data.title)
       setContent(res.data.content)
+    })
+
+    axios({
+      method: 'GET',
+      url: '/api/alarm/teamlist',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        url: params.url,
+      },
+    }).then((res) => {
+      console.log(res)
+      SetU_idxlist([])
+
+      res.data.map((data) => {
+        SetU_idxlist((u_idxlist) => [...u_idxlist, data])
+      })
     })
   }, [])
 
@@ -82,6 +118,7 @@ const Boardedit = () => {
       content: content,
       title: newTitle,
       label: '.',
+      u_idxList: alarmList,
     }
     console.log(edit)
     const fd = new FormData()
@@ -164,25 +201,37 @@ const Boardedit = () => {
                     </CCol>
                   </CRow>
                   <CCol className="row">
-                    <CCol className="col-md-4">
-                      <label>
-                        <strong>알림</strong>
-                      </label>{' '}
-                      <br></br>&nbsp;
-                      <CFormCheck inline id="inlineCheckbox1" value="option1" label="전체보내기" />
-                      <CFormCheck inline id="inlineCheckbox2" value="option2" />
-                      <CAvatar
-                        className="ms-2"
-                        src="https://cdnimg.melon.co.kr/cm2/album/images/111/27/145/11127145_20230102135733_500.jpg/melon/resize/120/quality/80/optimize"
-                      />{' '}
-                      메타몽 &nbsp;
-                      <CFormCheck
-                        inline
-                        id="inlineCheckbox3"
-                        value="option3"
-                        label="오리"
-                        disabled
-                      />
+                    <CCol className="col-md-12">
+                      <CRow>
+                        <CFormLabel className="col-sm-2 col-form-label">
+                          <strong>알림</strong>
+                        </CFormLabel>
+                        <CCol sm={10}>
+                          <CFormCheck
+                            inline
+                            id="inlineCheckbox1"
+                            value="option1"
+                            label="전체보내기"
+                          />
+                          <CRow>
+                            {u_idxlist.map((data, key) => (
+                              <div className="col" key={data.u_idx}>
+                                <CFormCheck
+                                  inline
+                                  name="u_idx"
+                                  value={data.u_idx}
+                                  label={
+                                    <div>
+                                      <CAvatar className="ms-2" src={data.profilephoto} />
+                                      {data.nickname}
+                                    </div>
+                                  }
+                                />
+                              </div>
+                            ))}
+                          </CRow>
+                        </CCol>
+                      </CRow>
                     </CCol>
                     <CCol className="col-md-4"></CCol>
                     <CCol className="col-md-4"></CCol>
