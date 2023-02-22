@@ -151,7 +151,7 @@ const WriteDocStorage = () => {
         depth: 0,
         step: 0,
         upload_type: upload_type,
-        u_idxlist: alarmlist,
+        u_idxList: alarmlist,
       }
       formData.append('file', orifile)
       formData.append('doc', JSON.stringify(doc))

@@ -50,11 +50,17 @@ const Comments = (props) => {
   const [visibleLg, setVisibleLg] = useState(false)
   const [visibleLg1, setVisibleLg1] = useState(false)
   const [commentContent, setCommentContent] = useState('')
+  const [content, SetContent] = useState('')
   const modalstyle = {}
   const myparams = {
     url: params.url,
     idx: props.idx,
   }
+
+  const contentHandler = (e) => {
+    SetContent(e.target.value)
+  }
+
   function list() {
     axios({
       method: 'POST',
@@ -77,7 +83,7 @@ const Comments = (props) => {
   //댓글 리스트
   useEffect(() => {
     list()
-  }, [])
+  }, [props.idx])
 
   //댓글 작성
   ////////////////////////////////////전체리스트
@@ -85,9 +91,8 @@ const Comments = (props) => {
     const write = {
       url: params.url,
       u_idx: login.u_idx,
-      content: $('#commentcontent').val(),
+      content: content,
       nickname: login.nickname,
-
       idx: props.idx,
     }
     axios({
@@ -128,7 +133,7 @@ const Comments = (props) => {
     const reply = {
       url: params.url,
       u_idx: login.u_idx,
-      content: commentContent,
+      content: content,
       nickname: login.nickname,
       idx: props.idx,
       ref: commentIdx,
@@ -153,7 +158,7 @@ const Comments = (props) => {
     const update = {
       url: params.url,
       co_idx: $('#coidx').val(),
-      content: commentContent,
+      content: content,
     }
 
     axios({
@@ -181,8 +186,8 @@ const Comments = (props) => {
         <CCol className="col-md-12 px-3 py-3">
           <CCol className="row">
             <CCol className="col-md-10 px-4">
-              <CAvatar className="ms-6" src={login.profilephoto} />
-              <strong> {login.nickname}</strong>
+              {/* <CAvatar className="ms-6" src={login.profilephoto} /> */}
+              <strong>{login.nickname}</strong>
             </CCol>
             <CCol className="col-md-2 px-4"></CCol>
           </CCol>
@@ -193,6 +198,7 @@ const Comments = (props) => {
                   rows={3}
                   placeholder="댓글을 작성해주세요"
                   id="commentcontent"
+                  onChange={contentHandler}
                 ></CFormTextarea>
               </CForm>
             </CCol>
@@ -217,24 +223,23 @@ const Comments = (props) => {
           </CRow>
         </CCol>
       </CCard>
-      <br></br>
 
       {commentlist.map((data, key) => {
         if (data.co_idx == data.ref) {
           return (
             <CCol key={data.co_idx}>
-              <CCard className="p-1">
+              <CCard className="mt-3 px-4 mb-3" color="light">
                 <CCol className="col-md-12">
                   <CCol className="row">
-                    <CCol className="col-md-10 mt-3 p-3">
+                    <CCol className="col-md-10 px-2 py-3">
                       <CAvatar className="ms-6" src={data.profilephoto} />
-                      &nbsp;<strong>{data.nickname}</strong>
+                      &nbsp;&nbsp;<strong>{data.nickname}</strong>
                     </CCol>
                   </CCol>
                   <CRow className="row">
-                    <CCol className="col-md-12 mt-2">{data.content}</CCol>
+                    <CCol className="col-md-12 mx-2">{data.content}</CCol>
                   </CRow>
-                  <CCol className="col-md-12 mt-2 mb-1" align="end">
+                  <CCol className="col-md-12 mt-2 mb-3" align="end">
                     {login.nickname === data.nickname && (
                       <CButton
                         color="primary"
@@ -265,11 +270,8 @@ const Comments = (props) => {
                                 <CFormTextarea
                                   rows={3}
                                   id="commentcontent"
-                                  value={commentContent}
-                                  onChange={(event) => {
-                                    const value = event.target.value
-                                    setCommentContent(value)
-                                  }}
+                                  placeholder={commentContent}
+                                  onChange={contentHandler}
                                 ></CFormTextarea>
                               </CForm>
                             </CCol>
@@ -319,10 +321,7 @@ const Comments = (props) => {
                                   rows={3}
                                   placeholder="답글을 작성해주세요"
                                   id="commentcontent"
-                                  onChange={(event) => {
-                                    const value = event.target.value
-                                    setCommentContent(value)
-                                  }}
+                                  onChange={contentHandler}
                                 ></CFormTextarea>
                               </CForm>
                             </CCol>
@@ -361,26 +360,26 @@ const Comments = (props) => {
         } else {
           return (
             <div className="row justify-content-between">
-              <div className="col-1 mt-2 p-0.5">
+              <div className="col-1 p-0.5">
                 <div className="row mt-2" align="center">
                   <FiCornerDownRight size="36px" />
                 </div>
               </div>
               <div className="col-11">
-                <div className="col-md-12 my-3" key={data.co_idx}>
+                <div className="col-md-12 my-1" key={data.co_idx}>
                   <CCol>
-                    <CCard className="p-2">
+                    <CCard className="p-3" color="light">
                       <CCol className="col-md-12">
                         <CCol className="row">
-                          <CCol className="col-md-5 mt-3 ps-3">
+                          <CCol className="col-md-5 ps-3">
                             <CAvatar className="ms-6" src={data.profilephoto} />
-                            &nbsp;&nbsp;&nbsp;<strong>{data.nickname}</strong>
+                            &nbsp;&nbsp;<strong>{data.nickname}</strong>
                           </CCol>
                         </CCol>
                         <CRow className="row">
-                          <CCol className="col-md-12 mt-2">{data.content}</CCol>
+                          <CCol className="col-md-12 m-2">{data.content}</CCol>
                         </CRow>
-                        <CCol className="col-md-12 mt-2 mb-1" align="end">
+                        <CCol className="col-md-12mb-1" align="end">
                           {login.nickname === data.nickname && (
                             <CButton
                               color="primary"
@@ -411,11 +410,8 @@ const Comments = (props) => {
                                       <CFormTextarea
                                         rows={3}
                                         id="commentcontent"
-                                        value={commentContent}
-                                        onChange={(event) => {
-                                          const value = event.target.value
-                                          setCommentContent(value)
-                                        }}
+                                        placeholder={commentContent}
+                                        onClick={contentHandler}
                                       ></CFormTextarea>
                                     </CForm>
                                   </CCol>
