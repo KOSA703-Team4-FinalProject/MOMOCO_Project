@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.or.dao.BoardDao;
+import kr.or.dao.CommonBoardDao;
 import kr.or.vo.Board;
+import kr.or.vo.CommonBoard;
 
 @Service
 public class BoardSerivce {
@@ -39,7 +41,7 @@ public class BoardSerivce {
 		return reboard;
 	}
 	
-	//allboardlist
+	//모든보드검색
 	public List<Board>allBoardList(String url){
 		List<Board> board = new ArrayList<Board>();
 		
@@ -54,4 +56,34 @@ public class BoardSerivce {
 		return board;
 	}
 	
+	//보드번호 검색
+	public List<Board>searchboardnumber(Board search){
+		List<Board> board = new ArrayList<Board>();
+		try {
+			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
+			board = boarddao.searchboardnumber(search);
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			}catch (SQLException e) {
+			e.printStackTrace();
+			}
+	
+		return board;
+	}
+	
+	//검색
+		public List<Board>boardSearch(Board string){
+			List<Board> board = new ArrayList<Board>();
+			try {
+				BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
+				board =boarddao.boardSearch(string);
+				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				}catch (SQLException e) {
+				e.printStackTrace();
+				}
+			return board;
+		}
+
 }

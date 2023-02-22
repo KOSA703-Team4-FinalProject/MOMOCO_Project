@@ -217,6 +217,7 @@ const Boardedit = () => {
                             {u_idxlist.map((data, key) => (
                               <div className="col" key={data.u_idx}>
                                 <CFormCheck
+                                  onChange={checkAList}
                                   inline
                                   name="u_idx"
                                   value={data.u_idx}
