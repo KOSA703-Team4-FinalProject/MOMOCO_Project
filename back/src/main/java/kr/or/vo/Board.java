@@ -26,4 +26,6 @@ public class Board {
 	private String type; //검색타입
 	private String keyword ; //검색내용
 	
+	
+	
 }
