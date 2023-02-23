@@ -34,6 +34,7 @@ import KanbanDetail from 'src/views/kanban/KanbanDetail'
 import axios from 'axios'
 import $ from 'jquery'
 import { useRef } from 'react'
+import Comments from './Comments'
 
 const KanbanItem = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
@@ -594,6 +595,7 @@ const KanbanItem = (props) => {
                                   <b>{itemDetail.content}</b>
                                 </CCard>
                                 <br />
+                                <Comments idx={parseInt(itemDetail.idx)} />
                                 <CCol className="mz-2" align="center">
                                   <CButton
                                     color="dark"
