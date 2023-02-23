@@ -65,6 +65,7 @@ const Boardedit = React.lazy(() => import('./views/board/Boardedit'))
 const AllBoardList = React.lazy(() => import('./views/board/AllBoardList'))
 //댓글 쓰기
 const Comments = React.lazy(() => import('./components/Comments'))
+
 //마이페이지
 const Mypage = React.lazy(() => import('./views/mypage/Mypage'))
 //깃 타임라인
@@ -87,7 +88,7 @@ const docStorage = React.lazy(() => import('./views/docStorage/docStorage'))
 const Projectmain = React.lazy(() => import('./views/project/Projectmain'))
 //프로젝트 상세페이지
 const Projectcontent = React.lazy(() => import('./views/project/Projectcontent'))
-
+const ReplyBoardWrite = React.lazy(() => import('./views/board/replyBoardWrite')) //commonboard 답글
 const routes = [
   { path: '/', exact: true, name: 'Home', element: AllBoardList },
   { path: '/dashboard', name: 'Dashboard', element: AllBoardList },
@@ -137,6 +138,12 @@ const routes = [
   { path: '/boardlist', name: 'boardlist', exact: true, element: Boardlist }, //CommonBoard게시판 보기
   { path: '/boardcontent/:idx', name: 'Boardcontent', exact: true, element: Boardcontent }, //CommonBoard게시판 내용 보기
   { path: '/boardwrite', name: 'Boardwrite', exact: true, element: Boardwrite },
+  {
+    path: '/replyboardwrite/:b_idx/:ref/:step/:depth',
+    name: 'Boardwrite',
+    exact: true,
+    element: ReplyBoardWrite,
+  }, // commonboard답글작성
   { path: '/boardedit/:idx', name: 'Boardedit', exact: true, element: Boardedit },
   { path: '/mypage', name: 'Mypage', exact: true, element: Mypage },
   { path: '/viewchat', name: 'Viewchat', exact: true, element: Viewchat },
@@ -153,7 +160,6 @@ const routes = [
   { path: '/comments', name: 'Comments', exact: true, element: Comments }, //댓글작성하기
   { path: '/allboardlist', name: 'allboardlist', exact: true, element: AllBoardList }, //전체게시판목록
   { path: '/IssueTimeLine', name: 'IssueTimeLine', exact: true, element: IssueTimeLine }, //이슈 타임 라인
-  
 ]
 
 export default routes

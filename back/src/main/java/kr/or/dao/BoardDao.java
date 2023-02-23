@@ -13,7 +13,7 @@ public interface BoardDao {
 	
 	
 	//전체 보드 리스트 
-	public List<Board> allBoardList(String url) throws ClassNotFoundException, SQLException;
+	public List<Board> allBoardList(Board url) throws ClassNotFoundException, SQLException;
 
 	//보드번로호로 검색
 	public List<Board> searchboardnumber (Board search)throws ClassNotFoundException, SQLException;

@@ -18,6 +18,7 @@ import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import Comments from 'src/components/Comments'
 import { Editor } from '@tinymce/tinymce-react'
+import { FormControlUnstyledContext } from '@mui/base'
 const title = {
   fontSize: 25,
   border: '2px',
@@ -47,9 +48,6 @@ const Boardcontent = (props) => {
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
 
-  const navigateToboardwrite = (params) => {
-    navigate(`/ws/boardwrite/${params.url}`)
-  }
   const myparams = {
     url: params.url,
     idx: params.idx,
@@ -65,6 +63,7 @@ const Boardcontent = (props) => {
     }).then((res) => {
       setBoardcontent(res.data)
     })
+
     //댓글 목록
     axios({
       method: 'POST',
@@ -200,12 +199,20 @@ const Boardcontent = (props) => {
 
         <div align="right" className="me-4">
           {login.nickname === boardcontent.nickname && (
-            <Link to={`/ws/${params.url}/boardedit/${boardcontent.idx}`}>
+            <Link to={`/ws/${params.url}/boardedit/${boardcontent.b_idx}`}>
               <CButton color="primary" variant="outline">
                 수정
-              </CButton>{' '}
+              </CButton>
             </Link>
           )}
+          &nbsp;
+          <Link
+            to={`/ws/${params.url}/replyboardwrite/${boardcontent.b_idx}/${boardcontent.ref}/${boardcontent.step}/${boardcontent.depth}`}
+          >
+            <CButton color="primary" variant="outline">
+              답글
+            </CButton>
+          </Link>
           &nbsp;
           {login.nickname === boardcontent.nickname && (
             <Link to={`/ws/${params.url}/boardlist`}>

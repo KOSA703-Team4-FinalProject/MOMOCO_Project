@@ -113,7 +113,6 @@ const Calendar = () => {
 
   //전체 일정 추가
   const addCal = () => {
-
     const reqData = {
       start_date: $('#calstart_date').val(),
       end_date: $('#calend_date').val(),
@@ -159,6 +158,7 @@ const Calendar = () => {
     }).then((res) => {
       setCheckList(res.data.checked)
       setReadCalList(res.data)
+      console.log('u_idx' + res.data)
     })
   }
 
@@ -233,21 +233,18 @@ const Calendar = () => {
 
   //알림 전송할 u_idx List 생성
   const checkAList = (e) => {
-
     const result = e.target.checked
     const u_idx = e.target.value
 
-    if(result == true){
-
-      setAlarmList(alarmList+","+u_idx)
-
-    }else{
-     const str = alarmList.split(',')
+    if (result == true) {
+      setAlarmList(alarmList + ',' + u_idx)
+    } else {
+      const str = alarmList.split(',')
       setAlarmList([])
 
-      str.map((res)=>{
-        if(res != u_idx){
-          setAlarmList(alarmList+","+u_idx)
+      str.map((res) => {
+        if (res != u_idx) {
+          setAlarmList(alarmList + ',' + u_idx)
         }
       })
     }
@@ -255,7 +252,6 @@ const Calendar = () => {
 
   //프로필 조회
   const clickProfile = (e) => {
-
     const pro = e.target
     const idx = $(pro).attr('value')
 
@@ -265,14 +261,13 @@ const Calendar = () => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      params: {u_idx: idx}
+      params: { u_idx: idx },
     }).then((res) => {
       console.log(res.data)
 
       setProfile(res.data)
       setProfileModal(true)
     })
-
   }
 
   function Component() {
@@ -337,17 +332,17 @@ const Calendar = () => {
                           <strong>알림</strong>
                         </div>
                         <CCol md={12} className="mx-3">
-                          <CRow className='me-2'>
+                          <CRow className="me-2">
                             {u_idxlist.map((data) => {
                               return (
-                                <CCol md={4} className='mb-3' key={data.u_idx}>
-                                  <CFormCheck inline 
-                                  onChange={checkAList}
-                                  className="inlineCheckbox2" value={data.u_idx} />
-                                  <CAvatar
-                                    className="ms-2"
-                                    src={data.profilephoto}
-                                  />{' '}
+                                <CCol md={4} className="mb-3" key={data.u_idx}>
+                                  <CFormCheck
+                                    inline
+                                    onChange={checkAList}
+                                    className="inlineCheckbox2"
+                                    value={data.u_idx}
+                                  />
+                                  <CAvatar className="ms-2" src={data.profilephoto} />{' '}
                                   {data.nickname}
                                 </CCol>
                               )

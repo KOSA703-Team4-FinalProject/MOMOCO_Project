@@ -49,7 +49,7 @@ public class CommonBoardController {
 
 		List<CommonBoard> boardlist = new ArrayList<CommonBoard>();
 
-		boardlist = commonboardservice.getBoard(url.getUrl());
+		boardlist = commonboardservice.getBoard(url);
 
 		return boardlist;
 	}
@@ -145,7 +145,6 @@ public class CommonBoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		// 새로운 파일이 업로드되었는지 확인
 		if (files.length > 0 && !files[0].isEmpty()) {
 			// 파일 명
@@ -207,5 +206,73 @@ public class CommonBoardController {
 		return searchlist;
 
 	}
+	// 답글글쓰기
+	@RequestMapping(value = "/relyboardwrite", method = RequestMethod.POST)
+	public int replyCommonBoard(@RequestParam(value = "file") MultipartFile[] files,
+			@RequestParam(value = "write1") String boardwrite, HttpServletRequest request) {
+
+		CommonBoard board = null;
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			// String to DTO
+			board = mapper.readValue(boardwrite, CommonBoard.class);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// 파일 명
+		String filename = files[0].getOriginalFilename();
+		// 확장자
+		String extension = filename.substring(filename.lastIndexOf("."));
+		// 확장자를 제외한 파일 명
+		String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
+
+		// 저장할 파일 명
+		String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis()))
+				.concat(extension);
+		String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/"
+				+ saveFileName;
+
+		// 파일이 저장될 경로
+		String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
+		// 폴더 생성
+		File folder = new File(path);
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+
+		System.out.println(savePath);
+
+		try {
+			File dest = new File(savePath);
+			files[0].transferTo(dest);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		board.setOri_filename(files[0].getOriginalFilename());
+		board.setFiletype(files[0].getContentType());
+		board.setVolume(files[0].getSize());
+		int result = commonboardservice.replyCommonBoard(board);
+
+		String[] u_idxList = board.getU_idxList().split(",");
+
+		alarmsocket.sendAlarm(board, u_idxList);
+
+		return result;
+	}
+	// 체크 리스트
+		@RequestMapping(value = "/checklist", method = RequestMethod.POST)
+		public List<CommonBoard> getCheck(@RequestBody CommonBoard url) {
+
+			List<CommonBoard> boardlist = new ArrayList<CommonBoard>();
+
+			boardlist = commonboardservice.getCheck(url);
+
+			return boardlist;
+		}
+
 
 }

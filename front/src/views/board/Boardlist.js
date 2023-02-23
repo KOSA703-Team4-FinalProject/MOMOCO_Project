@@ -15,9 +15,11 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useHistory } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-
+import $, { data, param } from 'jquery'
 import Pagination from 'react-js-pagination'
 import styled from 'styled-components'
+import { loginaxios } from '../login/backlogin'
+import { TbChecklist } from 'react-icons/tb'
 const writedate = {}
 const title = {}
 const context = {}
@@ -47,10 +49,18 @@ const Boardlist = () => {
   //인코딩, 문자열로 변환, JSON 변환
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
+  //로그인한 유저
+  const login = JSON.parse(localStorage.getItem('login'))
+  //글내용으로 가는  링크
+  function handleNavigate() {
+    navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+  }
+
   //글목록
   function list() {
     const myparams = {
       url: params.url,
+      u_idx: login.u_idx,
     }
 
     axios({
@@ -65,8 +75,10 @@ const Boardlist = () => {
       res.data.map((data) => {
         setBoardList((boardlist) => [...boardlist, data])
       })
+      console.log(res.data)
     })
   }
+
   function reset() {
     setBoardList([])
   }
@@ -86,8 +98,7 @@ const Boardlist = () => {
       type: 'title_content',
       keyword: searchValue,
     }
-    console.log(params.url)
-    console.log(searchcontent.url + searchcontent.type, searchcontent.keyword)
+
     axios({
       method: 'POST',
       url: '/board/commonboardsearch',
@@ -98,12 +109,13 @@ const Boardlist = () => {
       setBoardList(res.data)
     })
   }
+
   //읽음 테이블에 insert
   const checked = () => {
     const check = {
-      idx: e.target.idx.value,
-      nickname: e.target.nickname.value,
-      u_idx: e.target.u_idx.value,
+      idx: $('#idx').val(),
+      nickname: login.nickname,
+      u_idx: login.u_idx,
       url: params.url,
     }
     console.log(check.idx, check.nickname, check.u_idx)
@@ -126,7 +138,6 @@ const Boardlist = () => {
     setItems(Number(e.target.value))
   }
 
-  console.log(items * (page - 1), items * (page - 1) + items)
   return (
     <>
       <CCard className="mb-4">
@@ -184,47 +195,51 @@ const Boardlist = () => {
                 {/* 게시판 목록 시작 */}
                 {boardlist
                   .slice(items * (page - 1), items * (page - 1) + items)
-                  .map((data, key) => (
-                    <CCard
-                      className="p-3 mt-3"
-                      key={key}
-                      onClick={() => {
-                        navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
-                      }}
-                    >
-                      <div className="col-md-12">
-                        <div className="row">
-                          <div className="col-md-1" style={number}>
-                            <CIcon icon={cilCheck} />
-                            <CFormInput type="hidden" id="idx" value={data.idx} />
-                            <strong>{data.idx}.</strong>
-                          </div>
-                          <div className="col-md-8">
-                            <div className="row">
-                              <div className="col-md-12" style={title}>
-                                <strong> {data.title}</strong>
-                              </div>
-                              <div className="col-md-12" style={context}>
-                                {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-md-3">
-                            <div className="col-md-12" align="end">
-                              <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
-                              {data.nickname}
-                              <CFormInput type="hidden" id="nickname" value={data.nickname} />
-                              <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
-                            </div>
+                  .map((data, key) => {
+                    const checkIcon = login.u_idx === data.u_idx1 ? <CIcon icon={cilCheck} /> : null
 
-                            <div className="col-md-12" align="end" style={writedate}>
-                              {data.w_date}
+                    return (
+                      <CCard
+                        className="p-3 mt-3"
+                        key={data.idx}
+                        onClick={() => {
+                          navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+                          checked()
+                        }}
+                      >
+                        <div className="col-md-12">
+                          <div className="row">
+                            <div className="col-md-1" style={number}>
+                              {checkIcon}
+                              <strong>{data.b_idx}.</strong>
+                            </div>
+                            <div className="col-md-8">
+                              <div className="row">
+                                <div className="col-md-12" style={title}>
+                                  <strong> {data.title}</strong>
+                                </div>
+                                <div className="col-md-12" style={context}>
+                                  {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-md-3">
+                              <div className="col-md-12" align="end">
+                                <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
+                                {data.nickname}
+                                <CFormInput type="hidden" id="nickname" value={data.nickname} />
+                                <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
+                              </div>
+
+                              <div className="col-md-12" align="end" style={writedate}>
+                                {data.w_date}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </CCard>
-                  ))}
+                      </CCard>
+                    )
+                  })}
                 {/* 게시판 목록 끝 */}
                 <br />
                 <div className="col-md-12" align="center">

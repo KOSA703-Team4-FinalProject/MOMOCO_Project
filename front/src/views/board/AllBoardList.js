@@ -19,7 +19,7 @@ import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Pagination from 'react-js-pagination'
 import styled from 'styled-components'
 const number = {
@@ -41,12 +41,17 @@ const AllBoardList = () => {
   //인코딩, 문자열로 변환, JSON 변환
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
+  //로그인한 유저
+  const login = JSON.parse(localStorage.getItem('login'))
   const params = useParams()
   const myparams = {
     url: params.url,
   }
   const [allboardlist, setallBoardlist] = useState([]) //모든게시판목록
   const [boardnumber, setBoardNumber] = useState('') // 게시판 번호 받기
+  const [searchValue, setSearchValue] = useState('') // 검색
+  const [isChecked, setIsChecked] = useState(false) // 전체보기 게시판
+  const navigate = useNavigate()
   const handleClick = (event) => {
     //클릭할때 게시판번호 검색
     const number = event.target.value
@@ -79,19 +84,32 @@ const AllBoardList = () => {
       },
       data: myparams,
     }).then((res) => {
+      console.log(res.data)
       reset()
       res.data.map((data) => {
         setallBoardlist((allboardlist) => [...allboardlist, data])
       })
     })
   }
-  console.log(allboardlist)
+
   function reset() {
     setallBoardlist([])
   }
   useEffect(() => {
+    //로딩되었을때 전체보기
     list()
   }, [])
+  useEffect(() => {
+    //전체보기를 클릭했을때
+    if (isChecked) {
+      list()
+    }
+  }, [isChecked])
+  const handleAllview = (e) => {
+    // 전체보기 클릭
+    setIsChecked(!isChecked)
+    list()
+  }
   //페이징 처리
   const [items, setItems] = useState(5)
   const [page, setPage] = useState(1)
@@ -101,7 +119,28 @@ const AllBoardList = () => {
   const itemChange = (e) => {
     setItems(Number(e.target.value))
   }
+  //검색 기능
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value)
+  }
+  const searchChange = (e) => {
+    const searchcontent = {
+      url: params.url,
+      type: 'title_content',
+      keyword: searchValue,
+    }
+    console.log(params.url)
+    console.log(searchcontent.url + searchcontent.type, searchcontent.keyword)
+    axios({
+      method: 'POST',
+      url: '/allboard/boardsearch',
+      headers: { Authorization: `Bearer ${accessToken}` },
 
+      data: searchcontent,
+    }).then((res) => {
+      setallBoardlist(res.data)
+    })
+  }
   return (
     <>
       <CCard className="mb-4">
@@ -133,12 +172,15 @@ const AllBoardList = () => {
                           placeholder="검색어를 입력하세요"
                           aria-label="검색어를 입력하세요"
                           aria-describedby="button-addon2"
+                          value={searchValue}
+                          onChange={handleSearchChange}
                         />
                         <CButton
                           type="button"
                           color="secondary"
                           variant="outline"
                           id="button-addon2"
+                          onClick={searchChange}
                         >
                           검색
                         </CButton>
@@ -161,9 +203,9 @@ const AllBoardList = () => {
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck2"
                         autoComplete="off"
-                        value={2}
                         label="전체보기"
-                        onClick={handleClick}
+                        value={isChecked}
+                        onClick={handleAllview}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
@@ -206,11 +248,7 @@ const AllBoardList = () => {
                       />
                     </CButtonGroup>
                   </div>
-                  <div className="col-md-3" align="right">
-                    <Link to="/boardwrite">
-                      <CButton variant="outline">글쓰기</CButton>
-                    </Link>
-                  </div>
+                  <div className="col-md-3" align="right"></div>
                 </div>
 
                 {/* 게시판 목록 시작 */}
@@ -221,13 +259,21 @@ const AllBoardList = () => {
                       className="p-3 mt-3"
                       key={data.idx}
                       onClick={() => {
-                        navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+                        if (data.b_code === 3) {
+                          navigate(`/ws/${params.url}/docStorage/${data.idx}`)
+                        } else if (data.b_code === 4) {
+                          navigate(`/ws/${params.url}/calendar`)
+                        } else if (data.b_code === 5) {
+                          navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+                        } else if (data.b_code === 6) {
+                          navigate(`/ws/${params.url}/kanban`)
+                        }
                       }}
                     >
                       <div className="col-md-12">
                         <div className="row">
                           <div className="col-md-1" style={number}>
-                            <CIcon icon={cilCheck} />
+                            {login.u_idx === data.u_idx1 ? <CIcon icon={cilCheck} /> : null}
                             <CFormInput type="hidden" id="idx" value={data.idx} />
                             <strong>{data.idx}.</strong>
                           </div>
@@ -237,7 +283,7 @@ const AllBoardList = () => {
                                 <strong> {data.title}</strong>
                               </div>
                               <div className="col-md-12">
-                                {data.content.replace(/(<([^>]+)>)/gi, '')}
+                                {data.content ? data.content.replace(/(<([^>]+)>)/gi, '') : null}
                               </div>
                             </div>
                           </div>

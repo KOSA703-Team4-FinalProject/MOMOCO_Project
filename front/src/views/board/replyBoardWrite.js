@@ -26,7 +26,7 @@ import $, { data, param } from 'jquery'
 import Swal from 'sweetalert2'
 import Boardlist from './Boardlist'
 
-const Boardwirte = () => {
+const replyBoardWrite = () => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
   const issueNumber = useSelector((state) => state.issueNumber)
@@ -128,11 +128,16 @@ const Boardwirte = () => {
     console.log(e.target.files[0])
     setFilevalues(e.target.files[0])
   }
+  const [ref, setRef] = useState(parseInt(params.b_idx))
+  const [step, setStep] = useState(parseInt(params.step))
+  const [depth, setDepth] = useState(parseInt(params.depth))
+  //답글 작성
+  const replysend = () => {
+    if (parseInt(params.b_idx) == parseInt(params.ref)) {
+      setStep(step + 1)
+      setDepth(depth + 1)
+    }
 
-  const [step, setStep] = useState(0)
-  const [depth, setDepth] = useState(0)
-  //파일업로드 글작성
-  const send = () => {
     const write = {
       url: params.url,
       title: $('#issue').val() + ' ' + $('#title').val(),
@@ -143,17 +148,18 @@ const Boardwirte = () => {
       u_idxList: alarmList,
       label: '.',
       step: step,
+      ref: ref,
       depth: depth,
     }
     //계층형 만들기
+
     console.log(write.url)
     const fd = new FormData()
     fd.append('file', filevalues)
     fd.append('write1', JSON.stringify(write))
-
     axios({
       method: 'POST',
-      url: '/board/boardwrite',
+      url: '/board/relyboardwrite',
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': `multipart/form-data; `,
@@ -164,9 +170,7 @@ const Boardwirte = () => {
       setBoardcontent(res.data)
     })
   }
-
-  //답글 작성
-
+  console.log(u_idxlist)
   return (
     <>
       <CCard className="mb-4">
@@ -301,7 +305,7 @@ const Boardwirte = () => {
                       <br></br>
                       <CCol align="right">
                         <Link to={`/ws/${params.url}/boardlist`}>
-                          <CButton variant="outline" onClick={send}>
+                          <CButton variant="outline" onClick={replysend}>
                             글쓰기
                           </CButton>
                         </Link>
@@ -320,4 +324,4 @@ const Boardwirte = () => {
     </>
   )
 }
-export default Boardwirte
+export default replyBoardWrite

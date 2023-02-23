@@ -207,12 +207,6 @@ const Boardedit = () => {
                           <strong>알림</strong>
                         </CFormLabel>
                         <CCol sm={10}>
-                          <CFormCheck
-                            inline
-                            id="inlineCheckbox1"
-                            value="option1"
-                            label="전체보내기"
-                          />
                           <CRow>
                             {u_idxlist.map((data, key) => (
                               <div className="col" key={data.u_idx}>

@@ -33,7 +33,7 @@ public class BoardController {
 
 		 List<Board> boardlist = new ArrayList<Board>();
 			
-		 boardlist = boardservice.allBoardList(url.getUrl());
+		 boardlist = boardservice.allBoardList(url);
 		 return boardlist;
 	}
 	

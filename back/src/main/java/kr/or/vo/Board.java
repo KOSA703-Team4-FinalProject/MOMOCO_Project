@@ -16,7 +16,7 @@ public class Board {
 	private String b_name;		//게시판 이름
 	private String label;		//라벨 키워드
 	private int u_idx;			//깃헙 키
-	
+	private int u_idx1; 		//읽음유무 표시
 	private String url;			//워크스페이스 url
 	
 	private List<Comments> comments; //댓글
