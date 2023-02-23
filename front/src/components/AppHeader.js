@@ -40,6 +40,7 @@ const AppHeader = () => {
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
   let chatRead = useSelector((state) => state.chatRead)
+  const [chatStateRead, setChatStateRead] = useState(false)
   const [chatState, setCahtState] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
@@ -59,6 +60,12 @@ const AppHeader = () => {
       sameSite: 'strict',
     })
   }, [])
+
+  useEffect(()=>{
+
+    setChatStateRead(chatRead)
+
+  }, [chatRead])
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -136,7 +143,7 @@ const AppHeader = () => {
             {/* 채팅 이모티콘 */}
             <CDropdown autoClose={false} visible={chatState}>
               <CDropdownToggle color="ghost">
-                {chatRead == false ? (
+                {chatStateRead == false ? (
                   <IoChatboxOutline
                     className="mb-1"
                     size="21px"

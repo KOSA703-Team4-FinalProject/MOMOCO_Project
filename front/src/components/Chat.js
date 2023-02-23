@@ -24,7 +24,7 @@ import {
 import $, { param } from 'jquery'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeChatState } from 'src/store'
+import { changeChatState, updateChatRead } from 'src/store'
 import CryptoJS from 'crypto-js'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
@@ -70,6 +70,7 @@ const Chat = (props) => {
           setChatList((chatList) => [...chatList, chat])
         })
         setInitview(true)
+        dispatch( updateChatRead(true) )
       })
 
       //메시지를 받음

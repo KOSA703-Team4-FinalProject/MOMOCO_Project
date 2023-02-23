@@ -174,6 +174,7 @@ let chatRead = createSlice({
   reducers: {
     updateChatRead(state, action) {
       state = action.payload
+      console.log(state)
       return state
     }
   }
