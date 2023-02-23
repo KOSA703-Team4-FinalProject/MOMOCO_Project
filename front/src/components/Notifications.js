@@ -56,9 +56,6 @@ const Notifications = (props) => {
   useEffect(() => {
     connect()
 
-    return () => {
-      disconnect()
-    }
   }, [])
 
   const myparams = {

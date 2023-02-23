@@ -6,14 +6,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 채팅방 전체 조회 public List<ChatRoom> getChatRoom(ChatRoom chatroom) -->
 	<select id="getChatRoom" parameterType="kr.or.vo.ChatRoom" resultType="kr.or.vo.ChatRoom">
-		select r_idx, r_name
-		from chatroom_${url} order by r_idx
+		select r.r_idx, r_name
+		from chatroom_${url} r join (select u_idx, r_idx
+                      				 from chat_user_${url}
+                     				 where u_idx = #{u_idx}) a
+		on r.r_idx = a.r_idx
+		order by r_idx
 	</select>
 	
 	<!-- 채팅방 생성 public int createRoom(ChatRoom chatroom) -->
 	<insert id="createRoom" parameterType="kr.or.vo.ChatRoom">
-		insert into chatroom_${url} (r_idx, r_name)
+		insert all 
+			into chatroom_${url} (r_idx, r_name)
 				values (chatroom_r_idx_seq_${url}.nextval, #{r_name})
+			into chat_user_${url} (u_idx, r_idx, nickname)
+				values (#{u_idx}, chatroom_r_idx_seq_${url}.currval, #{nickname})
+		select * from dual
 	</insert>
 	
 	<!-- 채팅방 제거 public int deleteRoom(ChatRoom chatroom) -->
@@ -26,6 +34,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getChatRoomByRidx" parameterType="kr.or.vo.ChatRoom" resultType="kr.or.vo.ChatRoom">
 		select r_idx, r_name from chatroom_${url} where r_idx = #{r_idx}
 	</select>
+	
+	<!-- 특정 채팅방 이름으로 조회 public ChatRoom getChatRoomByRName(ChatRoom chatroom) -->
+	<select id="getChatRoomByRName" parameterType="kr.or.vo.ChatRoom" resultType="kr.or.vo.ChatRoom">
+		select r_idx, r_name from chatroom_${url} where r_name = #{r_name}
+	</select>
 
+	<!-- 2인 채팅 생성 public int pairRoomCreate(ChatRoom chatroom) -->
+	<insert id="pairRoomCreate" parameterType="kr.or.vo.ChatRoom">
+		insert all 
+			into chatroom_${url} (r_idx, r_name)
+				values (chatroom_r_idx_seq_${url}.nextval, #{r_name})
+			into chat_user_${url} (u_idx, r_idx, nickname)
+				values (#{u_idx}, chatroom_r_idx_seq_${url}.currval, #{nickname})
+			into chat_user_${url} (u_idx, r_idx, nickname)
+				vakyes (#{to_u_idx}, chatroom_r_idx_seq_${url}.currval, #{to_nickname})
+		select * from dual
+	</insert>
+	
+	<!-- 2인 채팅방 생성 전 해당 채팅방이 있는 지 확인 public int isPairRoom(ChatRoom chatroom) -->
+	<select id="isPairRoom" parameterType="String" resultType="int">
+		select count(r_idx) 
+		from chatroom_${url}
+		where r_name = #{r_name}
+	</select>
 
 </mapper>

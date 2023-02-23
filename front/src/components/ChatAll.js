@@ -21,7 +21,7 @@ const ChatAll = (props) => {
         ? <div></div>
         : (
           chatstate === 'chatroom'
-          ? <ChatRoom />
+          ? <ChatRoom stomp={stomp} />
           : (
             chatstate === 'chat'
             ? <Chat stomp={stomp} />

@@ -45,10 +45,25 @@ const AppHeader = () => {
   const params = useParams()
   const navigate = useNavigate()
 
+  const login = JSON.parse(localStorage.getItem('login'))
+
   //웹 소켓 연결
   const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
 
   const stomp = StompJs.over(websocket)
+
+  const connect = () => {
+    stomp.connect({}, () => {
+      stomp.subscribe('/sub/chat/isread/' + login.u_idx, (chat) => {
+        console.log('==============================')
+        const res = JSON.parse(chat.body)
+        console.log(res)
+        if (res.content == 'no_sys') {
+          setChatStateRead(true)
+        }
+      })
+    })
+  }
 
   useEffect(() => {
     const cookies = new Cookies()
@@ -59,12 +74,16 @@ const AppHeader = () => {
       expires: date.setHours(date.getHours + 8),
       sameSite: 'strict',
     })
+
+    connect()
+
+    return () => {
+      stomp.unsubscribe()
+    }
   }, [])
 
-  useEffect(()=>{
-
+  useEffect(() => {
     setChatStateRead(chatRead)
-
   }, [chatRead])
 
   return (

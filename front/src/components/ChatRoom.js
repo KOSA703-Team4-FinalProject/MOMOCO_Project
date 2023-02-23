@@ -21,14 +21,17 @@ import CryptoJS from 'crypto-js'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
+import { loginaxios } from 'src/views/login/backlogin'
 
 const ChatRoom = () => {
   const dispatch = useDispatch()
   const params = useParams()
+
   let chatstate = useSelector((state) => state.chatState)
   let [rend, setRend] = useState(false);
-
   const [chatroom, setChatRoom] = useState([])
+
+  const login = JSON.parse(localStorage.getItem('login'))
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -40,6 +43,7 @@ const ChatRoom = () => {
   useEffect(() => {
     const reqData = {
       url: params.url,
+      u_idx: login.u_idx,
     }
 
     axios({
@@ -59,6 +63,8 @@ const ChatRoom = () => {
     const reqData = {
       r_name: $(".createRoominput").val(),
       url: params.url,
+      u_idx: login.u_idx,
+      nickname: login.nickname
     }
 
     axios({

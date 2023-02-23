@@ -113,9 +113,6 @@ const Chat = (props) => {
   useEffect(() => {
     connect()
 
-    return () => {
-      disconnect()
-    }
   }, [])
 
   //채팅 기록이 늘어날때마다 스크롤 내리기

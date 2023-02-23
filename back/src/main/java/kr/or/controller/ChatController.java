@@ -349,6 +349,10 @@ public class ChatController {
 		chatservice.sendChat(chat);
 
 		template.convertAndSend("/sub/chat/room/" + chat.getR_idx(), chat);
+		
+		chat.setContent("no_sys");
+		
+		template.convertAndSend("/sub/chat/isread/" + chat.getU_idx(), chat);
 	}
 
 }
