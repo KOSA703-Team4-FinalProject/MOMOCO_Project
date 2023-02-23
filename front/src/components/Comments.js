@@ -3,7 +3,6 @@ import {
   CButton,
   CCard,
   CCol,
-  CContainer,
   CForm,
   CFormInput,
   CFormTextarea,
@@ -12,16 +11,15 @@ import {
   CModalFooter,
   CRow,
 } from '@coreui/react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { PRIMARY_KEY } from 'src/oauth'
 import CryptoJS from 'crypto-js'
-import { BsArrowReturnRight } from 'react-icons/bs'
-import { TbArrowForward } from 'react-icons/tb'
 import { FiCornerDownRight } from 'react-icons/fi'
 import axios from 'axios'
 import { useState } from 'react'
 import $ from 'jquery'
 import { useEffect } from 'react'
+import Profile from './Profile'
 
 const boxsize = {
   marginleft: '200px',
@@ -51,7 +49,10 @@ const Comments = (props) => {
   const [visibleLg1, setVisibleLg1] = useState(false)
   const [commentContent, setCommentContent] = useState('')
   const [content, SetContent] = useState('')
-  const modalstyle = {}
+
+  const [profile, setProfile] = useState({}) //프로필
+  const [profileMoal, setProfileModal] = useState(false)
+  
   const myparams = {
     url: params.url,
     idx: props.idx,
@@ -186,6 +187,33 @@ const Comments = (props) => {
     setVisibleLg1(true)
   }
 
+  //프로필 클릭
+  const clickprofile = (e) => {
+    const tar = e.target
+    const targ = $(tar).closest('.profile').attr('value')
+
+    axios({
+      method: 'GET',
+      url: '/backlogin/getmember',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {u_idx: targ},
+    }).then((res)=>{
+
+      setProfile({
+        u_idx: res.data.u_idx,
+        profilephoto: res.data.profilephoto,
+        nickname: res.data.nickname,
+        email: res.data.email,
+        github: res.data.github_url,
+      })
+      setProfileModal(!profileMoal)
+    })
+
+    console.log(targ)
+  }
+
   return (
     <CCol>
       <CCard style={boxsize}>
@@ -237,8 +265,8 @@ const Comments = (props) => {
               <CCard className="mt-3 px-4 mb-3" color="light">
                 <CCol className="col-md-12">
                   <CCol className="row">
-                    <CCol className="col-md-10 px-2 py-3">
-                      <CAvatar className="ms-6" src={data.profilephoto} />
+                    <CCol className="col-md-10 px-2 py-3 profile" onClick={clickprofile} value={data.u_idx}>
+                      <CAvatar className="ms-6" src={data.profilephoto}   />
                       &nbsp;&nbsp;<strong>{data.nickname}</strong>
                     </CCol>
                   </CCol>
@@ -365,7 +393,7 @@ const Comments = (props) => {
           )
         } else {
           return (
-            <div className="row justify-content-between">
+            <div className="row justify-content-between" key={data.co_idx}>
               <div className="col-1 p-0.5">
                 <div className="row mt-2" align="center">
                   <FiCornerDownRight size="36px" />
@@ -504,6 +532,7 @@ const Comments = (props) => {
                         </CCol>
                       </CCol>
                     </CCard>
+                    <Profile user={profile} profileMoal={profileMoal} />
                   </CCol>
                 </div>
               </div>

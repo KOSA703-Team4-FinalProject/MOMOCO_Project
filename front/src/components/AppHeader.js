@@ -17,7 +17,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilBellExclamation, cilMenu } from '@coreui/icons'
+import { cilBell, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -35,8 +35,6 @@ import { useEffect } from 'react'
 import { Cookies } from 'react-cookie'
 import { IoChatboxOutline, IoChatboxEllipses } from 'react-icons/io5'
 import { useCallback } from 'react'
-
-
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -134,7 +132,7 @@ const AppHeader = () => {
             {/* 알림 이모티콘 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-              <CIcon icon={cilBell} size="lg" />
+                <CIcon icon={cilBell} size="lg" />
               </CDropdownToggle>
               <CDropdownMenu>
                 <Notifications stomp={stomp} />
@@ -145,17 +143,16 @@ const AppHeader = () => {
             {/* 채팅 이모티콘 */}
             <CDropdown autoClose={false} visible={chatState}>
               <CDropdownToggle color="ghost">
-              <IoChatboxOutline
-                    className="mb-1"
-                    size="21px"
-                    onClick={() => {
-                      setChatStateRead(false)
-                      chatState == false ? setCahtState(true) : setCahtState(false)
-                      chatView == 'none'
-                        ? dispatch(changeChatState('chatroom'))
-                        : dispatch(changeChatState('none'))
-                    }}
-                  />
+                <IoChatboxOutline
+                  className="mb-1"
+                  size="21px"
+                  onClick={() => {
+                    chatState == false ? setCahtState(true) : setCahtState(false)
+                    chatView == 'none'
+                      ? dispatch(changeChatState('chatroom'))
+                      : dispatch(changeChatState('none'))
+                  }}
+                />
               </CDropdownToggle>
               <CDropdownMenu>
                 <ChatAll stomp={stomp} />

@@ -66,25 +66,7 @@ public class AlarmSocket {
 
 			// 알람 메시지 userIdx 기준으로 전송
 			template.convertAndSend("/sub/one/alarm/" + u_idx[i], alarm);
-			template.convertAndSend("/sub/chat/chatalarm/" + u_idx[i], alarm);
 		}
-	}
-	
-	//채팅 알람
-	public void sendChatAlarm(int u_idx, int r_idx, String nickname, String url) {
-		
-		Chat chat = new Chat();
-		chat.setContent("새로 초대되었습다");
-		chat.setContent_type("text");
-		chat.setRef(0);
-		chat.setNickname(nickname);
-		chat.setR_idx(r_idx);
-		chat.setU_idx(u_idx);
-		chat.setUrl(url);
-		
-		chatservice.sendChat(chat);
-		template.convertAndSend("/sub/chat/chatalarm/" + u_idx, chat);
-		
 	}
 
 }
