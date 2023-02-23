@@ -577,6 +577,9 @@ const KanbanItem = (props) => {
                           </CRow>
                           <CCardBody>
                             <CCardText>
+                              <CButton color={data2.style} shape="rounded-pill" size="sm">
+                                {data2.label}
+                              </CButton>{' '}
                               {data2.content.length > 10
                                 ? data2.content.substr(0, 10) + '...'
                                 : data2.content}
