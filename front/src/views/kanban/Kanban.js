@@ -1,28 +1,12 @@
 import {
   CCard,
   CCardBody,
-  CCardFooter,
   CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CRow,
-  Cbutton,
   CButton,
-  CCardHeader,
-  CCardTitle,
-  CCardText,
   CModal,
-  CModalHeader,
-  CModalTitle,
   CModalBody,
   CModalFooter,
-  CTooltip,
-  CLink,
-  CPopover,
-  CInputGroup,
-  CInputGroupText,
   CFormInput,
   CForm,
   CFormTextarea,
@@ -43,8 +27,7 @@ import HorizontalScroll from 'react-horizontal-scrolling'
 import CryptoJS from 'crypto-js'
 import axios from 'axios'
 import { PRIMARY_KEY } from '../../oauth'
-import { width } from '@mui/system'
-import { Navigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import $ from 'jquery'
 //라벨컴포넌트 필요 요소
 import Label from 'src/components/Label'
@@ -54,9 +37,6 @@ import { useDispatch, useSelector } from 'react-redux'
 const Kanban = () => {
   const [visible, setVisible] = useState(false)
   const [visibleB, setVisibleB] = useState(false)
-
-  // 변수
-  const [addKanbanItem, setAddKanbanItem] = useState([])
 
   const [statusList, setStateList] = useState([])
   const [kanbanlist, setKanbanlist] = useState('')

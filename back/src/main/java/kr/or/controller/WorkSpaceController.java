@@ -135,8 +135,6 @@ public class WorkSpaceController {
 	@RequestMapping(value = "/getworkspacebyurl", method = RequestMethod.GET)
 	public WorkSpace getWorkSpaceByUrl(@RequestParam(value = "url") String url) {
 
-		System.out.println("haha");
-
 		WorkSpace workspace = workspaceservice.getWorkSpaceByUrl(url);
 
 		return workspace;
@@ -145,8 +143,6 @@ public class WorkSpaceController {
 	// 워크스페이스의 정보 불러오기
 	@RequestMapping(value = "/workspaceowner", method = RequestMethod.GET)
 	public WorkSpace getWorkSpaceOwner(@RequestParam(value = "url") String url) {
-
-		System.out.println("haha");
 
 		WorkSpace workspace = workspaceservice.getWorkSpaceOwner(url);
 

@@ -167,19 +167,6 @@ let chooseLabel = createSlice({
 })
 export let { selectLabel } = chooseLabel.actions
 
-//채팅 읽음 유무
-let chatRead = createSlice({
-  name: 'chatRead',
-  initialState: false,    //true : 안읽음, false : 읽음
-  reducers: {
-    updateChatRead(state, action) {
-      state = action.payload
-      console.log(state)
-      return state
-    }
-  }
-})
-export let { updateChatRead } = chatRead.actions
 
 export default configureStore({
   reducer: {
@@ -195,6 +182,5 @@ export default configureStore({
     inviteMem: inviteMem.reducer,
     labelList: labelList.reducer,
     chooseLabel: chooseLabel.reducer,
-    chatRead: chatRead.reducer,
   },
 })

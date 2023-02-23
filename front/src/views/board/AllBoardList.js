@@ -143,12 +143,12 @@ const AllBoardList = () => {
   }
   return (
     <>
-      <CCard className="mb-4">
+      <CCard className="mb-4 p-3">
         <CCardBody>
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="card-title mb-0">
-                <strong>&nbsp;&nbsp;MOMOCO</strong>
+                <strong>&nbsp;&nbsp;전체보기</strong>
               </h4>
             </CCol>
             <CCol sm={7} className="d-none d-md-block"></CCol>

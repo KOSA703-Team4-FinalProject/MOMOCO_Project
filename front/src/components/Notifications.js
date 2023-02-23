@@ -36,30 +36,14 @@ const Notifications = (props) => {
   const url = params.url
 
   //웹 소켓 연결
-  const connect = () => {
-    stomp.connect({}, () => {
-      stomp.subscribe('/sub/one/alarm/' + u_idx, (alarm) => {
-        console.log(u_idx)
-        const res = JSON.parse(alarm.body)
-        console.log(res)
-        SetList(([list]) => [res, ...list])
-      })
+  stomp.connect({}, () => {
+    stomp.subscribe('/sub/one/alarm/' + u_idx, (alarm) => {
+      console.log(u_idx)
+      const res = JSON.parse(alarm.body)
+      console.log(res)
+      SetList(([...list]) => [res, ...list])
     })
-  }
-
-  //연결 끊기
-  const disconnect = () => {
-    stomp.unsubscribe()
-  }
-
-  //알림에 연결하기
-  useEffect(() => {
-    connect()
-
-    return () => {
-      disconnect()
-    }
-  }, [])
+  })
 
   const myparams = {
     u_idx: u_idx,
@@ -82,6 +66,10 @@ const Notifications = (props) => {
   useEffect(() => {
     //기존 알람 내용 불러오기
     listFromDb()
+
+    return () =>{
+      stomp.unsubscribe()
+    }
   }, [])
 
   function checkAlarm(a_idx, link) {

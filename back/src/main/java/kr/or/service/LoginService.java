@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.dao.ChatUserDao;
 import kr.or.dao.MemberDao;
+import kr.or.vo.ChatUser;
 import kr.or.vo.Member;
 import kr.or.vo.MemberAll;
 import kr.or.vo.UserDetail;
@@ -51,6 +53,15 @@ public class LoginService {
 			result = memberdao.addUserDetail(userDetail);
 			
 			System.out.println("result: " + result);
+			
+			//기본 채팅방에 추가
+			ChatUser chatuser = new ChatUser();
+			chatuser.setU_idx(member.getU_idx());
+			chatuser.setR_idx(1);
+			chatuser.setNickname(member.getNickname());
+			
+			ChatUserDao chatuserdao = sqlsession.getMapper(ChatUserDao.class);
+			result = chatuserdao.addChatUser(chatuser);
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

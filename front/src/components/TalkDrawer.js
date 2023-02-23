@@ -58,7 +58,33 @@ const TalkDrawer = () => {
       })
       setUserListView(true)
     })
-  }, [])
+  }, [addUserView])
+
+  const inviteMem = (e) => {
+
+    const tar = e.target
+    const tar2 = $(e.target).closest('.member').attr('value') //초대할 유저의 u_idx
+    const nick = $(e.target).closest('.member').attr('nick')
+
+    const reqData = {
+      url: params.url,
+      r_idx: chatRoomNumber,
+      u_idx: tar2,
+      nickname: nick,
+    }
+
+    axios({
+      method: 'POST',
+      url: '/api/chatroom/invite',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: reqData,
+    }).then((res)=>{
+      setAddUserView(false)
+    })
+    
+  }
 
   return (
     <div>
@@ -140,7 +166,7 @@ const TalkDrawer = () => {
             ) : (
               workspaceUserList.map((data) => {
                 return (
-                  <div className="profilebtn row pt-2 ps-2" key={data.u_idx}>
+                  <div className="profilebtn row pt-2 ps-2" key={data.u_idx} value={data.u_idx}>
                     <CAvatar size="xl" src={data.profilephoto} color="secondary"></CAvatar>
                     <h5 className="col pt-3">
                       <strong>{data.nickname}</strong>
@@ -171,9 +197,9 @@ const TalkDrawer = () => {
             {addUserView == true ? (
               addUserList.map((data) => {
                 return (
-                  <div className="profilebtn row pt-2 ps-2" key={data.u_idx}>
+                  <div className="profilebtn row pt-2 ps-2 member" key={data.u_idx} value={data.u_idx} nick={data.nickname}>
                     <CAvatar size="xl" src={data.profilephoto} color="secondary"></CAvatar>
-                    <h5 className="col pt-3">
+                    <h5 className="col pt-3" onClick={inviteMem}>
                       <strong>{data.nickname}</strong>
                     </h5>
                   </div>

@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 채팅 전송 public int sendChat(Chat chat) -->
 	<insert id="sendChat" parameterType="kr.or.vo.Chat">
 		insert into chat_${url} (ch_idx, content, content_type, ref, nickname, r_idx, u_idx)
-			values (chat_ch_idx_seq_${url}.nextval, #{content}, #{content_type}, #{ref}, #{nickname}, #{r_idx}, #{u_idx})
+			values (chat_ch_idx_seq_${url}.nextval, #{content}, #{content_type}, chat_ch_idx_seq_${url}.currval, #{nickname}, #{r_idx}, #{u_idx})
 	</insert>
 	
 	<!-- 채팅방 파일 기록 불러오기 public List<Chat> getFileList(Chat chat) -->

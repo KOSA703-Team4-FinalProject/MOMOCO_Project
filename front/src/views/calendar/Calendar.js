@@ -263,9 +263,14 @@ const Calendar = () => {
       },
       params: { u_idx: idx },
     }).then((res) => {
-      console.log(res.data)
 
-      setProfile(res.data)
+      setProfile({
+        u_idx: res.data.u_idx,
+        profilephoto: res.data.profilephoto,
+        nickname: res.data.nickname,
+        email: res.data.email,
+        github: res.data.github_url,
+      })
       setProfileModal(true)
     })
   }
