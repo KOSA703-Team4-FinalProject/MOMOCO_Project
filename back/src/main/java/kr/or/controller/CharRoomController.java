@@ -77,22 +77,6 @@ public class CharRoomController {
 		//2인 채팅 생성
 		int result = chatroomservice.pairRoomCreate(chatroom);
 		
-		//생성된 채팅방 조회
-		ChatRoom tempRoom = chatroomservice.getChatRoomByRname(chatroom);
-		
-		//초대 메시지 채팅 전송
-		Chat chat = new Chat();
-		chat.setContent(chatroom.getNickname() + "님이 채팅방을 생성하였습니다.");
-		chat.setContent_type("text");
-		chat.setNickname(chatroom.getNickname());
-		chat.setR_idx(tempRoom.getR_idx());
-		chat.setU_idx(chatroom.getU_idx());
-		chat.setUrl(chatroom.getUrl());
-		
-		chatservice.sendChat(chat);
-		
-		template.convertAndSend("/sub/chat/chatalarm/" + chatroom.getTo_u_idx(), chat);
-		
 		return result;
 	}
 
