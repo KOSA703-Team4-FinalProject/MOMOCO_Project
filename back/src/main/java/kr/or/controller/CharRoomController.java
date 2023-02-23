@@ -44,6 +44,10 @@ public class CharRoomController {
 		List<ChatRoom> chatroomlist = new ArrayList<ChatRoom>();
 
 		chatroomlist = chatroomservice.getChatRoom(chatroom);
+		
+		Chat chat = new Chat();
+		chat.setContent("yes_sys");
+		template.convertAndSend("/sub/chat/isread/" + chatroom.getU_idx(), chat);
 
 		return chatroomlist;
 	}
@@ -80,15 +84,14 @@ public class CharRoomController {
 		Chat chat = new Chat();
 		chat.setContent(chatroom.getNickname() + "님이 채팅방을 생성하였습니다.");
 		chat.setContent_type("text");
-		chat.setRef(0);
 		chat.setNickname(chatroom.getNickname());
 		chat.setR_idx(tempRoom.getR_idx());
 		chat.setU_idx(chatroom.getU_idx());
+		chat.setUrl(chatroom.getUrl());
 		
 		chatservice.sendChat(chat);
 		
 		template.convertAndSend("/sub/chat/room/" + chat.getR_idx(), chat);
-		template.convertAndSend("/sub/chat/isread/" + chatroom.getU_idx(), "no");
 		
 		return result;
 	}

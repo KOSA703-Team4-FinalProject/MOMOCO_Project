@@ -6,7 +6,6 @@ import {
   cilImagePlus,
   cilLink,
   cilStorage,
-  cilWallpaper,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import {
@@ -21,10 +20,10 @@ import {
   CModalTitle,
   CRow,
 } from '@coreui/react'
-import $, { param } from 'jquery'
+import $ from 'jquery'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeChatState, updateChatRead } from 'src/store'
+import { changeChatState } from 'src/store'
 import CryptoJS from 'crypto-js'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
@@ -70,13 +69,11 @@ const Chat = (props) => {
           setChatList((chatList) => [...chatList, chat])
         })
         setInitview(true)
-        dispatch( updateChatRead(true) )
       })
 
       //메시지를 받음
       stomp.subscribe('/sub/chat/room/' + chatRoomNumber, (chat) => {
         appendMessage(chat)
-        dispatch( updateChatRead(true) )
       })
 
       //메시지 전송
@@ -153,7 +150,6 @@ const Chat = (props) => {
     const reqData = {
       url: params.url,
       content_type: 'file',
-      ref: 1,
       nickname: login.nickname,
       u_idx: login.u_idx,
       r_idx: chatRoomNumber,
@@ -224,7 +220,7 @@ const Chat = (props) => {
       r_idx: chatRoomNumber,
       content: $('.inputmessage').val(),
       content_type: 'text',
-      ref: '1',
+      ref: '0',
     }
 
     const data = JSON.stringify(reqData)

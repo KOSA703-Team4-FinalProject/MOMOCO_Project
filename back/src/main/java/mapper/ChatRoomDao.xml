@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 특정 채팅방 이름으로 조회 public ChatRoom getChatRoomByRName(ChatRoom chatroom) -->
 	<select id="getChatRoomByRName" parameterType="kr.or.vo.ChatRoom" resultType="kr.or.vo.ChatRoom">
-		select r_idx, r_name from chatroom_${url} where r_name = #{r_name}
+		select r_idx, r_name from chatroom_${url} where r_name = #{r_name} 
 	</select>
 
 	<!-- 2인 채팅 생성 public int pairRoomCreate(ChatRoom chatroom) -->
@@ -48,12 +48,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			into chat_user_${url} (u_idx, r_idx, nickname)
 				values (#{u_idx}, chatroom_r_idx_seq_${url}.currval, #{nickname})
 			into chat_user_${url} (u_idx, r_idx, nickname)
-				vakyes (#{to_u_idx}, chatroom_r_idx_seq_${url}.currval, #{to_nickname})
+				values (#{to_u_idx}, chatroom_r_idx_seq_${url}.currval, #{to_nickname})
 		select * from dual
 	</insert>
 	
 	<!-- 2인 채팅방 생성 전 해당 채팅방이 있는 지 확인 public int isPairRoom(ChatRoom chatroom) -->
-	<select id="isPairRoom" parameterType="String" resultType="int">
+	<select id="isPairRoom" parameterType="kr.or.vo.ChatRoom" resultType="int">
 		select count(r_idx) 
 		from chatroom_${url}
 		where r_name = #{r_name}

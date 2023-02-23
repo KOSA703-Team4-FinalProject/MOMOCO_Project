@@ -115,9 +115,13 @@ public class ChatRoomService {
 			ChatRoomDao charroomdao = sqlsession.getMapper(ChatRoomDao.class);
 			
 			//2인 채팅방 생성 전 해당 채팅방이 있는 지 확인
-			result = charroomdao.isPairRoom(chatroom.getR_name());
+			result = charroomdao.isPairRoom(chatroom);
+			
+			System.out.println("채팅방 유무" + result);
+			
 			if(result == 0) {
 				//2인 채팅방 생성
+				System.out.println(chatroom.toString());
 				result = charroomdao.pairRoomCreate(chatroom);
 			}else {
 				//기존 채팅방 유지

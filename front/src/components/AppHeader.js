@@ -17,7 +17,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilCommentSquare, cilMenu } from '@coreui/icons'
+import { cilBell, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -39,9 +39,10 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
-  let chatRead = useSelector((state) => state.chatRead)
-  const [chatStateRead, setChatStateRead] = useState(false)
-  const [chatState, setCahtState] = useState(false)
+
+  const [chatStateRead, setChatStateRead] = useState(false) //채팅 읽음 유무
+  const [chatState, setCahtState] = useState(false) //채팅 모달 상태
+
   const params = useParams()
   const navigate = useNavigate()
 
@@ -55,11 +56,13 @@ const AppHeader = () => {
   const connect = () => {
     stomp.connect({}, () => {
       stomp.subscribe('/sub/chat/isread/' + login.u_idx, (chat) => {
-        console.log('==============================')
         const res = JSON.parse(chat.body)
+        console.log("------------------------------")
         console.log(res)
         if (res.content == 'no_sys') {
           setChatStateRead(true)
+        }else{
+          setChatStateRead(false)
         }
       })
     })
@@ -81,10 +84,6 @@ const AppHeader = () => {
       stomp.unsubscribe()
     }
   }, [])
-
-  useEffect(() => {
-    setChatStateRead(chatRead)
-  }, [chatRead])
 
   return (
     <CHeader position="sticky" className="mb-4">
