@@ -201,6 +201,7 @@ const docStorage = (props) => {
             <CCol sm={7} align="end" className="d-none d-md-block">
               <CButton
                 type="submit"
+                variant="outline"
                 onClick={() => {
                   setVisibleXL(!visibleXL)
                 }}
@@ -268,12 +269,12 @@ const docStorage = (props) => {
                         ) : (
                           <BsCardImage />
                         )}
-                        <strong> {data.ori_filename} </strong>
+                        <strong> {data.ori_filename.substr(0, 24)} </strong>
                         <CButton
                           type="submit"
                           className="my-3 mx-1"
                           color="dark"
-                          shape="rounded-pill"
+                          variant="outline"
                           value={data.upload_type}
                         >
                           {data.upload_type === 'image' ? (
@@ -327,7 +328,7 @@ const docStorage = (props) => {
                         }}
                         className="my-3 mx-1"
                         color="danger"
-                        shape="rounded-pill"
+                        variant="outline"
                       >
                         삭제
                       </CButton>

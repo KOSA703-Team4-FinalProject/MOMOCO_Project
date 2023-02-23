@@ -39,6 +39,7 @@ const workSpaceList = () => {
         rgba(20, 20, 20, 1)
       ),
       url(https://picsum.photos/1920/1080/?blur=2​);
+    background-size: cover;
   `
   const [workspacelist, setWorkspacelist] = useState([])
   const navigate = useNavigate()
@@ -56,15 +57,17 @@ const workSpaceList = () => {
         <CRow>
           <CCol md={12}>
             <CCardGroup>
-              <CCardBody>
-                <CForm>
-                  <h2>
-                    <strong className="text-light">{params.nickname}`s WorkSpace </strong>
-                  </h2>
-                  <br />
-                  <WorkSpaceListItem width="455px" />
-                </CForm>
-              </CCardBody>
+              <CCard>
+                <CCardBody>
+                  <CForm>
+                    <h2 align="center" className='pt-'>
+                      <strong >{params.nickname}`s WorkSpace </strong>
+                    </h2>
+                    <br />
+                    <WorkSpaceListItem width="455px" />
+                  </CForm>
+                </CCardBody>
+              </CCard>
             </CCardGroup>
           </CCol>
         </CRow>

@@ -1,8 +1,6 @@
 import React from 'react'
 import {
   CButton,
-  CFormInput,
-  CFormSelect,
   CModal,
   CModalHeader,
   CModalBody,

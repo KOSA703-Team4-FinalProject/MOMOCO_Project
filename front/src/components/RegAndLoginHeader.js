@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import {
   CButton,
+  CCard,
   CCol,
   CCollapse,
   CContainer,
@@ -32,9 +33,9 @@ const RegAndLoginHeader = () => {
         <CContainer fluid>
           <CNavbarBrand href="">
             <CCol className="align-self-center">
-              <h1>
-                <img src={momoco} width="75px" />
-                <strong> momoco</strong>
+              <h1 className="ps-3 pb-1">
+                <img src={momoco} width="40px" className='mb-2' />
+                <strong>momoco</strong>
               </h1>
             </CCol>
           </CNavbarBrand>
@@ -63,8 +64,6 @@ const RegAndLoginHeader = () => {
                           나의 워크스페이스 목록
                         </CNavLink>
                       </CDropdownItem>
-                      <CDropdownDivider />
-                      <CDropdownItem>Something else here</CDropdownItem>
                     </CDropdownMenu>
                   </h4>
                 </CDropdown>
@@ -95,13 +94,6 @@ const RegAndLoginHeader = () => {
                     </CDropdownMenu>
                   </h4>
                 </CDropdown>
-              </CNavItem>
-              <CNavItem className="px-4">
-                <CNavLink href="#" disabled>
-                  <strong>
-                    <h4> Contact us</h4>
-                  </strong>
-                </CNavLink>
               </CNavItem>
             </CNavbarNav>
           </CCollapse>

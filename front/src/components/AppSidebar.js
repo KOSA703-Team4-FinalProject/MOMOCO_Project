@@ -30,8 +30,8 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img src={whitemomoco} width="20%" />
-        <h2> - momoco</h2>
+        <img src={whitemomoco} width="45px" className='me-2' />
+        <h2>momoco</h2>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

@@ -13,15 +13,10 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
-  CFormText,
   CFormTextarea,
-  CHeader,
   CModal,
   CModalBody,
   CModalFooter,
-  CModalHeader,
-  CModalTitle,
   CRow,
 } from '@coreui/react'
 import React, { Suspense, useEffect, useState } from 'react'
@@ -30,7 +25,6 @@ import * as icon from '@coreui/icons'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../oauth'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import KanbanDetail from 'src/views/kanban/KanbanDetail'
 import axios from 'axios'
 import $ from 'jquery'
 import { useRef } from 'react'
@@ -570,7 +564,6 @@ const KanbanItem = (props) => {
                                   <CDropdownItem value={data2.b_idx} onClick={KanbanItemDelete}>
                                     아이템 삭제
                                   </CDropdownItem>
-                                  <CDropdownItem disabled>Disabled action</CDropdownItem>
                                 </CDropdownMenu>
                               </CDropdown>
                             </CCol>
