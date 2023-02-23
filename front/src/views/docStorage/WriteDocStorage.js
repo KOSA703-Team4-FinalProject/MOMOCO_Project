@@ -98,7 +98,7 @@ const WriteDocStorage = () => {
 
   const SubmitHandler = (e) => {
     e.preventDefault()
-
+    //새 글 작성일 경우
     if (upload_type === 'link') {
       // 링크 등록시
       const doc = {
@@ -116,6 +116,7 @@ const WriteDocStorage = () => {
         save_filename: link,
         u_idxList: alarmlist,
       }
+
       try {
         axios({
           method: 'POST',
@@ -127,11 +128,9 @@ const WriteDocStorage = () => {
         }).then((res) => {
           if (res.data == 2) {
             alert('문서가 등록되었습니다.')
-            navigate(`/ws/${url}/docStorage`)
           }
           if (res.data != 2) {
             alert('문서 등록에 실패하였습니다.')
-            navigate(`/ws/${url}/docStorage`)
           }
         })
       } catch (error) {
@@ -279,7 +278,7 @@ const WriteDocStorage = () => {
                 <>
                   <CFormCheck inline name="u_idx" value={data.u_idx} onChange={checkAList} />
                   <CAvatar className="ms-2" src={data.profilephoto} />
-                  {data.nickname}{' '}
+                  <strong>{data.nickname} </strong>
                 </>
               )
             })}

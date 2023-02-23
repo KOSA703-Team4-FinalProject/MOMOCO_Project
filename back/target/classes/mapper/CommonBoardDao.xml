@@ -8,14 +8,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 
 	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
-	
-	select  a.idx, a.nickname, a.title, a.content, a.w_date, a.b_code, a.label, a.u_idx, b.b_idx, b.ori_filename, 
-	b.save_filename, b.volume, b.filetype, b.ref,b.depth,b.step,b.thumb,b.idx , d.profilephoto
-	from board_${url} a 
-	join common_board_${url} b on a.idx = b.idx 
-	join member d on d.u_idx=a.u_idx
-	where a.b_code = 5
-	order by b.b_idx desc
+	select style, idx, nickname, title, content, w_date, b_code, l.label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto
+			from label_${url} l right join (select idx, m.nickname, title, content, w_date, b_code, label, m.u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto
+            from member m join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb
+                                from board_${url} b join common_board_${url} c
+                               on b.idx = c.idx) a
+            				   on m.u_idx = a.u_idx)aa
+			on l.label = aa.label
 	</select>
 	
    <!-- 글읽기-->

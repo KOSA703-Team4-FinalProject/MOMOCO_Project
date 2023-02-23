@@ -33,5 +33,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from dual
 	</insert>
 	
+	<!--삭제  -->
+	<delete id="deleteDoc" parameterType="kr.or.vo.Doc">
+		delete from board_${url} where idx = #{idx}
+	</delete>
+	
+	<!-- 글수정하기 board 테이블 -->
+	<update id="updateBoard" parameterType="kr.or.vo.Doc">
+		UPDATE board_${url}
+        SET  nickname = #{nickname}, title = #{title}, content = #{content}, label = #{label}, u_idx = #{u_idx}
+        WHERE idx = #{idx}
+	</update>
+	<!-- 글수정하기 파일/이미지 doc 테이블 -->
+	<update id="updateDoc" parameterType="kr.or.vo.Doc">
+	  	UPDATE doc_storage_${url}
+        SET ori_filename = #{ori_filename}, save_filename = #{save_filename}, thumb = '${thumb}', upload_type = #{upload_type}
+        WHERE idx = #{idx}
+	</update>
+	<!-- 글수정하기 링크 doc 테이블 -->
+	<update id="updateDocLink" parameterType="kr.or.vo.Doc">
+	  UPDATE doc_storage_${url}
+        SET ori_filename = #{ori_filename}, save_filename = #{save_filename}, thumb = '${thumb}', upload_type = #{upload_type}
+        WHERE idx = #{idx}
+	</update>
    
 </mapper>

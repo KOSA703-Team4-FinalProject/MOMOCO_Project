@@ -27,6 +27,7 @@ import { CForm, CFormTextarea } from '@coreui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import WriteDocStorage from './WriteDocStorage'
+import UpdateDocStorage from './UpdateDocStorage'
 import Comments from '../../components/Comments'
 import { Editor } from '@tinymce/tinymce-react'
 import CryptoJS from 'crypto-js'
@@ -42,8 +43,15 @@ import {
   BsLink,
 } from 'react-icons/bs'
 
+// AES알고리즘 사용 복호화
+const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+//인코딩, 문자열로 변환, JSON 변환
+const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+const accessToken = decrypted.token
+
 const docStorage = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
+
   const [list, SetList] = useState([])
   let [ImgModal, setImgModal] = useState(false)
   const [file, SetFile] = useState('')
@@ -59,14 +67,52 @@ const docStorage = (props) => {
     url: params.url,
   }
 
-  // AES알고리즘 사용 복호화
-  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
-  //인코딩, 문자열로 변환, JSON 변환
-  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-  const accessToken = decrypted.token
-  console.log(myparams)
-  //문서저장소 게시판 리스트 호출
-  useEffect(() => {
+  const deleteDoc = (idx) => {
+    const data = {
+      url: url,
+      idx: idx,
+    }
+    Swal.fire({
+      title: '문서저장소 삭제',
+      text: idx + '번 글을 삭제하시겠습니까?',
+      icon: 'warning',
+
+      showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+      confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+      cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+      confirmButtonText: '삭제', // confirm 버튼 텍스트 지정
+      cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+      reverseButtons: true, // 버튼 순서 거꾸로
+    }).then((result) => {
+      // 만약 Promise리턴을 받으면,
+      if (result.isConfirmed) {
+        // 만약 모달창에서 confirm 버튼을 눌렀다면
+        axios({
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          url: '/doc/delete',
+          data: data,
+        }).then((res) => {
+          console.log(res)
+          Swal.fire({
+            icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+            title: '삭제 되었습니다',
+          })
+          listDoc()
+        })
+      } else {
+        Swal.fire({
+          icon: 'error', // 여기다가 아이콘 종류를 쓰면 됩니다.
+          title: '취소되었습니다',
+        })
+      }
+    })
+  }
+
+  function listDoc() {
     axios({
       method: 'POST',
       headers: {
@@ -76,12 +122,20 @@ const docStorage = (props) => {
       data: myparams,
     }).then((res) => {
       SetList(res.data)
-      console.log(res.data)
     })
+  }
+
+  //문서저장소 게시판 리스트 호출
+  useEffect(() => {
+    listDoc()
   }, [])
 
+  //모달창 꺼질 때마다 리스트 호출
+  useEffect(() => {
+    listDoc()
+  }, [visibleXL])
+
   const filesubmit = (e) => {
-    e.preventDefault()
     const type = e.target.type.value
     const file = e.target.save.value
     const link = e.target.link.value
@@ -145,7 +199,12 @@ const docStorage = (props) => {
               </h4>
             </CCol>
             <CCol sm={7} align="end" className="d-none d-md-block">
-              <CButton type="submit" onClick={() => setVisibleXL(!visibleXL)}>
+              <CButton
+                type="submit"
+                onClick={() => {
+                  setVisibleXL(!visibleXL)
+                }}
+              >
                 등록
               </CButton>
               <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
@@ -159,8 +218,8 @@ const docStorage = (props) => {
             </CCol>
           </CRow>
           <CAccordion alwaysOpen activeItemKey={parseInt(params.idx)}>
-            {list.map((data) => (
-              <CAccordionItem itemKey={parseInt(data.idx)}>
+            {list.map((data, key) => (
+              <CAccordionItem itemKey={parseInt(data.idx)} key={key}>
                 <CAccordionHeader>
                   <CRow className="col-12">
                     <CCol className="col-2 px-2">
@@ -183,9 +242,9 @@ const docStorage = (props) => {
                         <BsCardImage />
                       )}
                       {data.ori_filename.length > 25 ? (
-                        <strong>{data.ori_filename.substr(0, 25) + '...'}</strong>
+                        <strong> {data.ori_filename.substr(0, 25) + '...'}</strong>
                       ) : (
-                        <strong>{data.ori_filename}</strong>
+                        <strong> {data.ori_filename}</strong>
                       )}
                     </CCol>
                     <CCol className="col-2 px-1">
@@ -260,10 +319,16 @@ const docStorage = (props) => {
                   />
                   <CRow>
                     <CCol align="end">
-                      <CButton className="my-3 mx-1" color="dark" shape="rounded-pill">
-                        업데이트
-                      </CButton>
-                      <CButton className="my-3 mx-1" color="danger" shape="rounded-pill">
+                      <UpdateDocStorage doc={data} />
+
+                      <CButton
+                        onClick={() => {
+                          deleteDoc(data.idx)
+                        }}
+                        className="my-3 mx-1"
+                        color="danger"
+                        shape="rounded-pill"
+                      >
                         삭제
                       </CButton>
                     </CCol>

@@ -46,6 +46,10 @@ import { PRIMARY_KEY } from '../../oauth'
 import { width } from '@mui/system'
 import { Navigate, useParams } from 'react-router-dom'
 import $ from 'jquery'
+//라벨컴포넌트 필요 요소
+import Label from 'src/components/Label'
+import { chooseLabel } from 'src/store'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Kanban = () => {
   const [visible, setVisible] = useState(false)
@@ -68,6 +72,15 @@ const Kanban = () => {
   const url = params.url
   const login = JSON.parse(localStorage.getItem('login'))
 
+  //라벨
+  const chooseLabel = useSelector((state) => state.chooseLabel)
+  const [label, SetLabel] = useState('')
+  const [style, SetStyle] = useState('')
+  useEffect(() => {
+    SetLabel(chooseLabel.label)
+    SetStyle(chooseLabel.style)
+  }, [chooseLabel])
+
   //전체 일정 추가
   const addKanban = () => {
     const reqData = {
@@ -76,7 +89,7 @@ const Kanban = () => {
       title: $('#kanbantitle').val(),
       content: $('#kanbancontent').val(),
       b_code: 6,
-      label: '.',
+      label: label,
       u_idx: login.u_idx,
       url: url,
       u_idxList: alarmList,
@@ -222,48 +235,81 @@ const Kanban = () => {
         </CCardBody>
       </CCard>
 
-      <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
-        <CModalBody>
+      <CModal size="xl" alignment="center" visible={visible} onClose={() => setVisible(false)}>
+        <CModalBody className="p-3">
           <CForm>
-            <div className="mb-3">
-              <CIcon icon={icon.cibGithub} className="me-2" />
-              <CFormLabel htmlFor="exampleFormControlInput1">Add Item</CFormLabel>
-              <CFormInput type="text" id="kanbantitle" placeholder="제목을 입력해주세요" />
-            </div>
-            <hr />
-            <strong>상태 입력</strong>
-            <br />
-            <br />
-            <CFormSelect id="status_select" aria-label="상태 입력">
-              {statusList.map((sta) => (
-                <option value={sta.s_idx} key={sta.s_idx}>
-                  {sta.s_name}
-                </option>
-              ))}
-            </CFormSelect>
-            <br />
-            <CFormLabel className="col-sm-2 col-form-label">
-              <strong>알림</strong>
+            <CIcon icon={icon.cibGithub} className="me-2" />
+            <CFormLabel htmlFor="exampleFormControlInput1">
+              <h4>Add Item</h4>
             </CFormLabel>
-            <CCol sm={10}>
-              {u_idxlist.map((data) => {
-                return (
-                  <>
-                    <CFormCheck inline className="u_idx" value={data.u_idx} onChange={checkAList} />
-                    <CAvatar className="ms-2" src={data.profilephoto} />
-                    {data.nickname}
-                  </>
-                )
-              })}
-            </CCol>
-            <br />
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-2 col-form-label">
+                <strong>
+                  라벨 선택{' '}
+                  <CButton color={chooseLabel.style} shape="rounded-pill" size="sm">
+                    {chooseLabel.label}
+                  </CButton>
+                </strong>
+              </CFormLabel>
+              <CCol sm={10}>
+                <CCol className="mb-3">
+                  <Label />
+                </CCol>
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-2 col-form-label">
+                <strong>문서 제목</strong>
+              </CFormLabel>
+              <CCol sm={10}>
+                <CCol className="mb-3">
+                  <CFormInput type="text" id="kanbantitle" placeholder="제목을 입력해주세요" />
+                </CCol>
+              </CCol>
+            </CRow>
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-2 col-form-label">
+                <strong>진행 상태</strong>
+              </CFormLabel>
+              <CCol sm={10}>
+                <CCol className="mb-3">
+                  <CFormSelect id="status_select" aria-label="상태 입력">
+                    {statusList.map((sta) => (
+                      <option value={sta.s_idx} key={sta.s_idx}>
+                        {sta.s_name}
+                      </option>
+                    ))}
+                  </CFormSelect>
+                </CCol>
+              </CCol>
+            </CRow>
+
+            <CRow className="mb-3">
+              <CFormLabel className="col-sm-2 col-form-label">
+                <strong>알림 전송</strong>
+              </CFormLabel>
+              <CCol sm={10}>
+                {u_idxlist.map((data) => {
+                  return (
+                    <>
+                      <CFormCheck
+                        inline
+                        className="u_idx"
+                        value={data.u_idx}
+                        onChange={checkAList}
+                      />
+                      <CAvatar className="ms-2" src={data.profilephoto} />
+                      <strong>{data.nickname} </strong>
+                    </>
+                  )
+                })}
+              </CCol>
+            </CRow>
+
             <div className="mb-3">
-              <CFormLabel htmlFor="exampleFormControlTextarea1">내용</CFormLabel>
-              <br />
-              <br />
               <CFormTextarea
                 id="kanbancontent"
-                rows={4}
+                rows={7}
                 placeholder="내용을 입력해주세요"
               ></CFormTextarea>
             </div>
