@@ -210,8 +210,6 @@ const Comments = (props) => {
       })
       setProfileModal(!profileMoal)
     })
-
-    console.log(targ)
   }
 
   return (

@@ -263,7 +263,6 @@ const Calendar = () => {
       },
       params: { u_idx: idx },
     }).then((res) => {
-
       setProfile({
         u_idx: res.data.u_idx,
         profilephoto: res.data.profilephoto,
@@ -586,6 +585,7 @@ const Calendar = () => {
 
   return (
     <>
+      
       <CCard className="mb-4">
         <CCardBody>
           <CRow>
@@ -637,12 +637,6 @@ const Calendar = () => {
           </CRow>
         </CCardBody>
         <CCardFooter></CCardFooter>
-        <CModal alignment="center" visible={profileMoal} onClose={() => setProfileModal(false)}>
-          <CModalHeader onClose={() => setProfileModal(false)}></CModalHeader>
-          <CModalBody>
-            <Profile user={profile} />
-          </CModalBody>
-        </CModal>
       </CCard>
     </>
   )
