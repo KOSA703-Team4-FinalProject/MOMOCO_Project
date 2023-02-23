@@ -31,11 +31,12 @@ import Swal from 'sweetalert2'
 
 import '../scss/chatRoom.scss'
 import { PRIMARY_KEY } from '../oauth'
+import { useCallback } from 'react'
 
 const Chat = (props) => {
   const dispatch = useDispatch()
   let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
-  
+
   let [initview, setInitview] = useState(false)
   let [room, setRoom] = useState({})
   let [chatList, setChatList] = useState([])
@@ -58,46 +59,9 @@ const Chat = (props) => {
 
   const stomp = props.stomp
 
-  const connect = () => {
-    stomp.connect({}, () => {
-      //기존 메시지 불러오기
-      stomp.subscribe('/sub/chat/postInfo/' + chatRoomNumber, (chat) => {
-        const res = JSON.parse(chat.body)
-        console.log(res)
-        setRoom(res[1])
-        res[0].map((chat) => {
-          setChatList((chatList) => [...chatList, chat])
-        })
-        setInitview(true)
-      })
-
-      //메시지를 받음
-      stomp.subscribe('/sub/chat/room/' + chatRoomNumber, (chat) => {
-        appendMessage(chat)
-      })
-
-      //메시지 전송
-      stomp.send(
-        '/pub/chat/enter',
-        {},
-        JSON.stringify({
-          r_idx: chatRoomNumber,
-          u_idx: login.u_idx,
-          nickname: login.nickname,
-          url: params.url,
-        }),
-      )
-    })
-  }
-
   useEffect(() => {
     chatref.current.scrollTop = chatref.current.scrollHeight
   }, [initview])
-
-  //연결 끊기
-  const disconnect = () => {
-    stomp.unsubscribe()
-  }
 
   //서버로 부터 채팅 메시지가 도착함
   function appendMessage(chat) {
@@ -106,10 +70,32 @@ const Chat = (props) => {
     setChatList((chatList) => [...chatList, message])
   }
 
-  //채팅방에 연결하기
   useEffect(() => {
-    connect()
+    //기존 메시지 불러오기
+    axios({
+      method: 'GET',
+      url: '/api/chat/chatList',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { url: params.url, r_idx: chatRoomNumber },
+    }).then((res) => {
+      console.log(res.data)
+      setRoom(res.data[1])
+      setChatList([])
+      res.data[0].map((chat) => {
+        setChatList((chatList) => [...chatList, chat])
+      })
+      setInitview(true)
+    })
 
+    stomp.connect({}, () => {
+      //메시지를 받음
+      stomp.subscribe('/sub/chat/room/' + chatRoomNumber, (chat) => {
+        appendMessage(chat)
+      })
+    })
+    
   }, [])
 
   //채팅 기록이 늘어날때마다 스크롤 내리기
@@ -212,7 +198,7 @@ const Chat = (props) => {
   }
 
   //채팅 전송
-  const sendChat = () => {
+  const sendChat = useCallback(() => {
     const reqData = {
       url: params.url,
       nickname: login.nickname,
@@ -227,7 +213,7 @@ const Chat = (props) => {
     stomp.send('/pub/chat/message', {}, data)
 
     $('.inputmessage').val('')
-  }
+  }, [])
 
   //콘텐츠를 클릭할 경우
   const clickContent = (e) => {
@@ -401,7 +387,7 @@ const Chat = (props) => {
                         idx={data.ch_idx}
                         onClick={clickContent}
                       >
-                        <CIcon icon={cilLink} size="xl"     className="me-2" />
+                        <CIcon icon={cilLink} size="xl" className="me-2" />
                         {data.content}
                       </div>
                     )}

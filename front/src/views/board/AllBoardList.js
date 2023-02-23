@@ -237,7 +237,7 @@ const AllBoardList = () => {
                                 <strong> {data.title}</strong>
                               </div>
                               <div className="col-md-12">
-                                {data.content.replace(/(<([^>]+)>)/gi, '')}
+                                {data.content}
                               </div>
                             </div>
                           </div>

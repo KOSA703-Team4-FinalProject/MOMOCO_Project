@@ -53,21 +53,6 @@ const AppHeader = () => {
 
   const stomp = StompJs.over(websocket)
 
-  const connect = () => {
-    stomp.connect({}, () => {
-      stomp.subscribe('/sub/chat/isread/' + login.u_idx, (chat) => {
-        const res = JSON.parse(chat.body)
-        console.log("------------------------------")
-        console.log(res)
-        if (res.content == 'no_sys') {
-          setChatStateRead(true)
-        }else{
-          setChatStateRead(false)
-        }
-      })
-    })
-  }
-
   useEffect(() => {
     const cookies = new Cookies()
     const date = new Date()
@@ -78,7 +63,15 @@ const AppHeader = () => {
       sameSite: 'strict',
     })
 
-    connect()
+    stomp.connect({}, () => {
+      console.log("haha")
+
+      stomp.subscribe('/sub/chat/chatalarm/' + login.u_idx, (chat) => {
+        console.log(chat)
+      })
+    })
+
+    
 
     return () => {
       stomp.unsubscribe()

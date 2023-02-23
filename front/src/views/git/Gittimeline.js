@@ -186,12 +186,7 @@ const Gittimeline = () => {
             </VerticalTimeline>
           )}
         </CCardBody>
-        <CModal alignment="center" visible={profileMoal} onClose={() => setProfileModal(false)}>
-          <CModalHeader onClose={() => setVisible(false)}></CModalHeader>
-          <CModalBody>
-            <Profile user={profile} />
-          </CModalBody>
-        </CModal>
+        <Profile user={profile} profileMoal={profileMoal} />
       </CCard>
     </>
   )

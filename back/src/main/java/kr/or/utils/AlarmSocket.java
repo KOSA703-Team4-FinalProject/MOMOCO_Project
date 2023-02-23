@@ -1,15 +1,15 @@
 package kr.or.utils;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import kr.or.service.AlarmService;
 import kr.or.service.BoardSerivce;
+import kr.or.service.ChatService;
 import kr.or.vo.Alarm;
 import kr.or.vo.Board;
+import kr.or.vo.Chat;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -31,6 +31,13 @@ public class AlarmSocket {
 	@Autowired
 	public void setAlarmService(AlarmService alarmservice) {
 		this.alarmservice = alarmservice;
+	}
+	
+	private ChatService chatservice;
+
+	@Autowired
+	public void setCharService(ChatService chatservice) {
+		this.chatservice = chatservice;
 	}
 
 	// 알림 생성
@@ -60,6 +67,23 @@ public class AlarmSocket {
 			// 알람 메시지 userIdx 기준으로 전송
 			template.convertAndSend("/sub/one/alarm/" + u_idx[i], alarm);
 		}
+	}
+	
+	//채팅 알람
+	public void sendChatAlarm(int u_idx, int r_idx, String nickname, String url) {
+		
+		Chat chat = new Chat();
+		chat.setContent("새로 초대되었습다");
+		chat.setContent_type("text");
+		chat.setRef(0);
+		chat.setNickname(nickname);
+		chat.setR_idx(r_idx);
+		chat.setU_idx(u_idx);
+		chat.setUrl(url);
+		
+		chatservice.sendChat(chat);
+		template.convertAndSend("/sub/chat/chatalarm/" + u_idx, chat);
+		
 	}
 
 }
