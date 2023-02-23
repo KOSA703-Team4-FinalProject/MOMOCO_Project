@@ -25,14 +25,14 @@ public class CommonBoardService {
 	}
 
 	// 글 전체 확인
-	public List<CommonBoard> getBoard(String url) {
+	public List<CommonBoard> getBoard(CommonBoard commonboard) {
 
 		List<CommonBoard> board = new ArrayList<CommonBoard>();
 
 		try {
 
 			CommonBoardDao boarddao = sqlsession.getMapper(CommonBoardDao.class);
-			board = boarddao.getBoard(url);
+			board = boarddao.getBoard(commonboard);
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -156,5 +156,35 @@ public class CommonBoardService {
 	    }
 	    return result;
 	}
-	
+	//답글쓰기
+	public int replyCommonBoard(CommonBoard all) {
+		int result =0;
+		try {
+			CommonBoardDao commonboarddao = sqlsession.getMapper(CommonBoardDao.class);
+			result=commonboarddao.replyCommonBoard(all);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	//글읽기체크
+	public List<CommonBoard> getCheck(CommonBoard commonboard) {
+
+		List<CommonBoard> board = new ArrayList<CommonBoard>();
+
+		try {
+
+			CommonBoardDao boarddao = sqlsession.getMapper(CommonBoardDao.class);
+			board = boarddao.getCheck(commonboard);
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return board;
+	}
 }

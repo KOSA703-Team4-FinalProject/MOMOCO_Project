@@ -8,7 +8,7 @@ import kr.or.vo.CommonBoard;
 public interface CommonBoardDao {
 	
 	//전체게시판 리스트 
-	public  List<CommonBoard> getBoard(String url) throws ClassNotFoundException, SQLException;
+	public  List<CommonBoard> getBoard(CommonBoard cmm) throws ClassNotFoundException, SQLException;
 	
 	//글읽기
 	public CommonBoard getBoardByIdx(CommonBoard idx) throws ClassNotFoundException, SQLException;
@@ -29,8 +29,10 @@ public interface CommonBoardDao {
 	//검색
 	public List<CommonBoard> commonboardSearch (CommonBoard search) throws ClassNotFoundException, SQLException;
 
+	//답글쓰기
+	public int replyCommonBoard (CommonBoard all)throws ClassNotFoundException, SQLException;
 	
-	
-	
-	
+	//글읽기 체크
+	public  List<CommonBoard> getCheck(CommonBoard cmm) throws ClassNotFoundException, SQLException;
+		
 }

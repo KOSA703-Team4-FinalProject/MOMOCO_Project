@@ -42,7 +42,7 @@ public class BoardSerivce {
 	}
 	
 	//모든보드검색
-	public List<Board>allBoardList(String url){
+	public List<Board>allBoardList(Board url){
 		List<Board> board = new ArrayList<Board>();
 		
 		try {
