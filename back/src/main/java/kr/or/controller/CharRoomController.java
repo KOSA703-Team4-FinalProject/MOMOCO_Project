@@ -91,7 +91,7 @@ public class CharRoomController {
 		
 		chatservice.sendChat(chat);
 		
-		template.convertAndSend("/sub/chat/room/" + chat.getR_idx(), chat);
+		template.convertAndSend("/sub/chat/chatalarm/" + chatroom.getTo_u_idx(), chat);
 		
 		return result;
 	}

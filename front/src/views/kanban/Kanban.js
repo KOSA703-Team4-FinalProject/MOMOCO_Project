@@ -1,28 +1,12 @@
 import {
   CCard,
   CCardBody,
-  CCardFooter,
   CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CRow,
-  Cbutton,
   CButton,
-  CCardHeader,
-  CCardTitle,
-  CCardText,
   CModal,
-  CModalHeader,
-  CModalTitle,
   CModalBody,
   CModalFooter,
-  CTooltip,
-  CLink,
-  CPopover,
-  CInputGroup,
-  CInputGroupText,
   CFormInput,
   CForm,
   CFormTextarea,
@@ -43,16 +27,12 @@ import HorizontalScroll from 'react-horizontal-scrolling'
 import CryptoJS from 'crypto-js'
 import axios from 'axios'
 import { PRIMARY_KEY } from '../../oauth'
-import { width } from '@mui/system'
-import { Navigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import $ from 'jquery'
 
 const Kanban = () => {
   const [visible, setVisible] = useState(false)
   const [visibleB, setVisibleB] = useState(false)
-
-  // 변수
-  const [addKanbanItem, setAddKanbanItem] = useState([])
 
   const [statusList, setStateList] = useState([])
   const [kanbanlist, setKanbanlist] = useState('')
@@ -246,10 +226,10 @@ const Kanban = () => {
               <strong>알림</strong>
             </CFormLabel>
             <CCol sm={10}>
-              {u_idxlist.map((data) => {
+              {u_idxlist.map((data, key) => {
                 return (
                   <>
-                    <CFormCheck inline className="u_idx" value={data.u_idx} onChange={checkAList} />
+                    <CFormCheck key={key} inline className="u_idx" value={data.u_idx} onChange={checkAList} />
                     <CAvatar className="ms-2" src={data.profilephoto} />
                     {data.nickname}
                   </>

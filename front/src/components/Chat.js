@@ -95,6 +95,10 @@ const Chat = (props) => {
         appendMessage(chat)
       })
     })
+
+    return () =>{
+      stomp.unsubscribe()
+    }
     
   }, [])
 

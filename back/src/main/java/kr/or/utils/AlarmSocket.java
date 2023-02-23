@@ -66,6 +66,7 @@ public class AlarmSocket {
 
 			// 알람 메시지 userIdx 기준으로 전송
 			template.convertAndSend("/sub/one/alarm/" + u_idx[i], alarm);
+			template.convertAndSend("/sub/chat/chatalarm/" + u_idx[i], alarm);
 		}
 	}
 	

@@ -17,7 +17,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilMenu } from '@coreui/icons'
+import { cilBell, cilBellExclamation, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -34,13 +34,15 @@ import StompJs from 'stompjs'
 import { useEffect } from 'react'
 import { Cookies } from 'react-cookie'
 import { IoChatboxOutline, IoChatboxEllipses } from 'react-icons/io5'
+import { useCallback } from 'react'
+
+
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
 
-  const [chatStateRead, setChatStateRead] = useState(false) //채팅 읽음 유무
   const [chatState, setCahtState] = useState(false) //채팅 모달 상태
 
   const params = useParams()
@@ -50,7 +52,6 @@ const AppHeader = () => {
 
   //웹 소켓 연결
   const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
-
   const stomp = StompJs.over(websocket)
 
   useEffect(() => {
@@ -62,16 +63,6 @@ const AppHeader = () => {
       expires: date.setHours(date.getHours + 8),
       sameSite: 'strict',
     })
-
-    stomp.connect({}, () => {
-      console.log("haha")
-
-      stomp.subscribe('/sub/chat/chatalarm/' + login.u_idx, (chat) => {
-        console.log(chat)
-      })
-    })
-
-    
 
     return () => {
       stomp.unsubscribe()
@@ -143,7 +134,7 @@ const AppHeader = () => {
             {/* 알림 이모티콘 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-                <CIcon icon={cilBell} size="lg" />
+              <CIcon icon={cilBell} size="lg" />
               </CDropdownToggle>
               <CDropdownMenu>
                 <Notifications stomp={stomp} />
@@ -154,29 +145,17 @@ const AppHeader = () => {
             {/* 채팅 이모티콘 */}
             <CDropdown autoClose={false} visible={chatState}>
               <CDropdownToggle color="ghost">
-                {chatStateRead == false ? (
-                  <IoChatboxOutline
+              <IoChatboxOutline
                     className="mb-1"
                     size="21px"
                     onClick={() => {
+                      setChatStateRead(false)
                       chatState == false ? setCahtState(true) : setCahtState(false)
                       chatView == 'none'
                         ? dispatch(changeChatState('chatroom'))
                         : dispatch(changeChatState('none'))
                     }}
                   />
-                ) : (
-                  <IoChatboxEllipses
-                    className="mb-1"
-                    size="21px"
-                    onClick={() => {
-                      chatState == false ? setCahtState(true) : setCahtState(false)
-                      chatView == 'none'
-                        ? dispatch(changeChatState('chatroom'))
-                        : dispatch(changeChatState('none'))
-                    }}
-                  />
-                )}
               </CDropdownToggle>
               <CDropdownMenu>
                 <ChatAll stomp={stomp} />
