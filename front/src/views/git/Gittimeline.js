@@ -2,18 +2,14 @@ import {
   CAvatar,
   CCard,
   CCardBody,
-  CCardFooter,
   CCol,
-  CFormSelect,
   CModal,
   CModalBody,
   CModalHeader,
-  CModalTitle,
   CRow,
 } from '@coreui/react'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
-import { BsEmojiSmile } from 'react-icons/bs'
 import CryptoJS from 'crypto-js'
 
 import { PRIMARY_KEY } from '../../oauth'
@@ -22,7 +18,6 @@ import { useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Octokit } from 'octokit'
-import { async } from 'regenerator-runtime'
 
 const backgroundcolor = {
   background: '#EEEEEE',
@@ -116,7 +111,7 @@ const Gittimeline = () => {
                       iconOnClick={() => {
                         setProfile({
                           u_idx: commit.committer.id,
-                          avatar_url: commit.committer.avatar_url,
+                          profilephoto: commit.committer.avatar_url,
                           nickname: commit.committer.login,
                           email: commit.commit.author.email,
                           github: commit.committer.html_url,
@@ -130,7 +125,7 @@ const Gittimeline = () => {
                         onClick={() => {
                           setProfile({
                             u_idx: commit.committer.id,
-                            avatar_url: commit.committer.avatar_url,
+                            profilephoto: commit.committer.avatar_url,
                             nickname: commit.committer.login,
                             email: commit.commit.author.email,
                             github: commit.committer.html_url,
@@ -157,7 +152,7 @@ const Gittimeline = () => {
                       iconOnClick={() => {
                         setProfile({
                           u_idx: commit.committer.id,
-                          avatar_url: commit.committer.avatar_url,
+                          profilephoto: commit.committer.avatar_url,
                           nickname: commit.committer.login,
                           email: commit.commit.author.email,
                           github: commit.committer.html_url,
@@ -171,7 +166,7 @@ const Gittimeline = () => {
                         onClick={() => {
                           setProfile({
                             u_idx: commit.committer.id,
-                            avatar_url: commit.committer.avatar_url,
+                            profilephoto: commit.committer.avatar_url,
                             nickname: commit.committer.login,
                             email: commit.commit.author.email,
                             github: commit.committer.html_url,

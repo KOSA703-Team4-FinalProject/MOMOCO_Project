@@ -153,7 +153,7 @@ const TalkDrawerDetail = (props) => {
   return (
     <div>
       <div className="main2">
-        <CCard>
+        <CCard className='drawerstyle'>
           <div className="row pt-2 ps-2 m-2">
             <h4 className="col">
               <AiOutlineLeftCircle
@@ -169,7 +169,7 @@ const TalkDrawerDetail = (props) => {
             </h4>
           </div>
         </CCard>
-        <CCard>
+        <CCard className='drawerstyle'>
           <div className="row pt-1" align="center">
             {initview == false ? (
               <div className='p-3'>

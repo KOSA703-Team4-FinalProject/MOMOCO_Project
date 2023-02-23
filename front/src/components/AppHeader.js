@@ -33,17 +33,18 @@ import { CButton } from '@coreui/react'
 import StompJs from 'stompjs'
 import { useEffect } from 'react'
 import { Cookies } from 'react-cookie'
+import { IoChatboxOutline, IoChatboxEllipses } from 'react-icons/io5'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   let sidebarShow = useSelector((state) => state.sidebarShow)
   const chatView = useSelector((state) => state.chatState)
+  let chatRead = useSelector((state) => state.chatRead)
+  const [chatStateRead, setChatStateRead] = useState(false)
   const [chatState, setCahtState] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
 
-  //접속한 채팅방 번호
-  let chatRoomNumber = useSelector((state) => state.chatRoomNumber)
   //웹 소켓 연결
   const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
 
@@ -59,6 +60,12 @@ const AppHeader = () => {
       sameSite: 'strict',
     })
   }, [])
+
+  useEffect(()=>{
+
+    setChatStateRead(chatRead)
+
+  }, [chatRead])
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -136,16 +143,29 @@ const AppHeader = () => {
             {/* 채팅 이모티콘 */}
             <CDropdown autoClose={false} visible={chatState}>
               <CDropdownToggle color="ghost">
-                <CIcon
-                  icon={cilCommentSquare}
-                  size="lg"
-                  onClick={() => {
-                    chatState == false ? setCahtState(true) : setCahtState(false)
-                    chatView == 'none'
-                      ? dispatch(changeChatState('chatroom'))
-                      : dispatch(changeChatState('none'))
-                  }}
-                />
+                {chatStateRead == false ? (
+                  <IoChatboxOutline
+                    className="mb-1"
+                    size="21px"
+                    onClick={() => {
+                      chatState == false ? setCahtState(true) : setCahtState(false)
+                      chatView == 'none'
+                        ? dispatch(changeChatState('chatroom'))
+                        : dispatch(changeChatState('none'))
+                    }}
+                  />
+                ) : (
+                  <IoChatboxEllipses
+                    className="mb-1"
+                    size="21px"
+                    onClick={() => {
+                      chatState == false ? setCahtState(true) : setCahtState(false)
+                      chatView == 'none'
+                        ? dispatch(changeChatState('chatroom'))
+                        : dispatch(changeChatState('none'))
+                    }}
+                  />
+                )}
               </CDropdownToggle>
               <CDropdownMenu>
                 <ChatAll stomp={stomp} />

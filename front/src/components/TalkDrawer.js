@@ -48,9 +48,11 @@ const TalkDrawer = () => {
       },
       params: reqData,
     }).then((res) => {
+      setWorkspaceUserList([])
       res.data[0].map((user) => {
         setWorkspaceUserList((workspaceUserList) => [...workspaceUserList, user])
       })
+      setAddUserList([])
       res.data[1].map((user) => {
         setAddUserList((addUserList) => [...addUserList, user])
       })
@@ -61,7 +63,7 @@ const TalkDrawer = () => {
   return (
     <div>
       <div className="main2">
-        <CCard>
+        <CCard className='drawerstyle'>
           <header className="pt-2 m-2 px-4">
             <CRow className='mydrawer'>
               <CCol xs="auto" className="me-auto pt-1">
@@ -87,7 +89,7 @@ const TalkDrawer = () => {
             </CRow>
           </header>
         </CCard>
-        <CCard>
+        <CCard className='drawerstyle'>
           <div className="row pt-1" align="center">
             <div
               className="m-4 col"
@@ -127,7 +129,7 @@ const TalkDrawer = () => {
             </div>
           </div>
         </CCard>
-        <CCard>
+        <CCard className='drawerstyle'>
           <div className="m-4 ps-3 pt-1">
             <h4 align="center">
               <strong>대화 상대</strong>

@@ -1,9 +1,9 @@
 package kr.or.dao;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 
 import kr.or.vo.Member;
+import kr.or.vo.MemberAll;
 import kr.or.vo.UserDetail;
 
 public interface MemberDao {
@@ -22,5 +22,8 @@ public interface MemberDao {
 	
 	//기존 유저 세부 정보 수정
 	public int updateUserDetail(UserDetail userDetail) throws ClassNotFoundException, SQLException;
+	
+	//유저 정보 확인
+	public MemberAll getMemberByIdx(int u_idx) throws ClassNotFoundException, SQLException;
 	
 }

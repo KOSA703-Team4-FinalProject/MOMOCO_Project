@@ -1,7 +1,6 @@
 package kr.or.service;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.dao.MemberDao;
 import kr.or.vo.Member;
+import kr.or.vo.MemberAll;
 import kr.or.vo.UserDetail;
 
 @Service
@@ -79,6 +79,23 @@ public class LoginService {
 		}
 		
 		return result; 
+	}
+	
+	//유저 정보 확인
+	public MemberAll getMemberByIdx(int u_idx) {
+		MemberAll member = new MemberAll();
+		
+		try {
+			MemberDao memberdao = sqlsession.getMapper(MemberDao.class);
+			member = memberdao.getMemberByIdx(u_idx);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return member;
 	}
 
 }

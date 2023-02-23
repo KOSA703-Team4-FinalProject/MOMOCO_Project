@@ -38,5 +38,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		set company = #{company}, bio = #{bio}, email = #{email}, location = #{location}, blog = #{blog}
 		where u_idx = #{u_idx}
 	</update>
+	
+	<!-- 유저 정보 확인 public Member getMemberByIdx(int u_idx) -->
+	<select id="getMemberByIdx" resultType="kr.or.vo.MemberAll">
+		select m.u_idx, m.nickname, github_url, profilephoto, company, bio, email, location, blog
+		from member m join user_detail u
+		on m.u_idx = u.u_idx
+		where m.u_idx = #{u_idx}
+	</select> 
+	
 
 </mapper>

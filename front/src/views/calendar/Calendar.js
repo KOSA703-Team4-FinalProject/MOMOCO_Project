@@ -11,19 +11,23 @@ import {
   CFormLabel,
   CFormSelect,
   CFormTextarea,
+  CModal,
+  CModalBody,
+  CModalHeader,
   CRow,
 } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import bootstrap5 from '@fullcalendar/bootstrap5'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
 import axios from 'axios'
 import $ from 'jquery'
 
 import { PRIMARY_KEY } from '../../oauth'
+import Profile from 'src/components/Profile'
 
 const Calendar = () => {
   let [view, setView] = useState('')
@@ -32,6 +36,9 @@ const Calendar = () => {
   const [readCalList, setReadCalList] = useState({})
   const [start_date, setStart_date] = useState('')
   const [checkList, setCheckList] = useState([])
+
+  const [profileMoal, setProfileModal] = useState(false)
+  const [profile, setProfile] = useState({})
 
   const [u_idxlist, SetU_idxlist] = useState([]) //워크스페이스 유저 id 리스트
   const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
@@ -96,7 +103,6 @@ const Calendar = () => {
         url: url,
       },
     }).then((res) => {
-      console.log(res)
       SetU_idxlist([])
 
       res.data.map((data) => {
@@ -221,6 +227,7 @@ const Calendar = () => {
       data: reqData2,
     }).then((res) => {
       console.log(res)
+      setView('')
     })
   }
 
@@ -244,6 +251,28 @@ const Calendar = () => {
         }
       })
     }
+  }
+
+  //프로필 조회
+  const clickProfile = (e) => {
+
+    const pro = e.target
+    const idx = $(pro).attr('value')
+
+    axios({
+      method: 'GET',
+      url: '/backlogin/getmember',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {u_idx: idx}
+    }).then((res) => {
+      console.log(res.data)
+
+      setProfile(res.data)
+      setProfileModal(true)
+    })
+
   }
 
   function Component() {
@@ -415,6 +444,8 @@ const Calendar = () => {
                             textColor="white"
                             shape="rounded"
                             key={data.u_idx}
+                            value={data.u_idx}
+                            onClick={clickProfile}
                           >
                             {data.nickname}..
                           </CAvatar>
@@ -606,6 +637,12 @@ const Calendar = () => {
           </CRow>
         </CCardBody>
         <CCardFooter></CCardFooter>
+        <CModal alignment="center" visible={profileMoal} onClose={() => setProfileModal(false)}>
+          <CModalHeader onClose={() => setProfileModal(false)}></CModalHeader>
+          <CModalBody>
+            <Profile user={profile} />
+          </CModalBody>
+        </CModal>
       </CCard>
     </>
   )

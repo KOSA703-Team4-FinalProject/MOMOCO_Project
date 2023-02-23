@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.LoginService;
@@ -82,6 +83,15 @@ public class LoginController {
 		}
 		
 		return result2;
+	}
+	
+	//멤버 정보 확인
+	@RequestMapping(value="/getmember", method=RequestMethod.GET)
+	public MemberAll getMemberByIdx(@RequestParam(value="u_idx") int u_idx) {
+		
+		MemberAll member = loginservice.getMemberByIdx(u_idx);
+		
+		return member;
 	}
 	
 
