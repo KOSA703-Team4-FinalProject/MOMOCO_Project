@@ -20,7 +20,7 @@ import { useEffect } from 'react'
 const WriteDocStorage = () => {
   const [title, SetTitle] = useState('')
   const [content, SetContent] = useState('')
-  const [label, SetLabel] = useState('')
+  const [label, SetLabel] = useState('　')
   const [style, SetStyle] = useState('')
   const [orifile, SetOrifile] = useState(null)
   const [depth, SetDepth] = useState('')
@@ -99,83 +99,87 @@ const WriteDocStorage = () => {
   const SubmitHandler = (e) => {
     e.preventDefault()
     //새 글 작성일 경우
-    if (upload_type === 'link') {
-      // 링크 등록시
-      const doc = {
-        nickname: nickname,
-        title: title,
-        content: content,
-        b_code: 3,
-        label: label,
-        u_idx: u_idx,
-        url: url,
-        depth: 0,
-        step: 0,
-        upload_type: upload_type,
-        ori_filename: link,
-        save_filename: link,
-        u_idxList: alarmlist,
-      }
+    if (title != '' && content != '' && label != '') {
+      if (upload_type === 'link') {
+        // 링크 등록시
+        const doc = {
+          nickname: nickname,
+          title: title,
+          content: content,
+          b_code: 3,
+          label: label,
+          u_idx: u_idx,
+          url: url,
+          depth: 0,
+          step: 0,
+          upload_type: upload_type,
+          ori_filename: link,
+          save_filename: link,
+          u_idxList: alarmlist,
+        }
 
-      try {
-        axios({
-          method: 'POST',
-          url: '/doc/addDocLink',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: doc,
-        }).then((res) => {
-          if (res.data == 2) {
-            alert('문서가 등록되었습니다.')
-          }
-          if (res.data != 2) {
-            alert('문서 등록에 실패하였습니다.')
-          }
-        })
-      } catch (error) {
-        console.error(error)
+        try {
+          axios({
+            method: 'POST',
+            url: '/doc/addDocLink',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: doc,
+          }).then((res) => {
+            if (res.data == 2) {
+              alert('문서가 등록되었습니다.')
+            }
+            if (res.data != 2) {
+              alert('문서 등록에 실패하였습니다.')
+            }
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        // 파일, 이미지 등록시
+        const formData = new FormData()
+        const doc = {
+          nickname: nickname,
+          title: title,
+          content: content,
+          b_code: 3,
+          label: label,
+          u_idx: u_idx,
+          url: url,
+          depth: 0,
+          step: 0,
+          upload_type: upload_type,
+          u_idxList: alarmlist,
+        }
+        formData.append('file', orifile)
+        formData.append('doc', JSON.stringify(doc))
+        try {
+          axios({
+            method: 'POST',
+            url: '/doc/addDoc',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': `multipart/form-data; `,
+            },
+            data: formData,
+          }).then((res) => {
+            if (res.data == 2) {
+              alert('문서가 등록되었습니다.')
+              navigate(`/ws/${url}/docStorage`)
+            }
+            if (res.data != 2) {
+              alert('문서 등록에 실패하였습니다.')
+              navigate(`/ws/${url}/docStorage`)
+            }
+          })
+        } catch (error) {
+          console.error(error)
+        }
       }
     } else {
-      // 파일, 이미지 등록시
-      const formData = new FormData()
-      const doc = {
-        nickname: nickname,
-        title: title,
-        content: content,
-        b_code: 3,
-        label: label,
-        u_idx: u_idx,
-        url: url,
-        depth: 0,
-        step: 0,
-        upload_type: upload_type,
-        u_idxList: alarmlist,
-      }
-      formData.append('file', orifile)
-      formData.append('doc', JSON.stringify(doc))
-      try {
-        axios({
-          method: 'POST',
-          url: '/doc/addDoc',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': `multipart/form-data; `,
-          },
-          data: formData,
-        }).then((res) => {
-          if (res.data == 2) {
-            alert('문서가 등록되었습니다.')
-            navigate(`/ws/${url}/docStorage`)
-          }
-          if (res.data != 2) {
-            alert('문서 등록에 실패하였습니다.')
-            navigate(`/ws/${url}/docStorage`)
-          }
-        })
-      } catch (error) {
-        console.error(error)
-      }
+      alert('입력하지 않은 항목이 있습니다. ex.제목/내용/라벨/파일/이미지/링크')
     }
   }
   //알림 전송할 u_idx List 생성

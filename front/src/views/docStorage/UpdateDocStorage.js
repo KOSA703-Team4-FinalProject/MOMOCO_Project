@@ -119,87 +119,91 @@ const UpdateDocStorage = (props) => {
 
   const SubmitHandler = (e) => {
     e.preventDefault()
-
-    if (upload_type === 'link') {
-      // 링크 등록시
-      const doc = {
-        idx: props.doc.idx,
-        nickname: nickname,
-        title: title,
-        content: content,
-        b_code: 3,
-        label: label,
-        u_idx: u_idx,
-        url: url,
-        depth: 0,
-        step: 0,
-        upload_type: upload_type,
-        ori_filename: link,
-        save_filename: link,
-        u_idxList: alarmlist,
-      }
-      console.log(doc)
-      try {
-        axios({
-          method: 'PUT',
-          url: '/doc/updateDocLink',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: doc,
-        }).then((res) => {
-          console.log(res.data)
-          if (res.data == 2) {
-            alert('문서가 수정되었습니다.')
-            setUpdateVisibleXL(!updatevisibleXL)
-          }
-          if (res.data != 2) {
-            alert('문서 수정에 실패하였습니다.')
-          }
-        })
-      } catch (error) {
-        console.error(error)
+    if (title != '' && content != '' && label != '') {
+      if (upload_type === 'link') {
+        // 링크 등록시
+        const doc = {
+          idx: props.doc.idx,
+          nickname: nickname,
+          title: title,
+          content: content,
+          b_code: 3,
+          label: label,
+          u_idx: u_idx,
+          url: url,
+          depth: 0,
+          step: 0,
+          upload_type: upload_type,
+          ori_filename: link,
+          save_filename: link,
+          u_idxList: alarmlist,
+        }
+        console.log(doc)
+        try {
+          axios({
+            method: 'POST',
+            url: '/doc/updateDocLink',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: doc,
+          }).then((res) => {
+            console.log(res.data)
+            if (res.data == 2) {
+              alert('문서가 수정되었습니다.')
+              setUpdateVisibleXL(!updatevisibleXL)
+            }
+            if (res.data != 2) {
+              alert('문서 수정에 실패하였습니다.')
+            }
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        // 파일, 이미지 등록시
+        const formData = new FormData()
+        const doc = {
+          idx: props.doc.idx,
+          nickname: nickname,
+          title: title,
+          content: content,
+          b_code: 3,
+          label: label,
+          u_idx: u_idx,
+          url: url,
+          depth: 0,
+          step: 0,
+          upload_type: upload_type,
+          u_idxList: alarmlist,
+        }
+        formData.append('file', orifile)
+        formData.append('doc', JSON.stringify(doc))
+        try {
+          axios({
+            method: 'POST',
+            url: '/doc/updateDoc',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': `multipart/form-data; `,
+            },
+            data: formData,
+          }).then((res) => {
+            console.log(res.data)
+            if (res.data == 1) {
+              alert('문서가 수정되었습니다.')
+              setUpdateVisibleXL(!updatevisibleXL)
+            }
+            if (res.data != 1) {
+              alert('문서 수정에 실패하였습니다.')
+            }
+          })
+        } catch (error) {
+          console.error(error)
+        }
       }
     } else {
-      // 파일, 이미지 등록시
-      const formData = new FormData()
-      const doc = {
-        idx: props.doc.idx,
-        nickname: nickname,
-        title: title,
-        content: content,
-        b_code: 3,
-        label: label,
-        u_idx: u_idx,
-        url: url,
-        depth: 0,
-        step: 0,
-        upload_type: upload_type,
-        u_idxList: alarmlist,
-      }
-      formData.append('file', orifile)
-      formData.append('doc', JSON.stringify(doc))
-      try {
-        axios({
-          method: 'PUT',
-          url: '/doc/updateDoc',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': `multipart/form-data; `,
-          },
-          data: formData,
-        }).then((res) => {
-          console.log(res.data)
-          if (res.data == 2) {
-            alert('문서가 수정되었습니다.')
-          }
-          if (res.data != 2) {
-            alert('문서 수정에 실패하였습니다.')
-          }
-        })
-      } catch (error) {
-        console.error(error)
-      }
+      alert('입력하지 않은 항목이 있습니다. ex.알림대상/제목/내용/라벨/파일/이미지/링크')
     }
   }
   //알림 전송할 u_idx List 생성
@@ -328,7 +332,7 @@ const UpdateDocStorage = (props) => {
                 <Editor
                   onEditorChange={EditorHandler}
                   initialValue={props.doc.content}
-                  value={content.content}
+                  value={content}
                   id="tinyEditor"
                   apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
                   init={{

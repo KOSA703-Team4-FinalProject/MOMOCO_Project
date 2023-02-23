@@ -31,7 +31,7 @@ public class BoardSerivce {
 			
 			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
 			reboard = boarddao.getBoardByTitle(board);
-			
+			System.out.println("reboardgetbytitle : " + reboard);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

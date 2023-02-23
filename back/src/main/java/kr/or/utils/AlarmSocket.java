@@ -43,8 +43,9 @@ public class AlarmSocket {
 	// 알림 생성
 	public void sendAlarm(Board board, String[] u_idx) {
 		// 알람에 전달할 객체
+		System.out.println("board : ---" + board);
 		Board reboard = boardservice.getBoardByTitle(board);
-
+		System.out.println("reboard : ---" + reboard);
 		Alarm alarm = new Alarm();
 		alarm.setIdx(reboard.getIdx());
 		alarm.setContent("(WS: " + board.getUrl() + ") " + reboard.getNickname() + "님께서 " + reboard.getTitle() + " 글을 "
