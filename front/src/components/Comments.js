@@ -87,6 +87,11 @@ const Comments = (props) => {
 
   //댓글 작성
   ////////////////////////////////////전체리스트
+  const onChangeHandler = (e) => {
+    console.log(e.target.value)
+    setComment(e.target.value)
+  }
+
   const commentsend = () => {
     const write = {
       url: params.url,
@@ -95,6 +100,7 @@ const Comments = (props) => {
       nickname: login.nickname,
       idx: props.idx,
     }
+    console.log(write.content)
     axios({
       method: 'POST',
       url: '/comment/commentwrite',
