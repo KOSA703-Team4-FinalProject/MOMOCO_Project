@@ -25,6 +25,7 @@ public class CommonBoard extends Board {
 	
 	private String u_idxList;      //메일 전달할 유저 식별키 리스트
 	
-	
+	private String label;
+	private String style;
 	
 }

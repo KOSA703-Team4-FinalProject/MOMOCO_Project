@@ -7,16 +7,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 전체 일정 public List<Kanban> getKanban(String url) -->
 	<select id="getKanban" parameterType="String"
 		resultType="kr.or.vo.Kanban">
-		select b.idx, title, content, to_char(w_date, 'YYYY-MM-DD')
-		as w_date, nickname, b_code, label, u_idx, b_idx, issue, side, s_idx,
-		s_name
-		from board_${url} b join (select b_idx, issue, side, idx,
-		s.s_idx, s_name
-		from kanban_${url} k right join status_${url} s
-		on
-		k.s_idx = s.s_idx) a
-		on b.idx = a.idx
-		order by a.side
+		select style, l.label, idx, title, content, w_date, nickname, b_code, u_idx, b_idx, issue, side, s_idx, s_name
+		from label_${url} l right join (select b.idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, label, u_idx, b_idx, issue, side, s_idx, s_name
+                        		from board_${url} b join (select b_idx, issue, side, idx, s.s_idx, s_name
+                                						  from kanban_${url} k right join status_${url} s on k.s_idx = s.s_idx) a on b.idx = a.idx) aa
+		on l.label = aa.label 
+		order by side
 	</select>
 
 	<!-- 칸반 아이템 모두 삭제시 리스트 불러옴 -->

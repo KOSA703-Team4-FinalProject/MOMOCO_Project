@@ -15,9 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.dao.CommonBoardDao;
 import kr.or.dao.DocDao;
+import kr.or.vo.Board;
+import kr.or.vo.CommonBoard;
 import kr.or.vo.Doc;
 
 @Service
@@ -76,6 +80,65 @@ public class DocService {
 		return result;
 	}
 	
+	@Transactional
+	public int updateDoc(Doc doc) {
+		int result = 0;
+	    try {
+	        Board board = new Board();
+	        board.setNickname(doc.getNickname());
+	        board.setTitle(doc.getTitle());
+	        board.setContent(doc.getContent());
+	        board.setLabel(doc.getLabel());
+	        board.setU_idx(doc.getU_idx());
+	        
+	        DocDao docdao = sqlsession.getMapper(DocDao.class);
+	        result = docdao.updateDoc(doc);
+	        result = docdao.updateBoard(doc);
+
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
+	@Transactional
+	public int updateDocLink(Doc doc) {
+		int result = 0;
+	    try {
+	        Board board = new Board();
+	        board.setNickname(doc.getNickname());
+	        board.setTitle(doc.getTitle());
+	        board.setContent(doc.getContent());
+	        board.setLabel(doc.getLabel());
+	        board.setU_idx(doc.getU_idx());
+	        
+	        DocDao docdao = sqlsession.getMapper(DocDao.class);
+	        result = docdao.updateDocLink(doc);
+	        result = docdao.updateBoard(doc);
+
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
+	//삭제
+	public int deleteDoc(Doc doc) {
+		int result =0;
+		try {
+			DocDao docdao = sqlsession.getMapper(DocDao.class);
+			result = docdao.deleteDoc(doc);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	// 이미지 파일 보기
 	public void getImge(@RequestParam(value = "url") String url, @RequestParam(value = "content") String content,

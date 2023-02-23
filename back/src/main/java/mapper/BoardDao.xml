@@ -15,10 +15,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!--전체 보드 리스트 -->
 	<select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
-	  select a.idx, a.title, a.content, a.w_date,a.nickname, a.b_code , a.label, a.u_idx ,c.c_idx, c.idx,c.nickname,c.u_idx as u_idx1
-    from board_${url} a 
-    left join checked_${url} c on a.idx= c.idx 
-
+	SELECT *
+	FROM board_${url} a
+	left outer JOIN doc_storage_${url} b ON a.idx = b.idx
+	 left outer JOIN common_board_${url} c ON a.idx = c.idx
+	left outer JOIN board_status_${url} d ON a.idx = d.idx
+	left outer JOIN calendar_${url} e ON e.idx = a.idx
+	left outer JOIN kanban_${url} f ON f.idx = d.idx
+    left outer join label_${url} g on a.label = g.label
+    left outer JOIN member h on a.u_idx =h.u_idx 
     order by a.idx desc
 	</select>
 	

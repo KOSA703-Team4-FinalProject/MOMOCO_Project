@@ -8,17 +8,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 
 	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
-	
-
-	SELECT a.idx, a.nickname, a.title, a.content, a.w_date, a.b_code, a.label, a.u_idx, b.b_idx, b.ori_filename, 
-	b.save_filename, b.volume, b.filetype, b.ref, b.depth, b.step, b.thumb, d.profilephoto ,e.u_idx as u_idx1
-	FROM board_${url} a 
-	JOIN common_board_${url} b ON a.idx = b.idx 
-	JOIN member d ON d.u_idx = a.u_idx 
-	left JOIN checked_${url} e ON e.idx = a.idx 
-	WHERE a.b_code = 5 AND a.u_idx = #{u_idx}
-	ORDER BY b.b_idx DESC
-	
+	select style, idx, nickname, title, content, w_date, b_code, l.label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto
+			from label_${url} l right join (select idx, m.nickname, title, content, w_date, b_code, label, m.u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto
+            from member m join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb
+                                from board_${url} b join common_board_${url} c
+                               on b.idx = c.idx) a
+            				   on m.u_idx = a.u_idx)aa
+			on l.label = aa.label
 	</select>
 	
    <!-- 글읽기-->
