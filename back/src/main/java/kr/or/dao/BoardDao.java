@@ -24,5 +24,8 @@ public interface BoardDao {
 	
 	//전체 최신 글 4개 출럭
 	public List<Board> getNewBoardList(String url) throws ClassNotFoundException, SQLException;
+	
+	//안읽은 게시글 4개 출력
+	public List<Board> getNotReadBoardList(String url, int u_idx) throws ClassNotFoundException, SQLException;
 
 }

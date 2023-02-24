@@ -116,4 +116,21 @@ public class BoardSerivce {
 		
 		return boardlist;
 	}
+	
+	//안읽은 데이터 4개 불러오기
+	public List<Board> getNotReadBoardList(String url, int u_idx) {
+List<Board> boardlist = new ArrayList<Board>();
+		
+		try {
+			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
+			boardlist = boarddao.getNotReadBoardList(url, u_idx);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return boardlist;
+	}
+	
 }
