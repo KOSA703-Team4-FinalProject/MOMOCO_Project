@@ -23,11 +23,10 @@ export const AppSidebarNav = ({ items }) => {
     )
   }
   const navItem = (item, index) => {
-
     const { component, name, badge, icon, ...rest } = item
     const Component = component
 
-    const re = {...rest}
+    const re = { ...rest }
     rest.to = '/ws/' + params.url + re.to
 
     return (

@@ -2,8 +2,23 @@
 	box-sizing:border-box;
  }
  body{
+	
 	font-family:Arial;
  }
+ .wrapper .body{
+	background:#D6E4E5;
+ }
+ 
+ .sidebar {
+	background: #497174;
+	font-size: 20px;
+	font-weight: bold;
+ }
+ 
+ .card {
+	background:rgb(255, 255, 255);
+ }
+
  .container{
 	width:750px;
 	height:800px;

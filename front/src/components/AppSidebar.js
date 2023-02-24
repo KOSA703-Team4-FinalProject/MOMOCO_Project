@@ -29,9 +29,9 @@ const AppSidebar = () => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
     >
-      <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img src={whitemomoco} width="45px" className='me-2' />
-        <h2>momoco</h2>
+      <CSidebarBrand className="d-none d-md-flex my-1 py-2" to="/">
+        <img src={whitemomoco} width="55px" className='me-3' />
+        <h1 className='mt-1'>momoco</h1>
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
