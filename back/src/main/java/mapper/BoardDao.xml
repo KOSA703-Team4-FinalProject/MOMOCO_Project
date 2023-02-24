@@ -19,14 +19,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!--전체 보드 리스트 -->
 	<select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
-	select c_idx, a2.idx, title, content, w_date, a2.nickname, b_code, label, style, a2.u_idx, profilephoto
+	select c_idx, s1.u_idx as u_idx1, a2.idx, title, content, w_date, a2.nickname, b_code, label, style, a2.u_idx, profilephoto
 	from (select c_idx, idx, u_idx 
-      		from checked_${url}
-      		where u_idx = #{u_idx}) s1 full outer join (select idx, title, content, w_date, a1.nickname, b_code, label, style, a1.u_idx, profilephoto
-                                                		from member m join (select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, b.label, style, u_idx
-                                                                    		from board_${url} b left join label_${url} l 
-                                                                    		on b.label = l.label) a1
-                                                		on m.u_idx = a1.u_idx) a2
+      	from checked_${url}
+      	where u_idx = #{u_idx}) s1 full outer join (select idx, title, content, w_date, a1.nickname, b_code, label, style, a1.u_idx, profilephoto
+                                                	from member m join (select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, b.label, style, u_idx
+                                                                    from board_${url} b left join label_${url} l 
+                                                                    on b.label = l.label) a1
+                                                	on m.u_idx = a1.u_idx) a2
 	on s1.idx = a2.idx
 	order by a2.idx desc
 	</select>
