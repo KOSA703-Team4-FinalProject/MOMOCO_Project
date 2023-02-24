@@ -263,16 +263,7 @@ public class CommonBoardController {
 
 		return result;
 	}
-	// 체크 리스트
-		@RequestMapping(value = "/checklist", method = RequestMethod.POST)
-		public List<CommonBoard> getCheck(@RequestBody CommonBoard url) {
-
-			List<CommonBoard> boardlist = new ArrayList<CommonBoard>();
-
-			boardlist = commonboardservice.getCheck(url);
-
-			return boardlist;
-		}
+	
 
 
 }

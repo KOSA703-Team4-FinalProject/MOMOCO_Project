@@ -131,11 +131,16 @@ const replyBoardWrite = () => {
   const [ref, setRef] = useState(parseInt(params.b_idx))
   const [step, setStep] = useState(parseInt(params.step))
   const [depth, setDepth] = useState(parseInt(params.depth))
+
   //답글 작성
   const replysend = () => {
-    if (parseInt(params.b_idx) == parseInt(params.ref)) {
-      setStep(step + 1)
-      setDepth(depth + 1)
+    // 이전 step과 depth 값 저장
+    const prevStep = step
+    const prevDepth = depth
+
+    if (parseInt(params.b_idx) === parseInt(params.ref)) {
+      setStep(prevStep + 1)
+      setDepth(prevDepth + 1)
     }
 
     const write = {
@@ -147,11 +152,10 @@ const replyBoardWrite = () => {
       u_idx: login.u_idx,
       u_idxList: alarmList,
       label: '.',
-      step: step,
+      step: prevStep + 1,
       ref: ref,
-      depth: depth,
+      depth: prevDepth + 1,
     }
-    //계층형 만들기
 
     console.log(write.url)
     const fd = new FormData()
@@ -164,7 +168,6 @@ const replyBoardWrite = () => {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': `multipart/form-data; `,
       },
-
       data: fd,
     }).then((res) => {
       setBoardcontent(res.data)

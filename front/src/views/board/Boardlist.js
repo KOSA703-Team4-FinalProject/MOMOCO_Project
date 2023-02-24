@@ -18,8 +18,7 @@ import { PRIMARY_KEY } from '../../oauth'
 import $, { data, param } from 'jquery'
 import Pagination from 'react-js-pagination'
 import styled from 'styled-components'
-import { loginaxios } from '../login/backlogin'
-import { TbChecklist } from 'react-icons/tb'
+import { FiCornerDownRight } from 'react-icons/fi'
 const writedate = {}
 const title = {}
 const context = {}
@@ -191,53 +190,57 @@ const Boardlist = () => {
                     </Link>
                   </div>
                 </div>
-
                 {/* 게시판 목록 시작 */}
                 {boardlist
+                  .sort((a, b) => a.b_idx - b.b_idx) // b_idx 기준으로 정렬
                   .slice(items * (page - 1), items * (page - 1) + items)
                   .map((data, key) => {
                     const checkIcon = login.u_idx === data.u_idx1 ? <CIcon icon={cilCheck} /> : null
+                    const indent = { marginLeft: `${data.depth * 15}px` } // 들여쓰기 스타일
+                    const indentIcon = data.depth > 0 ? <FiCornerDownRight size="12px" /> : null // 들여쓰기 아이콘
 
                     return (
-                      <CCard
-                        className="p-3 mt-3"
-                        key={data.idx}
-                        onClick={() => {
-                          navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
-                          checked()
-                        }}
-                      >
-                        <div className="col-md-12">
-                          <div className="row">
-                            <div className="col-md-1" style={number}>
-                              {checkIcon}
-                              <strong>{data.b_idx}.</strong>
-                            </div>
-                            <div className="col-md-8">
-                              <div className="row">
-                                <div className="col-md-12" style={title}>
-                                  <strong> {data.title}</strong>
-                                </div>
-                                <div className="col-md-12" style={context}>
-                                  {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
+                      <div key={data.idx} style={indent}>
+                        {indentIcon}
+                        <CCard
+                          className="p-3 mt-3"
+                          onClick={() => {
+                            navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+                            checked()
+                          }}
+                        >
+                          <div className="col-md-12">
+                            <div className="row">
+                              <div className="col-md-1" style={number}>
+                                {checkIcon}
+                                <strong>{data.b_idx}.</strong>
+                              </div>
+                              <div className="col-md-4">
+                                <div className="row">
+                                  <div className="col-md-3" style={title}>
+                                    <strong> {data.title}</strong>
+                                  </div>
+                                  <div className="col-md-12" style={context}>
+                                    {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="col-md-3">
-                              <div className="col-md-12" align="end">
-                                <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
-                                {data.nickname}
-                                <CFormInput type="hidden" id="nickname" value={data.nickname} />
-                                <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
-                              </div>
+                              <div className="col-md-7">
+                                <div className="col-md-12" align="end">
+                                  <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
+                                  {data.nickname}
+                                  <CFormInput type="hidden" id="nickname" value={data.nickname} />
+                                  <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
+                                </div>
 
-                              <div className="col-md-12" align="end" style={writedate}>
-                                {data.w_date}
+                                <div className="col-md-12" align="end" style={writedate}>
+                                  {data.w_date}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </CCard>
+                        </CCard>
+                      </div>
                     )
                   })}
                 {/* 게시판 목록 끝 */}
