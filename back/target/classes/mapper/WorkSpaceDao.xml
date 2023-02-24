@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    
    <!-- 워크스페이스 전체 조회 public List<WorkSpace> getWorkSpace() -->
       <select id="getWorkSpace" parameterType="int" resultType="kr.or.vo.WorkSpace">
-         select url, space_name, to_char(start_date, 'YYYY/MM/DD') AS start_date, to_char(end_date, 'YYYY/MM/DD') AS end_date, linked_repo, admin 
+         select url, space_name, to_char(start_date, 'YYYY/MM/DD') AS start_date, to_char(end_date, 'YYYY/MM/DD') AS end_date, linked_repo, admin, del_date 
          from workspace 
       where url in (select url from workspace_user where u_idx = #{u_idx} )
       </select>
@@ -72,9 +72,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          select url, space_name,admin from workspace where admin = ${u_idx}
       </select>
       
-      <!-- 워크스페이스 삭제 DeleteWorkSpace -->
+      <!-- 워크스페이스 유저 삭제 DeleteWorkSpace -->
       <delete id ="DeleteWorkSpace" parameterType = "kr.or.vo.WorkSpace">
-         delete from workspace where url = #{url}
+         delete from workspace_user where url = #{url} and u_idx = ${u_idx}
       </delete>
-   
+      
+      <!-- 워크스페이스 삭제 DeleteWorkSpace-->
+	<update id ="DeleteSpace"  parameterType = "kr.or.vo.WorkSpace">
+	 update workspace set DEL_DATE = sysdate + 3 where url = #{url}
+	</update>
+	
+	<!-- 워크스페이스 수정 RestoreWorkSpace -->
+	<update id ="RestoreWorkSpace"  parameterType = "kr.or.vo.WorkSpace">
+	 UPDATE workspace SET DEL_DATE = TO_DATE('1900-09-09', 'YYYY-MM-DD') where url = #{url}
+	</update>
+   	
+       
 </mapper>

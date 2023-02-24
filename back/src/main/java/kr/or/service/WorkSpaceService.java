@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.dao.KanbanDao;
 import kr.or.dao.WorkSpaceDao;
 import kr.or.dao.WorkSpaceUserDao;
 import kr.or.vo.Member;
@@ -240,13 +241,15 @@ public class WorkSpaceService {
 	}
 
 	// 워크스페이스 삭제
-	public int DeleteWorkSpace(String url) {
+	public int DeleteWorkSpace(String url, int u_idx) {
 		int result = 0;
-		
-		System.out.println("서비스");
+		System.out.println("워크스페이스 유저 삭제 서비스");
+		System.out.println(url);
+		System.out.println(u_idx);
+	      
 		try {
 			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
-			result = workspacedao.DeleteWorkSpace(url);
+			result = workspacedao.DeleteWorkSpace(url,u_idx);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -257,7 +260,37 @@ public class WorkSpaceService {
 		System.out.println(result);
 		return result;
 	}
+	
+	// 워크 스페이스 삭제
+	public int DeleteSpace(WorkSpace workspace) {
+		int result = 0;
 
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			result = workspacedao.DeleteSpace(workspace);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public int RestoreWorkSpace(WorkSpace workspace) {
+		int result = 0;
+
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			result = workspacedao.RestoreWorkSpace(workspace);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
 	
 	
 }

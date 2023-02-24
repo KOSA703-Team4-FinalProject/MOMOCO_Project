@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import {
-  CCardBody,
-  CCardGroup,
-  CCol,
-  CForm,
-  CRow,
-} from '@coreui/react'
+import { CCard, CCardBody, CCardGroup, CCol, CForm, CRow } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
 import RegAndLoginHeader from 'src/components/RegAndLoginHeader'
@@ -50,31 +44,33 @@ const workSpaceList = () => {
         <CRow>
           <CCol md={12}>
             <CCardGroup>
-              <CCardBody>
-                <CForm>
-                  <h2>
-                    <strong className="text-light">
-                      <CRow>
-                        <CCol xs="auto" className="me-auto">
-                          {params.nickname}`s WorkSpace{' '}
-                        </CCol>
-                        <CCol xs="auto" className="me-auto">
-                          <a
-                            style={{ color: 'white', fontSize: '20px' }}
-                            href="https://github.com/settings/profile"
-                          >
-                            {'    '}
-                            <CIcon icon={icon.cibGithub} height={24}></CIcon>
-                            settings
-                          </a>
-                        </CCol>
-                      </CRow>
-                    </strong>
-                  </h2>
-                  <br />
-                  <WorkSpaceListItem width="600px" />
-                </CForm>
-              </CCardBody>
+              <CCard className="my-5">
+                <CCardBody>
+                  <CForm>
+                    <h2>
+                      <strong>
+                        <CRow>
+                          <CCol xs="auto" className="me-auto ps-4">
+                            {params.nickname}`s WorkSpace{' '}
+                          </CCol>
+                          <CCol xs="auto" className="me-auto">
+                            <a
+                              style={{ color: 'black', fontSize: '20px' }}
+                              href="https://github.com/settings/profile"
+                            >
+                              {'    '}
+                              <CIcon icon={icon.cibGithub} height={24}></CIcon>
+                              깃허브 마이페이지
+                            </a>
+                          </CCol>
+                        </CRow>
+                      </strong>
+                    </h2>
+                    <br />
+                    <WorkSpaceListItem width="600px" />
+                  </CForm>
+                </CCardBody>
+              </CCard>
             </CCardGroup>
           </CCol>
         </CRow>
