@@ -202,9 +202,9 @@ const docStorage = (props) => {
         <CCardBody>
           <CRow>
             <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-3">
-                문서저장소
-              </h4>
+              <h3 id="traffic" className="card-title mb-3 m-2">
+                <strong>문서저장소</strong>
+              </h3>
             </CCol>
             <CCol sm={7} align="end" className="d-none d-md-block">
               <CButton

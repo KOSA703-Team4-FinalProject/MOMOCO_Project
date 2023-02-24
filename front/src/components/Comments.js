@@ -52,7 +52,7 @@ const Comments = (props) => {
 
   const [profile, setProfile] = useState({}) //프로필
   const [profileMoal, setProfileModal] = useState(false)
-  
+
   const myparams = {
     url: params.url,
     idx: props.idx,
@@ -198,9 +198,8 @@ const Comments = (props) => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      params: {u_idx: targ},
-    }).then((res)=>{
-
+      params: { u_idx: targ },
+    }).then((res) => {
       setProfile({
         u_idx: res.data.u_idx,
         profilephoto: res.data.profilephoto,
@@ -218,8 +217,8 @@ const Comments = (props) => {
         <CCol className="col-md-12 px-3 py-3">
           <CCol className="row">
             <CCol className="col-md-10 px-4">
-              {/* <CAvatar className="ms-6" src={login.profilephoto} /> */}
-              <strong>{login.nickname}</strong>
+              <CAvatar className="ms-6" src={login.profilephoto} />
+              &nbsp;&nbsp;<strong>{login.nickname}</strong>
             </CCol>
             <CCol className="col-md-2 px-4"></CCol>
           </CCol>
@@ -263,8 +262,12 @@ const Comments = (props) => {
               <CCard className="mt-3 px-4 mb-3" color="light">
                 <CCol className="col-md-12">
                   <CCol className="row">
-                    <CCol className="col-md-10 px-2 py-3 profile" onClick={clickprofile} value={data.u_idx}>
-                      <CAvatar className="ms-6" src={data.profilephoto}   />
+                    <CCol
+                      className="col-md-10 px-2 py-3 profile"
+                      onClick={clickprofile}
+                      value={data.u_idx}
+                    >
+                      <CAvatar className="ms-6" src={data.profilephoto} />
                       &nbsp;&nbsp;<strong>{data.nickname}</strong>
                     </CCol>
                   </CCol>
