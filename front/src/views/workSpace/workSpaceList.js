@@ -45,7 +45,7 @@ const workSpaceList = () => {
           <CCol md={12}>
             <CCardGroup>
               <CCard className="my-5">
-                <CCardBody>
+                <CCardBody align="center">
                   <CForm>
                     <h2>
                       <strong>

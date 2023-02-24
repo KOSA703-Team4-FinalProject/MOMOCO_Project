@@ -137,17 +137,63 @@ const Kanban = () => {
       url: url,
     }
 
-    axios({
-      method: 'POST',
-      url: '/api/kanban/addKanbanColumn',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      data: reqData,
-    }).then((res) => {
-      console.log(res.data)
-      setKanbanlist('2')
-    })
+    if (!reqData.s_name) {
+      Swal.fire({
+        icon: 'warning', // 여기다가 아이콘 종류를 쓰면 됩니다.
+        title: '컬럼명을 입력해주세요',
+      })
+    } else {
+      Swal.fire({
+        title: '컬럼을 등록하시겠습니까?',
+        text: '',
+        icon: 'warning',
+
+        showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+        confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+        cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+        confirmButtonText: '등록', // confirm 버튼 텍스트 지정
+        cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+        reverseButtons: true, // 버튼 순서 거꾸로
+      }).then((result) => {
+        // 만약 Promise리턴을 받으면,
+        if (result.isConfirmed) {
+          // 만약 모달창에서 confirm 버튼을 눌렀다면
+          axios({
+            method: 'POST',
+            url: '/api/kanban/addKanbanColumn',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: reqData,
+          }).then((res) => {
+            console.log(res)
+            Swal.fire({
+              icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+              title: '등록이 완료 되었습니다',
+            })
+            setVisibleB(!visibleB)
+            getStatus()
+          })
+        } else {
+          Swal.fire({
+            icon: 'error', // 여기다가 아이콘 종류를 쓰면 됩니다.
+            title: '취소되었습니다',
+          })
+        }
+      })
+    }
+    // axios({
+    //   method: 'POST',
+    //   url: '/api/kanban/addKanbanColumn',
+    //   headers: {
+    //     Authorization: `Bearer ${accessToken}`,
+    //   },
+    //   data: reqData,
+    // }).then((res) => {
+    //   console.log(res.data)
+    //   setKanbanlist('2')
+    // })
   }
 
   const getStatus = () => {
@@ -215,7 +261,7 @@ const Kanban = () => {
   }
 
   //github에서 이슈 불러오기
-  const loadIssue = (e) =>{
+  const loadIssue = (e) => {
     axios({
       method: 'GET',
       url: '/api/workspaceowner',
@@ -237,6 +283,9 @@ const Kanban = () => {
     const repos = data.linked_repo
     //레포지토리 주인
     const owner = data.owner
+
+    console.log(repos)
+    console.log(owner)
 
     octokit
       .request('GET /repos/{owner}/{repo}/issues', {
@@ -263,7 +312,7 @@ const Kanban = () => {
     console.log(targ)
 
     $('#kanbancontent').val(targ)
-    $('#kanbantitle').val("#"+num+" "+title)
+    $('#kanbantitle').val('#' + num + ' ' + title)
 
     setListView(false)
   }
@@ -300,12 +349,14 @@ const Kanban = () => {
             </CRow>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-2 col-form-label">
-                <strong>
-                  라벨 선택{' '}
+                <strong>라벨 선택 </strong>
+                {chooseLabel.label != '' ? (
                   <CButton color={chooseLabel.style} shape="rounded-pill" size="sm">
                     {chooseLabel.label}
                   </CButton>
-                </strong>
+                ) : (
+                  <strong>하세요</strong>
+                )}
               </CFormLabel>
               <CCol sm={10}>
                 <CCol className="mb-3">
@@ -411,27 +462,19 @@ const Kanban = () => {
                               </CFormLabel>
                               <br />
                               <br />
-                              제목
+                              컬럼명
                               <CFormInput
                                 type="text"
                                 id="addcolumntitle"
-                                placeholder="제목을 입력해주세요"
+                                placeholder="컬럼명을 입력해주세요"
                               />
                               <br />
                               <div align="end">
                                 <CButton
                                   className="me-2"
                                   variant="outline"
-                                  color="primary"
-                                  onClick={() => {
-                                    if (confirm('컬럼을 등록하시겠습니까?')) {
-                                      alert('등록을 완료했습니다.')
-                                      setVisibleB(!visibleB)
-                                      addColumn()
-                                    } else {
-                                      alert('취소했습니다.')
-                                    }
-                                  }}
+                                  color="success"
+                                  onClick={addColumn}
                                 >
                                   등록
                                 </CButton>
@@ -470,8 +513,15 @@ const Kanban = () => {
           <CModalBody>
             {commitsList.map((data) => {
               return (
-                <CCard key={data.id} className="my-3 p-3 issue" issueSrc={data.html_url} title={data.title} num={data.number} onClick={clickIssue}>
-                  <CCard className='p-2 mt-2'>
+                <CCard
+                  key={data.id}
+                  className="my-3 p-3 issue"
+                  issueSrc={data.html_url}
+                  title={data.title}
+                  num={data.number}
+                  onClick={clickIssue}
+                >
+                  <CCard className="p-2 mt-2">
                     <h5>
                       <strong>{data.title}</strong>
                     </h5>
