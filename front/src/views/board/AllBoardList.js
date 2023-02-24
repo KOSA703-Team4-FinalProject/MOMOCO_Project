@@ -233,7 +233,7 @@ const AllBoardList = () => {
                   <div className="col-md-9">
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'secondary', variant: 'outline' }}
                         id="btncheck2"
                         name="board"
                         autoComplete="off"
@@ -244,7 +244,7 @@ const AllBoardList = () => {
                         defaultChecked
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'secondary', variant: 'outline' }}
                         id="btncheck7"
                         name="board"
                         autoComplete="off"
@@ -253,7 +253,7 @@ const AllBoardList = () => {
                         onClick={handlenotcheck}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'secondary', variant: 'outline' }}
                         id="btncheck3"
                         name="board"
                         autoComplete="off"
@@ -263,7 +263,7 @@ const AllBoardList = () => {
                         onClick={handleClick}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'secondary', variant: 'outline' }}
                         id="btncheck4"
                         name="board"
                         autoComplete="off"
@@ -273,7 +273,7 @@ const AllBoardList = () => {
                         onClick={handleClick}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'secondary', variant: 'outline' }}
                         id="btncheck5"
                         name="board"
                         autoComplete="off"
@@ -283,7 +283,7 @@ const AllBoardList = () => {
                         onClick={handleClick}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'secondary', variant: 'outline' }}
                         id="btncheck6"
                         name="board"
                         autoComplete="off"

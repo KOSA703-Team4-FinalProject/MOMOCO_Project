@@ -35,6 +35,7 @@ import { useEffect } from 'react'
 import { Cookies } from 'react-cookie'
 import { IoChatboxOutline, IoChatboxEllipses } from 'react-icons/io5'
 import { useCallback } from 'react'
+import { fontSize } from '@mui/system'
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -120,8 +121,8 @@ const AppHeader = () => {
             {/* 워크스페이스 리스트 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-                <BsFillHouseDoorFill />
-                <strong> {params.url}</strong>
+                <BsFillHouseDoorFill className="mb-2" size={23} />
+                <strong style={{ fontSize: '25px' }}> {params.url}</strong>
               </CDropdownToggle>
               <CDropdownMenu>
                 <CRow className="mb-2 px-2">

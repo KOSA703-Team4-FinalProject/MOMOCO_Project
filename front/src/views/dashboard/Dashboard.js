@@ -2,6 +2,7 @@ import React from 'react'
 
 import {
   CAvatar,
+  CBadge,
   CButton,
   CButtonGroup,
   CCard,
@@ -17,9 +18,11 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CWidgetStatsF,
 } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
+
 import CIcon from '@coreui/icons-react'
 import {
   cibCcAmex,
@@ -42,7 +45,10 @@ import {
   cilPeople,
   cilUser,
   cilUserFemale,
+  cibGithub,
+  cilChartPie,
 } from '@coreui/icons'
+import { useParams } from 'react-router-dom'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import avatar2 from 'src/assets/images/avatars/2.jpg'
@@ -54,9 +60,14 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import { Link, Route, Routes } from 'react-router-dom'
+import { Icon } from '@mui/material'
+import { AiFillGithub } from 'react-icons/ai'
+import { BsGithub } from 'react-icons/bs'
+import momoco1 from '../../assets/images/momocologo.png'
 
 const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+  const login = JSON.parse(localStorage.getItem('login'))
 
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
@@ -181,136 +192,301 @@ const Dashboard = () => {
 
   return (
     <>
-    
-      <WidgetsDropdown />
       <CCard className="mb-4">
+        <CCardHeader className="pt-3 my-auto">
+          <h5>
+            <BsGithub size={25} />
+            <strong> 깃허브</strong>
+          </h5>
+        </CCardHeader>
         <CCardBody>
           <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                Traffic
-              </h4>
-              <div className="small text-medium-emphasis">January - July 2021</div>
+            <CCol>
+              <CCard>
+                <CCardHeader className="py-2 my-auto">
+                  <h6>
+                    <BsGithub size={20} />
+                    <strong> momoco(ws) 커밋 이력</strong>
+                  </h6>
+                </CCardHeader>
+                <CCardBody>
+                  <CCol xs="auto" className="me-auto">
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          {' '}
+                          Merge remote-tracking branch 'origin/JM'...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 모모코 탈퇴 만드는 중...</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 자유게시판 ....</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          {' '}
+                          230224 8시 46분 칸반 아이템 추가 오류...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 멤버 초대</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                  </CCol>
+                </CCardBody>
+              </CCard>
             </CCol>
-            <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
-                <CIcon icon={cilCloudDownload} />
-              </CButton>
-              <CButtonGroup className="float-end me-3">
-                {['Day', 'Month', 'Year'].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value}
-                    className="mx-0"
-                    active={value === 'Month'}
-                  >
-                    {value}
-                  </CButton>
-                ))}
-              </CButtonGroup>
+            <CCol>
+              <CCard>
+                <CCardHeader className="py-2 my-auto">
+                  <h6>
+                    <BsGithub size={20} />
+                    <strong> 미해결 issue List</strong>
+                  </h6>
+                </CCardHeader>
+                <CCardBody>
+                  <CCol xs="auto" className="me-auto">
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          {' '}
+                          Merge remote-tracking branch 'origin/JM'...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 모모코 탈퇴 만드는 중...</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 자유게시판 ....</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          {' '}
+                          230224 8시 46분 칸반 아이템 추가 오류...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 멤버 초대</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                  </CCol>
+                </CCardBody>
+              </CCard>
             </CCol>
           </CRow>
-          <CChartLine
-            style={{ height: '300px', marginTop: '40px' }}
-            data={{
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [
-                {
-                  label: 'My First dataset',
-                  backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                  borderColor: getStyle('--cui-info'),
-                  pointHoverBackgroundColor: getStyle('--cui-info'),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                  fill: true,
-                },
-                {
-                  label: 'My Second dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-success'),
-                  pointHoverBackgroundColor: getStyle('--cui-success'),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                },
-                {
-                  label: 'My Third dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-danger'),
-                  pointHoverBackgroundColor: getStyle('--cui-danger'),
-                  borderWidth: 1,
-                  borderDash: [8, 5],
-                  data: [65, 65, 65, 65, 65, 65, 65],
-                },
-              ],
-            }}
-            options={{
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    drawOnChartArea: false,
-                  },
-                },
-                y: {
-                  ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(250 / 5),
-                    max: 250,
-                  },
-                },
-              },
-              elements: {
-                line: {
-                  tension: 0.4,
-                },
-                point: {
-                  radius: 0,
-                  hitRadius: 10,
-                  hoverRadius: 4,
-                  hoverBorderWidth: 3,
-                },
-              },
-            }}
-          />
         </CCardBody>
-        <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">
-            {progressExample.map((item, index) => (
-              <CCol className="mb-sm-2 mb-0" key={index}>
-                <div className="text-medium-emphasis">{item.title}</div>
-                <strong>
-                  {item.value} ({item.percent}%)
-                </strong>
-                <CProgress thin className="mt-2" color={item.color} value={item.percent} />
-              </CCol>
-            ))}
-          </CRow>
-        </CCardFooter>
       </CCard>
 
-      <WidgetsBrand withCharts />
+      <CCard className="mb-4">
+        <CCardHeader className="pt-3 my-auto">
+          <h5>
+            <img src={momoco1} width="25px" />
+            <strong> momoco 게시판</strong>
+          </h5>
+        </CCardHeader>
+        <CCardBody>
+          <CRow>
+            <CCol>
+              <CCard>
+                <CCardHeader className="py-2 my-auto">
+                  <h6>
+                    <img src={momoco1} width="20px" />
+                    <strong> 새로운 전체 글 목록</strong>
+                  </h6>
+                </CCardHeader>
+                <CCardBody>
+                  <CCol xs="auto" className="me-auto">
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          <CBadge color="light" textColor="black">
+                            자유
+                          </CBadge>{' '}
+                          Merge remote-tracking branch ...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          <CBadge color="success">문서</CBadge> 테스트.............
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          <CBadge color="info">일정</CBadge> 자유게시판 ....
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          <CBadge color="danger">칸반</CBadge> 230224 8시 46분 칸반추가 오류...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          <CBadge color="light" textColor="black">
+                            자유{' '}
+                          </CBadge>
+                          멤버 초대
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                  </CCol>
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol>
+              <CCard>
+                <CCardHeader className="py-2 my-auto">
+                  <h6>
+                    <img src={momoco1} width="20px" />
+                    <strong> 확인 안한 글</strong>
+                  </h6>
+                </CCardHeader>
+                <CCardBody>
+                  <CCol xs="auto" className="me-auto">
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          {' '}
+                          Merge remote-tracking branch 'origin/JM'...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 모모코 탈퇴 만드는 중...</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 자유게시판 ....</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto">
+                          {' '}
+                          230224 8시 46분 칸반 아이템 추가 오류...
+                        </CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                    <CCard className="px-2 py-1">
+                      <CRow>
+                        <CCol className="col-md-1 my-auto">
+                          <CAvatar src={login.profilephoto} />
+                        </CCol>
+                        <CCol className="col-md-9 my-auto"> 멤버 초대</CCol>
+                        <CCol className="col-md-2 my-auto">09/12</CCol>
+                      </CRow>
+                    </CCard>
+                  </CCol>
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>
 
       <CRow>
         <CCol xs>
@@ -387,7 +563,8 @@ const Dashboard = () => {
                         <CIcon className="me-2" icon={item.icon} size="lg" />
                         <span>{item.title}</span>
                         <span className="ms-auto fw-semibold">
-                          {item.value}{' '}
+                          {item.value}
+                          {'asd '}
                           <span className="text-medium-emphasis small">({item.percent}%)</span>
                         </span>
                       </div>
@@ -400,63 +577,10 @@ const Dashboard = () => {
               </CRow>
 
               <br />
-
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
-                  <CTableRow>
-                    <CTableHeaderCell className="text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
-                    <CTableHeaderCell>User</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Country</CTableHeaderCell>
-                    <CTableHeaderCell>Usage</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Payment Method</CTableHeaderCell>
-                    <CTableHeaderCell>Activity</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {tableExample.map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={item.avatar.src} status={item.avatar.status} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{item.user.name}</div>
-                        <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered:{' '}
-                          {item.user.registered}
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="clearfix">
-                          <div className="float-start">
-                            <strong>{item.usage.value}%</strong>
-                          </div>
-                          <div className="float-end">
-                            <small className="text-medium-emphasis">{item.usage.period}</small>
-                          </div>
-                        </div>
-                        <CProgress thin color={item.usage.color} value={item.usage.value} />
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.payment.icon} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="small text-medium-emphasis">Last login</div>
-                        <strong>{item.activity}</strong>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
-    
     </>
   )
 }
