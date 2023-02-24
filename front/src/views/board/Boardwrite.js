@@ -140,7 +140,7 @@ const Boardwirte = () => {
   const send = () => {
     const write = {
       url: params.url,
-      title: $('#issue').val() + ' ' + $('#title').val(),
+      title: $('#title').val(),
       nickname: login.nickname,
       content: content,
       b_code: 5,

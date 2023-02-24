@@ -7,15 +7,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- commandBoard list-->
 	
 
-	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
-
-	SELECT a.idx, a.title,a.content, e.profilephoto , b.ref, b.step, b.depth, a.w_date, d.u_idx as u_idx1 ,b.b_idx,a.nickname,a.w_date
-	FROM board_${url} a
-	LEFT JOIN common_board_${url} b ON a.idx = b.idx
-	LEFT JOIN label_${url} c ON a.label = c.label
-	LEFT JOIN checked_${url} d ON d.idx = a.idx
-	LEFT JOIN member e ON e.u_idx = a.u_idx
-	where a.b_code =5
+	
+	<select id="getBoard" parameterType="int" resultType="kr.or.vo.CommonBoard">
+	select c.c_idx, c.idx as u_idx1, a2.idx, a2.nickname, title, content, w_date, b_code, label, a2.u_idx, style, b_idx, ori_filename, save_filename, ref, depth, step, thumb, filetype ,volume
+	from (select c_idx, u_idx, idx 
+        from checked_${url} 
+        where u_idx = #{u_idx}) c right join (select l.label, style, idx, nickname, title, content, w_date, b_code, u_idx, b_idx, ori_filename, save_filename, ref, depth, step, thumb, filetype ,volume 
+                                                from label_${url} l right join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, b_idx, ori_filename, save_filename, ref, depth, step, thumb, filetype ,volume 
+                                                                                from board_${url} b join common_board_${url} cb
+                                                                                on b.idx = cb.idx) a1
+                                                on l.label = a1.label) a2
+	on c.idx = a2.idx
+	order by a2.idx desc
 	</select>
 	
    <!-- 글읽기-->

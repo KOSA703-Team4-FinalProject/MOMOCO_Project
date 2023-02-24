@@ -28,6 +28,7 @@ public class Board {
 	private String type; 			//검색타입
 	private String keyword ; 		//검색내용
 	
+	private String style;			//라벨 스타일
 	
 	
 }
