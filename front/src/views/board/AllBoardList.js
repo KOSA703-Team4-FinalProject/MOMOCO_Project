@@ -1,5 +1,6 @@
 import { cilCaretLeft, cilCheck } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
+import { FcCheckmark } from 'react-icons/fc'
 import {
   CAvatar,
   CButton,
@@ -34,6 +35,9 @@ const check = {
 }
 const ccardsize = {
   height: '45px',
+}
+const common = {
+  color: '#D8CEF6',
 }
 const AllBoardList = () => {
   // AES알고리즘 사용 복호화
@@ -141,6 +145,26 @@ const AllBoardList = () => {
       setallBoardlist(res.data)
     })
   }
+
+  //읽음 테이블에 insert
+  const checked = (idx) => {
+    const check = {
+      idx: idx,
+      nickname: login.nickname,
+      u_idx: login.u_idx,
+      url: params.url,
+    }
+    console.log(check.idx, check.nickname, check.u_idx)
+    axios({
+      method: 'POST',
+      url: '/api/check/add',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: check,
+    }).then((res) => {})
+  }
+
   return (
     <>
       <CCard className="mb-4 p-3">
@@ -193,14 +217,6 @@ const AllBoardList = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
-                        id="btncheck1"
-                        autoComplete="off"
-                        value={1}
-                        label="대시보드"
-                        onClick={handleClick}
-                      />
-                      <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck2"
                         autoComplete="off"
                         label="전체보기"
@@ -239,13 +255,6 @@ const AllBoardList = () => {
                         label="칸반보드"
                         onClick={handleClick}
                       />
-                      <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
-                        id="btncheck7"
-                        autoComplete="off"
-                        label="미확인글"
-                        onClick={handleClick}
-                      />
                     </CButtonGroup>
                   </div>
                   <div className="col-md-3" align="right"></div>
@@ -268,21 +277,45 @@ const AllBoardList = () => {
                         } else if (data.b_code === 6) {
                           navigate(`/ws/${params.url}/kanban`)
                         }
+                        checked(data.idx)
                       }}
                     >
                       <div className="col-md-12">
                         <div className="row">
                           <div className="col-md-1" style={number}>
-                            {login.u_idx === data.u_idx1 ? <CIcon icon={cilCheck} /> : null}
+                            {login.u_idx === data.u_idx1 ? <FcCheckmark /> : null}
                             <CFormInput type="hidden" id="idx" value={data.idx} />
                             <strong>{data.idx}.</strong>
                           </div>
                           <div className="col-md-8">
                             <div className="row">
-                              <div className="col-md-12">
-                                <strong> {data.title}</strong>
+                              <div className="col-md-4">
+                                &nbsp;<strong> {data.title}</strong>
+                                <div className="col-md-8" align="left">
+                                  {data.b_code === 5 && (
+                                    <CButton color="light" shape="rounded-pill" size="sm">
+                                      자유게시판
+                                    </CButton>
+                                  )}
+                                  {data.b_code === 3 && (
+                                    <CButton color="light" shape="rounded-pill" size="sm">
+                                      문서저장소
+                                    </CButton>
+                                  )}
+                                  {data.b_code === 4 && (
+                                    <CButton color="light" shape="rounded-pill" size="sm">
+                                      캘린더
+                                    </CButton>
+                                  )}
+                                  {data.b_code === 6 && (
+                                    <CButton color="light" shape="rounded-pill" size="sm">
+                                      칸반보드
+                                    </CButton>
+                                  )}
+                                </div>
                               </div>
                               <div className="col-md-12">
+                                &nbsp;{' '}
                                 {data.content ? data.content.replace(/(<([^>]+)>)/gi, '') : null}
                               </div>
                             </div>

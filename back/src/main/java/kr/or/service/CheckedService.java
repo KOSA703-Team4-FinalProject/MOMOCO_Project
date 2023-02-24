@@ -28,7 +28,7 @@ public class CheckedService {
 	  int result = 0;
 	  try {
 	    CheckedDao checkeddao = sqlsession.getMapper(CheckedDao.class);
-	    Integer readCount = checkeddao.getread(checked.getIdx(), checked.getU_idx() ,checked.getUrl());
+	    Integer readCount = checkeddao.getread(checked);
 	    if (readCount == null || readCount < 1) {
 	      result = checkeddao.addChecked(checked);
 	    }
@@ -39,6 +39,7 @@ public class CheckedService {
 	  }
 	  return result;
 	}
+
 	
 
 	

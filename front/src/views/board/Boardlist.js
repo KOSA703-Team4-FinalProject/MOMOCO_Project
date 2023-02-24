@@ -1,5 +1,6 @@
-import { cilCheck } from '@coreui/icons'
+import { ImCheckmark } from 'react-icons/im'
 import CIcon from '@coreui/icons-react'
+import { FcCheckmark } from 'react-icons/fc'
 import {
   CAvatar,
   CButton,
@@ -19,6 +20,7 @@ import $, { data } from 'jquery'
 import Pagination from 'react-js-pagination'
 import styled from 'styled-components'
 import { FiCornerDownRight } from 'react-icons/fi'
+import { style } from '@mui/system'
 const writedate = {}
 const title = {}
 const context = {}
@@ -101,9 +103,9 @@ const Boardlist = () => {
   }
 
   //읽음 테이블에 insert
-  const checked = () => {
+  const checked = (idx) => {
     const check = {
-      idx: $('#idx').val(),
+      idx: idx,
       nickname: login.nickname,
       u_idx: login.u_idx,
       url: params.url,
@@ -183,55 +185,59 @@ const Boardlist = () => {
                 </div>
                 {/* 게시판 목록 시작 */}
                 {boardlist
-                  .sort((a, b) => a.b_idx - b.b_idx) // b_idx 기준으로 정렬
+                  .sort((a, b) => a.b_idx - b.b_idx)
                   .slice(items * (page - 1), items * (page - 1) + items)
                   .map((data, key) => {
-                    const checkIcon = login.u_idx === data.u_idx1 ? <CIcon icon={cilCheck} /> : null
-                    const indent = { marginLeft: `${data.depth * 15}px` } // 들여쓰기 스타일
-                    const indentIcon = data.depth > 0 ? <FiCornerDownRight size="12px" /> : null // 들여쓰기 아이콘
+                    const checkIcon = login.u_idx === data.u_idx1 ? <FcCheckmark /> : null
+                    const indent = {
+                      marginLeft: `${data.depth * 50}px`,
+                    }
+                    const cardStyle =
+                      data.depth > 0 ? { ...indent, backgroundColor: '#f5f5f5' } : indent
+                    const cornerIcon = data.depth > 0 ? <FiCornerDownRight /> : null
 
                     return (
-                      <div key={data.idx} style={indent}>
-                        {indentIcon}
-                        <CCard
-                          className="p-3 mt-3"
-                          onClick={() => {
-                            navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
-                            checked()
-                          }}
-                        >
-                          <div className="col-md-12">
-                            <div className="row">
-                              <div className="col-md-1" style={number}>
-                                {checkIcon}
-                                <strong>{data.b_idx}.</strong>
-                              </div>
-                              <div className="col-md-4">
-                                <div className="row">
-                                  <div className="col-md-3" style={title}>
-                                    <strong> {data.title}</strong>
-                                  </div>
-                                  <div className="col-md-12" style={context}>
-                                    {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
-                                  </div>
+                      <CCard
+                        className="p-3 mt-3"
+                        key={data.idx}
+                        style={cardStyle}
+                        onClick={() => {
+                          navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
+                          checked()
+                        }}
+                      >
+                        <div className="col-md-12">
+                          <div className="row">
+                            <div className="col-md-1" style={number} align="center">
+                              {checkIcon}
+                              <strong>{data.b_idx}.</strong>
+                            </div>
+                            <div className="col-md-7" align="left">
+                              <div className="row">
+                                <div className="col-md-12" style={title}>
+                                  {cornerIcon}
+                                  <strong> {data.title}</strong>
                                 </div>
-                              </div>
-                              <div className="col-md-7">
-                                <div className="col-md-12" align="end">
-                                  <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
-                                  {data.nickname}
-                                  <CFormInput type="hidden" id="nickname" value={data.nickname} />
-                                  <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
-                                </div>
-
-                                <div className="col-md-12" align="end" style={writedate}>
-                                  {data.w_date}
+                                <div className="col-md-12" style={context}>
+                                  {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
                                 </div>
                               </div>
                             </div>
+                            <div className="col-md-4">
+                              <div className="col-md-12" align="end">
+                                <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
+                                {data.nickname}
+                                <CFormInput type="hidden" id="nickname" value={data.nickname} />
+                                <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
+                              </div>
+
+                              <div className="col-md-12" align="end" style={writedate}>
+                                {data.w_date}
+                              </div>
+                            </div>
                           </div>
-                        </CCard>
-                      </div>
+                        </div>
+                      </CCard>
                     )
                   })}
                 {/* 게시판 목록 끝 */}

@@ -8,14 +8,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 
 	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
-	select style, idx, nickname, title, content, w_date, b_code, l.label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto ,b_idx 
-	from label_${url} l right join (select idx, m.nickname, title, content, w_date, b_code, label, m.u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto, b_idx
-                                from member m join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, b_idx
-                                                    from board_${url} b join common_board_${url} c
-                                                    on b.idx = c.idx) a
-                                on m.u_idx = a.u_idx)aa
-	on l.label = aa.label
-	order by b_idx asc
+
+	SELECT a.idx, a.title,a.content, e.profilephoto , b.ref, b.step, b.depth, a.w_date, d.u_idx as u_idx1 ,b.b_idx,a.nickname,a.w_date
+	FROM board_${url} a
+	LEFT JOIN common_board_${url} b ON a.idx = b.idx
+	LEFT JOIN label_${url} c ON a.label = c.label
+	LEFT JOIN checked_${url} d ON d.idx = a.idx
+	LEFT JOIN member e ON e.u_idx = a.u_idx
+	where a.b_code =5
 	</select>
 	
    <!-- 글읽기-->

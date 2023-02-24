@@ -18,6 +18,6 @@ public interface CheckedDao {
 	public List<CommonBoard> getCheck(Checked checked) throws ClassNotFoundException, SQLException;
 
 	// checked테이블에 있는이 유뮤 판별
-	public Integer getread(int idx, int u_idx, String url) throws ClassNotFoundException, SQLException;
+	public int getread(Checked checked) throws ClassNotFoundException, SQLException;
 
 }

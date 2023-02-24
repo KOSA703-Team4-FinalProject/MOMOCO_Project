@@ -19,7 +19,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from checked_${url}
 		where idx = #{idx}
 	</select>
-
+	
+	<!--읽음여부판별  -->
 	<select id="getread" parameterType="kr.or.vo.Checked"
 		resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM checked_${url} WHERE idx = #{idx} AND u_idx = #{u_idx}
