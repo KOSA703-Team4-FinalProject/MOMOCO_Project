@@ -3,6 +3,7 @@ package kr.or.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import kr.or.vo.Checked;
 import kr.or.vo.CommonBoard;
 
 public interface CommonBoardDao {
@@ -31,8 +32,8 @@ public interface CommonBoardDao {
 
 	//답글쓰기
 	public int replyCommonBoard (CommonBoard all)throws ClassNotFoundException, SQLException;
+
 	
-	//글읽기 체크
-	public  List<CommonBoard> getCheck(CommonBoard cmm) throws ClassNotFoundException, SQLException;
+	
 		
 }

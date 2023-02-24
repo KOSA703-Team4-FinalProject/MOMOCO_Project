@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import kr.or.vo.Checked;
+import kr.or.vo.CommonBoard;
 
 public interface CheckedDao {
 	
@@ -12,5 +13,7 @@ public interface CheckedDao {
 
 	//해당 글의 체크된 리스트 확인
 	public List<Checked> getCheckedByIdx(Checked checked) throws ClassNotFoundException, SQLException;
-	
+
+	//글읽기 체크
+	public  List<CommonBoard> getCheck(Checked checked) throws ClassNotFoundException, SQLException;
 }

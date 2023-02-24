@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.dao.CheckedDao;
 import kr.or.vo.Checked;
+import kr.or.vo.CommonBoard;
 
 @Service
 public class CheckedService {
@@ -40,5 +41,24 @@ public class CheckedService {
 		return result;
 		
 	}
+	
+	//글읽기체크
+		public List<CommonBoard> getCheck(Checked checked) {
+
+			List<CommonBoard> board = new ArrayList<CommonBoard>();
+
+			try {
+
+				CheckedDao checkeddao = sqlsession.getMapper(CheckedDao.class);
+				board = checkeddao.getCheck(checked);
+
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			return board;
+		}
 
 }
