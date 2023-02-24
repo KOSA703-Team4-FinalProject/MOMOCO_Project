@@ -17,7 +17,6 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
-  CBadge,
 } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'

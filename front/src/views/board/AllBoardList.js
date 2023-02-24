@@ -62,13 +62,14 @@ const AllBoardList = () => {
 
     const searchcontent = {
       url: params.url,
+      u_idx: login.u_idx,
       type: 'boardnumber1',
       keyword: number,
     }
 
     axios({
       method: 'POST',
-      url: '/allboard/searchboardnumber',
+      url: '/allboard/allboardlist',
       headers: { Authorization: `Bearer ${accessToken}` },
 
       data: searchcontent,
@@ -321,7 +322,10 @@ const AllBoardList = () => {
                           <div className="col-md-1" style={number}>
                             {login.u_idx === data.u_idx1 ? <FcCheckmark /> : null}
                             <CFormInput type="hidden" id="idx" value={data.idx} />
-                            <strong>{data.idx}.</strong>
+                            <strong>#{data.idx}</strong>
+                            <CButton color={data.style} shape="rounded-pill" size="sm">
+                              {data.label}
+                            </CButton>
                           </div>
                           <div className="col-md-8">
                             <div className="row">
