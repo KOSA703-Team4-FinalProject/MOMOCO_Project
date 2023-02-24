@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.dao.WorkSpaceDao;
 import kr.or.dao.WorkSpaceUserDao;
+import kr.or.vo.Member;
+import kr.or.vo.MemberAll;
 import kr.or.vo.WorkSpace;
 import kr.or.vo.WorkSpaceUser;
 
@@ -61,13 +63,13 @@ public class WorkSpaceService {
 	}
 	
 	//워크스페이스 전체 조회
-	public List<WorkSpace> getWorkSpace(int u_idx) {
+	public List<WorkSpace> getWorkSpace(Member member) {
 		List<WorkSpace> workspacelist = new ArrayList<WorkSpace>();
 		
 		try {
 			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
 			
-			workspacelist = workspacedao.getWorkSpace(u_idx);
+			workspacelist = workspacedao.getWorkSpace(member);
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -76,6 +78,22 @@ public class WorkSpaceService {
 		}
 		
 		return workspacelist;
+	}
+	// 워크스페이스 멤버
+	public List<MemberAll> getWorkSpaceMember(String url) {
+		List<MemberAll> workspacememberlist = new ArrayList<MemberAll>();
+		
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			workspacememberlist = workspacedao.getWorkSpaceMember(url);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return workspacememberlist;
 	}
 
 	//워크스페이스 안의 유저 탐색
@@ -202,5 +220,44 @@ public class WorkSpaceService {
 		
 		return workspace; 
 	}
+
+	public List<WorkSpaceUser> checkOwner(WorkSpaceUser workspaceuser) {
+		List<WorkSpaceUser> workspaceusercheck = new ArrayList<WorkSpaceUser>();
+		
+		
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			workspaceusercheck = workspacedao.checkOwner(workspaceuser);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		return workspaceusercheck;
+	}
+
+	// 워크스페이스 삭제
+	public int DeleteWorkSpace(String url) {
+		int result = 0;
+		
+		System.out.println("서비스");
+		try {
+			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
+			result = workspacedao.DeleteWorkSpace(url);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(result);
+		return result;
+	}
+
+	
 	
 }

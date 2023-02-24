@@ -1,8 +1,9 @@
 package kr.or.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.WorkSpaceService;
+import kr.or.vo.Board;
+import kr.or.vo.Kanban;
 import kr.or.vo.Member;
+import kr.or.vo.MemberAll;
 import kr.or.vo.WorkSpace;
 import kr.or.vo.WorkSpaceUser;
 
@@ -27,6 +31,9 @@ import kr.or.vo.WorkSpaceUser;
 public class WorkSpaceController {
 
 	private WorkSpaceService workspaceservice;
+	
+	private List<MemberAll> members;
+	
 
 	@Autowired
 	public void setWorkspaceservice(WorkSpaceService workspaceservice) {
@@ -53,15 +60,52 @@ public class WorkSpaceController {
 
 		return result;
 	}
+	
+	// 워크 스페이스 삭제
+	@RequestMapping(value = "/DeleteWorkSpace", method = RequestMethod.POST)
+		public int deleteWorkSpace(@RequestBody WorkSpace workspace) {
+			System.out.println("워크스페이스 삭제");
+					
+			System.out.println(workspace.getUrl());
+			int result = workspaceservice.DeleteWorkSpace(workspace.getUrl());
+					
+			return result;
+		}
+
 
 	// 해당 유저가 소속된 워크스페이스 전체 조회
+//	@RequestMapping(value = "/getWorkSpace", method = RequestMethod.POST)
+//	public List<WorkSpace> getWorkSpace(@RequestBody Member member) {
+//
+//		List<WorkSpace> workspacelist = workspaceservice.getWorkSpace(member.getU_idx());
+//
+//		return workspacelist;
+//	}
+	
 	@RequestMapping(value = "/getWorkSpace", method = RequestMethod.POST)
-	public List<WorkSpace> getWorkSpace(@RequestBody Member member) {
+	public  List<Map<String, Object>> getWorkSpace(@RequestBody Member member) {
+		// 결과를 저장할 List
+	    List<Map<String, Object>> result = new ArrayList<>();
 
-		List<WorkSpace> workspacelist = workspaceservice.getWorkSpace(member.getU_idx());
+	    // 유저가 가진 워크스페이스 리스트
+	    List<WorkSpace> workspace = workspaceservice.getWorkSpace(member);
+	    System.out.println(workspace);
 
-		return workspacelist;
+	    for (WorkSpace work : workspace) {
+	        // 워크스페이스를 가지는 유저 목록
+	        List<MemberAll> team = workspaceservice.getWorkSpaceMember(work.getUrl());
+
+	        // 워크스페이스 정보와 해당 워크스페이스의 멤버 정보를 Map으로 저장
+	        Map<String, Object> workSpaceMap = new HashMap<>();
+	        workSpaceMap.put("workSpace", work);
+	        workSpaceMap.put("team", team);
+
+	        result.add(workSpaceMap);
+	    }
+
+	    return result;
 	}
+	
 
 	// 워크스페이스 안 팀원 확인
 	@RequestMapping(value = "/getWorkSpaceUser", method = RequestMethod.GET)
@@ -148,5 +192,18 @@ public class WorkSpaceController {
 
 		return workspace;
 	}
+	
+	// 워크스페이스 오너 체크
+	@RequestMapping(value = "/checkOwner", method = RequestMethod.POST)
+	public List<WorkSpaceUser> CheckOwner(@RequestBody WorkSpaceUser workspaceuser) {
+
+		
+		List<WorkSpaceUser> list = new ArrayList<WorkSpaceUser>();
+		list = workspaceservice.checkOwner(workspaceuser);
+
+		return list;
+	}
+	
+	
 
 }

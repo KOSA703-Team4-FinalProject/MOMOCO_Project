@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -14,6 +14,7 @@ import {
   CRow,
   CCardFooter,
   CWidgetStatsF,
+  CCardText,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -29,6 +30,7 @@ import WorkSpaceListItem from 'src/components/WorkSpaceListItem'
 import CryptoJS from 'crypto-js'
 
 import { PRIMARY_KEY } from '../../oauth'
+import { fontSize } from '@mui/system'
 
 const workSpaceList = () => {
   const Container = styled.div`
@@ -53,21 +55,35 @@ const workSpaceList = () => {
 
   return (
     <Container>
-      <div className="min-vh-100 d-flex align-items-center justify-content-center">
+      <div className="min-vh-100 d-flex align-items-center justify-content-center ">
         <CRow>
           <CCol md={12}>
             <CCardGroup>
-              <CCard>
-                <CCardBody>
-                  <CForm>
-                    <h2 align="center" className='pt-'>
-                      <strong >{params.nickname}`s WorkSpace </strong>
-                    </h2>
-                    <br />
-                    <WorkSpaceListItem width="455px" />
-                  </CForm>
-                </CCardBody>
-              </CCard>
+              <CCardBody>
+                <CForm>
+                  <h2>
+                    <strong className="text-light">
+                      <CRow>
+                        <CCol xs="auto" className="me-auto">
+                          {params.nickname}`s WorkSpace{' '}
+                        </CCol>
+                        <CCol xs="auto" className="me-auto">
+                          <a
+                            style={{ color: 'white', fontSize: '20px' }}
+                            href="https://github.com/settings/profile"
+                          >
+                            {'    '}
+                            <CIcon icon={icon.cibGithub} height={24}></CIcon>
+                            settings
+                          </a>
+                        </CCol>
+                      </CRow>
+                    </strong>
+                  </h2>
+                  <br />
+                  <WorkSpaceListItem width="600px" />
+                </CForm>
+              </CCardBody>
             </CCardGroup>
           </CCol>
         </CRow>

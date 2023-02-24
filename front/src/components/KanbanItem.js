@@ -91,30 +91,6 @@ const KanbanItem = (props) => {
 
       console.log(res.data)
 
-      // let arr = []
-      // $(res.data).each(function (data, key) {
-      //   console.log(res.data)
-      //   console.log(data)
-      //   if ($(res.data[data]).attr('content').length > 10) {
-      //     let request4 = {
-      //       content: $(res.data[data]).attr('content').substring(0, 10) + '...',
-      //     }
-      //     arr.push(request4)
-      //   }
-      // })
-
-      // console.log(arr)
-      // console.log($(res.data[0]).attr('content').length)
-
-      // const data = res.data
-
-      // const modifiedData = data.map((item,i) => {
-      //   if ($(item[i]).attr('content').length >= 10) {
-      //     $(item[i]).attr('content') = $(item[i]).attr('content').substring(0, 10) + '...'
-      //   }
-      //   return item
-      // })
-
       // console.log(modifiedData)
       setKanbanItemList(res.data)
       setView(true)
