@@ -13,5 +13,7 @@ public class WorkSpace {
 	private String del_date;	//워크 스페이스 삭제일
 	private int admin; 		//워크 스페이스 관리자
 
-	
+	private String owner;   //워크스페이스 소유자
+	   private String ownerphoto;   //워크스페이스 프로필 사진
+	   
 }

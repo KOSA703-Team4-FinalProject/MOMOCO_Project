@@ -28,7 +28,7 @@ public class CheckedController {
 	// 체크 추가
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public int addChecked(@RequestBody Checked checked) {
-
+			
 		int result = checkedservice.addChecked(checked);
 
 		return result;
@@ -37,7 +37,7 @@ public class CheckedController {
 	// 체크 리스트
 	@RequestMapping(value = "/checklist", method = RequestMethod.POST)
 	public int getCheck(@RequestBody Checked checked) {
-
+				
 		int boardlist = checkedservice.addChecked(checked);
 
 		return boardlist;
