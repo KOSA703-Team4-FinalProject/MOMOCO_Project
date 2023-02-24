@@ -75,6 +75,7 @@ const Kanban = () => {
       nickname: login.nickname,
       title: $('#kanbantitle').val(),
       content: $('#kanbancontent').val(),
+      label: $('#selectlabel').val(),
       b_code: 6,
       label: label,
       u_idx: login.u_idx,
@@ -82,10 +83,11 @@ const Kanban = () => {
       u_idxList: alarmList,
     }
     console.log(reqData.title)
-    if (!reqData.title || !reqData.content) {
+    console.log(reqData.content)
+    if (!reqData.title || !reqData.content || !reqData.label) {
       Swal.fire({
         icon: 'warning', // 여기다가 아이콘 종류를 쓰면 됩니다.
-        title: '제목, 내용을 모두 입력해주세요',
+        title: '라벨, 제목, 내용을 모두 입력해주세요',
       })
     } else {
       Swal.fire({
@@ -351,7 +353,12 @@ const Kanban = () => {
               <CFormLabel className="col-sm-2 col-form-label">
                 <strong>라벨 선택 </strong>
                 {chooseLabel.label != '' ? (
-                  <CButton color={chooseLabel.style} shape="rounded-pill" size="sm">
+                  <CButton
+                    color={chooseLabel.style}
+                    shape="rounded-pill"
+                    size="sm"
+                    id="selectlabel"
+                  >
                     {chooseLabel.label}
                   </CButton>
                 ) : (

@@ -111,8 +111,7 @@ public class KanbanController {
 	@RequestMapping(value = "/addKanban", method = RequestMethod.POST)
 	public int addKanban(@RequestBody Kanban kanban) {
 		
-		
-
+		System.out.println("칸반 아이템 추가" + kanban);
 		int result = kanbanservice.addKanban(kanban);
 		
 		String[] u_idxList = kanban.getU_idxList().split(",");
