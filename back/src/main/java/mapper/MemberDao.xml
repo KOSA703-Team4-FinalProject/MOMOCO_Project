@@ -47,5 +47,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where m.u_idx = #{u_idx}
 	</select> 
 	
+	<!-- 유저 탈퇴 시 leave_date 3일 뒤로 수정 public int leaveMember(int u_idx) -->
+	<update id="leaveMember">
+		update member set leave_date = sysdate + 3 where u_idx = #{u_idx}
+	</update>
+	
 
 </mapper>

@@ -63,9 +63,7 @@ const Boardlist = () => {
       },
       data: myparams,
     }).then((res) => {
-      res.data.map((data) => {
-        setBoardList(res.data)
-      })
+      setBoardList((prev) => res.data)
       console.log(res.data)
     })
   }
@@ -122,10 +120,6 @@ const Boardlist = () => {
   const handlePageChange = (page) => {
     setPage(page)
   }
-  const itemChange = (e) => {
-    setItems(Number(e.target.value))
-  }
-
   return (
     <>
       <CCard className="mb-4">
@@ -181,7 +175,6 @@ const Boardlist = () => {
                 </div>
                 {/* 게시판 목록 시작 */}
                 {boardlist
-                  .sort((a, b) => a.b_idx - b.b_idx)
                   .slice(items * (page - 1), items * (page - 1) + items)
                   .map((data, key) => {
                     const checkIcon = login.u_idx === data.u_idx1 ? <FcCheckmark /> : null

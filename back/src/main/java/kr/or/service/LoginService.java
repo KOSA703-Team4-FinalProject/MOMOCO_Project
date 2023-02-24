@@ -108,5 +108,21 @@ public class LoginService {
 		
 		return member;
 	}
+	
+	//유저 탈퇴 시 leave_date 3일 뒤로 수정
+	public int leaveMember(int u_idx) {
+		int result = 0;
+		
+		try {
+			MemberDao memberdao = sqlsession.getMapper(MemberDao.class);
+			result = memberdao.leaveMember(u_idx);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 }

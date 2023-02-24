@@ -112,8 +112,11 @@ public class CommonBoardController {
 		}
 
 		board.setOri_filename(files[0].getOriginalFilename());
+		board.setSave_filename(saveFileName);
 		board.setFiletype(files[0].getContentType());
 		board.setVolume(files[0].getSize());
+		board.setThumb("");
+		
 		int result = commonboardservice.addCommonBoard(board);
 
 		String[] u_idxList = board.getU_idxList().split(",");

@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          select url, space_name,admin from workspace where admin = ${u_idx}
       </select>
       
-      <!-- 워크스페이스 유저 삭제 DeleteWorkSpace -->
+      <!-- 워크스페이스에서 떠나기 DeleteWorkSpace -->
       <delete id ="DeleteWorkSpace" parameterType = "kr.or.vo.WorkSpace">
          delete from workspace_user where url = #{url} and u_idx = ${u_idx}
       </delete>

@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- commandBoard list-->
 	
 
-	
+	<!-- 자유게시판 전체 글 목록 -->
 	<select id="getBoard" parameterType="int" resultType="kr.or.vo.CommonBoard">
 	select c.c_idx, c.idx as u_idx1, a2.idx, a2.nickname, title, content, w_date, b_code, label, a2.u_idx, style, b_idx, ori_filename, save_filename, ref, depth, step, thumb, filetype ,volume
 	from (select c_idx, u_idx, idx 
@@ -35,9 +35,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="addCommonBoard" parameterType="kr.or.vo.CommonBoard">
 	INSERT ALL
 	INTO board_${url} (idx, nickname, title, content, b_code, label, u_idx)
-		VALUES (BOARD_IDX_SEQ_${url}.nextval, '${nickname}', '${title}', '${content}', ${b_code}, '${label}', ${u_idx})
-	INTO common_board_${url}(b_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, idx)
-		VALUES (COMMON_BOARD_B_IDX_SEQ_${url}.nextval, '${ori_filename}', '${save_filename}', ${volume}, '${filetype}', COMMON_BOARD_B_IDX_SEQ_${url}.CURRVAL, ${depth}, ${step}, '${thumb}', board_idx_seq_${url}.CURRVAL)
+		VALUES (BOARD_IDX_SEQ_${url}.nextval, #{nickname}, #{title}, #{content}, #{b_code}, #{label}, #{u_idx})
+	INTO common_board_${url} (b_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, idx)
+		VALUES (COMMON_BOARD_B_IDX_SEQ_${url}.nextval, #{ori_filename}, #{save_filename}, #{volume}, #{filetype}, COMMON_BOARD_B_IDX_SEQ_${url}.CURRVAL, #{depth}, #{step}, #{thumb}, BOARD_IDX_SEQ_${url}.CURRVAL)
 		
 	SELECT * FROM dual
 	</insert>

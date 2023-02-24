@@ -16,7 +16,7 @@ import CIcon from '@coreui/icons-react'
 import { Octokit } from 'octokit'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
-import { BiExit } from 'react-icons/bi'
+import Swal from 'sweetalert2'
 
 import { PRIMARY_KEY } from '../../oauth'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -137,6 +137,37 @@ const AppHeaderDropdown = () => {
       })
   }
 
+  // 모모코 회원 탈퇴
+  const leaveMoMoCo = () => {
+    Swal.fire({
+      title: '정말로 momoco를 탈퇴하시겠습니까?',
+      text: '3일 뒤 모든 데이터가 삭제됩니다.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '승인',
+      cancelButtonText: '취소',
+      reverseButtons: true, // 버튼 순서 거꾸로
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        Swal.fire('탈퇴 완료', 'momoco에서 탈퇴되었습니다', 'success')
+
+        axios({
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          url: '/backlogin/leaveMember',
+          params: { u_idx: login.u_idx },
+        }).then((res) => {
+          console.log(res.data)
+        })
+      }
+    })
+  }
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
@@ -153,7 +184,7 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilLockLocked} className="me-2" />
           로그아웃
         </CDropdownItem>
-        <CDropdownItem onClick={loadWorkSpace} className="my-1">
+        <CDropdownItem onClick={leaveMoMoCo} className="my-1">
           <CIcon icon={cilExitToApp} className="me-2" />
           모모코 탈퇴
         </CDropdownItem>
