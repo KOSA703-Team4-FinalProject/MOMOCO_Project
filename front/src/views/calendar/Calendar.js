@@ -6,10 +6,8 @@ import {
   CCardBody,
   CCardFooter,
   CCol,
-  CCollapse,
   CFormCheck,
   CFormInput,
-  CFormLabel,
   CFormSelect,
   CFormTextarea,
   CModal,
@@ -17,7 +15,6 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
-  CBadge,
 } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
