@@ -549,7 +549,6 @@ const KanbanItem = (props) => {
                           <CRow>
                             <CCol xs="auto" className="me-auto">
                               <CCardHeader className="bg-light">
-                                {' '}
                                 {'#'}
                                 {data2.idx}{' '}
                                 {data2.title.length > 8
@@ -577,9 +576,21 @@ const KanbanItem = (props) => {
                           </CRow>
                           <CCardBody>
                             <CCardText>
-                              {data2.content.length > 10
-                                ? data2.content.substr(0, 10) + '...'
-                                : data2.content}
+                              {data2.content.length > 10 ? (
+                                <>
+                                  <CButton color={data2.style} shape="rounded-pill" size="sm">
+                                    {data2.label}
+                                  </CButton>{' '}
+                                  {data2.content.substr(0, 10) + '...'}
+                                </>
+                              ) : (
+                                <>
+                                  <CButton color={data2.style} shape="rounded-pill" size="sm">
+                                    {data2.label}
+                                  </CButton>{' '}
+                                  {data2.content}{' '}
+                                </>
+                              )}
                             </CCardText>
                           </CCardBody>
                           <br />
@@ -597,7 +608,7 @@ const KanbanItem = (props) => {
                                   <b>{itemDetail.content}</b>
                                 </CCard>
                                 <br />
-                                <Comments idx={parseInt(itemDetail.idx)} />
+
                                 <CCol className="mz-2" align="center">
                                   <CButton
                                     color="dark"

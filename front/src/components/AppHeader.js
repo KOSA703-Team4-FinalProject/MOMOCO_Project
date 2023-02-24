@@ -111,7 +111,7 @@ const AppHeader = () => {
                       variant="outline"
                       shape="rounded-pill"
                     >
-                      <strong>전체보기</strong>
+                      <strong>설정</strong>
                     </CButton>
                   </CCol>
                 </CRow>

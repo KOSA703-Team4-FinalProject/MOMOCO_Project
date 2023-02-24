@@ -57,6 +57,7 @@ const docStorage = (props) => {
   const [file, SetFile] = useState('')
   const [link, SetLink] = useState('')
   let [imageURL, setImageURL] = useState('')
+  const [preview, setPreview] = useState('')
 
   //워크스페이스 주소값
   const dispatch = useDispatch()
@@ -136,6 +137,7 @@ const docStorage = (props) => {
   }, [visibleXL])
 
   const filesubmit = (e) => {
+    e.preventDefault()
     const type = e.target.type.value
     const file = e.target.save.value
     const link = e.target.link.value
@@ -169,7 +171,7 @@ const docStorage = (props) => {
         content: file,
       }
       axios({
-        method: 'post',
+        method: 'POST',
         url: '/doc/viewImage',
         headers: { Authorization: `Bearer ${accessToken}` },
         responseType: 'blob',
@@ -180,6 +182,12 @@ const docStorage = (props) => {
         reader.onload = (ev) => {
           const previewImage = String(ev.target?.result)
           setImageURL(previewImage) // myImage라는 state에 저장
+          const imgTag = (
+            <CModalBody>
+              <img src={previewImage} style={{ width: '100%', height: 'auto' }} alt="Preview" />
+            </CModalBody>
+          )
+          setPreview(imgTag)
         }
         reader.readAsDataURL(myFile)
       })
@@ -284,13 +292,7 @@ const docStorage = (props) => {
                                 visible={ImgModal}
                                 onClose={() => setImgModal(false)}
                               >
-                                <CModalBody>
-                                  <img
-                                    src={imageURL}
-                                    alt="이미지"
-                                    style={{ width: '100%', height: 'auto' }}
-                                  />
-                                </CModalBody>
+                                {preview}
                               </CModal>
                             </>
                           ) : data.upload_type === 'link' ? (

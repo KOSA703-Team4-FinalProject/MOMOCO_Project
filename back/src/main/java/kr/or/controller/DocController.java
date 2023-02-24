@@ -95,7 +95,7 @@ public class DocController {
 	}
 	
 	//문서 저장소 링크 등록
-	@RequestMapping(value="/updateDocLink", method=RequestMethod.PUT)
+	@RequestMapping(value="/updateDocLink", method=RequestMethod.POST)
 	public int updateDocLink(@RequestBody Doc doc) {
 		System.out.println("컨트롤러 updatedoclink");
 		
@@ -186,9 +186,9 @@ public class DocController {
 		return result;
 	}
 	
-	@RequestMapping(value="/updateDoc", method=RequestMethod.PUT)
+	@RequestMapping(value="/updateDoc", method=RequestMethod.POST)
 	public int updateDoc(@RequestParam(value="doc") String docJson, @RequestParam(value="file") MultipartFile[] files, HttpServletRequest request) throws IOException {
-		
+		System.out.println("doc : " + docJson);
 		Doc doc = null;
 	    ObjectMapper mapper = new ObjectMapper();
 		
