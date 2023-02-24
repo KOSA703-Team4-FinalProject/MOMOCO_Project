@@ -3,7 +3,10 @@ package kr.or.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import kr.or.vo.Member;
+import kr.or.vo.MemberAll;
 import kr.or.vo.WorkSpace;
+import kr.or.vo.WorkSpaceUser;
 
 public interface WorkSpaceDao {
    
@@ -17,7 +20,7 @@ public interface WorkSpaceDao {
    public void createTable(String URL) throws ClassNotFoundException, SQLException;
 
    //워크스페이스 전체 조회
-   public List<WorkSpace> getWorkSpace(int u_idx) throws ClassNotFoundException, SQLException;
+   public List<WorkSpace> getWorkSpace(Member member) throws ClassNotFoundException, SQLException;
  
    //해당하는 레포지토리가 연결된 레포지토리인지 확인
    public int isRepo(String linked_repo) throws ClassNotFoundException, SQLException;
@@ -30,5 +33,13 @@ public interface WorkSpaceDao {
 
    //워크스페이스 소유자 불러오기
    public WorkSpace getWorkSpaceOwner(String url) throws ClassNotFoundException, SQLException;
+
+   // 워크스페이스 멤버 불러오기
+   public List<MemberAll> getWorkSpaceMember(String url)throws ClassNotFoundException, SQLException;
+
+   // 워크스페이스 오너 체크
+   public List<WorkSpaceUser> checkOwner(WorkSpaceUser workspaceuser)throws ClassNotFoundException, SQLException;
+   // 워크스페이스 삭제
+   public int DeleteWorkSpace(String url)throws ClassNotFoundException, SQLException;
 
 }
