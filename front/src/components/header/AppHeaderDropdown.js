@@ -11,11 +11,12 @@ import {
   CModalBody,
   CModalHeader,
 } from '@coreui/react'
-import { cilLockLocked, cilPeople } from '@coreui/icons'
+import { cilExitToApp, cilLockLocked, cilPeople } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { Octokit } from 'octokit'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
+import { BiExit } from 'react-icons/bi'
 
 import { PRIMARY_KEY } from '../../oauth'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -50,8 +51,6 @@ const AppHeaderDropdown = () => {
 
   //워크스페이스 정보 불러오기
   const loadWorkSpace = () => {
-    console.log('hahah')
-
     axios({
       method: 'GET',
       url: '/api/workspaceowner',
@@ -153,6 +152,10 @@ const AppHeaderDropdown = () => {
         <CDropdownItem onClick={logout} className="my-1">
           <CIcon icon={cilLockLocked} className="me-2" />
           로그아웃
+        </CDropdownItem>
+        <CDropdownItem onClick={loadWorkSpace} className="my-1">
+          <CIcon icon={cilExitToApp} className="me-2" />
+          모모코 탈퇴
         </CDropdownItem>
       </CDropdownMenu>
 
