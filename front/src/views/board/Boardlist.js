@@ -63,17 +63,13 @@ const Boardlist = () => {
       },
       data: myparams,
     }).then((res) => {
-      reset()
       res.data.map((data) => {
-        setBoardList((boardlist) => [...boardlist, data])
+        setBoardList(res.data)
       })
       console.log(res.data)
     })
   }
 
-  function reset() {
-    setBoardList([])
-  }
   //글목록
   useEffect(() => {
     list()
@@ -216,7 +212,9 @@ const Boardlist = () => {
                               <div className="row">
                                 <div className="col-md-12" style={title}>
                                   {cornerIcon}
-                                  <strong> {data.title}</strong>
+                                  {data.content
+                                    ? data.content.replace(/(<([^>]+)>)/gi, '').substring(0, 45)
+                                    : null}
                                 </div>
                                 <div className="col-md-12" style={context}>
                                   {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}

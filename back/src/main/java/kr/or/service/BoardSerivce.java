@@ -86,4 +86,19 @@ public class BoardSerivce {
 			return board;
 		}
 
+		
+		//자신이 읽지 않은글 
+		
+		public List<Board>notread(Board url){
+			List<Board> board = new ArrayList<Board>();
+			try {
+				BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
+				board = boarddao.notread(url);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return board;
+		}
 }

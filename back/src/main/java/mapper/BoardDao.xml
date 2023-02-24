@@ -5,62 +5,86 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="kr.or.dao.BoardDao">
 
 	<!-- 알람에서 사용, 해당 알람이 발생할 게시글 찾기 public Board getBoardByTitle(Board board) -->
-	<select id="getBoardByTitle" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board"> 
-		select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b.b_code, t.b_name, label, u_idx
-		from board_${url} b join board_type_${url} t
+	<select id="getBoardByTitle" parameterType="kr.or.vo.Board"
+		resultType="kr.or.vo.Board">
+		select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date,
+		nickname, b.b_code, t.b_name, label, u_idx
+		from board_${url} b join
+		board_type_${url} t
 		on b.b_code = t.b_code
-		where title = #{title} and u_idx = #{u_idx} and content = #{content} and label = #{label}
+		where title = #{title} and
+		u_idx = #{u_idx} and content = #{content} and label = #{label}
 	</select>
 
 
 	<!--전체 보드 리스트 -->
-	<select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
-	SELECT a.idx, a.title,a.content, h.profilephoto ,j.u_idx as u_idx1, a.b_code ,a.nickname,a.w_date
-	FROM board_${url} a
-	left outer JOIN doc_storage_${url} b ON a.idx = b.idx
-	 left outer JOIN common_board_${url} c ON a.idx = c.idx
-	left outer JOIN board_status_${url} d ON a.idx = d.idx
-	left outer JOIN calendar_${url} e ON e.idx = a.idx
-	left outer JOIN kanban_${url} f ON f.idx = d.idx
-    left outer join label_${url} g on a.label = g.label
-    left outer JOIN member h on a.u_idx =h.u_idx 
-    left outer join board_type_${url} i on a.b_code =i.b_code
-    LEFT JOIN checked_${url} j ON j.idx = a.idx
- 	 order by a.idx desc
+	<select id="allBoardList" parameterType="kr.or.vo.Board"
+		resultType="kr.or.vo.Board">
+		SELECT a.idx, a.title,a.content, h.profilephoto ,j.u_idx as u_idx1, a.b_code
+		,a.nickname,a.w_date
+		FROM board_${url} a
+		left outer JOIN doc_storage_${url} b ON a.idx = b.idx
+		left outer JOIN common_board_${url} c ON a.idx = c.idx
+		left outer JOIN board_status_${url} d ON a.idx = d.idx
+		left outer JOIN calendar_${url} e ON e.idx = a.idx
+		left outer JOIN kanban_${url} f ON f.idx = d.idx
+		left outer join label_${url} g on a.label = g.label
+		left outer JOIN member h on a.u_idx =h.u_idx
+		left outer join board_type_${url} i on a.b_code =i.b_code
+		LEFT JOIN checked_${url} j ON j.idx = a.idx
+		order by a.idx desc
 	</select>
-	
+
 	<!-- b_code 검색 -->
-	<select id="searchboardnumber" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
-	SELECT *
-	FROM board_${url} a
-	left outer JOIN doc_storage_${url} b ON
-	a.idx = b.idx
-	left outer JOIN common_board_${url} c ON a.idx = c.idx
-	left outer JOIN board_status_${url} d ON a.idx = d.idx
-	left outer JOIN
-	calendar_${url} e ON e.idx = a.idx
-	left outer JOIN kanban_${url} f ON
-	f.idx = d.idx
-	<if test="type != null and type =='boardnumber1'">
- 		WHERE a.b_code LIKE #{keyword}
-	</if>
-	ORDER BY a.idx DESC
+	<select id="searchboardnumber" parameterType="kr.or.vo.Board"
+		resultType="kr.or.vo.Board">
+
+
+		select a.title, a.nickname , a.content, d.profilephoto , a.b_code,
+		a.w_date, c.u_idx as u_idx1
+		from board_momoco a left join common_board_momoco b on a.idx = b.idx
+		left join checked_momoco c on a.u_idx = c.u_idx
+		left join member d on d.u_idx = a.u_idx
+		<if test="type != null and type =='boardnumber1'">
+			WHERE a.b_code LIKE #{keyword}
+		</if>
+		GROUP BY a.title, a.nickname , a.content, d.profilephoto , a.b_code,
+		a.w_date, c.u_idx
+		ORDER BY a.idx DESC
 	</select>
-	
+
 	<!-- 검색어로 검색 -->
-	<select id="boardSearch" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
-    SELECT *
-	FROM board_${url} a
-	left outer JOIN doc_storage_${url} b ON a.idx = b.idx
-	left outer JOIN common_board_${url} c ON a.idx = c.idx
-	left outer JOIN board_status_${url} d ON a.idx = d.idx
-	left outer JOIN calendar_${url} e ON e.idx = a.idx
-	left outer JOIN kanban_${url} f ON f.idx = d.idx
-    <if test="type != null and type == 'title_content'">
-        WHERE a.title LIKE '%' || #{keyword} || '%' OR a.content LIKE '%' || #{keyword} || '%'
-    </if>
-    ORDER BY a.idx DESC
+	<select id="boardSearch" parameterType="kr.or.vo.Board"
+		resultType="kr.or.vo.Board">
+		SELECT *
+		FROM board_${url} a
+		left outer JOIN doc_storage_${url} b ON a.idx = b.idx
+		left outer JOIN common_board_${url} c ON a.idx = c.idx
+		left outer JOIN board_status_${url} d ON a.idx = d.idx
+		left outer JOIN calendar_${url} e ON e.idx = a.idx
+		left outer JOIN kanban_${url} f ON f.idx = d.idx
+		<if test="type != null and type == 'title_content'">
+			WHERE a.title LIKE '%' || #{keyword} || '%' OR a.content LIKE '%' ||
+			#{keyword} || '%'
+		</if>
+		ORDER BY a.idx DESC
 	</select>
-	
-	
+
+	<!--자신이 읽지않은 글 -->
+	<select id="notread" parameterType="kr.or.vo.Board"
+		resultType="kr.or.vo.Board">
+		select c_idx, a.u_idx, a.idx, a.nickname, title, content, w_date, b_code,
+		label, b_name
+		from checked_${url} c full outer join (select idx, nickname, title,
+		content, to_char(w_date, 'YYYY-MM-DD') as w_date, b.b_code, label,
+		u_idx, b_name
+		from board_${url} b join board_type_${url} t
+		on b.b_code = t.b_code) a
+		on c.idx = a.idx
+
+		where c_idx is null
+
+		order by a.idx desc
+	</select>
+
 </mapper>

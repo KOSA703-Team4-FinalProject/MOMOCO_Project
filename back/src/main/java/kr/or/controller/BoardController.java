@@ -40,8 +40,8 @@ public class BoardController {
 	//보드번호로 검색하기
 	@RequestMapping(value="/searchboardnumber",method =RequestMethod.POST)
 	public List<Board> searchboardnumber(@RequestBody(required = false) Board search){
-		
-		System.out.println("아니이건 뭐지" + search.toString());
+
+
 		
 		List<Board> searchlist = boardservice.searchboardnumber(search);
 		
@@ -51,9 +51,19 @@ public class BoardController {
 	// 검색
 		@RequestMapping(value = "/boardsearch", method = RequestMethod.POST)
 		public List<Board> commonboardSearch(@RequestBody(required = false) CommonBoard search) {
-			System.out.println("아니이건 뭐지" + search.toString());
+		
 			List<Board> searchboard = boardservice.boardSearch(search);
 			return searchboard;
 
+		}
+		
+	//읽지않은글
+		@RequestMapping(value="/notread",method =RequestMethod.POST)
+		public List<Board> notread(@RequestBody Board url){
+
+			 List<Board> boardlist = new ArrayList<Board>();
+				
+			 boardlist = boardservice.notread(url);
+			 return boardlist;
 		}
 }

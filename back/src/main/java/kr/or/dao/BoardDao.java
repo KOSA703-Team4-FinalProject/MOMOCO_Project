@@ -19,6 +19,7 @@ public interface BoardDao {
 	
 	//타이틀 + 제목으로 검색
 	public List<Board> boardSearch (Board search) throws ClassNotFoundException, SQLException;
-	
+	//읽지 않은글
+	public List<Board> notread(Board url) throws ClassNotFoundException, SQLException;
 
 }
