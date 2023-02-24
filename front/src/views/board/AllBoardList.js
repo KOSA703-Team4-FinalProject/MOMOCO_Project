@@ -216,7 +216,7 @@ const AllBoardList = () => {
                   <div className="col-md-9">
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         id="btncheck2"
                         autoComplete="off"
                         label="전체보기"
@@ -224,7 +224,7 @@ const AllBoardList = () => {
                         onClick={handleAllview}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         id="btncheck3"
                         autoComplete="off"
                         value={3}
@@ -232,7 +232,7 @@ const AllBoardList = () => {
                         onClick={handleClick}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         id="btncheck4"
                         autoComplete="off"
                         value={4}
@@ -240,7 +240,7 @@ const AllBoardList = () => {
                         onClick={handleClick}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         id="btncheck5"
                         autoComplete="off"
                         value={5}
@@ -248,7 +248,7 @@ const AllBoardList = () => {
                         onClick={handleClick}
                       />
                       <CFormCheck
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         id="btncheck6"
                         autoComplete="off"
                         value={6}
@@ -294,22 +294,22 @@ const AllBoardList = () => {
                                 <div className="col-md-8" align="left">
                                   {data.b_code === 5 && (
                                     <CButton color="light" shape="rounded-pill" size="sm">
-                                      자유게시판
+                                      <strong>자유게시판</strong>
                                     </CButton>
                                   )}
                                   {data.b_code === 3 && (
                                     <CButton color="light" shape="rounded-pill" size="sm">
-                                      문서저장소
+                                      <strong>문서저장소</strong>
                                     </CButton>
                                   )}
                                   {data.b_code === 4 && (
                                     <CButton color="light" shape="rounded-pill" size="sm">
-                                      캘린더
+                                      <strong>캘린더</strong>
                                     </CButton>
                                   )}
                                   {data.b_code === 6 && (
                                     <CButton color="light" shape="rounded-pill" size="sm">
-                                      칸반보드
+                                      <strong>칸반보드</strong>
                                     </CButton>
                                   )}
                                 </div>

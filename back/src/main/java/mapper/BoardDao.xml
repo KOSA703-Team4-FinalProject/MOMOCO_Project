@@ -31,20 +31,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- b_code 검색 -->
 	<select id="searchboardnumber" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
-	SELECT *
-	FROM board_${url} a
-	left outer JOIN doc_storage_${url} b ON
-	a.idx = b.idx
-	left outer JOIN common_board_${url} c ON a.idx = c.idx
-	left outer JOIN board_status_${url} d ON a.idx = d.idx
-	left outer JOIN
-	calendar_${url} e ON e.idx = a.idx
-	left outer JOIN kanban_${url} f ON
-	f.idx = d.idx
-	<if test="type != null and type =='boardnumber1'">
+
+	
+	SELECT  a.idx, a.title, a.content, h.profilephoto ,a.b_code ,a.nickname,a.w_date, j.u_idx as idx1
+	FROM 
+    board_momoco a
+    LEFT OUTER JOIN doc_storage_momoco b ON a.idx = b.idx
+    LEFT OUTER JOIN common_board_momoco c ON a.idx = c.idx
+    LEFT OUTER JOIN board_status_momoco d ON a.idx = d.idx
+    LEFT OUTER JOIN calendar_momoco e ON e.idx = a.idx
+    LEFT OUTER JOIN kanban_momoco f ON f.idx = d.idx
+    LEFT OUTER JOIN label_momoco g ON a.label = g.label
+    LEFT OUTER JOIN member h ON a.u_idx = h.u_idx 
+    LEFT OUTER JOIN board_type_momoco i ON a.b_code = i.b_code
+    LEFT JOIN checked_momoco j ON j.idx = a.idx
+    <if test="type != null and type =='boardnumber1'">
  		WHERE a.b_code LIKE #{keyword}
 	</if>
-	ORDER BY a.idx DESC
+	GROUP BY a.idx,a.title,a.content,h.profilephoto,a.b_code,a.nickname,a.w_date,j.u_idx
+	ORDER BY  a.idx DESC
 	</select>
 	
 	<!-- 검색어로 검색 -->
