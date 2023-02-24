@@ -119,69 +119,73 @@ const WorkSpaceListItem = (props) => {
 
   return (
     <div style={props}>
-      {workspacelist.map((workspace) => {
-        return (
-          <CCardBody key={workspace.workSpace.url}>
-            <CCol className="mz-2" align="right">
-              {params.u_idx === workspace.workSpace.admin ? (
-                <CButton
-                  color="danger"
-                  variant="outline"
-                  value={workspace.workSpace.url}
-                  onClick={DeleteWorkSpace}
-                >
-                  삭제
-                </CButton>
-              ) : (
-                <CButton color="danger" variant="outline">
-                  나가기
-                </CButton>
-              )}
-            </CCol>
-            <CCol
-              onClick={() => {
-                const date = new Date()
-                cookies.set('url', workspace.workSpace.url, {
-                  path: '/',
-                  expires: date.setHours(date.getHours + 8),
-                  sameSite: 'strict',
-                })
-                navigate(`/ws/${workspace.workSpace.url}/dashboard`)
-              }}
-            >
-              <CWidgetStatsF
-                color="dark"
-                icon={<CIcon icon={icon.cibGithub} height={24} />}
-                padding={false}
-                title={' (momoco.kr/ws/' + workspace.workSpace.url + ')'}
-                value={
-                  workspace.workSpace.space_name +
-                  ' (' +
-                  workspace.workSpace.start_date +
-                  '~ ' +
-                  workspace.workSpace.end_date +
-                  workspace.workSpace.admin +
-                  ')'
-                }
-              />
+      {workspacelist == null ? (
+        <div>로딩중</div>
+      ) : (
+        workspacelist.map((workspace) => {
+          return (
+            <CCardBody key={workspace.workSpace.url}>
+              <CCol className="mz-2" align="right">
+                {params.u_idx === workspace.workSpace.admin ? (
+                  <CButton
+                    color="danger"
+                    variant="outline"
+                    value={workspace.workSpace.url}
+                    onClick={DeleteWorkSpace}
+                  >
+                    삭제
+                  </CButton>
+                ) : (
+                  <CButton color="danger" variant="outline">
+                    나가기
+                  </CButton>
+                )}
+              </CCol>
+              <CCol
+                onClick={() => {
+                  const date = new Date()
+                  cookies.set('url', workspace.workSpace.url, {
+                    path: '/',
+                    expires: date.setHours(date.getHours + 8),
+                    sameSite: 'strict',
+                  })
+                  navigate(`/ws/${workspace.workSpace.url}/dashboard`)
+                }}
+              >
+                <CWidgetStatsF
+                  color="dark"
+                  icon={<CIcon icon={icon.cibGithub} height={24} />}
+                  padding={false}
+                  title={' (momoco.kr/ws/' + workspace.workSpace.url + ')'}
+                  value={
+                    workspace.workSpace.space_name +
+                    ' (' +
+                    workspace.workSpace.start_date +
+                    '~ ' +
+                    workspace.workSpace.end_date +
+                    workspace.workSpace.admin +
+                    ')'
+                  }
+                />
 
-              <CCard className="mb-3">
-                <CRow>
-                  {workspace.team.map((member) => (
-                    <CCol sm="auto">
-                      <CCardText key={member.u_idx}>
-                        {''}
-                        {member.nickname}
-                        <CAvatar className="ms-6" src={member.profilephoto} />
-                      </CCardText>
-                    </CCol>
-                  ))}
-                </CRow>
-              </CCard>
-            </CCol>
-          </CCardBody>
-        )
-      })}
+                <CCard className="mb-3">
+                  <CRow>
+                    {workspace.team.map((member) => (
+                      <CCol sm="auto">
+                        <CCardText key={member.u_idx}>
+                          {''}
+                          {member.nickname}
+                          <CAvatar className="ms-6" src={member.profilephoto} />
+                        </CCardText>
+                      </CCol>
+                    ))}
+                  </CRow>
+                </CCard>
+              </CCol>
+            </CCardBody>
+          )
+        })
+      )}
     </div>
   )
 }

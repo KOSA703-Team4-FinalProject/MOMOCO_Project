@@ -10,75 +10,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       FROM workspace WHERE url = #{url}   
    </select>
    
-	<!-- 워크스페이스 생성 : public int makeWorkSpace(WorkSpace workspace) -->
-	<insert id="makeWorkSpace" parameterType="kr.or.vo.WorkSpace">
-		insert all
-			into workspace (url, space_name, start_date, end_date, linked_repo, admin)
-				values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
-			into workspace_user (url, u_idx, role)
-				values (#{url}, #{admin}, 'admin')
-		select * from dual
-	</insert>
-	
-	<resultMap id="createTable" type="hashmap"></resultMap>
-	
-	<select id="createTable" statementType="CALLABLE"> 
-		{ CALL CREATE_TABLE( 
-		      #{URL} )
-		} 
-	</select>
-	
-	<!-- 워크스페이스 전체 조회 public List<WorkSpace> getWorkSpace() -->
-   	<select id="getWorkSpace" parameterType="int" resultType="kr.or.vo.WorkSpace">
-   		select url, space_name, to_char(start_date, 'YYYY/MM/DD') AS start_date, to_char(end_date, 'YYYY/MM/DD') AS end_date, linked_repo, admin 
-   		from workspace 
-		where url in (select url from workspace_user where u_idx = #{u_idx} )
-   	</select>
-   	
-   	
-   		<!-- 워크스페이스별 멤버 조회 getWorkSpaceMember -->
-   	<select id="getWorkSpaceMember" parameterType="int" resultType="kr.or.vo.MemberAll">
-   		select m.nickname, m.profilephoto, w.url, m.u_idx from member m join workspace_user w on m.u_idx = w.u_idx where w.url = '${url}'
-   	</select>
+   <!-- 워크스페이스 생성 : public int makeWorkSpace(WorkSpace workspace) -->
+   <insert id="makeWorkSpace" parameterType="kr.or.vo.WorkSpace">
+      insert all
+         into workspace (url, space_name, start_date, end_date, linked_repo, admin)
+            values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
+         into workspace_user (url, u_idx, role)
+            values (#{url}, #{admin}, 'admin')
+      select * from dual
+   </insert>
    
-   <resultMap id="createTable" type="hashmap"></resultMap>
+   <resultMap id="createTable123" type="hashmap"></resultMap>
    
-   	<!-- 워크스페이스 정보 불러오기 public WorkSpace getWorkSpaceByUrl(String url) -->
-   	<select id="getWorkSpaceByUrl" parameterType="String" resultType="kr.or.vo.WorkSpace">
-   		select url, space_name, linked_repo, to_char(start_date, 'YYYY-MM-DD') as start_date,  to_char(end_date, 'YYYY-MM-DD') as end_date, admin
-		from workspace 
-		where url = #{url}
-   	</select>
-   	
-   	<!-- 워크스페이스 소유자 저장 public int insertWorkSpaceOwner(WorkSpace workspace) -->
-   	<insert id="insertWorkSpaceOwner" parameterType="kr.or.vo.WorkSpace">
-   		insert into workspace_owner(url, ownerphoto, owner)
-   			values (#{url}, #{ownerphoto}, #{owner})
-   	</insert>
-   	
-   	<!-- 워크스페이스 소유자 불러오기 public WorkSpace getWorkSpaceOwner(String url) -->
-   	<select id="getWorkSpaceOwner" parameterType="String" resultType="kr.or.vo.WorkSpace">
-   		select w.url, ownerphoto, owner, linked_repo 
-		from workspace w join workspace_owner o
-		on w.url = o.url
-		where w.url = #{url}
-   	</select> 
-   	
-   	<!-- 워크스페이스 오너 체크 -->
-   	<select id = "checkOwner" parameterType = "String" resultType = "kr.or.vo.WorkSpaceUser">
-   		select url, space_name,admin from workspace where admin = ${u_idx}
-   	</select>
-   	
-   	<!-- 워크스페이스 삭제 DeleteWorkSpace -->
-   	<delete id ="DeleteWorkSpace" parameterType = "kr.or.vo.WorkSpace">
-   		delete from workspace where url = #{url}
-   	</delete>
+   <select id="createTable" statementType="CALLABLE" resultMap="createTable123"> 
+      { CALL CREATE_TABLE( 
+            #{URL} )
+      } 
+   </select>
    
    <!-- 워크스페이스 전체 조회 public List<WorkSpace> getWorkSpace() -->
       <select id="getWorkSpace" parameterType="int" resultType="kr.or.vo.WorkSpace">
          select url, space_name, to_char(start_date, 'YYYY/MM/DD') AS start_date, to_char(end_date, 'YYYY/MM/DD') AS end_date, linked_repo, admin 
          from workspace 
-      	where url in (select url from workspace_user where u_idx = #{u_idx} )
+      where url in (select url from workspace_user where u_idx = #{u_idx} )
       </select>
       
       
@@ -117,5 +71,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       <select id = "checkOwner" parameterType = "String" resultType = "kr.or.vo.WorkSpaceUser">
          select url, space_name,admin from workspace where admin = ${u_idx}
       </select>
+      
+      <!-- 워크스페이스 삭제 DeleteWorkSpace -->
+      <delete id ="DeleteWorkSpace" parameterType = "kr.or.vo.WorkSpace">
+         delete from workspace where url = #{url}
+      </delete>
    
 </mapper>

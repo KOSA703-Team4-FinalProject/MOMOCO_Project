@@ -1,20 +1,11 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
-  CButton,
-  CCard,
   CCardBody,
   CCardGroup,
   CCol,
-  CContainer,
   CForm,
-  CFormInput,
-  CInputGroup,
-  CInputGroupText,
   CRow,
-  CCardFooter,
-  CWidgetStatsF,
-  CCardText,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
