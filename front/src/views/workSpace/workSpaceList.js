@@ -67,6 +67,7 @@ const workSpaceList = () => {
                       </strong>
                     </h2>
                     <br />
+
                     <WorkSpaceListItem width="600px" />
                   </CForm>
                 </CCardBody>

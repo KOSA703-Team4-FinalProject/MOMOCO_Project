@@ -67,7 +67,7 @@ const Notifications = (props) => {
     //기존 알람 내용 불러오기
     listFromDb()
 
-    return () =>{
+    return () => {
       stomp.unsubscribe()
     }
   }, [])

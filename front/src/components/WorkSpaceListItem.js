@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import {
   CAvatar,
+  CBadge,
   CButton,
   CCard,
   CCardText,
@@ -213,87 +214,94 @@ const WorkSpaceListItem = (props) => {
       ) : (
         workspacelist.map((workspace) => {
           return (
-            <CCardBody key={workspace.workSpace.url}>
-              <CCol
-                onClick={() => {
-                  const date = new Date()
-                  cookies.set('url', workspace.workSpace.url, {
-                    path: '/',
-                    expires: date.setHours(date.getHours + 8),
-                    sameSite: 'strict',
-                  })
-                  navigate(`/ws/${workspace.workSpace.url}/dashboard`)
-                }}
-              >
-                <CWidgetStatsF
-                  color="dark"
-                  icon={<CIcon icon={icon.cibGithub} height={24} />}
-                  padding={false}
-                  title={' (momoco.kr/ws/' + workspace.workSpace.url + ')'}
-                  value={
-                    workspace.workSpace.space_name +
-                    ' (' +
-                    workspace.workSpace.start_date +
-                    '~ ' +
-                    workspace.workSpace.end_date +
-                    ')'
-                  }
-                />
-              </CCol>
+            <CCard className="mb-3" style={{ background: '#D6E4E5' }}>
+              <CCardBody align="left" key={workspace.workSpace.url}>
+                <CCol
+                  onClick={() => {
+                    const date = new Date()
+                    cookies.set('url', workspace.workSpace.url, {
+                      path: '/',
+                      expires: date.setHours(date.getHours + 8),
+                      sameSite: 'strict',
+                    })
+                    navigate(`/ws/${workspace.workSpace.url}/dashboard`)
+                  }}
+                >
+                  <CWidgetStatsF
+                    color="dark"
+                    icon={<CIcon icon={icon.cibGithub} height={24} />}
+                    padding={false}
+                    title={' (momoco.kr/ws/' + workspace.workSpace.url + ')'}
+                    value={
+                      workspace.workSpace.space_name +
+                      ' (' +
+                      workspace.workSpace.start_date +
+                      '~ ' +
+                      workspace.workSpace.end_date +
+                      ')'
+                    }
+                  />
+                </CCol>
 
-              <CCard>
-                <CRow>
-                  {workspace.team.map((member) => (
-                    <CCol sm="auto">
-                      <CCardText key={member.u_idx}>
-                        <CAvatar className="ms-6" src={member.profilephoto} />
-                        <strong>{member.nickname}</strong>
-                      </CCardText>
-                    </CCol>
-                  ))}
+                <CCard>
+                  <CCol className="p-2">
+                    {workspace.team.map((member) => (
+                      <>
+                        <CBadge color="light" textColor="black" className="ms-6 m-1">
+                          <CAvatar size="sm" className="me-1" src={member.profilephoto} />
+                          {member.nickname}
+                        </CBadge>
+                      </>
+                    ))}
+                  </CCol>
 
-                  <CCol className="mz-2" align="right">
-                    {params.u_idx === workspace.workSpace.admin ? (
-                      workspace.workSpace.del_date != '1900-09-09 00:00:00' ? (
-                        <>
-                          <strong>
-                            삭제예정일 : {workspace.workSpace.del_date.substr(0, 10)}{' '}
-                          </strong>
+                  <CRow>
+                    <CCol align="right">
+                      {params.u_idx === workspace.workSpace.admin ? (
+                        workspace.workSpace.del_date != '1900-09-09 00:00:00' ? (
+                          <>
+                            <strong>
+                              삭제예정일 : {workspace.workSpace.del_date.substr(0, 10)}{' '}
+                            </strong>
+                            <CButton
+                              id="rebutton"
+                              color="success"
+                              variant="outline"
+                              size="sm"
+                              value={workspace.workSpace.url}
+                              onClick={RestoreWorkSpace}
+                            >
+                              복구
+                            </CButton>
+                          </>
+                        ) : (
                           <CButton
-                            id="rebutton"
-                            color="success"
+                            id="delbutton"
+                            color="danger"
                             variant="outline"
+                            size="sm"
                             value={workspace.workSpace.url}
-                            onClick={RestoreWorkSpace}
+                            onClick={DeleteWorkSpace}
                           >
-                            복구
+                            삭제
                           </CButton>
-                        </>
+                        )
                       ) : (
                         <CButton
-                          id="delbutton"
                           color="danger"
                           variant="outline"
+                          size="sm"
                           value={workspace.workSpace.url}
-                          onClick={DeleteWorkSpace}
+                          onClick={DeleteWorkSpaceUser}
                         >
-                          삭제
+                          나가기
                         </CButton>
-                      )
-                    ) : (
-                      <CButton
-                        color="danger"
-                        variant="outline"
-                        value={workspace.workSpace.url}
-                        onClick={DeleteWorkSpaceUser}
-                      >
-                        나가기
-                      </CButton>
-                    )}
-                  </CCol>
-                </CRow>
-              </CCard>
-            </CCardBody>
+                      )}
+                    </CCol>
+                  </CRow>
+                </CCard>
+              </CCardBody>
+            </CCard>
           )
         })
       )}

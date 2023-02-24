@@ -29,12 +29,12 @@ const RegAndLoginHeader = () => {
 
   return (
     <>
-      <CNavbar expand="lg" colorScheme="light" className="bg-light">
+      <CNavbar expand="lg" colorScheme="light" style={{ background: '#D6E4E5' }}>
         <CContainer fluid>
           <CNavbarBrand href="">
             <CCol className="align-self-center">
               <h1 className="ps-3 pb-1">
-                <img src={momoco} width="40px" className='mb-2 me-2' />
+                <img src={momoco} width="40px" className="mb-2 me-2" />
                 <strong>momoco</strong>
               </h1>
             </CCol>
@@ -50,7 +50,7 @@ const RegAndLoginHeader = () => {
               <CNavItem className="px-4">
                 <CDropdown variant="nav-item" popper={false}>
                   <h5>
-                    <CDropdownToggle color="secondary">
+                    <CDropdownToggle color="dark">
                       <strong>워크스페이스</strong>
                     </CDropdownToggle>
                     <CDropdownMenu>

@@ -17,6 +17,7 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
+  CBadge,
 } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -396,14 +397,16 @@ const Calendar = () => {
                             {u_idxlist.map((data) => {
                               return (
                                 <CCol md={4} className="mb-3" key={data.u_idx}>
-                                  <CFormCheck
-                                    inline
-                                    onChange={checkAList}
-                                    className="inlineCheckbox2"
-                                    value={data.u_idx}
-                                  />
-                                  <CAvatar className="ms-2" src={data.profilephoto} />{' '}
-                                  {data.nickname}
+                                  <CBadge color="light" textColor="black" className="ms-6 m-1">
+                                    <CFormCheck
+                                      inline
+                                      onChange={checkAList}
+                                      className="inlineCheckbox2"
+                                      value={data.u_idx}
+                                    />
+                                    <CAvatar size="sm" className="me-1" src={data.profilephoto} />
+                                    <strong>{data.nickname}</strong>
+                                  </CBadge>
                                 </CCol>
                               )
                             })}

@@ -18,21 +18,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<!--전체 보드 리스트 -->
-	<select id="allBoardList" parameterType="kr.or.vo.Board"
-		resultType="kr.or.vo.Board">
-		SELECT a.idx, a.title,a.content, h.profilephoto ,j.u_idx as u_idx1, a.b_code
-		,a.nickname,a.w_date
-		FROM board_${url} a
-		left outer JOIN doc_storage_${url} b ON a.idx = b.idx
-		left outer JOIN common_board_${url} c ON a.idx = c.idx
-		left outer JOIN board_status_${url} d ON a.idx = d.idx
-		left outer JOIN calendar_${url} e ON e.idx = a.idx
-		left outer JOIN kanban_${url} f ON f.idx = d.idx
-		left outer join label_${url} g on a.label = g.label
-		left outer JOIN member h on a.u_idx =h.u_idx
-		left outer join board_type_${url} i on a.b_code =i.b_code
-		LEFT JOIN checked_${url} j ON j.idx = a.idx
-		order by a.idx desc
+	<select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
+	select c_idx, a2.idx, title, content, w_date, a2.nickname, b_code, label, style, a2.u_idx, profilephoto
+	from (select c_idx, idx, u_idx 
+      		from checked_${url}
+      		where u_idx = #{u_idx}) s1 full outer join (select idx, title, content, w_date, a1.nickname, b_code, label, style, a1.u_idx, profilephoto
+                                                		from member m join (select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, b.label, style, u_idx
+                                                                    		from board_${url} b left join label_${url} l 
+                                                                    		on b.label = l.label) a1
+                                                		on m.u_idx = a1.u_idx) a2
+	on s1.idx = a2.idx
+	order by a2.idx desc
 	</select>
 
 	<!-- b_code 검색 -->

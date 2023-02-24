@@ -48,9 +48,7 @@ const AllBoardList = () => {
   //로그인한 유저
   const login = JSON.parse(localStorage.getItem('login'))
   const params = useParams()
-  const myparams = {
-    url: params.url,
-  }
+
   const [allboardlist, setallBoardlist] = useState([]) //모든게시판목록
   const [boardnumber, setBoardNumber] = useState('') // 게시판 번호 받기
   const [searchValue, setSearchValue] = useState('') // 검색
@@ -82,6 +80,11 @@ const AllBoardList = () => {
 
   //모든 게시판 목록
   function list() {
+    const myparams = {
+      url: params.url,
+      u_idx: login.u_idx,
+    }
+
     axios({
       method: 'POST',
       url: '/allboard/allboardlist',

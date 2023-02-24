@@ -1,5 +1,6 @@
 import {
   CAvatar,
+  CBadge,
   CCard,
   CCardBody,
   CCardFooter,
@@ -198,7 +199,10 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
                           <div className="col-3" align="end">
                             <strong># {data.number}</strong>
@@ -250,7 +254,10 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
 
                           <div className="col-3" align="end">
@@ -307,7 +314,10 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
                           <div className="col-3" align="end">
                             <strong># {data.number}</strong>
@@ -359,7 +369,10 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
 
                           <div className="col-3" align="end">

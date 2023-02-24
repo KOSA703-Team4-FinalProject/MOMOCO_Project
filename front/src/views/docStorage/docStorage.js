@@ -4,6 +4,7 @@ import {
   CAccordionBody,
   CAccordionHeader,
   CAccordionItem,
+  CBadge,
   CButton,
   CCard,
   CCardBody,
@@ -19,6 +20,7 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
+  CAvatar,
 } from '@coreui/react'
 import axios from 'axios'
 import CIcon from '@coreui/icons-react'
@@ -257,7 +259,9 @@ const docStorage = (props) => {
                       )}
                     </CCol>
                     <CCol className="col-2 px-1">
-                      <strong>{data.nickname}</strong>
+                      <CBadge color="light" textColor="black" className="ms-6 m-1">
+                        <strong>{data.nickname}</strong>
+                      </CBadge>
                       <p></p>
                       <strong>{data.w_date}</strong>
                     </CCol>
