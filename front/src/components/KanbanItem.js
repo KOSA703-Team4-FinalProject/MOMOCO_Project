@@ -29,6 +29,7 @@ import axios from 'axios'
 import $ from 'jquery'
 import { useRef } from 'react'
 import Comments from './Comments'
+import Swal from 'sweetalert2'
 
 const KanbanItem = (props) => {
   const [visibleXL, setVisibleXL] = useState(false)
@@ -93,6 +94,7 @@ const KanbanItem = (props) => {
 
       // console.log(modifiedData)
       setKanbanItemList(res.data)
+      console.log(res.data)
       setView(true)
     })
 
@@ -125,21 +127,60 @@ const KanbanItem = (props) => {
     console.log('모두 삭제')
     console.log(params.url)
 
-    if (confirm('해당 컬럼의 모든 아이템을 삭제하시겠습니까?')) {
-      alert('삭제가 완료되었습니다.')
-      axios({
-        url: '/api/kanban/deleteAllKanbanItem',
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: params,
-      }).then((res) => {
-        getKanban()
-      })
-    } else {
-      alert('취소했습니다.')
-    }
+    Swal.fire({
+      title: '해당 컬럼의 모든 아이템을 삭제하시겠습니까?',
+      text: '',
+      icon: 'warning',
+
+      showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+      confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+      cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+      confirmButtonText: '삭제', // confirm 버튼 텍스트 지정
+      cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+      reverseButtons: true, // 버튼 순서 거꾸로
+    }).then((result) => {
+      // 만약 Promise리턴을 받으면,
+      if (result.isConfirmed) {
+        // 만약 모달창에서 confirm 버튼을 눌렀다면
+        axios({
+          method: 'POST',
+          url: '/api/kanban/deleteAllKanbanItem',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: params,
+        }).then((res) => {
+          console.log(res)
+          Swal.fire({
+            icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+            title: '삭제가 완료 되었습니다.',
+          })
+          getKanban()
+        })
+      } else {
+        Swal.fire({
+          icon: 'error', // 여기다가 아이콘 종류를 쓰면 됩니다.
+          title: '취소되었습니다',
+        })
+      }
+    })
+
+    // if (confirm('해당 컬럼의 모든 아이템을 삭제하시겠습니까?')) {
+    //   alert('삭제가 완료되었습니다.')
+    //   axios({
+    //     url: '/api/kanban/deleteAllKanbanItem',
+    //     method: 'POST',
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //     data: params,
+    //   }).then((res) => {
+    //     getKanban()
+    //   })
+    // } else {
+    //   alert('취소했습니다.')
+    // }
   }
 
   // 모든 컬럼 삭제
@@ -182,23 +223,63 @@ const KanbanItem = (props) => {
             ')  '
           )
         })
-        if (
-          confirm('삭제시 캘린더와 칸반의 글들이 모두 삭제됩니다. 정말 지우시겠습니까?  ' + list)
-        ) {
-          alert('삭제가 완료 되었습니다.')
-          axios({
-            url: '/api/kanban/deleteKanbanColumn',
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            data: params,
-          }).then((res) => {
-            getKanban()
-          })
-        } else {
-          alert('취소했습니다.')
-        }
+
+        Swal.fire({
+          title: '삭제시 캘린더와 칸반의 글들이 모두 삭제됩니다. 정말 지우시겠습니까?  ',
+          text: list,
+          icon: 'warning',
+
+          showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+          confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+          cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+          confirmButtonText: '삭제', // confirm 버튼 텍스트 지정
+          cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+          reverseButtons: true, // 버튼 순서 거꾸로
+        }).then((result) => {
+          // 만약 Promise리턴을 받으면,
+          if (result.isConfirmed) {
+            // 만약 모달창에서 confirm 버튼을 눌렀다면
+            axios({
+              method: 'POST',
+              url: '/api/kanban/deleteKanbanColumn',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+              data: params,
+            }).then((res) => {
+              console.log(res)
+              Swal.fire({
+                icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+                title: '삭제가 완료 되었습니다.',
+              })
+              getKanban()
+            })
+          } else {
+            Swal.fire({
+              icon: 'error', // 여기다가 아이콘 종류를 쓰면 됩니다.
+              title: '취소되었습니다',
+            })
+          }
+        })
+
+        // if (
+        //   confirm('삭제시 캘린더와 칸반의 글들이 모두 삭제됩니다. 정말 지우시겠습니까?  ' + list)
+        // ) {
+        //   alert('삭제가 완료 되었습니다.')
+        //   axios({
+        //     url: '/api/kanban/deleteKanbanColumn',
+        //     method: 'POST',
+        //     headers: {
+        //       Authorization: `Bearer ${accessToken}`,
+        //     },
+        //     data: params,
+        //   }).then((res) => {
+        //     getKanban()
+        //   })
+        // } else {
+        //   alert('취소했습니다.')
+        // }
       })
     }
   }
@@ -211,7 +292,10 @@ const KanbanItem = (props) => {
     const params = { s_idx: content_type, url: param.url }
 
     if (params.s_idx < 4) {
-      alert('기본 컬럼은 제목 수정이 불가합니다.')
+      Swal.fire({
+        icon: 'warning', // 여기다가 아이콘 종류를 쓰면 됩니다.
+        text: '기본 컬럼은 제목을 수정할 수 없습니다.',
+      })
     } else {
       setTitleVisible(!titleVisible)
       setColumnValue(content_type)
@@ -222,15 +306,19 @@ const KanbanItem = (props) => {
     e.preventDefault()
     const name = e.target.elements.editColumnName.value
     const params = { s_name: name, s_idx: columnValue, url: param.url }
-
+    console.log(name)
     axios({
       url: '/api/kanban/modifyKanbanColumnName',
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       data: params,
     }).then((res) => {
-      alert('수정이 완료 되었습니다.')
+      Swal.fire({
+        icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+        text: '수정이 완료 되었습니다.',
+      })
       setTitleVisible(!titleVisible)
       getKanban()
     })
@@ -264,21 +352,44 @@ const KanbanItem = (props) => {
     const content_type = $(tag).attr('value')
     const params = { b_idx: content_type, url: param.url }
 
-    if (confirm('해당 아이템을 삭제하시겠습니까?')) {
-      alert('삭제가 완료 되었습니다.')
-      axios({
-        url: '/api/kanban/KanbanItemDelete',
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: params,
-      }).then((res) => {
-        getKanban()
-      })
-    } else {
-      alert('취소했습니다.')
-    }
+    Swal.fire({
+      title: '해당 아이템을 삭제하시겠습니까?',
+      text: '',
+      icon: 'warning',
+
+      showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+      confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+      cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+      confirmButtonText: '삭제', // confirm 버튼 텍스트 지정
+      cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+      reverseButtons: true, // 버튼 순서 거꾸로
+    }).then((result) => {
+      // 만약 Promise리턴을 받으면,
+      if (result.isConfirmed) {
+        // 만약 모달창에서 confirm 버튼을 눌렀다면
+        axios({
+          method: 'POST',
+          url: '/api/kanban/KanbanItemDelete',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: params,
+        }).then((res) => {
+          console.log(res)
+          Swal.fire({
+            icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+            title: '삭제가 완료 되었습니다',
+          })
+          getKanban()
+        })
+      } else {
+        Swal.fire({
+          icon: 'error', // 여기다가 아이콘 종류를 쓰면 됩니다.
+          title: '취소되었습니다',
+        })
+      }
+    })
   }
 
   // 수정 버튼을 클릭했을때 실행
@@ -299,23 +410,70 @@ const KanbanItem = (props) => {
 
     console.log(reqData)
 
-    if (confirm('수정하시겠습니까?')) {
-      axios({
-        method: 'POST',
-        url: '/api/kanban/modifyKanbanItem',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: reqData,
-      }).then((res) => {
-        console.log(res)
-        alert('수정이 완료 되었습니다.')
-        getKanban()
-        setVisibleModify(!visiblemodify)
+    if (!inputtitle1 || !inputtitle2) {
+      Swal.fire({
+        icon: 'warning', // 여기다가 아이콘 종류를 쓰면 됩니다.
+        title: '제목, 내용을 모두 입력해주세요',
       })
     } else {
-      alert('취소되었습니다')
+      Swal.fire({
+        title: '수정하시겠습니까?',
+        text: '',
+        icon: 'warning',
+
+        showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+        confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+        cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+        confirmButtonText: '수정', // confirm 버튼 텍스트 지정
+        cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+        reverseButtons: true, // 버튼 순서 거꾸로
+      }).then((result) => {
+        // 만약 Promise리턴을 받으면,
+        if (result.isConfirmed) {
+          // 만약 모달창에서 confirm 버튼을 눌렀다면
+          axios({
+            method: 'POST',
+            url: '/api/kanban/modifyKanbanItem',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: reqData,
+          }).then((res) => {
+            console.log(res)
+            Swal.fire({
+              icon: 'success', // 여기다가 아이콘 종류를 쓰면 됩니다.
+              title: '수정이 완료 되었습니다',
+            })
+            getKanban()
+            setVisibleModify(!visiblemodify)
+          })
+        } else {
+          Swal.fire({
+            icon: 'error', // 여기다가 아이콘 종류를 쓰면 됩니다.
+            title: '취소되었습니다',
+          })
+        }
+      })
     }
+
+    // if (confirm('수정하시겠습니까?')) {
+    //   axios({
+    //     method: 'POST',
+    //     url: '/api/kanban/modifyKanbanItem',
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //     data: reqData,
+    //   }).then((res) => {
+    //     console.log(res)
+    //     alert('수정이 완료 되었습니다.')
+    //     getKanban()
+    //     setVisibleModify(!visiblemodify)
+    //   })
+    // } else {
+    //   alert('취소되었습니다')
+    // }
   }
 
   const onChange1 = (e) => {
@@ -439,7 +597,12 @@ const KanbanItem = (props) => {
           {conList.map((data, key) => {
             return (
               <CCard
-                style={{ width: '300px', height: '600px', overflowY: 'scroll', background: '#729597' }}
+                style={{
+                  width: '300px',
+                  height: '600px',
+                  overflowY: 'scroll',
+                  background: '#729597',
+                }}
                 className=" py-3 me-2 container1"
                 key={conList[key].s_name}
               >
@@ -474,7 +637,7 @@ const KanbanItem = (props) => {
                   <CModal
                     alignment="center"
                     visible={titleVisible}
-                    onClose={() => setTitleVisible(false)}
+                    // onClose={() => setTitleVisible(false)}
                   >
                     <CModalBody>
                       <CForm onSubmit={editKanbanColumnName} value={conList[key].s_idx}>
@@ -564,31 +727,21 @@ const KanbanItem = (props) => {
                           </CCardBody>
                           <br />
 
-                          <CModal size="xl" visible={visibleXL} onClose={() => setVisibleXL(false)}>
-                            <CModalBody>
+                          <CModal size="xl" visible={visibleXL}>
+                            <CModalBody style={{ background: '#729597' }}>
                               <CCard className="col-md-12 container-fluid">
                                 <CIcon icon={icon.cibGithub} className="me-2" />
                                 <CFormLabel htmlFor="exampleFormControlInput1">Item</CFormLabel>
                                 <b>제목 : {itemDetail.title}</b>
                                 <hr />
                                 <b>상태 : {itemDetail.s_name}</b>
+
                                 <br />
                                 <CCard style={{ height: '200px', overflowY: 'scroll' }}>
                                   <b>{itemDetail.content}</b>
                                 </CCard>
                                 <br />
-
                                 <CCol className="mz-2" align="center">
-                                  <CButton
-                                    color="dark"
-                                    variant="outline"
-                                    onClick={() => {
-                                      setVisibleXL(!visibleXL)
-                                    }}
-                                  >
-                                    닫기
-                                  </CButton>
-                                  {'  '}
                                   <CButton
                                     color="danger"
                                     variant="outline"
@@ -596,27 +749,33 @@ const KanbanItem = (props) => {
                                   >
                                     수정
                                   </CButton>
+                                  {'  '}
+                                  <CButton
+                                    color="success"
+                                    variant="outline"
+                                    className="text-dark"
+                                    onClick={() => {
+                                      setVisibleXL(!visibleXL)
+                                    }}
+                                  >
+                                    상세보기 닫기
+                                  </CButton>
                                 </CCol>
                                 <br />
                                 <Comments idx={getidx} />
-
                                 <br />
                               </CCard>
                             </CModalBody>
                           </CModal>
                           {/* 수정 모달 화면 */}
 
-                          <CModal
-                            size="xl"
-                            visible={visiblemodify}
-                            onClose={() => setVisibleModify(false)}
-                          >
-                            <CModalBody>
+                          <CModal size="xl" visible={visiblemodify}>
+                            <CModalBody style={{ background: '#729597' }}>
                               <CForm>
                                 <CCard className="col-md-12 container-fluid" ref={modifyModal}>
                                   <CIcon icon={icon.cibGithub} className="me-2" />
                                   <CFormLabel htmlFor="exampleFormControlInput1" align="center">
-                                    <strong>{itemDetail.title}</strong> 수정
+                                    #{itemDetail.idx} <strong>{itemDetail.title}</strong>수정
                                   </CFormLabel>
                                   <hr />
                                   <b>제목</b>
