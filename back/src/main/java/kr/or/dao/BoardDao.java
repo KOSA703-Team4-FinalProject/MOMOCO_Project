@@ -21,5 +21,8 @@ public interface BoardDao {
 	public List<Board> boardSearch (Board search) throws ClassNotFoundException, SQLException;
 	//읽지 않은글
 	public List<Board> notread(Board url) throws ClassNotFoundException, SQLException;
+	
+	//전체 최신 글 4개 출럭
+	public List<Board> getNewBoardList(String url) throws ClassNotFoundException, SQLException;
 
 }

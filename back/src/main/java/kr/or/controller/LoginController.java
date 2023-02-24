@@ -94,5 +94,11 @@ public class LoginController {
 		return member;
 	}
 	
-
+	//유저 탈퇴 시 leave_date 3일 뒤로 업데이트
+	@RequestMapping(value="/leaveMember", method=RequestMethod.PUT)
+	public int leaveMember(@RequestParam(value="u_idx") int u_idx) {
+		int result = loginservice.leaveMember(u_idx);
+		
+		return result;
+	}
 }

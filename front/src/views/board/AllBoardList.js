@@ -122,9 +122,6 @@ const AllBoardList = () => {
   const handlePageChange = (page) => {
     setPage(page)
   }
-  const itemChange = (e) => {
-    setItems(Number(e.target.value))
-  }
   //검색 기능
   const handleSearchChange = (event) => {
     setSearchValue(() => event.target.value)

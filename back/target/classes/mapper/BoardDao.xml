@@ -67,5 +67,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 		order by a.idx desc
 	</select>
+	
+	<!-- 전체 최신글 4가 불러오기  public List<Board> getNewBoardList(Board board) -->
+	<select id="getNewBoardList" parameterType="String" resultType="kr.or.vo.Board">
+		<![CDATA[
+			select t.b_code, b_name, u_idx, profilephoto, nickname, title, content, w_date, label
+			from board_type_${url} t join (select m.u_idx, profilephoto, m.nickname, title, content, w_date, b_code, label
+	                    				   	from member m join board_${url} b
+	                    					on m.u_idx = b.u_idx
+	                    					where rownum <= 4) al
+			on t.b_code = al.b_code
+		]]>
+	</select>
 
 </mapper>

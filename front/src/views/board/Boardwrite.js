@@ -40,6 +40,8 @@ const Boardwirte = () => {
   const [commitsList, setCommitsList] = useState([])
   const [listview, setListView] = useState(false)
 
+  const [codeView, setCodeView] = useState(false)   //code 편집기 보일지 아닐지 여부
+
   const [codeContent, setCodeContent] = useState('<h1>hhahaha</h1>') //code 편집기 내용
 
   //워크스페이스 주소값
@@ -150,8 +152,8 @@ const Boardwirte = () => {
       step: step,
       depth: depth,
     }
+
     //계층형 만들기
-    console.log(write.url)
     const fd = new FormData()
     fd.append('file', filevalues)
     fd.append('write1', JSON.stringify(write))
@@ -221,6 +223,7 @@ const Boardwirte = () => {
 
     setListView(false)
   }
+
 
   //code 편집기 내용 변경 시
   const codewrite = (arg1, arg2) => {
@@ -326,7 +329,7 @@ const Boardwirte = () => {
                           </CRow>
                         </CCol>
                         <CCol sm={1}>
-                          <CButton color="primary" variant="outline">
+                          <CButton color="primary" variant="outline" onClick={() => setCodeView(false)}>
                             Code
                           </CButton>
                         </CCol>
@@ -337,7 +340,7 @@ const Boardwirte = () => {
                   <CRow>
                     <CCol md={12}>
                       <CRow>
-                        <CCol md={6}>
+                        <CCol>
                           <Editor
                             onEditorChange={handleEditorChange}
                             value={content.content}
@@ -363,7 +366,7 @@ const Boardwirte = () => {
                             }}
                           />
                         </CCol>
-                        <CCol md={6}>
+                        <CCol>
                           <AceEditor
                             mode="java"
                             theme="monokai"

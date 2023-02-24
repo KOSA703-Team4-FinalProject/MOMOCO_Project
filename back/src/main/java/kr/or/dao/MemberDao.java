@@ -26,4 +26,7 @@ public interface MemberDao {
 	//유저 정보 확인
 	public MemberAll getMemberByIdx(int u_idx) throws ClassNotFoundException, SQLException;
 	
+	//유저 탈퇴 시 leave_date 3일 뒤로 수정
+	public int leaveMember(int u_idx) throws ClassNotFoundException, SQLException;
+	
 }
