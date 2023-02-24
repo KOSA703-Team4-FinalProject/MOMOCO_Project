@@ -87,7 +87,7 @@ const Gittimeline = () => {
         <CCardBody>
           <CRow>
             <CCol sm={3} className="mx-3 mt-2">
-              <h5><strong>Commit 이력</strong></h5>
+              <h3><strong>Commit 이력</strong></h3>
             </CCol>
             <CCol sm={9} className="d-none d-md-block"></CCol>
           </CRow>

@@ -34,7 +34,7 @@ const RegAndLoginHeader = () => {
           <CNavbarBrand href="">
             <CCol className="align-self-center">
               <h1 className="ps-3 pb-1">
-                <img src={momoco} width="40px" className='mb-2' />
+                <img src={momoco} width="40px" className='mb-2 me-2' />
                 <strong>momoco</strong>
               </h1>
             </CCol>
@@ -49,7 +49,7 @@ const RegAndLoginHeader = () => {
             <CNavbarNav>
               <CNavItem className="px-4">
                 <CDropdown variant="nav-item" popper={false}>
-                  <h4>
+                  <h5>
                     <CDropdownToggle color="secondary">
                       <strong>워크스페이스</strong>
                     </CDropdownToggle>
@@ -65,12 +65,12 @@ const RegAndLoginHeader = () => {
                         </CNavLink>
                       </CDropdownItem>
                     </CDropdownMenu>
-                  </h4>
+                  </h5>
                 </CDropdown>
               </CNavItem>
               <CNavItem className="px-4">
                 <CDropdown variant="nav-item" popper={false}>
-                  <h4>
+                  <h5>
                     <CDropdownToggle color="secondary">
                       <strong> About 모모코</strong>
                     </CDropdownToggle>
@@ -92,7 +92,7 @@ const RegAndLoginHeader = () => {
                         </CNavLink>
                       </CDropdownItem>
                     </CDropdownMenu>
-                  </h4>
+                  </h5>
                 </CDropdown>
               </CNavItem>
             </CNavbarNav>

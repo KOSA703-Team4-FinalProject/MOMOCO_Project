@@ -78,16 +78,50 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
-        <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <img src={momoco} width="20%" />
+        <CHeaderBrand className=" d-md-none" to="/">
+          <img src={momoco} width="40px" />
+          <CDropdown>
+            <CDropdownToggle color="ghost">
+              <BsFillHouseDoorFill />
+              <strong> {params.url}</strong>
+            </CDropdownToggle>
+            <CDropdownMenu>
+              <CRow className="mb-2 px-2">
+                <CCol className="my-auto px-4" md={4}>
+                  <strong>MY SPACE</strong>
+                </CCol>
+                <CCol md={8} align="end">
+                  <CButton
+                    onClick={() => navigate('/workspace')}
+                    className="mx-1"
+                    color="primary"
+                    variant="outline"
+                  >
+                    <strong>만들기</strong>
+                  </CButton>
+                  <CButton
+                    onClick={() => navigate('/workspacelist')}
+                    className="mx-1"
+                    color="dark"
+                    variant="outline"
+                  >
+                    <strong>설정</strong>
+                  </CButton>
+                </CCol>
+              </CRow>
+              <CRow className="px-2">
+                <WorkSpaceListItem width="400px" maxHeight="400px" overflowY="scroll" />
+              </CRow>
+            </CDropdownMenu>
+          </CDropdown>
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
             {/* 워크스페이스 리스트 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-                  <BsFillHouseDoorFill />
-                  <strong> {params.url}</strong>
+                <BsFillHouseDoorFill />
+                <strong> {params.url}</strong>
               </CDropdownToggle>
               <CDropdownMenu>
                 <CRow className="mb-2 px-2">

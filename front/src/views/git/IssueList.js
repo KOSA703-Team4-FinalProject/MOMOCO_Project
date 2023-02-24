@@ -147,6 +147,7 @@ const IssueList = () => {
         <CCardBody>
           <CRow>
             <CCol sm={3}>
+              <h3 className='m-2'><strong>Issue List</strong></h3>
               <CFormSelect onChange={changeOption}>
                 <option value="unresolvedissue">미해결 Issue 이력</option>
                 <option value="assignedissue">할당된 Issue List</option>
@@ -314,7 +315,8 @@ const IssueList = () => {
                       <VerticalTimelineElement
                         className="vertical-timeline-element--work"
                         date={data.updated_at}
-                        iconStyle={{ background: '#514200', color: '#fff' }}
+                        icon={<CAvatar size="xl" src={data.user.avatar_url} />}
+                        iconStyle={{ background: 'white', color: 'white' }}
                         key={data.id}
                         iconOnClick={() => {
                           setProfile({

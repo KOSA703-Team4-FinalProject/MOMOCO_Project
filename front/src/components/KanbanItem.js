@@ -439,8 +439,8 @@ const KanbanItem = (props) => {
           {conList.map((data, key) => {
             return (
               <CCard
-                style={{ width: '300px', height: '600px', overflowY: 'scroll' }}
-                className="bg-dark py-3 me-2 container1"
+                style={{ width: '300px', height: '600px', overflowY: 'scroll', background: '#729597' }}
+                className=" py-3 me-2 container1"
                 key={conList[key].s_name}
               >
                 <CCol xs="auto" className="me-auto text-light" value={conList[key].s_idx}>
