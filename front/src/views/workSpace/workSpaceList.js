@@ -60,7 +60,7 @@ const workSpaceList = () => {
                             >
                               {'    '}
                               <CIcon icon={icon.cibGithub} height={24}></CIcon>
-                              깃허브 마이페이지
+                              깃허브 MyPage
                             </a>
                           </CCol>
                         </CRow>

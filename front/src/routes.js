@@ -89,8 +89,10 @@ const Projectmain = React.lazy(() => import('./views/project/Projectmain'))
 //프로젝트 상세페이지
 const Projectcontent = React.lazy(() => import('./views/project/Projectcontent'))
 const ReplyBoardWrite = React.lazy(() => import('./views/board/replyBoardWrite')) //commonboard 답글
+
 const routes = [
-  { path: '/', exact: true, name: 'Home', element: AllBoardList },
+  { path: '/', exact: true, name: 'Home', element: Dashboard },
+  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/dashboard', name: 'Dashboard', element: AllBoardList },
   { path: '/calendar', name: 'calendar', exact: true, element: Calendar },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },

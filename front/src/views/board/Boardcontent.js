@@ -219,8 +219,8 @@ const Boardcontent = (props) => {
         </div>
         <br></br>
 
-        <div className="p-4">
-          <div className="ms-5 me-5">
+        <div>
+          <div className="ms-4 me-4">
             <Comments idx={params.idx} />
             <br></br>
           </div>

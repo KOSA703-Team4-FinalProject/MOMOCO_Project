@@ -291,11 +291,11 @@ const Comments = (props) => {
                       key={key}
                     >
                       <CModalBody>
-                        <CCol className="col-md-12 px-3 py-3">
+                        <CCol className="col-md-12">
                           <CCol className="row">
                             <CCol className="col-md-10 px-4">
                               <CAvatar className="ms-6" src={data.profilephoto} />
-                              <strong>닉네임: {data.nickname}</strong>
+                              <strong> {data.nickname}</strong>
                             </CCol>
                             <CCol className="col-md-2 px-4"></CCol>
                           </CCol>
@@ -325,7 +325,7 @@ const Comments = (props) => {
                         </CButton>
                         <CButton color="primary" onClick={updatecomment}>
                           <CFormInput type="hidden" id="coidx" value={data.co_idx} />
-                          작성
+                          수정
                         </CButton>
                       </CModalFooter>
                     </CModal>
@@ -341,11 +341,11 @@ const Comments = (props) => {
                     </CButton>
                     <CModal size="lg" visible={visibleLg} onClose={() => setVisibleLg(false)}>
                       <CModalBody>
-                        <CCol className="col-md-12 px-3 py-3">
+                        <CCol className="col-md-12">
                           <CCol className="row">
                             <CCol className="col-md-10 px-4">
                               <CAvatar className="ms-6" src={login.profilephoto} />
-                              <strong>닉네임: {login.nickname}</strong>
+                              <strong> {login.nickname}</strong>
                             </CCol>
                             <CCol className="col-md-2 px-4"></CCol>
                           </CCol>
