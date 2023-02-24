@@ -1,5 +1,6 @@
 import {
   CAvatar,
+  CBadge,
   CButton,
   CCard,
   CCardBody,
@@ -326,7 +327,7 @@ const Calendar = () => {
 
     console.log(targ)
 
-    $('#caltitle').val("#"+num+" "+title)
+    $('#caltitle').val('#' + num + ' ' + title)
     $('#calcontent').val(targ)
     setListView(false)
   }
@@ -349,11 +350,7 @@ const Calendar = () => {
                 <CCol className="mt-3">
                   <CRow className="g-3 mt-2">
                     <CCol md={12}>
-                      <CFormInput
-                        type="text"
-                        id="caltitle"
-                        floatingLabel="일정"
-                      />
+                      <CFormInput type="text" id="caltitle" floatingLabel="일정" />
                     </CCol>
                     <CCol md={6}>
                       <CFormInput
@@ -709,8 +706,15 @@ const Calendar = () => {
           <CModalBody>
             {commitsList.map((data) => {
               return (
-                <CCard key={data.id} className="my-3 p-3 issue" issueSrc={data.html_url} title={data.title} num={data.number} onClick={clickIssue}>
-                  <CCard className='p-2 mt-2'>
+                <CCard
+                  key={data.id}
+                  className="my-3 p-3 issue"
+                  issueSrc={data.html_url}
+                  title={data.title}
+                  num={data.number}
+                  onClick={clickIssue}
+                >
+                  <CCard className="p-2 mt-2">
                     <h5>
                       <strong>{data.title}</strong>
                     </h5>

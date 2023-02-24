@@ -6,14 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 전체 일정 조회 public List<Calendar> getCalendar() -->
 	<select id="getCalendar" parameterType="String" resultType="kr.or.vo.Calendar">
-		select e.idx, e.nickname, e.title, e.content, to_char(e.w_date, 'YYYY-MM-DD') as w_date, e.b_code, label, u_idx, c.b_idx, to_char(c.start_date, 'YYYY-MM-DD') as start_date, to_char(c.end_date, 'YYYY-MM-DD') as end_date, c.s_idx
+		select e.idx, e.nickname, e.title, e.content, to_char(e.w_date, 'yyyy-MM-dd HH24:MI') as w_date, e.b_code, label, u_idx, c.b_idx, to_char(c.start_date, 'YYYY-MM-DD') as start_date, to_char(c.end_date, 'YYYY-MM-DD') as end_date, c.s_idx
 		from board_${url} e join calendar_${url} c
 		on c.idx = e.idx
 	</select>
 	
 	<!-- 특정 일정 조회 public Calendar getCalendarByTitle(Calendar cal) -->
 	<select id="getCalendarByTitle" parameterType="kr.or.vo.Calendar" resultType="kr.or.vo.Calendar">
-		select idx, nickname, title, content, to_char(w_date, 'yyyy-MM-dd') as w_date, b_code, label, u_idx, b_idx, to_char(start_date, 'yyyy-MM-dd') as start_date, to_char(end_date, 'yyyy-MM-dd') as end_date, a.s_idx, s_name
+		select idx, nickname, title, content, to_char(w_date, 'yyyy-MM-dd HH24:MI') as w_date, b_code, label, u_idx, b_idx, to_char(start_date, 'yyyy-MM-dd') as start_date, to_char(end_date, 'yyyy-MM-dd') as end_date, a.s_idx, s_name
 		from (select b.idx, nickname, title, content, w_date, b_code, label, u_idx, b_idx, start_date, end_date, s_idx
     		from board_${url} b join calendar_${url} c 
     		on b.idx = c.idx 
