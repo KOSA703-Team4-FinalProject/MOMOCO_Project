@@ -48,23 +48,22 @@ const AllBoardList = () => {
   //로그인한 유저
   const login = JSON.parse(localStorage.getItem('login'))
   const params = useParams()
-  const myparams = {
-    url: params.url,
-  }
+
   const [allboardlist, setallBoardlist] = useState([]) //모든게시판목록
   const [boardnumber, setBoardNumber] = useState('') // 게시판 번호 받기
   const [searchValue, setSearchValue] = useState('') // 검색
   const [isChecked, setIsChecked] = useState(false) // 전체보기 게시판
   const navigate = useNavigate()
+
   const handleClick = (event) => {
     //클릭할때 게시판번호 검색
     const number = event.target.value
-    setBoardNumber(number)
+    setBoardNumber((prev) => number)
 
     const searchcontent = {
       url: params.url,
       type: 'boardnumber1',
-      keyword: boardnumber,
+      keyword: number,
     }
 
     axios({
@@ -74,12 +73,18 @@ const AllBoardList = () => {
 
       data: searchcontent,
     }).then((res) => {
+      console.log(res.data)
       setallBoardlist(res.data)
     })
   }
 
   //모든 게시판 목록
   function list() {
+    const myparams = {
+      url: params.url,
+      u_idx: login.u_idx,
+    }
+
     axios({
       method: 'POST',
       url: '/allboard/allboardlist',
@@ -89,26 +94,22 @@ const AllBoardList = () => {
       data: myparams,
     }).then((res) => {
       console.log(res.data)
-      reset()
-      res.data.map((data) => {
-        setallBoardlist((allboardlist) => [...allboardlist, data])
-      })
+      setallBoardlist((prev) => res.data)
     })
   }
 
-  function reset() {
-    setallBoardlist([])
-  }
   useEffect(() => {
     //로딩되었을때 전체보기
     list()
   }, [])
+
   useEffect(() => {
     //전체보기를 클릭했을때
     if (isChecked) {
       list()
     }
   }, [isChecked])
+
   const handleAllview = (e) => {
     // 전체보기 클릭
     setIsChecked(!isChecked)
@@ -125,7 +126,7 @@ const AllBoardList = () => {
   }
   //검색 기능
   const handleSearchChange = (event) => {
-    setSearchValue(event.target.value)
+    setSearchValue(() => event.target.value)
   }
   const searchChange = (e) => {
     const searchcontent = {
@@ -133,8 +134,6 @@ const AllBoardList = () => {
       type: 'title_content',
       keyword: searchValue,
     }
-    console.log(params.url)
-    console.log(searchcontent.url + searchcontent.type, searchcontent.keyword)
     axios({
       method: 'POST',
       url: '/allboard/boardsearch',
@@ -142,7 +141,8 @@ const AllBoardList = () => {
 
       data: searchcontent,
     }).then((res) => {
-      setallBoardlist(res.data)
+      console.log(res.data)
+      setallBoardlist((prev) => res.data)
     })
   }
 
@@ -218,41 +218,52 @@ const AllBoardList = () => {
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck2"
+                        name="board"
                         autoComplete="off"
                         label="전체보기"
                         value={isChecked}
                         onClick={handleAllview}
+                        type="radio"
+                        defaultChecked
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck3"
+                        name="board"
                         autoComplete="off"
                         value={3}
                         label="문서저장소"
+                        type="radio"
                         onClick={handleClick}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck4"
+                        name="board"
                         autoComplete="off"
                         value={4}
                         label="캘린더"
+                        type="radio"
                         onClick={handleClick}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck5"
+                        name="board"
                         autoComplete="off"
                         value={5}
                         label="자유게시판"
+                        type="radio"
                         onClick={handleClick}
                       />
                       <CFormCheck
                         button={{ color: 'primary', variant: 'outline' }}
                         id="btncheck6"
+                        name="board"
                         autoComplete="off"
                         value={6}
                         label="칸반보드"
+                        type="radio"
                         onClick={handleClick}
                       />
                     </CButtonGroup>
@@ -291,32 +302,34 @@ const AllBoardList = () => {
                             <div className="row">
                               <div className="col-md-4">
                                 &nbsp;<strong> {data.title}</strong>
-                                <div className="col-md-8" align="left">
-                                  {data.b_code === 5 && (
-                                    <CButton color="light" shape="rounded-pill" size="sm">
-                                      자유게시판
-                                    </CButton>
-                                  )}
-                                  {data.b_code === 3 && (
-                                    <CButton color="light" shape="rounded-pill" size="sm">
-                                      문서저장소
-                                    </CButton>
-                                  )}
-                                  {data.b_code === 4 && (
-                                    <CButton color="light" shape="rounded-pill" size="sm">
-                                      캘린더
-                                    </CButton>
-                                  )}
-                                  {data.b_code === 6 && (
-                                    <CButton color="light" shape="rounded-pill" size="sm">
-                                      칸반보드
-                                    </CButton>
-                                  )}
-                                </div>
                               </div>
                               <div className="col-md-12">
                                 &nbsp;{' '}
-                                {data.content ? data.content.replace(/(<([^>]+)>)/gi, '') : null}
+                                {data.content
+                                  ? data.content.replace(/(<([^>]+)>)/gi, '').substring(0, 19)
+                                  : null}
+                              </div>
+                              <div className="col-md-8" align="left">
+                                {data.b_code === 5 && (
+                                  <CButton color="light" shape="rounded-pill" size="sm">
+                                    자유게시판
+                                  </CButton>
+                                )}
+                                {data.b_code === 3 && (
+                                  <CButton color="light" shape="rounded-pill" size="sm">
+                                    문서저장소
+                                  </CButton>
+                                )}
+                                {data.b_code === 4 && (
+                                  <CButton color="light" shape="rounded-pill" size="sm">
+                                    캘린더
+                                  </CButton>
+                                )}
+                                {data.b_code === 6 && (
+                                  <CButton color="light" shape="rounded-pill" size="sm">
+                                    칸반보드
+                                  </CButton>
+                                )}
                               </div>
                             </div>
                           </div>

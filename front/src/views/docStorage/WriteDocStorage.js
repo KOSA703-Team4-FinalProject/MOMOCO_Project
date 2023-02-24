@@ -1,5 +1,5 @@
 import React from 'react'
-import { CCard, CForm } from '@coreui/react'
+import { CBadge, CCard, CForm } from '@coreui/react'
 import { CRow, CFormLabel, CCol, CFormInput, CInputGroup, CInputGroupText } from '@coreui/react'
 import { CCardBody } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
@@ -206,12 +206,14 @@ const WriteDocStorage = () => {
       <CForm onSubmit={SubmitHandler}>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-2 col-form-label">
-            <strong>
-              라벨 선택{' '}
+            <strong>라벨 선택 </strong>
+            {chooseLabel.label != '' ? (
               <CButton color={chooseLabel.style} shape="rounded-pill" size="sm">
                 {chooseLabel.label}
               </CButton>
-            </strong>
+            ) : (
+              <strong>하세요</strong>
+            )}
           </CFormLabel>
           <CCol sm={10}>
             <CCol className="mb-3">
@@ -280,9 +282,11 @@ const WriteDocStorage = () => {
             {u_idxlist.map((data) => {
               return (
                 <>
-                  <CFormCheck inline name="u_idx" value={data.u_idx} onChange={checkAList} />
-                  <CAvatar className="ms-2" src={data.profilephoto} />
-                  <strong>{data.nickname} </strong>
+                  <CBadge color="light" textColor="black" className="ms-6 m-1">
+                    <CFormCheck inline name="u_idx" value={data.u_idx} onChange={checkAList} />
+                    <CAvatar size="sm" className="me-1" src={data.profilephoto} />
+                    <strong>{data.nickname}</strong>
+                  </CBadge>
                 </>
               )
             })}

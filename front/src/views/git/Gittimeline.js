@@ -1,5 +1,6 @@
 import {
   CAvatar,
+  CBadge,
   CCard,
   CCardBody,
   CCol,
@@ -87,7 +88,9 @@ const Gittimeline = () => {
         <CCardBody>
           <CRow>
             <CCol sm={3} className="mx-3 mt-2">
-              <h3><strong>Commit 이력</strong></h3>
+              <h3>
+                <strong>Commit 이력</strong>
+              </h3>
             </CCol>
             <CCol sm={9} className="d-none d-md-block"></CCol>
           </CRow>
@@ -133,7 +136,10 @@ const Gittimeline = () => {
                           setProfileModal(!profileMoal)
                         }}
                       >
-                        <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
+                        <CBadge color="light" textColor="black" className="ms-6 m-1">
+                          <CAvatar size="sm" className="me-1" src={commit.committer.avatar_url} />
+                          <strong>{commit.committer.login}</strong>
+                        </CBadge>
                       </h6>
                       <CCard className="p-3" style={{ background: '#D9E5FF' }}>
                         {commit.commit.message}
@@ -174,7 +180,10 @@ const Gittimeline = () => {
                           setProfileModal(!profileMoal)
                         }}
                       >
-                        <CAvatar src={commit.committer.avatar_url} /> {commit.committer.login}
+                        <CBadge color="light" textColor="black" className="ms-6">
+                          <CAvatar size="sm" className="me-1" src={commit.committer.avatar_url} />
+                          <strong>{commit.committer.login}</strong>
+                        </CBadge>
                       </h6>
                       <CCard className="p-3" style={{ background: '#FAF4C0' }}>
                         {commit.commit.message}

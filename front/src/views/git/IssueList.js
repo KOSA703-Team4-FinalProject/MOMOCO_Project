@@ -1,5 +1,6 @@
 import {
   CAvatar,
+  CBadge,
   CCard,
   CCardBody,
   CCardFooter,
@@ -22,7 +23,6 @@ import $ from 'jquery'
 
 import { PRIMARY_KEY } from '../../oauth'
 import Profile from '../../components/Profile'
-
 
 const backgroundcolor = {
   background: '#EEEEEE',
@@ -129,7 +129,6 @@ const IssueList = () => {
 
   //이슈 클릭
   const clickIssue = (e) => {
-
     const tart = e.target
     const targ = $(tart).closest('.issue').attr('giturl')
 
@@ -138,7 +137,6 @@ const IssueList = () => {
     go.href = targ
     go.setAttribute('target', '_blank')
     go.click()
-
   }
 
   return (
@@ -147,7 +145,9 @@ const IssueList = () => {
         <CCardBody>
           <CRow>
             <CCol sm={3}>
-              <h3 className='m-2'><strong>Issue List</strong></h3>
+              <h3 className="m-2">
+                <strong>Issue List</strong>
+              </h3>
               <CFormSelect onChange={changeOption}>
                 <option value="unresolvedissue">미해결 Issue 이력</option>
                 <option value="assignedissue">할당된 Issue List</option>
@@ -197,13 +197,21 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
                           <div className="col-3" align="end">
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}  >
+                        <CCard
+                          className="p-3 issue"
+                          giturl={data.html_url}
+                          onClick={clickIssue}
+                          style={{ background: '#FAF4C0' }}
+                        >
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
@@ -244,14 +252,22 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
 
                           <div className="col-3" align="end">
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}>
+                        <CCard
+                          className="p-3 issue"
+                          giturl={data.html_url}
+                          onClick={clickIssue}
+                          style={{ background: '#FAF4C0' }}
+                        >
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
@@ -296,13 +312,21 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
                           <div className="col-3" align="end">
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}>
+                        <CCard
+                          className="p-3 issue"
+                          giturl={data.html_url}
+                          onClick={clickIssue}
+                          style={{ background: '#FAF4C0' }}
+                        >
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
@@ -343,14 +367,22 @@ const IssueList = () => {
                           }}
                         >
                           <div align="start" className="col-9">
-                            <CAvatar src={data.user.avatar_url} /> {data.user.login}
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CAvatar size="sm" className="me-1" src={data.user.avatar_url} />
+                              <strong>{data.user.login}</strong>
+                            </CBadge>
                           </div>
 
                           <div className="col-3" align="end">
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}>
+                        <CCard
+                          className="p-3 issue"
+                          giturl={data.html_url}
+                          onClick={clickIssue}
+                          style={{ background: '#FAF4C0' }}
+                        >
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
