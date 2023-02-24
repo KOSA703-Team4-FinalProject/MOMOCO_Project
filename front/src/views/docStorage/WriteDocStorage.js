@@ -243,7 +243,7 @@ const WriteDocStorage = () => {
                 name="issue"
                 aria-label="타입"
                 options={[
-                  '선택하세요',
+                  '파일 유형',
                   { label: '이미지', value: 'image' },
                   { label: '파일', value: 'file' },
                   { label: '링크', value: 'link' },

@@ -68,7 +68,7 @@ const AppHeader = () => {
   }, [])
 
   return (
-    <CHeader position="sticky" className="mb-4">
+    <CHeader position="sticky" className="mb-4 p-3">
       <CContainer fluid>
         <CHeaderToggler
           className="ps-1"
@@ -86,8 +86,8 @@ const AppHeader = () => {
             {/* 워크스페이스 리스트 */}
             <CDropdown>
               <CDropdownToggle color="ghost">
-                <BsFillHouseDoorFill />
-                <strong> {params.url}</strong>
+                  <BsFillHouseDoorFill />
+                  <strong> {params.url}</strong>
               </CDropdownToggle>
               <CDropdownMenu>
                 <CRow className="mb-2 px-2">
@@ -100,7 +100,6 @@ const AppHeader = () => {
                       className="mx-1"
                       color="primary"
                       variant="outline"
-                      shape="rounded-pill"
                     >
                       <strong>만들기</strong>
                     </CButton>
@@ -109,7 +108,6 @@ const AppHeader = () => {
                       className="mx-1"
                       color="dark"
                       variant="outline"
-                      shape="rounded-pill"
                     >
                       <strong>설정</strong>
                     </CButton>
@@ -120,11 +118,6 @@ const AppHeader = () => {
                 </CRow>
               </CDropdownMenu>
             </CDropdown>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink to={`/ws/${params.url}/dashboard`} component={NavLink}>
-              <strong>Dashboard</strong>
-            </CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>
@@ -163,10 +156,6 @@ const AppHeader = () => {
         <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
         </CHeaderNav>
-      </CContainer>
-      <CHeaderDivider />
-      <CContainer fluid>
-        <AppBreadcrumb />
       </CContainer>
       <Issues issuelist={issuelist} />
     </CHeader>

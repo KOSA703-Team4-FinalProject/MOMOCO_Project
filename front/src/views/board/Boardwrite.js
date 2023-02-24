@@ -8,32 +8,42 @@ import {
   CFormInput,
   CFormLabel,
   CFormSelect,
-  CFormTextarea,
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalTitle,
   CRow,
 } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
-import React, { Component, useEffect, useRef, useState } from 'react'
-
-import { Link, NavLink, useParams } from 'react-router-dom'
-
+import React, { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import issuelist from './issuelist'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateIssueModal, updateissueNumber } from 'src/store'
+import { updateIssueModal } from 'src/store'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import $, { data, param } from 'jquery'
-import Swal from 'sweetalert2'
-import Boardlist from './Boardlist'
+import $ from 'jquery'
+import { Octokit } from 'octokit'
+import AceEditor from 'react-ace'
+
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/theme-monokai'
+import 'ace-builds/src-noconflict/ext-language_tools'
 
 const Boardwirte = () => {
   const dispatch = useDispatch()
   const issueModal = useSelector((state) => state.issueModal)
   const issueNumber = useSelector((state) => state.issueNumber)
   const [u_idxlist, SetU_idxlist] = useState([]) //알림
+
+  const [commitsList, setCommitsList] = useState([])
+  const [listview, setListView] = useState(false)
+
+  const [codeContent, setCodeContent] = useState('<h1>hhahaha</h1>') //code 편집기 내용
+
   //워크스페이스 주소값
   const params = useParams()
-  console.log(params.url + 'hahah')
 
   const labelselect = {
     width: '200px',
@@ -63,11 +73,6 @@ const Boardwirte = () => {
   const [content, setContent] = useState('')
   //로그인한 유저
   const login = JSON.parse(localStorage.getItem('login'))
-
-  const getIssue = (e) => {
-    setIssue(e.target.value)
-    console.log('이슈번호' + e.target.value)
-  }
 
   const handleEditorChange = (content) => {
     setContent(content)
@@ -165,7 +170,63 @@ const Boardwirte = () => {
     })
   }
 
-  //답글 작성
+  //github에서 이슈 불러오기
+  const loadIssue = () => {
+    axios({
+      method: 'GET',
+      url: '/api/workspaceowner',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { url: params.url },
+    }).then((res) => {
+      getIssue(res.data)
+    })
+  }
+
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`,
+  })
+
+  const getIssue = (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    octokit
+      .request('GET /repos/{owner}/{repo}/issues', {
+        owner: owner,
+        repo: repos,
+      })
+      .then((res) => {
+        console.log(res.data)
+        setCommitsList(() => [])
+        res.data.map((d) => {
+          setCommitsList((commitsList) => [...commitsList, d])
+        })
+        setListView(true)
+      })
+  }
+
+  //이슈 클릭시 content에 추가
+  const clickIssue = (e) => {
+    const tar = e.target
+    const targ = $(tar).closest('.issue').attr('issueSrc')
+    const title = $(tar).closest('.issue').attr('title')
+    const num = $(tar).closest('.issue').attr('num')
+
+    $('#title').val('#' + num + ' ' + title)
+    setContent(targ)
+
+    setListView(false)
+  }
+
+  //code 편집기 내용 변경 시
+  const codewrite = (arg1, arg2) => {
+    console.log('value: ' + arg1)
+    console.log(arg2)
+  }
 
   return (
     <>
@@ -197,21 +258,7 @@ const Boardwirte = () => {
                         ]}
                       />
                     </CCol>
-                    <CCol className="col-md-2 ps-3" align="left">
-                      <label>
-                        <strong>이슈번호</strong>
-                      </label>
-                      <br></br>
-                      <CFormInput
-                        type="text"
-                        placeholder="참조이슈번호"
-                        aria-label="default input example"
-                        onKeyUp={onKeyUP}
-                        id="issue"
-                        value={issueNumber}
-                        onChange={getIssue}
-                      />
-                    </CCol>
+
                     <CCol className="col-md-8 ps-1" align="left">
                       <label>
                         <strong>제목</strong>
@@ -223,6 +270,16 @@ const Boardwirte = () => {
                         placeholder="제목을 입력하세요"
                         aria-label="default input example"
                       />
+                    </CCol>
+                    <CCol className="col-md-2 ps-3 mt-3" align="left">
+                      <CButton
+                        color="primary"
+                        variant="outline"
+                        className="mt-1"
+                        onClick={loadIssue}
+                      >
+                        Issue 불러오기
+                      </CButton>
                     </CCol>
                   </CCol>
                   <br></br>
@@ -248,7 +305,7 @@ const Boardwirte = () => {
                         <CFormLabel className="col-sm-2 col-form-label">
                           <strong>알림</strong>
                         </CFormLabel>
-                        <CCol sm={10}>
+                        <CCol sm={9}>
                           <CRow>
                             {u_idxlist.map((data, key) => (
                               <div className="col" key={data.u_idx}>
@@ -268,35 +325,62 @@ const Boardwirte = () => {
                             ))}
                           </CRow>
                         </CCol>
+                        <CCol sm={1}>
+                          <CButton color="primary" variant="outline">
+                            Code
+                          </CButton>
+                        </CCol>
                       </CRow>
                     </CCol>
                   </CCol>
                   <br></br>
-                  <CCol className="row">
-                    <CCol className="col-md-12">
-                      <Editor
-                        onEditorChange={handleEditorChange}
-                        value={content.content}
-                        id="tinyEditor"
-                        apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
-                        init={{
-                          height: 500,
-                          menubar: false,
-                          plugins: [
-                            'advlist autolink lists link image charmap print preview anchor',
-                            'searchreplace visualblocks code fullscreen',
-                            'insertdatetime media table paste code help wordcount',
-                          ],
-                          toolbar:
-                            'undo redo | formatselect | ' +
-                            'bold italic backcolor | alignleft aligncenter ' +
-                            'alignright alignjustify | bullist numlist outdent indent | ' +
-                            'removeformat | help',
-                          content_style:
-                            'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                          forced_root_block: false,
-                        }}
-                      />
+                  <CRow>
+                    <CCol md={12}>
+                      <CRow>
+                        <CCol md={6}>
+                          <Editor
+                            onEditorChange={handleEditorChange}
+                            value={content.content}
+                            initialValue={content}
+                            id="tinyEditor"
+                            apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
+                            init={{
+                              height: 500,
+                              menubar: false,
+                              plugins: [
+                                'advlist autolink lists link image charmap print preview anchor',
+                                'searchreplace visualblocks code fullscreen',
+                                'insertdatetime media table paste code help wordcount',
+                              ],
+                              toolbar:
+                                'undo redo | formatselect | ' +
+                                'bold italic backcolor | alignleft aligncenter ' +
+                                'alignright alignjustify | bullist numlist outdent indent | ' +
+                                'removeformat | help',
+                              content_style:
+                                'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                              forced_root_block: false,
+                            }}
+                          />
+                        </CCol>
+                        <CCol md={6}>
+                          <AceEditor
+                            mode="java"
+                            theme="monokai"
+                            name="codeEditor"
+                            editorProps={{ $blockScrolling: true }}
+                            setOptions={{
+                              enableBasicAutocompletion: true,
+                              enableLiveAutocompletion: true,
+                              enableSnippets: true,
+                            }}
+                            value={codeContent}
+                            width="100%"
+                            fontSize={20}
+                            onChange={codewrite}
+                          />
+                        </CCol>
+                      </CRow>
 
                       <br></br>
                       <CCol align="right">
@@ -307,15 +391,51 @@ const Boardwirte = () => {
                         </Link>
                       </CCol>
                     </CCol>
-                  </CCol>
-                  <CCol className="row">
-                    <CCol className="col-md-12"></CCol>
-                  </CCol>
+                  </CRow>
                 </CCol>
               </CRow>
             </CCol>
           </CCol>
         </CCardBody>
+        {/* 이슈 불러오기 목록 */}
+        <CModal
+          alignment="center"
+          scrollable
+          backdrop="static"
+          visible={listview}
+          onClose={() => setListView(false)}
+        >
+          <CModalHeader onClose={() => setListView(false)}>
+            <CModalTitle>Issue List</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {commitsList.map((data) => {
+              return (
+                <CCard
+                  key={data.id}
+                  className="my-3 p-3 issue"
+                  issueSrc={data.html_url}
+                  title={data.title}
+                  num={data.number}
+                  onClick={clickIssue}
+                >
+                  <CCard className="p-2 mt-2">
+                    <h5>
+                      <strong>{data.title}</strong>
+                    </h5>
+                  </CCard>
+
+                  <div align="end" className="m-2">
+                    <CAvatar src={data.user.avatar_url} className="me-2" />
+                    {data.user.login}
+                  </div>
+
+                  {data.body}
+                </CCard>
+              )
+            })}
+          </CModalBody>
+        </CModal>
       </CCard>
     </>
   )

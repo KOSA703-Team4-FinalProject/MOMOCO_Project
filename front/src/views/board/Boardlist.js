@@ -12,13 +12,12 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams, useHistory } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
-import $, { data, param } from 'jquery'
+import $, { data } from 'jquery'
 import Pagination from 'react-js-pagination'
 import styled from 'styled-components'
-import { FiCornerDownRight } from 'react-icons/fi'
 const writedate = {}
 const title = {}
 const context = {}
@@ -27,15 +26,6 @@ const number = {
   border: '8px',
   mt: '-30px',
 }
-const boardname = {}
-const check = {
-  width: '45px',
-  height: '45px',
-}
-const ccardsize = {
-  height: '45px',
-}
-
 const Boardlist = () => {
   const params = useParams()
   const navigate = useNavigate()
@@ -140,11 +130,11 @@ const Boardlist = () => {
   return (
     <>
       <CCard className="mb-4">
-        <CCardBody>
+        <CCardBody className="my-4">
           <CRow>
             <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                <strong>&nbsp;&nbsp;자유게시판</strong>
+              <h4 id="traffic" className="card-title mb-0 ms-3">
+                <strong>자유게시판</strong>
               </h4>
             </CCol>
             <CCol sm={7} className="d-none d-md-block"></CCol>
@@ -276,8 +266,8 @@ const PaginationBox = styled.div`
   }
   ul.pagination li {
     display: inline-block;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border: 1px solid #e2e2e2;
     display: flex;
     justify-content: center;

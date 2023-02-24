@@ -16,6 +16,8 @@ import {
   CHeader,
   CFormCheck,
   CAvatar,
+  CModalHeader,
+  CModalTitle,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import * as icon from '@coreui/icons'
@@ -33,6 +35,7 @@ import $ from 'jquery'
 import Label from 'src/components/Label'
 import { chooseLabel } from 'src/store'
 import { useDispatch, useSelector } from 'react-redux'
+import { Octokit } from 'octokit'
 
 const Kanban = () => {
   const [visible, setVisible] = useState(false)
@@ -42,6 +45,10 @@ const Kanban = () => {
   const [kanbanlist, setKanbanlist] = useState('')
   const [u_idxlist, SetU_idxlist] = useState([]) // 알람보낼 유저 아이디 리스트
   const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
+
+  const [commitsList, setCommitsList] = useState([])
+  const [listview, setListView] = useState(false)
+
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -207,6 +214,60 @@ const Kanban = () => {
     }
   }
 
+  //github에서 이슈 불러오기
+  const loadIssue = (e) =>{
+    axios({
+      method: 'GET',
+      url: '/api/workspaceowner',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { url: params.url },
+    }).then((res) => {
+      getIssue(res.data)
+    })
+  }
+
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`,
+  })
+
+  const getIssue = (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    octokit
+      .request('GET /repos/{owner}/{repo}/issues', {
+        owner: owner,
+        repo: repos,
+      })
+      .then((res) => {
+        console.log(res.data)
+        setCommitsList(() => [])
+        res.data.map((d) => {
+          setCommitsList((commitsList) => [...commitsList, d])
+        })
+        setListView(true)
+      })
+  }
+
+  //이슈 클릭시 content에 추가
+  const clickIssue = (e) => {
+    const tar = e.target
+    const targ = $(tar).closest('.issue').attr('issueSrc')
+    const title = $(tar).closest('.issue').attr('title')
+    const num = $(tar).closest('.issue').attr('num')
+
+    console.log(targ)
+
+    $('#kanbancontent').val(targ)
+    $('#kanbantitle').val("#"+num+" "+title)
+
+    setListView(false)
+  }
+
   return (
     <>
       <CCard className="col-md-12 my-3">
@@ -218,10 +279,25 @@ const Kanban = () => {
       <CModal size="xl" alignment="center" visible={visible} onClose={() => setVisible(false)}>
         <CModalBody className="p-3">
           <CForm>
-            <CIcon icon={icon.cibGithub} className="me-2" />
-            <CFormLabel htmlFor="exampleFormControlInput1">
-              <h4>Add Item</h4>
-            </CFormLabel>
+            <CRow>
+              <CFormLabel htmlFor="exampleFormControlInput1">
+                <CCol md={12}>
+                  <CRow className="justify-content-between">
+                    <div className="row col-3">
+                      <h4>
+                        <CIcon icon={icon.cibGithub} size="lg" className="me-2" />
+                        <strong>Add Item</strong>
+                      </h4>
+                    </div>
+                    <div className="col-4" align="end">
+                      <CButton color="primary" variant="outline" onClick={loadIssue}>
+                        Issue 불러오기
+                      </CButton>
+                    </div>
+                  </CRow>
+                </CCol>
+              </CFormLabel>
+            </CRow>
             <CRow className="mb-3">
               <CFormLabel className="col-sm-2 col-form-label">
                 <strong>
@@ -380,6 +456,38 @@ const Kanban = () => {
             </CRow>
           </CCardBody>
         </HorizontalScroll>
+        {/* 이슈 불러오기 목록 */}
+        <CModal
+          alignment="center"
+          scrollable
+          backdrop="static"
+          visible={listview}
+          onClose={() => setListView(false)}
+        >
+          <CModalHeader onClose={() => setListView(false)}>
+            <CModalTitle>Issue List</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {commitsList.map((data) => {
+              return (
+                <CCard key={data.id} className="my-3 p-3 issue" issueSrc={data.html_url} title={data.title} num={data.number} onClick={clickIssue}>
+                  <CCard className='p-2 mt-2'>
+                    <h5>
+                      <strong>{data.title}</strong>
+                    </h5>
+                  </CCard>
+
+                  <div align="end" className="m-2">
+                    <CAvatar src={data.user.avatar_url} className="me-2" />
+                    {data.user.login}
+                  </div>
+
+                  {data.body}
+                </CCard>
+              )
+            })}
+          </CModalBody>
+        </CModal>
       </CCard>
     </>
   )

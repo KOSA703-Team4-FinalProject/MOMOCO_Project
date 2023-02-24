@@ -230,7 +230,7 @@ const UpdateDocStorage = (props) => {
       <CButton
         className="my-3 mx-1"
         color="dark"
-        shape="rounded-pill"
+        variant="outline"
         onClick={() => {
           setUpdateVisibleXL(!updatevisibleXL)
         }}

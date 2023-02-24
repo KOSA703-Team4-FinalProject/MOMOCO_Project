@@ -13,16 +13,16 @@ import {
 } from '@coreui/react'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
-import { BsEmojiSmile } from 'react-icons/bs'
 import CryptoJS from 'crypto-js'
-
-import { PRIMARY_KEY } from '../../oauth'
-import Profile from '../../components/Profile'
 import { useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Octokit } from 'octokit'
-import { async } from 'regenerator-runtime'
+import $ from 'jquery'
+
+import { PRIMARY_KEY } from '../../oauth'
+import Profile from '../../components/Profile'
+
 
 const backgroundcolor = {
   background: '#EEEEEE',
@@ -127,6 +127,20 @@ const IssueList = () => {
       })
   }
 
+  //이슈 클릭
+  const clickIssue = (e) => {
+
+    const tart = e.target
+    const targ = $(tart).closest('.issue').attr('giturl')
+
+    const go = document.createElement('a')
+
+    go.href = targ
+    go.setAttribute('target', '_blank')
+    go.click()
+
+  }
+
   return (
     <>
       <CCard className="mb-4" style={backgroundcolor}>
@@ -158,12 +172,26 @@ const IssueList = () => {
                         iconStyle={{ background: 'white', color: 'white' }}
                         key={data.id}
                         iconOnClick={() => {
+                          setProfile({
+                            u_idx: data.user.id,
+                            profilephoto: data.user.avatar_url,
+                            nickname: data.user.login,
+                            email: '',
+                            github: data.user.html_url,
+                          })
                           setProfileModal(!profileMoal)
                         }}
                       >
                         <h6
                           className="mb-2 row"
                           onClick={() => {
+                            setProfile({
+                              u_idx: data.user.id,
+                              profilephoto: data.user.avatar_url,
+                              nickname: data.user.login,
+                              email: '',
+                              github: data.user.html_url,
+                            })
                             setProfileModal(!profileMoal)
                           }}
                         >
@@ -174,7 +202,7 @@ const IssueList = () => {
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}  >
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
@@ -191,12 +219,26 @@ const IssueList = () => {
                         iconStyle={{ background: 'white', color: 'white' }}
                         key={data.id}
                         iconOnClick={() => {
+                          setProfile({
+                            u_idx: data.user.id,
+                            profilephoto: data.user.avatar_url,
+                            nickname: data.user.login,
+                            email: '',
+                            github: data.user.html_url,
+                          })
                           setProfileModal(!profileMoal)
                         }}
                       >
                         <h6
                           className="mb-2 row"
                           onClick={() => {
+                            setProfile({
+                              u_idx: data.user.id,
+                              profilephoto: data.user.avatar_url,
+                              nickname: data.user.login,
+                              email: '',
+                              github: data.user.html_url,
+                            })
                             setProfileModal(!profileMoal)
                           }}
                         >
@@ -208,7 +250,7 @@ const IssueList = () => {
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}>
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
@@ -229,12 +271,26 @@ const IssueList = () => {
                         iconStyle={{ background: 'white', color: 'white' }}
                         key={data.id}
                         iconOnClick={() => {
+                          setProfile({
+                            u_idx: data.user.id,
+                            profilephoto: data.user.avatar_url,
+                            nickname: data.user.login,
+                            email: '',
+                            github: data.user.html_url,
+                          })
                           setProfileModal(!profileMoal)
                         }}
                       >
                         <h6
                           className="mb-2 row"
                           onClick={() => {
+                            setProfile({
+                              u_idx: data.user.id,
+                              profilephoto: data.user.avatar_url,
+                              nickname: data.user.login,
+                              email: '',
+                              github: data.user.html_url,
+                            })
                             setProfileModal(!profileMoal)
                           }}
                         >
@@ -245,7 +301,7 @@ const IssueList = () => {
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}>
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
@@ -261,12 +317,26 @@ const IssueList = () => {
                         iconStyle={{ background: '#514200', color: '#fff' }}
                         key={data.id}
                         iconOnClick={() => {
+                          setProfile({
+                            u_idx: data.user.id,
+                            profilephoto: data.user.avatar_url,
+                            nickname: data.user.login,
+                            email: '',
+                            github: data.user.html_url,
+                          })
                           setProfileModal(!profileMoal)
                         }}
                       >
                         <h6
                           className="mb-2 row"
                           onClick={() => {
+                            setProfile({
+                              u_idx: data.user.id,
+                              profilephoto: data.user.avatar_url,
+                              nickname: data.user.login,
+                              email: '',
+                              github: data.user.html_url,
+                            })
                             setProfileModal(!profileMoal)
                           }}
                         >
@@ -278,7 +348,7 @@ const IssueList = () => {
                             <strong># {data.number}</strong>
                           </div>
                         </h6>
-                        <CCard className="p-3" style={{ background: '#FAF4C0' }}>
+                        <CCard className="p-3 issue" giturl={data.html_url} onClick={clickIssue} style={{ background: '#FAF4C0' }}>
                           <h5>
                             <strong>{data.title}</strong>
                           </h5>
@@ -294,12 +364,7 @@ const IssueList = () => {
             </VerticalTimeline>
           )}
         </CCardBody>
-        <CModal alignment="center" visible={profileMoal} onClose={() => setProfileModal(false)}>
-          <CModalHeader onClose={() => setVisible(false)}></CModalHeader>
-          <CModalBody>
-            <Profile user={profile} />
-          </CModalBody>
-        </CModal>
+        <Profile user={profile} profileMoal={profileMoal} />
       </CCard>
     </>
   )

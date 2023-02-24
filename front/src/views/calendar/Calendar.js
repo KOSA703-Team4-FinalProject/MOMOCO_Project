@@ -14,6 +14,7 @@ import {
   CModal,
   CModalBody,
   CModalHeader,
+  CModalTitle,
   CRow,
 } from '@coreui/react'
 import FullCalendar from '@fullcalendar/react'
@@ -28,6 +29,7 @@ import $ from 'jquery'
 
 import { PRIMARY_KEY } from '../../oauth'
 import Profile from 'src/components/Profile'
+import { Octokit } from 'octokit'
 
 const Calendar = () => {
   let [view, setView] = useState('')
@@ -39,6 +41,9 @@ const Calendar = () => {
 
   const [profileMoal, setProfileModal] = useState(false)
   const [profile, setProfile] = useState({})
+
+  const [commitsList, setCommitsList] = useState([])
+  const [listview, setListView] = useState(false)
 
   const [u_idxlist, SetU_idxlist] = useState([]) //워크스페이스 유저 id 리스트
   const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
@@ -158,7 +163,6 @@ const Calendar = () => {
     }).then((res) => {
       setCheckList(res.data.checked)
       setReadCalList(res.data)
-      console.log('u_idx' + res.data)
     })
   }
 
@@ -263,7 +267,6 @@ const Calendar = () => {
       },
       params: { u_idx: idx },
     }).then((res) => {
-
       setProfile({
         u_idx: res.data.u_idx,
         profilephoto: res.data.profilephoto,
@@ -273,6 +276,59 @@ const Calendar = () => {
       })
       setProfileModal(true)
     })
+  }
+
+  //github에서 이슈 불러오기
+  const loadIssue = () => {
+    axios({
+      method: 'GET',
+      url: '/api/workspaceowner',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { url: params.url },
+    }).then((res) => {
+      getIssue(res.data)
+    })
+  }
+
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`,
+  })
+
+  const getIssue = (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    octokit
+      .request('GET /repos/{owner}/{repo}/issues', {
+        owner: owner,
+        repo: repos,
+      })
+      .then((res) => {
+        console.log(res.data)
+        setCommitsList(() => [])
+        res.data.map((d) => {
+          setCommitsList((commitsList) => [...commitsList, d])
+        })
+        setListView(true)
+      })
+  }
+
+  //이슈 클릭시 content에 추가
+  const clickIssue = (e) => {
+    const tar = e.target
+    const targ = $(tar).closest('.issue').attr('issueSrc')
+    const title = $(tar).closest('.issue').attr('title')
+    const num = $(tar).closest('.issue').attr('num')
+
+    console.log(targ)
+
+    $('#caltitle').val("#"+num+" "+title)
+    $('#calcontent').val(targ)
+    setListView(false)
   }
 
   function Component() {
@@ -285,6 +341,9 @@ const Calendar = () => {
                 <CCol className="h4">
                   <div className="d-grid gap-2 d-md-flex justify-content-md-between">
                     <strong className="ms-2 mt-2">일정 추가</strong>
+                    <CButton color="primary" variant="outline" className="mt-1" onClick={loadIssue}>
+                      Issue 불러오기
+                    </CButton>
                   </div>
                 </CCol>
                 <CCol className="mt-3">
@@ -294,7 +353,6 @@ const Calendar = () => {
                         type="text"
                         id="caltitle"
                         floatingLabel="일정"
-                        defaultValue="일정을 추가해주세요"
                       />
                     </CCol>
                     <CCol md={6}>
@@ -637,10 +695,36 @@ const Calendar = () => {
           </CRow>
         </CCardBody>
         <CCardFooter></CCardFooter>
-        <CModal alignment="center" visible={profileMoal} onClose={() => setProfileModal(false)}>
-          <CModalHeader onClose={() => setProfileModal(false)}></CModalHeader>
+        {/* 이슈 불러오기 목록 */}
+        <CModal
+          alignment="center"
+          scrollable
+          backdrop="static"
+          visible={listview}
+          onClose={() => setListView(false)}
+        >
+          <CModalHeader onClose={() => setListView(false)}>
+            <CModalTitle>Issue List</CModalTitle>
+          </CModalHeader>
           <CModalBody>
-            <Profile user={profile} />
+            {commitsList.map((data) => {
+              return (
+                <CCard key={data.id} className="my-3 p-3 issue" issueSrc={data.html_url} title={data.title} num={data.number} onClick={clickIssue}>
+                  <CCard className='p-2 mt-2'>
+                    <h5>
+                      <strong>{data.title}</strong>
+                    </h5>
+                  </CCard>
+
+                  <div align="end" className="m-2">
+                    <CAvatar src={data.user.avatar_url} className="me-2" />
+                    {data.user.login}
+                  </div>
+
+                  {data.body}
+                </CCard>
+              )
+            })}
           </CModalBody>
         </CModal>
       </CCard>
