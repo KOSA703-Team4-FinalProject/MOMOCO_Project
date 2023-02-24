@@ -169,22 +169,5 @@ public class CommonBoardService {
 		}
 		return result;
 	}
-	//글읽기체크
-	public List<CommonBoard> getCheck(CommonBoard commonboard) {
-
-		List<CommonBoard> board = new ArrayList<CommonBoard>();
-
-		try {
-
-			CommonBoardDao boarddao = sqlsession.getMapper(CommonBoardDao.class);
-			board = boarddao.getCheck(commonboard);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return board;
-	}
+	
 }

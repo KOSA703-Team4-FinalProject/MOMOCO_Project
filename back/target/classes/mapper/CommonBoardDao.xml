@@ -8,13 +8,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 
 	<select id="getBoard"  parameterType="int" resultType="kr.or.vo.CommonBoard">
-	select style, idx, nickname, title, content, w_date, b_code, l.label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto
-			from label_${url} l right join (select idx, m.nickname, title, content, w_date, b_code, label, m.u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto
-            from member m join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb
-                                from board_${url} b join common_board_${url} c
-                               on b.idx = c.idx) a
-            				   on m.u_idx = a.u_idx)aa
-			on l.label = aa.label
+	select style, idx, nickname, title, content, w_date, b_code, l.label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto ,b_idx 
+	from label_${url} l right join (select idx, m.nickname, title, content, w_date, b_code, label, m.u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, profilephoto, b_idx
+                                from member m join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, b_idx
+                                                    from board_${url} b join common_board_${url} c
+                                                    on b.idx = c.idx) a
+                                on m.u_idx = a.u_idx)aa
+	on l.label = aa.label
+	order by b_idx asc
 	</select>
 	
    <!-- 글읽기-->
@@ -57,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 검색-->
 	<select id="commonboardSearch" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
-    SELECT b.idx, b.nickname, b.title, b.content, to_char(b.w_date, 'YYYY-MM-DD') as w_date, b.b_code, b.label, b.u_idx, c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth, c.step, c.thumb, m.profilephoto
+    SELECT b.idx, b.nickname, b.title, b.content, to_char(b.w_date, 'YYYY-MM-DD') as w_date, b.b_code, b.label, b.u_idx, c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth, c.step, c.thumb, m.profilephoto,b_idx
     FROM board_${url} b
     JOIN common_board_${url} c ON b.idx = c.idx
     JOIN member m ON m.u_idx = b.u_idx
