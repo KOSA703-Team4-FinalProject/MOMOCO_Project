@@ -91,6 +91,11 @@ const UpdateDocStorage = (props) => {
   const TypeHandler = (e) => {
     e.preventDefault()
     SetUpload_type(e.target.value)
+    console.log(e.target.value)
+    if (e.target.value == 'none') {
+      SetUpload_type('link')
+      SetLink('첨부파일 X')
+    }
   }
 
   useEffect(() => {
@@ -120,8 +125,8 @@ const UpdateDocStorage = (props) => {
 
   const SubmitHandler = (e) => {
     e.preventDefault()
-    if (title != '' && content != '' && label != '') {
-      if (upload_type === 'link') {
+    if (title != '' && content != '' && label != '' && alarmlist != '') {
+      if (upload_type === 'link' && upload_type === 'none') {
         // 링크 등록시
         const doc = {
           idx: props.doc.idx,
@@ -204,7 +209,13 @@ const UpdateDocStorage = (props) => {
         }
       }
     } else {
-      alert('입력하지 않은 항목이 있습니다. ex.알림대상/제목/내용/라벨/파일/이미지/링크')
+      if (content == '') {
+        alert('글 내용을 입력해주십시오.')
+      } else if (label == '') {
+        alert('라벨을 입력해주세요')
+      } else if (alarmlist == '') {
+        alert('알람 보낼 사람을 최소 1명 선택하세요')
+      }
     }
   }
   //알림 전송할 u_idx List 생성
@@ -287,6 +298,7 @@ const UpdateDocStorage = (props) => {
                       required
                       options={[
                         '선택하세요',
+                        { label: '선택안함', value: 'none' },
                         { label: '이미지', value: 'image' },
                         { label: '파일', value: 'file' },
                         { label: '링크', value: 'link' },
@@ -302,7 +314,7 @@ const UpdateDocStorage = (props) => {
                         onChange={LinkHandler}
                         defaultValue={props.doc.ori_filename}
                       ></CFormInput>
-                    ) : (
+                    ) : upload_type === 'none' ? null : (
                       <CFormInput
                         onChange={FileHandler}
                         enctype="multipart/form-data"

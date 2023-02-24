@@ -20,7 +20,7 @@ import { useEffect } from 'react'
 const WriteDocStorage = () => {
   const [title, SetTitle] = useState('')
   const [content, SetContent] = useState('')
-  const [label, SetLabel] = useState('　')
+  const [label, SetLabel] = useState('')
   const [style, SetStyle] = useState('')
   const [orifile, SetOrifile] = useState(null)
   const [depth, SetDepth] = useState('')
@@ -69,6 +69,11 @@ const WriteDocStorage = () => {
   const TypeHandler = (e) => {
     e.preventDefault()
     SetUpload_type(e.target.value)
+    console.log(e.target.value)
+    if (e.target.value == 'none') {
+      SetUpload_type('link')
+      SetLink('첨부파일 X')
+    }
   }
 
   useEffect(() => {
@@ -99,8 +104,8 @@ const WriteDocStorage = () => {
   const SubmitHandler = (e) => {
     e.preventDefault()
     //새 글 작성일 경우
-    if (title != '' && content != '' && label != '') {
-      if (upload_type === 'link') {
+    if (title != '' && content != '' && label != '' && alarmlist != '' && orifile != '') {
+      if (upload_type === 'link' || upload_type === 'none') {
         // 링크 등록시
         const doc = {
           nickname: nickname,
@@ -179,7 +184,13 @@ const WriteDocStorage = () => {
         }
       }
     } else {
-      alert('입력하지 않은 항목이 있습니다. ex.제목/내용/라벨/파일/이미지/링크')
+      if (content == '') {
+        alert('글 내용을 입력해주십시오.')
+      } else if (label == '') {
+        alert('라벨을 입력해주세요')
+      } else if (alarmlist == '') {
+        alert('알람 보낼 사람을 최소 1명 선택하세요')
+      }
     }
   }
   //알림 전송할 u_idx List 생성
@@ -246,6 +257,7 @@ const WriteDocStorage = () => {
                 aria-label="타입"
                 options={[
                   '파일 유형',
+                  { label: '선택안함', value: 'none' },
                   { label: '이미지', value: 'image' },
                   { label: '파일', value: 'file' },
                   { label: '링크', value: 'link' },
@@ -262,7 +274,7 @@ const WriteDocStorage = () => {
                   onChange={LinkHandler}
                   value={link}
                 ></CFormInput>
-              ) : (
+              ) : upload_type === 'none' ? null : (
                 <CFormInput
                   onChange={FileHandler}
                   enctype="multipart/form-data"

@@ -231,7 +231,7 @@ const WorkSpaceListItem = (props) => {
                     color="dark"
                     icon={<CIcon icon={icon.cibGithub} height={24} />}
                     padding={false}
-                    title={' (momoco.kr/ws/' + workspace.workSpace.url + ')'}
+                    title={' (/ws/' + workspace.workSpace.url + ')'}
                     value={
                       workspace.workSpace.space_name +
                       ' (' +

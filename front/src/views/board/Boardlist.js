@@ -3,6 +3,7 @@ import CIcon from '@coreui/icons-react'
 import { FcCheckmark } from 'react-icons/fc'
 import {
   CAvatar,
+  CBadge,
   CButton,
   CCard,
   CCardBody,
@@ -199,25 +200,36 @@ const Boardlist = () => {
                           <div className="row">
                             <div className="col-md-1" style={number} align="center">
                               {checkIcon}
-                              <strong>{data.b_idx}.</strong>
+                              <strong>#{data.idx}</strong>
+                              <CButton color={data.style} shape="rounded-pill" size="sm">
+                                {data.label}
+                              </CButton>
                             </div>
                             <div className="col-md-7" align="left">
                               <div className="row">
                                 <div className="col-md-12" style={title}>
                                   {cornerIcon}
-                                  {data.content
-                                    ? data.content.replace(/(<([^>]+)>)/gi, '').substring(0, 45)
-                                    : null}
+                                  {data.title ? (
+                                    <h5>
+                                      <strong>
+                                        {data.title.replace(/(<([^>]+)>)/gi, '').substring(0, 20)}
+                                      </strong>
+                                    </h5>
+                                  ) : null}
                                 </div>
                                 <div className="col-md-12" style={context}>
-                                  {data.content && data.content.replace(/(<([^>]+)>)/gi, '')}
+                                  {data.content &&
+                                    data.content.replace(/(<([^>]+)>)/gi, '').substring(0, 20) +
+                                      '...'}
                                 </div>
                               </div>
                             </div>
                             <div className="col-md-4">
                               <div className="col-md-12" align="end">
-                                <CAvatar className="ms-3" src={data.profilephoto} /> &nbsp;
-                                {data.nickname}
+                                <CBadge color="light" textColor="black" className="ms-6 m-1">
+                                  <CAvatar size="sm" className="me-1" src={data.profilephoto} />
+                                  <strong>{data.nickname}</strong>
+                                </CBadge>
                                 <CFormInput type="hidden" id="nickname" value={data.nickname} />
                                 <CFormInput type="hidden" id="u_idx" value={data.u_idx} />
                               </div>
