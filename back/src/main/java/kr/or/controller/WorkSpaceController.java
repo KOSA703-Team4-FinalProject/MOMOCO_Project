@@ -62,13 +62,16 @@ public class WorkSpaceController {
 	}
 	
 	// 워크 스페이스 삭제
-	@RequestMapping(value = "/DeleteWorkSpace", method = RequestMethod.POST)
-		public int deleteWorkSpace(@RequestBody WorkSpace workspace) {
-			System.out.println("워크스페이스 삭제");
+	@RequestMapping(value = "/DeleteWorkSpaceUser", method = RequestMethod.POST)
+		public int deleteWorkSpaceUser(@RequestParam(value = "url") String url,
+				@RequestParam(value = "u_idx") int u_idx) {
+			System.out.println("워크스페이스 유저 삭제");
+			System.out.println(url);
 					
-			System.out.println(workspace.getUrl());
-			int result = workspaceservice.DeleteWorkSpace(workspace.getUrl());
-					
+			System.out.println(u_idx); 
+			int result = workspaceservice.DeleteWorkSpace(url, u_idx);
+				
+			
 			return result;
 		}
 
@@ -203,6 +206,26 @@ public class WorkSpaceController {
 
 		return list;
 	}
+	
+	// 워크스페이스 삭제  DeleteWorkSpace
+	
+	@RequestMapping(value = "/DeleteSpace", method = RequestMethod.POST)
+	public int deleteWorkSpace(@RequestBody WorkSpace workspace) {
+
+		int result = workspaceservice.DeleteSpace(workspace);
+
+		return result;
+	}
+	
+	// 워크스페이스 복구  DeleteWorkSpace
+	
+		@RequestMapping(value = "/RestoreWorkSpace", method = RequestMethod.POST)
+		public int restoreWorkSpace(@RequestBody WorkSpace workspace) {
+
+			int result = workspaceservice.RestoreWorkSpace(workspace);
+
+			return result;
+		}
 	
 	
 

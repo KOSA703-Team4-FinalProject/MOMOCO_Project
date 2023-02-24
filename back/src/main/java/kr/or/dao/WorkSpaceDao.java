@@ -3,6 +3,8 @@ package kr.or.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import kr.or.vo.Member;
 import kr.or.vo.MemberAll;
 import kr.or.vo.WorkSpace;
@@ -39,7 +41,11 @@ public interface WorkSpaceDao {
 
    // 워크스페이스 오너 체크
    public List<WorkSpaceUser> checkOwner(WorkSpaceUser workspaceuser)throws ClassNotFoundException, SQLException;
+   // 워크스페이스 유저 삭제
+   public int DeleteWorkSpace(@Param("url") String url, @Param("u_idx") int u_idx)throws ClassNotFoundException, SQLException;
    // 워크스페이스 삭제
-   public int DeleteWorkSpace(String url)throws ClassNotFoundException, SQLException;
+   public int DeleteSpace(WorkSpace workspace)throws ClassNotFoundException, SQLException;
+   // 워스크스페이스 수정
+   public int RestoreWorkSpace(WorkSpace workspace)throws ClassNotFoundException, SQLException;
 
 }
