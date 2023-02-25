@@ -1,4 +1,15 @@
-import { CCard, CCardBody, CCol, CListGroup, CListGroupItem, CRow, CButton } from '@coreui/react'
+import {
+  CCard,
+  CCardBody,
+  CCol,
+  CListGroup,
+  CListGroupItem,
+  CRow,
+  CButton,
+  CToast,
+  CToastHeader,
+  CToastBody,
+} from '@coreui/react'
 import React from 'react'
 import { CAvatar } from '@coreui/react'
 import { useEffect, useState } from 'react'
@@ -6,10 +17,10 @@ import StompJs from 'stompjs'
 import CryptoJS from 'crypto-js'
 import axios from 'axios'
 import { PRIMARY_KEY } from '../oauth'
-import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import { Swal } from 'sweetalert2'
 import { BsFillTrashFill } from 'react-icons/bs'
+import { useDispatch, useSelector } from 'react-redux'
 
 const NotisStyle = {
   width: '400px',
@@ -21,6 +32,8 @@ const Notifications = (props) => {
   const [list, SetList] = useState([])
   const params = useParams()
   const navigate = useNavigate()
+  const updateToast = useSelector((state) => state.updateToast)
+  const dispatch = useDispatch()
 
   let stomp = props.stomp
 
@@ -42,6 +55,13 @@ const Notifications = (props) => {
       const res = JSON.parse(alarm.body)
       console.log(res)
       SetList(([...list]) => [res, ...list])
+      if (res != '') {
+        {
+          res.data.map((data) => {
+            return dispatch(updateToast({ content: data.content, link: data.link, url: data.url }))
+          })
+        }
+      }
     })
   })
 
@@ -153,65 +173,67 @@ const Notifications = (props) => {
   }
 
   return (
-    <CCard style={NotisStyle}>
-      <CCardBody>
-        <CRow className="px-1 pb-4">
-          <CCol sm={5}>
-            <strong>미확인({getAlarmCount(list)})</strong>
-          </CCol>
-          <CCol align="end" sm={7}>
-            <CButton color="light" onClick={() => checkAllAlarm()}>
-              전체읽음으로 표시
-            </CButton>
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol>
-            <CListGroup>
-              <CListGroupItem component="a" href="#">
-                <CRow>
-                  {list.length == 0 ? (
-                    <strong>알림이 없습니다</strong>
-                  ) : (
-                    <CButton color="warning" onClick={deleteAll}>
-                      전체삭제
-                    </CButton>
-                  )}
-                </CRow>
-              </CListGroupItem>
-              {list.map((data) => {
-                return (
-                  <CListGroupItem
-                    component="a"
-                    href={data.link}
-                    color={data.check_alarm != 1 ? 'info' : 'darklight'}
-                    key={data.a_idx}
-                  >
-                    <CRow>
-                      <CCol sm={2}>
-                        <CAvatar className="ms-1" src={data.profilephoto} />
-                      </CCol>
-                      <CCol sm={8} onClick={() => checkAlarm(data.a_idx, data.link)}>
-                        <strong>{data.content}</strong>
-                      </CCol>
-                      <CCol sm={2}>
-                        <CButton
-                          color="info"
-                          value={data.a_idx}
-                          onClick={() => deleteAlarm(data.a_idx)}
-                        >
-                          <BsFillTrashFill />
-                        </CButton>
-                      </CCol>
-                    </CRow>
-                  </CListGroupItem>
-                )
-              })}
-            </CListGroup>
-          </CCol>
-        </CRow>
-      </CCardBody>
-    </CCard>
+    <>
+      <CCard style={NotisStyle}>
+        <CCardBody>
+          <CRow className="px-1 pb-4">
+            <CCol sm={5}>
+              <strong>미확인({getAlarmCount(list)})</strong>
+            </CCol>
+            <CCol align="end" sm={7}>
+              <CButton color="light" onClick={() => checkAllAlarm()}>
+                전체읽음으로 표시
+              </CButton>
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol>
+              <CListGroup>
+                <CListGroupItem component="a" href="#">
+                  <CRow>
+                    {list.length == 0 ? (
+                      <strong>알림이 없습니다</strong>
+                    ) : (
+                      <CButton color="warning" onClick={deleteAll}>
+                        전체삭제
+                      </CButton>
+                    )}
+                  </CRow>
+                </CListGroupItem>
+                {list.map((data) => {
+                  return (
+                    <CListGroupItem
+                      component="a"
+                      href={data.link}
+                      color={data.check_alarm != 1 ? 'info' : 'darklight'}
+                      key={data.a_idx}
+                    >
+                      <CRow>
+                        <CCol sm={2}>
+                          <CAvatar className="ms-1" src={data.profilephoto} />
+                        </CCol>
+                        <CCol sm={8} onClick={() => checkAlarm(data.a_idx, data.link)}>
+                          <strong>{data.content}</strong>
+                        </CCol>
+                        <CCol sm={2}>
+                          <CButton
+                            color="info"
+                            value={data.a_idx}
+                            onClick={() => deleteAlarm(data.a_idx)}
+                          >
+                            <BsFillTrashFill />
+                          </CButton>
+                        </CCol>
+                      </CRow>
+                    </CListGroupItem>
+                  )
+                })}
+              </CListGroup>
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>
+    </>
   )
 }
 

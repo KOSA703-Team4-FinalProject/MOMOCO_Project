@@ -1,5 +1,5 @@
 import React from 'react'
-import { CBadge, CCard, CForm } from '@coreui/react'
+import { CBadge, CCard, CForm, CModal, CModalHeader, CModalBody, CModalTitle } from '@coreui/react'
 import { CRow, CFormLabel, CCol, CFormInput, CInputGroup, CInputGroupText } from '@coreui/react'
 import { CCardBody } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
@@ -16,6 +16,8 @@ import Label from 'src/components/Label'
 import { useDispatch, useSelector } from 'react-redux'
 import { chooseLabel } from 'src/store'
 import { useEffect } from 'react'
+import { Octokit } from 'octokit'
+import $ from 'jquery'
 
 const WriteDocStorage = () => {
   const [title, SetTitle] = useState('')
@@ -30,6 +32,10 @@ const WriteDocStorage = () => {
   const [u_idxlist, SetU_idxlist] = useState([]) //워크스페이스 유저
   const [alarmlist, SetAlarmList] = useState('') //알람 보낼 리스트
   const navigate = useNavigate()
+  const issueModal = useSelector((state) => state.issueModal)
+  const issueNumber = useSelector((state) => state.issueNumber)
+  const [commitsList, setCommitsList] = useState([])
+  const [listview, setListView] = useState(false)
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -115,8 +121,6 @@ const WriteDocStorage = () => {
           label: label,
           u_idx: u_idx,
           url: url,
-          depth: 0,
-          step: 0,
           upload_type: upload_type,
           ori_filename: link,
           save_filename: link,
@@ -153,8 +157,6 @@ const WriteDocStorage = () => {
           label: label,
           u_idx: u_idx,
           url: url,
-          depth: 0,
-          step: 0,
           upload_type: upload_type,
           u_idxList: alarmlist,
         }
@@ -212,6 +214,60 @@ const WriteDocStorage = () => {
     }
   }
 
+  //github에서 이슈 불러오기
+  const loadIssue = () => {
+    axios({
+      method: 'GET',
+      url: '/api/workspaceowner',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { url: params.url },
+    }).then((res) => {
+      getIssue(res.data)
+    })
+  }
+
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`,
+  })
+
+  const getIssue = (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    octokit
+      .request('GET /repos/{owner}/{repo}/issues', {
+        owner: owner,
+        repo: repos,
+      })
+      .then((res) => {
+        console.log(res.data)
+        setCommitsList(() => [])
+        res.data.map((d) => {
+          setCommitsList((commitsList) => [...commitsList, d])
+        })
+        setListView(true)
+      })
+  }
+
+  //이슈 클릭시 content에 추가
+  const clickIssue = (e) => {
+    const tar = e.target
+    const targ = $(tar).closest('.issue').attr('issueSrc')
+    const title = $(tar).closest('.issue').attr('title')
+    const num = $(tar).closest('.issue').attr('num')
+    console.log(content)
+    console.log(targ)
+    console.log(title)
+
+    SetContent((content) => content + '[#' + num + ' ' + title + '] ' + targ)
+
+    setListView(false)
+  }
+
   return (
     <CCard className="draggable px-4 py-3" draggable="true">
       <CForm onSubmit={SubmitHandler}>
@@ -226,9 +282,16 @@ const WriteDocStorage = () => {
               <strong>하세요</strong>
             )}
           </CFormLabel>
-          <CCol sm={10}>
+          <CCol sm={8}>
             <CCol className="mb-3">
               <Label />
+            </CCol>
+          </CCol>
+          <CCol sm={2}>
+            <CCol align="left">
+              <CButton color="primary" variant="outline" className="mt-1" onClick={loadIssue}>
+                Issue 불러오기
+              </CButton>
             </CCol>
           </CCol>
         </CRow>
@@ -308,10 +371,11 @@ const WriteDocStorage = () => {
           <Editor
             onEditorChange={EditorHandler}
             value={content.content}
+            initialValue={content}
             id="tinyEditor"
             apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
             init={{
-              height: 500,
+              height: 400,
               menubar: false,
               plugins: [
                 'advlist autolink lists link image charmap print preview anchor',
@@ -332,6 +396,45 @@ const WriteDocStorage = () => {
             <CButton type="submit">등록</CButton>
           </div>
         </CCardBody>
+        {/* 이슈 불러오기 목록 */}
+        <CModal
+          alignment="center"
+          scrollable
+          backdrop="static"
+          visible={listview}
+          onClose={() => setListView(false)}
+        >
+          <CModalHeader onClose={() => setListView(false)}>
+            <CModalTitle>Issue List</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {commitsList.map((data) => {
+              return (
+                <CCard
+                  key={data.id}
+                  className="my-3 p-3 issue"
+                  issueSrc={data.html_url}
+                  title={data.title}
+                  num={data.number}
+                  onClick={clickIssue}
+                >
+                  <CCard className="p-2 mt-2">
+                    <h5>
+                      <strong>{data.title}</strong>
+                    </h5>
+                  </CCard>
+
+                  <div align="end" className="m-2">
+                    <CAvatar src={data.user.avatar_url} className="me-2" />
+                    {data.user.login}
+                  </div>
+
+                  {data.body}
+                </CCard>
+              )
+            })}
+          </CModalBody>
+        </CModal>
       </CForm>
     </CCard>
   )

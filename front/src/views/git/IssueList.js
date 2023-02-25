@@ -1,12 +1,4 @@
-import {
-  CAvatar,
-  CBadge,
-  CCard,
-  CCardBody,
-  CCol,
-  CFormSelect,
-  CRow,
-} from '@coreui/react'
+import { CAvatar, CBadge, CButton, CCard, CCardBody, CCol, CFormSelect, CRow } from '@coreui/react'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
 import CryptoJS from 'crypto-js'
@@ -18,6 +10,7 @@ import $ from 'jquery'
 
 import { PRIMARY_KEY } from '../../oauth'
 import Profile from '../../components/Profile'
+import { BsGithub } from 'react-icons/bs'
 
 const backgroundcolor = {
   background: '#EEEEEE',
@@ -45,6 +38,7 @@ const IssueList = () => {
   const [profileMoal, setProfileModal] = useState(false)
   const [profile, setProfile] = useState({})
   const [option, setOption] = useState('unresolvedissue')
+  const [gogitIssue, setGogitIssue] = useState('')
 
   useEffect(() => {
     axios({
@@ -57,6 +51,7 @@ const IssueList = () => {
     }).then((res) => {
       setListView(false)
       getIssue(res.data)
+      setGogitIssue(`https://github.com/${res.data.owner}/${res.data.linked_repo}/issues/`)
     })
   }, [])
 
@@ -128,7 +123,8 @@ const IssueList = () => {
   const clickIssue = (e) => {
     const tart = e.target
     const targ = $(tart).closest('.issue').attr('giturl')
-
+    console.log(tart)
+    console.log(targ)
     const go = document.createElement('a')
 
     go.href = targ
@@ -150,7 +146,17 @@ const IssueList = () => {
                 <option value="assignedissue">할당된 Issue List</option>
               </CFormSelect>
             </CCol>
-            <CCol sm={9} className="d-none d-md-block"></CCol>
+            <CCol sm={9} className="d-none d-md-block" align="end">
+              <CButton
+                color="dark"
+                variant="outline"
+                className="issue"
+                giturl={gogitIssue}
+                onClick={clickIssue}
+              >
+                <BsGithub size={25} /> 깃허브 이슈 관리
+              </CButton>
+            </CCol>
           </CRow>
 
           {listview == false ? (

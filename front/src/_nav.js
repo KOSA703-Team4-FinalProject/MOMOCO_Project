@@ -27,12 +27,6 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Git 차트',
-    to: '/gitchart',
-    icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
     name: 'Commit 로그',
     to: '/gittimeline',
     icon: <CIcon icon={cilListRich} customClassName="nav-icon" />,
@@ -42,6 +36,12 @@ const _nav = [
     name: 'GitHub Issue',
     to: '/IssueTimeLine',
     icon: <CIcon icon={cilScrubber} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Git 차트',
+    to: '/gitchart',
+    icon: <CIcon icon={cilChart} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
