@@ -4,93 +4,93 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.dao.BoardDao">
 
-	<!-- 알람에서 사용, 해당 알람이 발생할 게시글 찾기 public Board getBoardByTitle(Board board) -->
-	<select id="getBoardByTitle" parameterType="kr.or.vo.Board"
-		resultType="kr.or.vo.Board">
-		select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date,
-		nickname, b.b_code, t.b_name, label, u_idx
-		from board_${url} b join
-		board_type_${url} t
-		on b.b_code = t.b_code
-		where title = #{title} and
-		u_idx = #{u_idx} and content = #{content} and label = #{label}
-	</select>
+   <!-- 알람에서 사용, 해당 알람이 발생할 게시글 찾기 public Board getBoardByTitle(Board board) -->
+   <select id="getBoardByTitle" parameterType="kr.or.vo.Board"
+      resultType="kr.or.vo.Board">
+      select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date,
+      nickname, b.b_code, t.b_name, label, u_idx
+      from board_${url} b join
+      board_type_${url} t
+      on b.b_code = t.b_code
+      where title = #{title} and
+      u_idx = #{u_idx} and content = #{content} and label = #{label}
+   </select>
 
 
-	<!--전체 보드 리스트 -->
-	<select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
-  	select c_idx, s1.u_idx as u_idx1, a2.idx, title, content, w_date, a2.nickname, b_code, label, style, a2.u_idx, profilephoto
-	from (select c_idx, idx, u_idx 
-      	from checked_${url}
-      	where u_idx = #{u_idx}) s1 full outer join (select idx, title, content, w_date, a1.nickname, b_code, label, style, a1.u_idx, profilephoto
-                                                	from member m join (select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, b.label, style, u_idx
+   <!--전체 보드 리스트 -->
+   <select id="allBoardList" parameterType="kr.or.vo.Board" resultType="kr.or.vo.Board">
+     select c_idx, s1.u_idx as u_idx1, a2.idx, title, content, w_date, a2.nickname, b_code, label, style, a2.u_idx, profilephoto
+   from (select c_idx, idx, u_idx 
+         from checked_${url}
+         where u_idx = #{u_idx}) s1 full outer join (select idx, title, content, w_date, a1.nickname, b_code, label, style, a1.u_idx, profilephoto
+                                                   from member m join (select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, nickname, b_code, b.label, style, u_idx
                                                                     from board_${url} b left join label_${url} l 
                                                                     on b.label = l.label) a1
-                                                	on m.u_idx = a1.u_idx) a2
-	on s1.idx = a2.idx
-	<if test="type != null and type =='boardnumber1'">
-		where b_code = #{keyword}
-	</if>
-	order by a2.idx desc
-	</select>
+                                                   on m.u_idx = a1.u_idx) a2
+   on s1.idx = a2.idx
+   <if test="type != null and type =='boardnumber1'">
+      where b_code = #{keyword}
+   </if>
+   order by a2.idx desc
+   </select>
 
-	<!-- 검색어로 검색 -->
-	<select id="boardSearch" parameterType="kr.or.vo.Board"
-		resultType="kr.or.vo.Board">
-		SELECT *
-		FROM board_${url} a
-		left outer JOIN doc_storage_${url} b ON a.idx = b.idx
-		left outer JOIN common_board_${url} c ON a.idx = c.idx
-		left outer JOIN board_status_${url} d ON a.idx = d.idx
-		left outer JOIN calendar_${url} e ON e.idx = a.idx
-		left outer JOIN kanban_${url} f ON f.idx = d.idx
-		<if test="type != null and type == 'title_content'">
-			WHERE a.title LIKE '%' || #{keyword} || '%' OR a.content LIKE '%' ||
-			#{keyword} || '%'
-		</if>
-		ORDER BY a.idx DESC
-	</select>
+   <!-- 검색어로 검색 -->
+   <select id="boardSearch" parameterType="kr.or.vo.Board"
+      resultType="kr.or.vo.Board">
+      SELECT *
+      FROM board_${url} a
+      left outer JOIN doc_storage_${url} b ON a.idx = b.idx
+      left outer JOIN common_board_${url} c ON a.idx = c.idx
+      left outer JOIN board_status_${url} d ON a.idx = d.idx
+      left outer JOIN calendar_${url} e ON e.idx = a.idx
+      left outer JOIN kanban_${url} f ON f.idx = d.idx
+      <if test="type != null and type == 'title_content'">
+         WHERE a.title LIKE '%' || #{keyword} || '%' OR a.content LIKE '%' ||
+         #{keyword} || '%'
+      </if>
+      ORDER BY a.idx DESC
+   </select>
 
-	<!--자신이 읽지않은 글 -->
-	<select id="notread" parameterType="kr.or.vo.Board"
-		resultType="kr.or.vo.Board">
-		select c_idx, a.u_idx, a.idx, a.nickname, title, content, w_date, b_code,
-		label, b_name
-		from checked_${url} c full outer join (select idx, nickname, title,
-		content, to_char(w_date, 'YYYY-MM-DD') as w_date, b.b_code, label,
-		u_idx, b_name
-		from board_${url} b join board_type_${url} t
-		on b.b_code = t.b_code) a
-		on c.idx = a.idx
+   <!--자신이 읽지않은 글 -->
+   <select id="notread" parameterType="kr.or.vo.Board"
+      resultType="kr.or.vo.Board">
+      select c_idx, a.u_idx, a.idx, a.nickname, title, content, w_date, b_code,
+      label, b_name
+      from checked_${url} c full outer join (select idx, nickname, title,
+      content, to_char(w_date, 'YYYY-MM-DD') as w_date, b.b_code, label,
+      u_idx, b_name
+      from board_${url} b join board_type_${url} t
+      on b.b_code = t.b_code) a
+      on c.idx = a.idx
 
-		where c_idx is null
+      where c_idx is null
 
-		order by a.idx desc
-	</select>
-	
-	<!-- 전체 최신글 4가 불러오기  public List<Board> getNewBoardList(Board board) -->
-	<select id="getNewBoardList" parameterType="String" resultType="kr.or.vo.Board">
-		<![CDATA[
-			select t.b_code, b_name, u_idx, profilephoto, nickname, title, content, w_date, label
-			from board_type_${url} t join (select m.u_idx, profilephoto, m.nickname, title, content, to_char(w_date, 'MM-DD') as w_date, b_code, label
-	                    				   	from member m join board_${url} b
-	                    					on m.u_idx = b.u_idx
-	                    					where rownum <= 4) al
-			on t.b_code = al.b_code
-		]]>
-	</select>
-	
-	<!-- 안읽은 게시글 4개 불러오기 public List<Board> getNotReadBoardList(String url, int u_idx) -->
-	<select id="getNotReadBoardList" resultType="kr.or.vo.Board">
-		<![CDATA[
-			select c.c_idx, aa.idx, c.u_idx as u_idx1, aa.u_idx, profilephoto, nickname, title, content, w_date, b_code, label
-			from (select c_idx, idx, u_idx 
-			      	from checked_momoco
-			      	where u_idx = 112244603 ) c right join (select idx, m.u_idx, profilephoto, m.nickname, title, content, to_char(w_date, 'MM-DD') as w_date, b_code, label
-			                                            from member m join board_momoco b
-			                                            on m.u_idx = b.u_idx
-			                                            where rownum <= 4) aa
-			on c.idx = aa.idx
-		]]>
-	</select>
+      order by a.idx desc
+   </select>
+   
+   <!-- 전체 최신글 4가 불러오기  public List<Board> getNewBoardList(Board board) -->
+   <select id="getNewBoardList" parameterType="String" resultType="kr.or.vo.Board">
+      <![CDATA[
+         select t.b_code, b_name, u_idx, profilephoto, nickname, title, content, w_date, label
+         from board_type_${url} t join (select m.u_idx, profilephoto, m.nickname, title, content, to_char(w_date, 'MM-DD') as w_date, b_code, label
+                                         from member m join board_${url} b
+                                      on m.u_idx = b.u_idx
+                                      where rownum <= 4) al
+         on t.b_code = al.b_code
+      ]]>
+   </select>
+   
+   <!-- 안읽은 게시글 4개 불러오기 public List<Board> getNotReadBoardList(String url, int u_idx) -->
+   <select id="getNotReadBoardList" resultType="kr.or.vo.Board">
+      <![CDATA[
+         select c.c_idx, aa.idx, c.u_idx as u_idx1, aa.u_idx, profilephoto, nickname, title, content, w_date, b_code, label
+         from (select c_idx, idx, u_idx 
+                  from checked_momoco
+                  where u_idx = 112244603 ) c right join (select idx, m.u_idx, profilephoto, m.nickname, title, content, to_char(w_date, 'MM-DD') as w_date, b_code, label
+                                                     from member m join board_momoco b
+                                                     on m.u_idx = b.u_idx
+                                                     where rownum <= 4) aa
+         on c.idx = aa.idx
+      ]]>
+   </select>
 </mapper>

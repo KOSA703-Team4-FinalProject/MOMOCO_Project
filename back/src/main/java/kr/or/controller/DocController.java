@@ -88,7 +88,6 @@ public class DocController {
 		
 		String[] u_idxList = doc.getU_idxList().split(",");
 		
-		System.out.println("addDocLink1 : " + result);
 		alarmsocket.sendAlarm(doc, u_idxList);
 		System.out.println("addDocLink2 : " + result);
 		return result;
@@ -176,11 +175,12 @@ public class DocController {
 		
 		doc.setOri_filename(files[0].getOriginalFilename());
 		doc.setSave_filename(saveFileName);
-		
+				
 		int result = docservice.addDoc(doc);
 		
 		String[] u_idxList = doc.getU_idxList().split(",");
 		alarmsocket.sendAlarm(doc, u_idxList);
+		
 		
 		System.out.println(result);
 		return result;

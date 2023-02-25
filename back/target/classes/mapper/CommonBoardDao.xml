@@ -9,19 +9,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 자유게시판 전체 글 목록 -->
 	<select id="getBoard" parameterType="int" resultType="kr.or.vo.CommonBoard">
-	select c_idx, aaa.idx, c.u_idx as u_idx1, aaa.u_idx, title, content, w_date, b_code, label, ref, depth, step, style, aaa.nickname, profilephoto
-	from (select c_idx, idx, u_idx 
-	      	from checked_${url}
-	      	where u_idx = #{u_idx}) c right join (select idx, aa.u_idx, title, content, w_date, b_code, label, ref, depth, step, style, m.nickname, profilephoto
-	                                                from member m join (select idx, nickname, title, content, w_date, b_code, a.label, u_idx, ref, depth, step, style
-	                                                                    from label_${url} l right join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, b_idx, ref, depth, step 
-	                                                                                                    from board_${url} b join common_board_${url} c
-	                                                                                                    on b.idx = c.idx
-	                                                                                                    where b_code = 5) a
-	                                                                    on l.label = a.label) aa
-	                                                on m.u_idx = aa.u_idx) aaa
-	on c.idx = aaa.idx
-	order by ref desc, step
+		select c_idx, aaa.idx, c.u_idx as u_idx1, aaa.u_idx, title, content, w_date, b_code, label, ref, depth, step, style, aaa.nickname, profilephoto
+	   from (select c_idx, idx, u_idx 
+	            from checked_${url}
+	            where u_idx = #{u_idx}) c right join (select idx, aa.u_idx, title, content, w_date, b_code, label, ref, depth, step, style, m.nickname, profilephoto
+	                                                   from member m join (select idx, nickname, title, content, w_date, b_code, a.label, u_idx, ref, depth, step, style
+	                                                                       from label_${url} l right join (select b.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, b_idx, ref, depth, step 
+	                                                                                                       from board_${url} b join common_board_${url} c
+	                                                                                                       on b.idx = c.idx
+	                                                                                                       where b_code = 5) a
+	                                                                       on l.label = a.label) aa
+	                                                   on m.u_idx = aa.u_idx) aaa
+	   on c.idx = aaa.idx
+	   order by ref desc, step
 	</select>
 	
    <!-- 글읽기-->
