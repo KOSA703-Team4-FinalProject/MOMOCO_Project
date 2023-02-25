@@ -167,6 +167,18 @@ let chooseLabel = createSlice({
 })
 export let { selectLabel } = chooseLabel.actions
 
+//토스트에 알림메시지 전송
+let alarmToast = createSlice({
+  name: 'alarmToast',
+  initialState: { link: '', content: '', url: '' },
+  reducers: {
+    updateToast(state, action) {
+      state = action.payload
+      return state
+    },
+  },
+})
+export let { updateToast } = alarmToast.actions
 
 export default configureStore({
   reducer: {
@@ -182,5 +194,6 @@ export default configureStore({
     inviteMem: inviteMem.reducer,
     labelList: labelList.reducer,
     chooseLabel: chooseLabel.reducer,
+    alarmToast: alarmToast.reducer,
   },
 })

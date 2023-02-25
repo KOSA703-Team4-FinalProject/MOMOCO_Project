@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 전체 일정 조회 public List<Calendar> getCalendar() -->
 	<select id="getDoc" parameterType="String" resultType="kr.or.vo.Doc">
-		select d.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, style, b_idx, ori_filename, save_filename, ref, depth, step, thumb, upload_type
+		select d.idx, nickname, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date, b_code, label, u_idx, style, b_idx, ori_filename, save_filename, thumb, upload_type
 		from doc_storage_${url} d join (select idx, nickname, title, content, w_date, b_code, b.label, u_idx, style
                                  	from board_${url} b join label_${url} l
                                      on b.label = l.label) a
@@ -18,8 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert all
 			into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
 				values (board_idx_seq_${url}.nextval, '${nickname}', '${title}', '${content}', '${b_code}', '${label}', '${u_idx}')
-			into doc_storage_${url} (b_idx, ori_filename, save_filename, ref, depth, step, thumb, idx, upload_type)
-				values (doc_storage_d_idx_seq_${url}.nextval, '${ori_filename}', '${save_filename}', '${ref}', '${depth}', '${step}', '${thumb}', board_idx_seq_${url}.CURRVAL, '${upload_type}')
+			into doc_storage_${url} (b_idx, ori_filename, save_filename, thumb, idx, upload_type)
+				values (doc_storage_d_idx_seq_${url}.nextval, '${ori_filename}', '${save_filename}', '${thumb}', board_idx_seq_${url}.CURRVAL, '${upload_type}')
 		select * from dual
 	</insert>
 	
@@ -28,8 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert all
 			into board_${url} (idx, nickname, title, content, b_code, label, u_idx)
 				values (board_idx_seq_${url}.nextval, '${nickname}', '${title}', '${content}', '${b_code}', '${label}', '${u_idx}')
-			into doc_storage_${url} (b_idx, ori_filename, save_filename, ref, depth, step, thumb, idx, upload_type)
-				values (doc_storage_d_idx_seq_${url}.nextval, '${ori_filename}', '${save_filename}', '${ref}', '${depth}', '${step}', '${thumb}', board_idx_seq_${url}.CURRVAL, '${upload_type}')
+			into doc_storage_${url} (b_idx, ori_filename, save_filename, thumb, idx, upload_type)
+				values (doc_storage_d_idx_seq_${url}.nextval, '${ori_filename}', '${save_filename}', '${thumb}', board_idx_seq_${url}.CURRVAL, '${upload_type}')
 		select * from dual
 	</insert>
 	
