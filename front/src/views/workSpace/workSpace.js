@@ -161,6 +161,9 @@ const workSpace = () => {
 
   //GitHub에서 워크스페이스 불러오기
   const getWorkSpace = async () => {
+
+    setRepList([])
+
     await octokit
       .request('GET /orgs/{org}/repos', {
         org: orgRef.current.value,
@@ -168,7 +171,7 @@ const workSpace = () => {
       .then((res) => {
 
         console.log(res.data)
-
+        
         res.data.map((data) => {
           setRepList((repList) => [...repList, data])
         })
@@ -188,6 +191,7 @@ const workSpace = () => {
         username: login.nickname,
       })
       .then((res) => {
+
         res.data.map((data) => {
           setRepList((repList) => [...repList, data])
         })

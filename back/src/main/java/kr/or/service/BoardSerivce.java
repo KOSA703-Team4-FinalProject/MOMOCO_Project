@@ -123,7 +123,12 @@ List<Board> boardlist = new ArrayList<Board>();
 		
 		try {
 			BoardDao boarddao = sqlsession.getMapper(BoardDao.class);
-			boardlist = boarddao.getNotReadBoardList(url, u_idx);
+			
+			Board board = new Board();
+			board.setUrl(url);
+			board.setU_idx(u_idx);
+			
+			boardlist = boarddao.getNotReadBoardList(board);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
