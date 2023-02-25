@@ -1,11 +1,16 @@
 package kr.or.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -66,74 +71,74 @@ public class CommonBoardController {
 	}
 
 	// 글쓰기
-	   @RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
-	   public int addCommonBoard(@RequestParam(value = "file", required = false) MultipartFile[] files,
-	         @RequestParam(value = "write1") String boardwrite, HttpServletRequest request) {
+	@RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
+	public int addCommonBoard(@RequestParam(value = "file", required = false) MultipartFile[] files,
+			@RequestParam(value = "write1") String boardwrite, HttpServletRequest request) {
 
-	      CommonBoard board = null;
-	      ObjectMapper mapper = new ObjectMapper();
+		CommonBoard board = null;
+		ObjectMapper mapper = new ObjectMapper();
 
-	      try {
-	         // String to DTO
-	         board = mapper.readValue(boardwrite, CommonBoard.class);
+		try {
+			// String to DTO
+			board = mapper.readValue(boardwrite, CommonBoard.class);
 
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      }
-	      
-	      if(files != null) {
-	         // 파일 명
-	         String filename = files[0].getOriginalFilename();
-	         // 확장자
-	         String extension = filename.substring(filename.lastIndexOf("."));
-	         // 확장자를 제외한 파일 명
-	         String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	         // 저장할 파일 명
-	         String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis()))
-	               .concat(extension);
-	         String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/"
-	               + saveFileName;
+		if (files != null) {
+			// 파일 명
+			String filename = files[0].getOriginalFilename();
+			// 확장자
+			String extension = filename.substring(filename.lastIndexOf("."));
+			// 확장자를 제외한 파일 명
+			String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
 
-	         // 파일이 저장될 경로
-	         String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
-	         // 폴더 생성
-	         File folder = new File(path);
-	         if (!folder.exists()) {
-	            folder.mkdirs();
-	         }
-	         
-	         System.out.println(savePath);
-	         
-	         try {
-	            File dest = new File(savePath);
-	            files[0].transferTo(dest);
-	         } catch (IOException e) {
-	            e.printStackTrace();
-	         }
-	         
-	         board.setOri_filename(files[0].getOriginalFilename());
-	         board.setSave_filename(saveFileName);
-	         board.setFiletype(files[0].getContentType());
-	         board.setVolume(files[0].getSize());
-	         board.setThumb("");
-	         
-	      } else {
-	         board.setOri_filename("");
-	         board.setSave_filename("");
-	         board.setFiletype("");
-	         board.setVolume(0);
-	         board.setThumb("");
-	      }
+			// 저장할 파일 명
+			String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis()))
+					.concat(extension);
+			String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/"
+					+ saveFileName;
 
-	      int result = commonboardservice.addCommonBoard(board);
+			// 파일이 저장될 경로
+			String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
+			// 폴더 생성
+			File folder = new File(path);
+			if (!folder.exists()) {
+				folder.mkdirs();
+			}
 
-	      String[] u_idxList = board.getU_idxList().split(",");
+			System.out.println(savePath);
 
-	      alarmsocket.sendAlarm(board, u_idxList);
+			try {
+				File dest = new File(savePath);
+				files[0].transferTo(dest);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-	      return result;
-	   }
+			board.setOri_filename(files[0].getOriginalFilename());
+			board.setSave_filename(saveFileName);
+			board.setFiletype(files[0].getContentType());
+			board.setVolume(files[0].getSize());
+			board.setThumb("");
+
+		} else {
+			board.setOri_filename("");
+			board.setSave_filename("");
+			board.setFiletype("");
+			board.setVolume(0);
+			board.setThumb("");
+		}
+
+		int result = commonboardservice.addCommonBoard(board);
+
+		String[] u_idxList = board.getU_idxList().split(",");
+
+		alarmsocket.sendAlarm(board, u_idxList);
+
+		return result;
+	}
 
 	// 글 삭제
 	@RequestMapping(value = "/boarddelete", method = RequestMethod.POST)
@@ -190,10 +195,11 @@ public class CommonBoardController {
 			board.setOri_filename(files[0].getOriginalFilename());
 			board.setFiletype(files[0].getContentType());
 			board.setVolume(files[0].getSize());
+			board.setSave_filename(saveFileName);
 		}
 
 		int result = commonboardservice.modifyCommonBoard(board);
-		
+
 		String[] u_idxList = board.getU_idxList().split(",");
 		alarmsocket.sendAlarm(board, u_idxList);
 
@@ -218,6 +224,7 @@ public class CommonBoardController {
 		return searchlist;
 
 	}
+
 	// 답글글쓰기
 	@RequestMapping(value = "/relyboardwrite", method = RequestMethod.POST)
 	public int replyCommonBoard(@RequestParam(value = "file") MultipartFile[] files,
@@ -275,7 +282,67 @@ public class CommonBoardController {
 
 		return result;
 	}
-	
 
+	@RequestMapping(value = "/viewImage", method = RequestMethod.POST)
+	public void viewImage(@RequestParam(value = "url") String url, @RequestParam(value = "content") String content,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		commonboardservice.getImge(url, content, request, response);
+
+	}
+
+	// 파일 다운로드 전 사전 토큰 확인
+	@RequestMapping(value = "/api/token", method = RequestMethod.GET)
+	public int isToekn() {
+
+		return 1;
+	}
+
+	// 파일 다운로드
+	@RequestMapping(value = "/fileDown", method = RequestMethod.GET)
+	public void downFile(@RequestParam(value = "url") String url, @RequestParam(value = "content") String content,
+			HttpServletRequest request, HttpServletResponse response) {
+		System.out.println(url);
+		System.out.println(content);
+		File file = new File(request.getServletContext().getRealPath("/resources/upload/board_") + url + "/" + content);
+
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		ServletOutputStream sos = null;
+
+		try {
+
+			fis = new FileInputStream(file);
+			bis = new BufferedInputStream(fis);
+			sos = response.getOutputStream();
+
+			String reFilename = "";
+
+			// IE로 실행한 경우인지 -> IE는 따로 인코딩 작업을 거쳐야 한다. request헤어에 MSIE 또는 Trident가 포함되어 있는지
+			// 확인
+			boolean isMSIE = request.getHeader("user-agent").indexOf("MSIE") != -1
+					|| request.getHeader("user-agent").indexOf("Trident") != -1;
+
+			if (isMSIE) {
+				reFilename = URLEncoder.encode(content, "utf-8");
+				reFilename = reFilename.replaceAll("\\+", "%20");
+			} else {
+				reFilename = new String(content.getBytes("utf-8"), "ISO-8859-1");
+			}
+
+			response.setContentType("application/octet-stream;charset=utf-8");
+			response.addHeader("Content-Disposition", "attachment;filename=\"" + reFilename + "\"");
+			response.setContentLength((int) file.length());
+
+			int read = 0;
+			while ((read = bis.read()) != -1) {
+				sos.write(read);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 }

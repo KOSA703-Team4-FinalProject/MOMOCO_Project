@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SET ori_filename = #{ori_filename},  volume = #{volume}, filetype = #{filetype}
         WHERE idx = #{idx}
 	</update>
-	
+	 
 	<!--삭제  -->
 	<delete id="deletecommonboard" parameterType="kr.or.vo.CommonBoard">
 		delete from board_${url} where idx = #{idx}

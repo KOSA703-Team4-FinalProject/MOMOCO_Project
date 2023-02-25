@@ -73,7 +73,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			}
 		}
 
-		if (request.getRequestURI().equals("/controller/api/chat/fileDown") || request.getRequestURI().equals("/controller/doc/fileDown")) {
+		if (request.getRequestURI().equals("/controller/api/chat/fileDown") || request.getRequestURI().equals("/controller/doc/fileDown") || request.getRequestURI().equals("/controller/board/fileDown")) {
 			result = true;
 		}
 
