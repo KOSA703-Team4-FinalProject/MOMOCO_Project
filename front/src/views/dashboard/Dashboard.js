@@ -3,25 +3,14 @@ import React from 'react'
 import {
   CAvatar,
   CBadge,
-  CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
   CCol,
   CProgress,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-  CWidgetStatsF,
+  CSpinner,
 } from '@coreui/react'
-import { CChartLine } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
 
 import CIcon from '@coreui/icons-react'
 import {
@@ -41,14 +30,15 @@ import {
   cifPl,
   cifUs,
   cibTwitter,
-  cilCloudDownload,
-  cilPeople,
   cilUser,
   cilUserFemale,
-  cibGithub,
-  cilChartPie,
 } from '@coreui/icons'
 import { useParams } from 'react-router-dom'
+import { Octokit } from 'octokit'
+import axios from 'axios'
+import CryptoJS from 'crypto-js'
+
+import { PRIMARY_KEY } from '../../oauth'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import avatar2 from 'src/assets/images/avatars/2.jpg'
@@ -56,18 +46,15 @@ import avatar3 from 'src/assets/images/avatars/3.jpg'
 import avatar4 from 'src/assets/images/avatars/4.jpg'
 import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
-
-import WidgetsBrand from '../widgets/WidgetsBrand'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import { Link, Route, Routes } from 'react-router-dom'
-import { Icon } from '@mui/material'
-import { AiFillGithub } from 'react-icons/ai'
 import { BsGithub } from 'react-icons/bs'
 import momoco1 from '../../assets/images/momocologo.png'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { red } from '@mui/material/colors'
+import { async } from 'regenerator-runtime'
 
 const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-  const login = JSON.parse(localStorage.getItem('login'))
 
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
@@ -190,6 +177,121 @@ const Dashboard = () => {
     },
   ]
 
+  const params = useParams()
+  const login = JSON.parse(localStorage.getItem('login'))
+
+  // AES알고리즘 사용 복호화
+  const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
+  //인코딩, 문자열로 변환, JSON 변환
+  const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+  const accessToken = decrypted.token
+
+  const [newList, setNewList] = useState([]) //새로운 전체글 목록
+  const [notreadList, setNotReadList] = useState([]) //확인 안한 글 목록
+  const [boardView, setBoardView] = useState(false) //게시판 여부 렌더링 여부
+
+  const [commitsList, setCommitsList] = useState([]) //커밋 리스트
+  const [commitView, setCoomitView] = useState(false) //커밋 이력 렌더링 여부
+  const [issueList, setIssueList] = useState([]) //미해결 이슈 리스트
+  const [issueview, setissueView] = useState(false) //미해결 이슈 렌더링 여부
+  const [clone, setClone] = useState(0) //클론 데이터
+  const [cloneView, setCloneView] = useState(false) //클론 데이터 렌더링 여부
+
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`,
+  })
+
+  useEffect(() => {
+    axios({
+      method: 'GET',
+      url: '/allboard/dashboard',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        url: params.url,
+        u_idx: login.u_idx,
+      },
+    }).then((res) => {
+      console.log(res.data)
+
+      setNewList((prev) => res.data.newList)
+      setNotReadList((prev) => res.data.notreadList)
+      setBoardView(true)
+    })
+
+    axios({
+      method: 'GET',
+      url: '/api/workspaceowner',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { url: params.url },
+    }).then((res) => {
+      getCommits(res.data)
+      getAssignedIssue(res.data)
+      getCloneNum(res.data)
+    })
+  }, [])
+
+  //커밋 이력 불러오기
+  const getCommits = async (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    await octokit
+      .request('GET /repos/{owner}/{repo}/commits', {
+        owner: owner,
+        repo: repos,
+        page: 1,
+        per_page: 4,
+      })
+      .then((res) => {
+        setCommitsList((prev) => res.data)
+        setCoomitView(true)
+      })
+  }
+
+  //미해결 이슈
+  const getAssignedIssue = async (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    await octokit
+      .request('GET /orgs/{org}/issues', { org: owner, page: 1, per_page: 4 })
+      .then((res) => {
+        setIssueList([])
+        res.data.map((d) => {
+          if (d.repository.name == repos) {
+            setIssueList((issueList) => [...issueList, d])
+          }
+        })
+        setissueView(true)
+      })
+  }
+
+  //한 주간 클론 수
+  const getCloneNum = async (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    await octokit
+      .request('GET /repos/{owner}/{repo}/traffic/clones', {
+        owner: owner,
+        repo: repos,
+      })
+      .then((res) => {
+        setClone((prev) => res.data.count)
+        setCloneView(true)
+      })
+  }
+
   return (
     <>
       <CCard className="mb-4">
@@ -209,61 +311,32 @@ const Dashboard = () => {
                     <strong> momoco(ws) 커밋 이력</strong>
                   </h6>
                 </CCardHeader>
-                <CCardBody>
-                  <CCol xs="auto" className="me-auto">
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          {' '}
-                          Merge remote-tracking branch 'origin/JM'...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 모모코 탈퇴 만드는 중...</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 자유게시판 ....</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          {' '}
-                          230224 8시 46분 칸반 아이템 추가 오류...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 멤버 초대</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                  </CCol>
-                </CCardBody>
+                {commitView == false ? (
+                  <CSpinner color="success" />
+                ) : (
+                  <CCardBody>
+                    <CCol xs="auto" className="me-auto">
+                      {commitsList.map((data) => {
+                        return (
+                          <CCard className="px-2 py-1">
+                            <CRow>
+                              <CCol className="col-md-1 my-auto">
+                                <CAvatar src={data.committer.avatar_url} />
+                              </CCol>
+                              <CCol className="col-md-9 my-auto">
+                                {' '}
+                                {data.commit.message.substr(0, 10)}
+                              </CCol>
+                              <CCol className="col-md-2 my-auto">
+                                {data.commit.author.date.substr(5, 5)}
+                              </CCol>
+                            </CRow>
+                          </CCard>
+                        )
+                      })}
+                    </CCol>
+                  </CCardBody>
+                )}
               </CCard>
             </CCol>
             <CCol>
@@ -274,61 +347,29 @@ const Dashboard = () => {
                     <strong> 미해결 issue List</strong>
                   </h6>
                 </CCardHeader>
-                <CCardBody>
-                  <CCol xs="auto" className="me-auto">
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          {' '}
-                          Merge remote-tracking branch 'origin/JM'...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 모모코 탈퇴 만드는 중...</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 자유게시판 ....</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          {' '}
-                          230224 8시 46분 칸반 아이템 추가 오류...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 멤버 초대</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                  </CCol>
-                </CCardBody>
+                {issueview == false ? (
+                  <CSpinner color="success" />
+                ) : (
+                  <CCardBody>
+                    <CCol xs="auto" className="me-auto">
+                      {issueList.map((data) => {
+                        return (
+                          <CCard className="px-2 py-1" key={data.number}>
+                            <CRow>
+                              <CCol className="col-md-1 my-auto">
+                                <CAvatar src={data.user.avatar_url} />
+                              </CCol>
+                              <CCol className="col-md-9 my-auto"> {data.title.substr(0, 10)}</CCol>
+                              <CCol className="col-md-2 my-auto">
+                                {data.updated_at.substr(5, 5)}
+                              </CCol>
+                            </CRow>
+                          </CCard>
+                        )
+                      })}
+                    </CCol>
+                  </CCardBody>
+                )}
               </CCard>
             </CCol>
           </CRow>
@@ -352,71 +393,76 @@ const Dashboard = () => {
                     <strong> 새로운 전체 글 목록</strong>
                   </h6>
                 </CCardHeader>
-                <CCardBody>
-                  <CCol xs="auto" className="me-auto">
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          <CBadge color="light" textColor="black">
-                            자유
-                          </CBadge>{' '}
-                          Merge remote-tracking branch ...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          <CBadge color="success">문서</CBadge> 테스트.............
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          <CBadge color="info">일정</CBadge> 자유게시판 ....
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          <CBadge color="danger">칸반</CBadge> 230224 8시 46분 칸반추가 오류...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          <CBadge color="light" textColor="black">
-                            자유{' '}
-                          </CBadge>
-                          멤버 초대
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                  </CCol>
-                </CCardBody>
+                {boardView == false ? (
+                  <CSpinner color="success" />
+                ) : (
+                  <CCardBody>
+                    <CCol xs="auto" className="me-auto">
+                      {newList.map((data) => {
+                        if (data.b_code == 5) {
+                          return (
+                            <CCard className="px-2 py-1" key={data.idx}>
+                              <CRow>
+                                <CCol className="col-md-1 my-auto">
+                                  <CAvatar src={data.profilephoto} />
+                                </CCol>
+                                <CCol className="col-md-9 my-auto">
+                                  <CBadge color="light" textColor="black">
+                                    자유
+                                  </CBadge>{' '}
+                                  {data.title}
+                                </CCol>
+                                <CCol className="col-md-2 my-auto">{data.w_date}</CCol>
+                              </CRow>
+                            </CCard>
+                          )
+                        } else if (data.b_code == 3) {
+                          return (
+                            <CCard className="px-2 py-1" key={data.idx}>
+                              <CRow>
+                                <CCol className="col-md-1 my-auto">
+                                  <CAvatar src={data.profilephoto} />
+                                </CCol>
+                                <CCol className="col-md-9 my-auto">
+                                  <CBadge color="success">문서</CBadge> {data.title}
+                                </CCol>
+                                <CCol className="col-md-2 my-auto">{data.w_date}</CCol>
+                              </CRow>
+                            </CCard>
+                          )
+                        } else if (data.b_code == 4) {
+                          return (
+                            <CCard className="px-2 py-1" key={data.idx}>
+                              <CRow>
+                                <CCol className="col-md-1 my-auto">
+                                  <CAvatar src={data.profilephoto} />
+                                </CCol>
+                                <CCol className="col-md-9 my-auto">
+                                  <CBadge color="info">일정</CBadge> {data.title}
+                                </CCol>
+                                <CCol className="col-md-2 my-auto">{data.w_date}</CCol>
+                              </CRow>
+                            </CCard>
+                          )
+                        } else if (data.b_code == 6) {
+                          return (
+                            <CCard className="px-2 py-1" key={data.idx}>
+                              <CRow>
+                                <CCol className="col-md-1 my-auto">
+                                  <CAvatar src={data.profilephoto} />
+                                </CCol>
+                                <CCol className="col-md-9 my-auto">
+                                  <CBadge color="danger">칸반</CBadge> {data.title}
+                                </CCol>
+                                <CCol className="col-md-2 my-auto">{data.w_date}</CCol>
+                              </CRow>
+                            </CCard>
+                          )
+                        }
+                      })}
+                    </CCol>
+                  </CCardBody>
+                )}
               </CCard>
             </CCol>
             <CCol>
@@ -427,61 +473,27 @@ const Dashboard = () => {
                     <strong> 확인 안한 글</strong>
                   </h6>
                 </CCardHeader>
-                <CCardBody>
-                  <CCol xs="auto" className="me-auto">
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          {' '}
-                          Merge remote-tracking branch 'origin/JM'...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 모모코 탈퇴 만드는 중...</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 자유게시판 ....</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto">
-                          {' '}
-                          230224 8시 46분 칸반 아이템 추가 오류...
-                        </CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                    <CCard className="px-2 py-1">
-                      <CRow>
-                        <CCol className="col-md-1 my-auto">
-                          <CAvatar src={login.profilephoto} />
-                        </CCol>
-                        <CCol className="col-md-9 my-auto"> 멤버 초대</CCol>
-                        <CCol className="col-md-2 my-auto">09/12</CCol>
-                      </CRow>
-                    </CCard>
-                  </CCol>
-                </CCardBody>
+                {boardView == false ? (
+                  <CSpinner color="success" />
+                ) : (
+                  <CCardBody>
+                    <CCol xs="auto" className="me-auto">
+                      {notreadList.map((data) => {
+                        return (
+                          <CCard className="px-2 py-1" key={data.idx}>
+                            <CRow>
+                              <CCol className="col-md-1 my-auto">
+                                <CAvatar src={data.profilephoto} />
+                              </CCol>
+                              <CCol className="col-md-9 my-auto"> {data.title}</CCol>
+                              <CCol className="col-md-2 my-auto">{data.w_date}</CCol>
+                            </CRow>
+                          </CCard>
+                        )
+                      })}
+                    </CCol>
+                  </CCardBody>
+                )}
               </CCard>
             </CCol>
           </CRow>
@@ -491,15 +503,19 @@ const Dashboard = () => {
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Traffic {' & '} Sales</CCardHeader>
+            <CCardHeader>GitHub</CCardHeader>
             <CCardBody>
               <CRow>
                 <CCol xs={12} md={6} xl={6}>
                   <CRow>
                     <CCol sm={6}>
                       <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">New Clients</div>
-                        <div className="fs-5 fw-semibold">9,123</div>
+                        <div className="text-medium-emphasis small">한 주간 Clone 수</div>
+                        {cloneView == false ? (
+                          <CSpinner color="success" />
+                        ) : (
+                          <div className="fs-5 fw-semibold">{clone}</div>
+                        )}
                       </div>
                     </CCol>
                     <CCol sm={6}>

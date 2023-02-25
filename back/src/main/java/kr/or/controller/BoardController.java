@@ -69,7 +69,7 @@ public class BoardController {
 	
 	//대시보드
 	@RequestMapping(value="/dashboard", method = RequestMethod.GET)
-	public Map<String, List<Board>> getDashBoard(@RequestParam(value="url") String url){
+	public Map<String, List<Board>> getDashBoard(@RequestParam(value="url") String url, @RequestParam(value="u_idx") int u_idx){
 		
 		Map<String, List<Board>> reMap = new HashMap<String, List<Board>>();
 		
@@ -77,7 +77,10 @@ public class BoardController {
 		List<Board> newboardlist = boardservice.getNewBoardList(url);
 		
 		//확인 안한 글 리스트
-	
+		List<Board> notreadboardlist = boardservice.getNotReadBoardList(url, u_idx);
+		
+		reMap.put("newList", newboardlist);
+		reMap.put("notreadList", notreadboardlist);
 		
 		return reMap;
 	}

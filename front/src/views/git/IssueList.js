@@ -3,13 +3,8 @@ import {
   CBadge,
   CCard,
   CCardBody,
-  CCardFooter,
   CCol,
   CFormSelect,
-  CModal,
-  CModalBody,
-  CModalHeader,
-  CModalTitle,
   CRow,
 } from '@coreui/react'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'

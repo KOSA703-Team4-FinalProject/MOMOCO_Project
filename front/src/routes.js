@@ -93,7 +93,6 @@ const ReplyBoardWrite = React.lazy(() => import('./views/board/replyBoardWrite')
 const routes = [
   { path: '/', exact: true, name: 'Home', element: Dashboard },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/dashboard', name: 'Dashboard', element: AllBoardList },
   { path: '/calendar', name: 'calendar', exact: true, element: Calendar },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

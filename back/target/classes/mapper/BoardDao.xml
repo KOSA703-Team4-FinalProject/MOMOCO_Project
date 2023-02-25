@@ -72,12 +72,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getNewBoardList" parameterType="String" resultType="kr.or.vo.Board">
 		<![CDATA[
 			select t.b_code, b_name, u_idx, profilephoto, nickname, title, content, w_date, label
-			from board_type_${url} t join (select m.u_idx, profilephoto, m.nickname, title, content, w_date, b_code, label
+			from board_type_${url} t join (select m.u_idx, profilephoto, m.nickname, title, content, to_char(w_date, 'MM-DD') as w_date, b_code, label
 	                    				   	from member m join board_${url} b
 	                    					on m.u_idx = b.u_idx
 	                    					where rownum <= 4) al
 			on t.b_code = al.b_code
 		]]>
 	</select>
-
+	
+	<!-- 안읽은 게시글 4개 불러오기 public List<Board> getNotReadBoardList(String url, int u_idx) -->
+	<select id="getNotReadBoardList" resultType="kr.or.vo.Board">
+		<![CDATA[
+			select c.c_idx, aa.idx, c.u_idx as u_idx1, aa.u_idx, profilephoto, nickname, title, content, w_date, b_code, label
+			from (select c_idx, idx, u_idx 
+			      	from checked_momoco
+			      	where u_idx = 112244603 ) c right join (select idx, m.u_idx, profilephoto, m.nickname, title, content, to_char(w_date, 'MM-DD') as w_date, b_code, label
+			                                            from member m join board_momoco b
+			                                            on m.u_idx = b.u_idx
+			                                            where rownum <= 4) aa
+			on c.idx = aa.idx
+		]]>
+	</select>
 </mapper>
