@@ -17,7 +17,7 @@ import { Octokit } from 'octokit'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 import Swal from 'sweetalert2'
-
+import $ from 'jquery'
 import { PRIMARY_KEY } from '../../oauth'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
@@ -151,7 +151,6 @@ const AppHeaderDropdown = () => {
       reverseButtons: true, // 버튼 순서 거꾸로
     }).then((result) => {
       if (result.isConfirmed) {
-        
         Swal.fire('탈퇴 완료', 'momoco에서 탈퇴되었습니다', 'success')
 
         axios({

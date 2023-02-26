@@ -14,9 +14,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <insert id="makeWorkSpace" parameterType="kr.or.vo.WorkSpace">
       insert all
          into workspace (url, space_name, start_date, end_date, linked_repo, admin)
-            values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, #{admin})
+            values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, ${admin})
          into workspace_user (url, u_idx, role)
-            values (#{url}, #{admin}, 'admin')
+            values (#{url}, ${admin}, 'admin')
+         into workspace_user(url, u_idx, role) 
+         	values(#{url}, ${admin} ,'admin')
+         into chat_user (u_idx, r_idx, nickname)
+         	values(${admin}, 1, (select nickname from member where u_idx = ${admin}))
       select * from dual
    </insert>
    
@@ -79,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       
       <!-- 워크스페이스 삭제 DeleteWorkSpace-->
 	<update id ="DeleteSpace"  parameterType = "kr.or.vo.WorkSpace">
-	 update workspace set DEL_DATE = sysdate + 3 where url = #{url}
+	 update workspace set DEL_DATE = CURRENT_DATE + 3 where url = #{url}
 	</update>
 	
 	<!-- 워크스페이스 수정 RestoreWorkSpace -->

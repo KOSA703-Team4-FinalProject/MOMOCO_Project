@@ -215,7 +215,29 @@ public class ChatController {
 		}
 
 	}
-
+	
+	@RequestMapping(value = "/api/chat/chat/chatList", method = RequestMethod.GET)
+	   public List<Object> getChatList(@RequestParam(value="url") String url, @RequestParam(value="r_idx") int r_idx){
+	      
+	      //채팅 기록
+	      Chat chat = new Chat();
+	      chat.setUrl(url);
+	      chat.setR_idx(r_idx);
+	      List<Chat> chatLsit = chatservice.getChat(chat);
+	      
+	      //채팅방 정보
+	      ChatRoom chatroom = new ChatRoom();
+	      chat.setUrl(url);
+	      chat.setR_idx(r_idx);
+	      ChatRoom room = chatroomservice.selectRoom(chatroom);
+	      
+	      List<Object> result = new ArrayList<Object>();
+	      result.add(chatLsit);
+	      result.add(room);
+	      
+	      return result;
+	   }
+	
 	// 이미지 파일 보기
 	@RequestMapping(value = "/api/chat/imgView", method = RequestMethod.GET)
 	public void getImge(@RequestParam(value = "url") String url, @RequestParam(value = "content") String content,
