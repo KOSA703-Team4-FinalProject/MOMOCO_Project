@@ -17,10 +17,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             values (#{url}, #{space_name}, to_date(#{start_date}, 'YYYY/MM/DD'), to_date(#{end_date}, 'YYYY/MM/DD'), #{linked_repo}, ${admin})
          into workspace_user (url, u_idx, role)
             values (#{url}, ${admin}, 'admin')
-         into workspace_user(url, u_idx, role) 
-         	values(#{url}, ${admin} ,'admin')
-         into chat_user (u_idx, r_idx, nickname)
-         	values(${admin}, 1, (select nickname from member where u_idx = ${admin}))
       select * from dual
    </insert>
    
