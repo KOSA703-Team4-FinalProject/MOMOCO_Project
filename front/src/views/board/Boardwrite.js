@@ -6,7 +6,6 @@ import { CButton } from '@coreui/react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CFormCheck } from '@coreui/react'
 import { CAvatar } from '@coreui/react'
-import { PRIMARY_KEY } from '../../oauth'
 import axios from 'axios'
 import Label from 'src/components/Label'
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,6 +14,13 @@ import { Editor } from '@tinymce/tinymce-react'
 import CryptoJS from 'crypto-js'
 import $ from 'jquery'
 import { Octokit } from 'octokit'
+import AceEditor from 'react-ace'
+
+import { PRIMARY_KEY } from '../../oauth'
+
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/theme-github'
+import 'ace-builds/src-noconflict/ext-language_tools'
 
 const Boardwirte = () => {
   const [title, SetTitle] = useState('')
@@ -28,6 +34,8 @@ const Boardwirte = () => {
   const issueNumber = useSelector((state) => state.issueNumber)
   const [commitsList, setCommitsList] = useState([])
   const [listview, setListView] = useState(false)
+  const [codeLost, setCodeLost] = useState(false) //code editor view
+  const [codevalue, setCodeValue] = useState('')
 
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
@@ -115,9 +123,10 @@ const Boardwirte = () => {
       label: label,
       step: 0,
       depth: 0,
+      code: codevalue,
     }
 
-    //계층형 만들기
+    //글작성
     const fd = new FormData()
     fd.append('file', filevalues)
     fd.append('write1', JSON.stringify(write))
@@ -191,6 +200,16 @@ const Boardwirte = () => {
     setListView(false)
   }
 
+  //코드 추가 클릭시 코드 추가 가능한 view 로드
+  const loadCode = () => {
+    setCodeLost(!codeLost)
+  }
+
+  //코드 에디터에 코드가 변할 경우
+  const codewrite = (arg1) => {
+    setCodeValue(arg1)
+  }
+
   return (
     <CCard className="draggable px-4 py-3" draggable="true">
       <CForm onSubmit={SubmitHandler}>
@@ -205,17 +224,24 @@ const Boardwirte = () => {
               <strong>하세요</strong>
             )}
           </CFormLabel>
-          <CCol sm={8}>
+          <CCol md={7} sm={12}>
             <CCol className="mb-3">
               <Label />
             </CCol>
           </CCol>
-          <CCol sm={2}>
-            <CCol align="left">
-              <CButton color="primary" variant="outline" className="mt-1" onClick={loadIssue}>
-                Issue 불러오기
-              </CButton>
-            </CCol>
+          <CCol md={3} sm={12}>
+            <CRow>
+              <CCol align="left" md={6} sm={12}>
+                <CButton color="primary" variant="outline" className="mt-1" onClick={loadCode}>
+                  Code 추가
+                </CButton>
+              </CCol>
+              <CCol align="left" md={6} sm={12}>
+                <CButton color="primary" variant="outline" className="mt-1" onClick={loadIssue}>
+                  Issue 불러오기
+                </CButton>
+              </CCol>
+            </CRow>
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -295,6 +321,26 @@ const Boardwirte = () => {
             }}
           />
           <br></br>
+          {codeLost == false ? (
+            <></>
+          ) : (
+            <AceEditor
+              mode="java"
+              theme="monokai"
+              name="codeEditor"
+              editorProps={{ $blockScrolling: true }}
+              setOptions={{
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true,
+              }}
+              value={codevalue}
+              width="100%"
+              fontSize={20}
+              onChange={codewrite}
+            />
+          )}
+
           <div align="right">
             <CButton type="submit">등록</CButton>
           </div>

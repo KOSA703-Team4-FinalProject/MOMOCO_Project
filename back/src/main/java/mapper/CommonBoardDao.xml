@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
    <!-- 글읽기-->
   	<select id="getBoardByIdx" parameterType="kr.or.vo.CommonBoard" resultType="kr.or.vo.CommonBoard">
-		 select b.idx , b.nickname, b.title, b.content, to_char(b.w_date ,'YYYY-MM-DD')as w_date, b.b_code, b.label, b.u_idx, c.b_idx,c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth,c.step, c.thumb, m.profilephoto
+		 select b.idx , b.nickname, b.title, b.content, to_char(b.w_date ,'YYYY-MM-DD')as w_date, b.b_code, b.label, b.u_idx, c.b_idx,c.ori_filename, c.save_filename, c.filetype, c.ref, c.depth,c.step, c.thumb, m.profilephoto, code
 		from board_${url} b join common_board_${url} c
  		on b.idx = c.idx 
 		join member m
@@ -39,8 +39,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	INSERT ALL
 	INTO board_${url} (idx, nickname, title, content, b_code, label, u_idx)
 		VALUES (BOARD_IDX_SEQ_${url}.nextval, #{nickname}, #{title}, #{content}, #{b_code}, #{label}, #{u_idx})
-	INTO common_board_${url} (b_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, idx)
-		VALUES (COMMON_BOARD_B_IDX_SEQ_${url}.nextval, #{ori_filename}, #{save_filename}, #{volume}, #{filetype}, COMMON_BOARD_B_IDX_SEQ_${url}.CURRVAL, #{depth}, #{step}, #{thumb}, BOARD_IDX_SEQ_${url}.CURRVAL)
+	INTO common_board_${url} (b_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, idx, code)
+		VALUES (COMMON_BOARD_B_IDX_SEQ_${url}.nextval, #{ori_filename}, #{save_filename}, #{volume}, #{filetype}, COMMON_BOARD_B_IDX_SEQ_${url}.CURRVAL, #{depth}, #{step}, #{thumb}, BOARD_IDX_SEQ_${url}.CURRVAL, #{code})
 		
 	SELECT * FROM dual
 	</insert>

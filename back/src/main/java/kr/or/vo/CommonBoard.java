@@ -14,6 +14,7 @@ public class CommonBoard extends Board {
 	private int step;			//step	
 	private String thumb;		//썸네일
 	private int b_idx;			//글번호
+	private String code;		//code
 
 	private String nickname;	//닉네임 (login)
 	private String profilephoto;	//프로필 사진(avatar_url)

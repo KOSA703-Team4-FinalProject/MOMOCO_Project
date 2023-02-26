@@ -66,74 +66,75 @@ public class CommonBoardController {
 	}
 
 	// 글쓰기
-	   @RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
-	   public int addCommonBoard(@RequestParam(value = "file", required = false) MultipartFile[] files,
-	         @RequestParam(value = "write1") String boardwrite, HttpServletRequest request) {
+	@RequestMapping(value = "/boardwrite", method = RequestMethod.POST)
+	public int addCommonBoard(@RequestParam(value = "file", required = false) MultipartFile[] files,
+			@RequestParam(value = "write1") String boardwrite, HttpServletRequest request) {
 
-	      CommonBoard board = null;
-	      ObjectMapper mapper = new ObjectMapper();
+		CommonBoard board = null;
+		ObjectMapper mapper = new ObjectMapper();
 
-	      try {
-	         // String to DTO
-	         board = mapper.readValue(boardwrite, CommonBoard.class);
+		try {
+			// String to DTO
+			board = mapper.readValue(boardwrite, CommonBoard.class);
 
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      }
-	      
-	      if(files != null) {
-	         // 파일 명
-	         String filename = files[0].getOriginalFilename();
-	         // 확장자
-	         String extension = filename.substring(filename.lastIndexOf("."));
-	         // 확장자를 제외한 파일 명
-	         String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	         // 저장할 파일 명
-	         String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis()))
-	               .concat(extension);
-	         String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/"
-	               + saveFileName;
+		if (files != null) {
+			// 파일 명
+			String filename = files[0].getOriginalFilename();
+			// 확장자
+			String extension = filename.substring(filename.lastIndexOf("."));
+			// 확장자를 제외한 파일 명
+			String onlyFileName = filename.substring(0, filename.lastIndexOf("."));
 
-	         // 파일이 저장될 경로
-	         String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
-	         // 폴더 생성
-	         File folder = new File(path);
-	         if (!folder.exists()) {
-	            folder.mkdirs();
-	         }
-	         
-	         System.out.println(savePath);
-	         
-	         try {
-	            File dest = new File(savePath);
-	            files[0].transferTo(dest);
-	         } catch (IOException e) {
-	            e.printStackTrace();
-	         }
-	         
-	         board.setOri_filename(files[0].getOriginalFilename());
-	         board.setSave_filename(saveFileName);
-	         board.setFiletype(files[0].getContentType());
-	         board.setVolume(files[0].getSize());
-	         board.setThumb("");
-	         
-	      } else {
-	         board.setOri_filename("");
-	         board.setSave_filename("");
-	         board.setFiletype("");
-	         board.setVolume(0);
-	         board.setThumb("");
-	      }
+			// 저장할 파일 명
+			String saveFileName = onlyFileName.concat("_").concat(String.valueOf(System.currentTimeMillis()))
+					.concat(extension);
+			String savePath = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl() + "/"
+					+ saveFileName;
 
-	      int result = commonboardservice.addCommonBoard(board);
+			// 파일이 저장될 경로
+			String path = request.getServletContext().getRealPath("/resources/upload/board_") + board.getUrl();
+			// 폴더 생성
+			File folder = new File(path);
+			if (!folder.exists()) {
+				folder.mkdirs();
+			}
 
-	      String[] u_idxList = board.getU_idxList().split(",");
+			System.out.println(savePath);
 
-	      alarmsocket.sendAlarm(board, u_idxList);
+			try {
+				File dest = new File(savePath);
+				files[0].transferTo(dest);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-	      return result;
-	   }
+			board.setOri_filename(files[0].getOriginalFilename());
+			board.setSave_filename(saveFileName);
+			board.setFiletype(files[0].getContentType());
+			board.setVolume(files[0].getSize());
+			board.setThumb("");
+
+		} else {
+			board.setOri_filename("");
+			board.setSave_filename("");
+			board.setFiletype("");
+			board.setVolume(0);
+			board.setThumb("");
+		}
+
+		System.out.println(board.toString());
+		int result = commonboardservice.addCommonBoard(board);
+
+		String[] u_idxList = board.getU_idxList().split(",");
+
+		alarmsocket.sendAlarm(board, u_idxList);
+
+		return result;
+	}
 
 	// 글 삭제
 	@RequestMapping(value = "/boarddelete", method = RequestMethod.POST)
@@ -193,7 +194,7 @@ public class CommonBoardController {
 		}
 
 		int result = commonboardservice.modifyCommonBoard(board);
-		
+
 		String[] u_idxList = board.getU_idxList().split(",");
 		alarmsocket.sendAlarm(board, u_idxList);
 
@@ -218,6 +219,7 @@ public class CommonBoardController {
 		return searchlist;
 
 	}
+
 	// 답글글쓰기
 	@RequestMapping(value = "/relyboardwrite", method = RequestMethod.POST)
 	public int replyCommonBoard(@RequestParam(value = "file") MultipartFile[] files,
@@ -275,7 +277,5 @@ public class CommonBoardController {
 
 		return result;
 	}
-	
-
 
 }

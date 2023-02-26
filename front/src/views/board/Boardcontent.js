@@ -18,7 +18,12 @@ import CryptoJS from 'crypto-js'
 import { PRIMARY_KEY } from '../../oauth'
 import Comments from 'src/components/Comments'
 import { Editor } from '@tinymce/tinymce-react'
-import { FormControlUnstyledContext } from '@mui/base'
+import AceEditor from 'react-ace'
+
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/theme-github'
+import 'ace-builds/src-noconflict/ext-language_tools'
+
 const title = {
   fontSize: 25,
   border: '2px',
@@ -169,6 +174,27 @@ const Boardcontent = (props) => {
                           }}
                         />
                       </div>
+                      {boardcontent.code == null || boardcontent.code == '' ? (
+                        <></>
+                      ) : (
+                        <div className="col-md-12 mt-3">
+                          <AceEditor
+                            mode="java"
+                            theme="monokai"
+                            name="codeEditor"
+                            editorProps={{ $blockScrolling: true }}
+                            setOptions={{
+                              enableBasicAutocompletion: true,
+                              enableLiveAutocompletion: true,
+                              enableSnippets: true,
+                            }}
+                            value={boardcontent.code}
+                            width="100%"
+                            fontSize={20}
+                            readOnly
+                          />
+                        </div>
+                      )}
                     </div>
                   </CCard>
                   <br></br>
