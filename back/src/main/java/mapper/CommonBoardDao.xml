@@ -36,14 +36,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 글쓰기 -->
 	<insert id="addCommonBoard" parameterType="kr.or.vo.CommonBoard">
-	INSERT ALL
-	INTO board_${url} (idx, nickname, title, content, b_code, label, u_idx)
-		VALUES (BOARD_IDX_SEQ_${url}.nextval, #{nickname}, #{title}, #{content}, #{b_code}, #{label}, #{u_idx})
-	INTO common_board_${url} (b_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, idx, code)
+	INSERT INTO common_board_${url} (b_idx, ori_filename, save_filename, volume, filetype, ref, depth, step, thumb, idx, code)
 		VALUES (COMMON_BOARD_B_IDX_SEQ_${url}.nextval, #{ori_filename}, #{save_filename}, #{volume}, #{filetype}, COMMON_BOARD_B_IDX_SEQ_${url}.CURRVAL, #{depth}, #{step}, #{thumb}, BOARD_IDX_SEQ_${url}.CURRVAL, #{code})
 		
-	SELECT * FROM dual
 	</insert>
+	
+	<!-- 글쓰기 public int writeBoard(CommonBoard all)  -->
+	<insert id="writeBoard" parameterType="kr.or.vo.CommonBoard">
+		insert INTO board_${url} (idx, nickname, title, content, b_code, label, u_idx)
+			VALUES (BOARD_IDX_SEQ_${url}.nextval, #{nickname}, #{title}, #{content}, #{b_code}, #{label}, #{u_idx})
+	</insert>
+	
 	<!-- 글수정하기board 테이블 -->
 	<update id="updateBoard" parameterType="kr.or.vo.CommonBoard">
 		 UPDATE board_${url}
