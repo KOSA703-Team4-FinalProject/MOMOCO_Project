@@ -289,7 +289,7 @@ const Boardcontent = (props) => {
                         <div className="col-md-12 mt-3">
                           <AceEditor
                             mode="java"
-                            theme="monokai"
+                            theme="github"
                             name="codeEditor"
                             editorProps={{ $blockScrolling: true }}
                             setOptions={{

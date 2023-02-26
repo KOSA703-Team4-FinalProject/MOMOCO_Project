@@ -79,7 +79,7 @@ const AppHeader = () => {
   const [toast, addToast] = useState(0)
   const toaster = useRef()
   const Toast = (
-    <CToast>
+    <CToast autohide={false}>
       <CToastHeader closeButton>
         <svg
           className="rounded me-2"
