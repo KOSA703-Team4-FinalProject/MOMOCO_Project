@@ -33,7 +33,8 @@ public interface CommonBoardDao {
 	//답글쓰기
 	public int replyCommonBoard (CommonBoard all)throws ClassNotFoundException, SQLException;
 
-	
+	//글쓰기 2
+	public int writeBoard(CommonBoard all) throws ClassNotFoundException, SQLException;
 	
 		
 }

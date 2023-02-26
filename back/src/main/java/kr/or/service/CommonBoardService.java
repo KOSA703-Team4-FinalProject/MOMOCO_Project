@@ -71,10 +71,14 @@ public class CommonBoardService {
 	}
 
 	// 글쓰기
+	@Transactional
 	public int addCommonBoard(CommonBoard all) {
 		int result = 0;
 		try {
 			CommonBoardDao commonboarddao = sqlsession.getMapper(CommonBoardDao.class);
+			
+			result = commonboarddao.writeBoard(all);
+			
 			result = commonboarddao.addCommonBoard(all);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
