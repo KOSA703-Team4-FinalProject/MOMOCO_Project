@@ -198,7 +198,7 @@ const Gitchart = () => {
       <CCard className="mb-4">
         <CCardBody>
           <CRow sm={12}>
-            <CCol sm={6}>
+            <CCol sm={8}>
               <CCard className="p-3">
                 <div className="row">
                   <div className="col-md-12" align="center">
@@ -232,8 +232,8 @@ const Gitchart = () => {
                 )}
               </CCard>
             </CCol>
-            <CCol sm={6}>
-              <CCard className="p-3">
+            <CCol sm={4}>
+              <CCard className="p-3" style={{ width: '100%' }}>
                 <div className="row">
                   <div className="col-md-12" align="center">
                     <h2>
@@ -251,7 +251,6 @@ const Gitchart = () => {
                         type="doughnut"
                         data={{
                           labels: valuearr,
-
                           datasets: [
                             {
                               backgroundColor: backgroundColor,
