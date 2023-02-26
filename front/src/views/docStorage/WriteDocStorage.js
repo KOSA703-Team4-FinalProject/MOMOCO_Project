@@ -370,8 +370,7 @@ const WriteDocStorage = () => {
         <CCardBody>
           <Editor
             onEditorChange={EditorHandler}
-            value={content.content}
-            initialValue={content}
+            value={content}
             id="tinyEditor"
             apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
             init={{
@@ -388,7 +387,6 @@ const WriteDocStorage = () => {
                 'alignright alignjustify | bullist numlist outdent indent | ' +
                 'removeformat | help',
               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-              forced_root_block: false,
             }}
           />
           <br></br>
