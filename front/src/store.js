@@ -170,10 +170,12 @@ export let { selectLabel } = chooseLabel.actions
 //토스트에 알림메시지 전송
 let alarmToast = createSlice({
   name: 'alarmToast',
-  initialState: { link: '', content: '', url: '' },
+  initialState: {link: '', url: '', content: ''},
   reducers: {
     updateToast(state, action) {
-      state = action.payload
+      state.link = action.payload.link
+      state.url = action.url
+      state.content = action.payload.content
       return state
     },
   },

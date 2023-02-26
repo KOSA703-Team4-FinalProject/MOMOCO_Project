@@ -21,6 +21,7 @@ import { useNavigate, useParams } from 'react-router'
 import { Swal } from 'sweetalert2'
 import { BsFillTrashFill } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
+import { updateToast } from 'src/store'
 
 const NotisStyle = {
   width: '400px',
@@ -32,7 +33,7 @@ const Notifications = (props) => {
   const [list, SetList] = useState([])
   const params = useParams()
   const navigate = useNavigate()
-  const updateToast = useSelector((state) => state.updateToast)
+  const alarmToast = useSelector((state) => state.alarmToast)
   const dispatch = useDispatch()
 
   let stomp = props.stomp
@@ -48,19 +49,16 @@ const Notifications = (props) => {
   const u_idx = login.u_idx
   const url = params.url
 
-  //웹 소켓 연결
   stomp.connect({}, () => {
+    console.log("22222")
     stomp.subscribe('/sub/one/alarm/' + u_idx, (alarm) => {
       console.log(u_idx)
       const res = JSON.parse(alarm.body)
       console.log(res)
-      SetList(([...list]) => [res, ...list])
+      SetList((list) => [res, ...list])
+  
       if (res != '') {
-        {
-          res.data.map((data) => {
-            return dispatch(updateToast({ content: data.content, link: data.link, url: data.url }))
-          })
-        }
+        dispatch(updateToast({link: res.link, url: res.url, content: res.content}))
       }
     })
   })
