@@ -22,6 +22,7 @@ import { Swal } from 'sweetalert2'
 import { BsFillTrashFill } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateToast } from 'src/store'
+import { listItemButtonClasses } from '@mui/material'
 
 const NotisStyle = {
   width: '400px',
@@ -50,15 +51,24 @@ const Notifications = (props) => {
   const url = params.url
 
   stomp.connect({}, () => {
-    console.log("22222")
+    console.log('22222')
     stomp.subscribe('/sub/one/alarm/' + u_idx, (alarm) => {
       console.log(u_idx)
       const res = JSON.parse(alarm.body)
       console.log(res)
       SetList((list) => [res, ...list])
-  
+      console.log(res.w_date)
+
       if (res != '') {
-        dispatch(updateToast({link: res.link, url: res.url, content: res.content}))
+        dispatch(
+          updateToast({
+            link: res.link,
+            url: res.url,
+            content: res.content,
+            nickname: res.nickname,
+            w_date: res.w_date,
+          }),
+        )
       }
     })
   })
@@ -211,7 +221,11 @@ const Notifications = (props) => {
                           <CAvatar className="ms-1" src={data.profilephoto} />
                         </CCol>
                         <CCol sm={8} onClick={() => checkAlarm(data.a_idx, data.link)}>
-                          <strong>{data.content}</strong>
+                          <strong>
+                            {data.content}
+                            {data.w_date}
+                          </strong>
+                          <i className="text-medium-emphasis"> {data.url}에서..</i>
                         </CCol>
                         <CCol sm={2}>
                           <CButton

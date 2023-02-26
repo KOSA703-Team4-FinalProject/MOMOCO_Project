@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <!-- 알람에서 사용, 해당 알람이 발생할 게시글 찾기 public Board getBoardByTitle(Board board) -->
    <select id="getBoardByTitle" parameterType="kr.or.vo.Board"
       resultType="kr.or.vo.Board">
-      select idx, title, content, to_char(w_date, 'YYYY-MM-DD') as w_date,
+      select idx, title, content, to_char(w_date, 'MM-DD hh:mi') as w_date,
       nickname, b.b_code, t.b_name, label, u_idx
       from board_${url} b join
       board_type_${url} t

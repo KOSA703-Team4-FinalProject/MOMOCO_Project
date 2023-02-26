@@ -18,4 +18,5 @@ public class Alarm {
 	private String b_code;
 	private String nickname;
 	private String profilephoto;
+	private String w_date;
 }
