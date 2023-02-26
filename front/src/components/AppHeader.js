@@ -51,9 +51,6 @@ const AppHeader = () => {
   const [chatState, setCahtState] = useState(false) //채팅 모달 상태
   //토스트
   const alarmToast = useSelector((state) => state.alarmToast)
-  const [link, SetLink] = useState('')
-  const [content, SetContent] = useState('')
-  const [url, SetURL] = useState('')
 
   const params = useParams()
   const navigate = useNavigate()
@@ -74,9 +71,8 @@ const AppHeader = () => {
       sameSite: 'strict',
     })
 
-    return () => {
-      stomp.unsubscribe()
-    }
+    
+
   }, [])
 
   //토스트
@@ -96,18 +92,22 @@ const AppHeader = () => {
         >
           <rect width="100%" height="100%" fill="#007aff"></rect>
         </svg>
-        <div className="fw-bold me-auto">{link}에서 알림이 왔습니다</div>
-        <small>{url}</small>
+        <div className="fw-bold me-auto">{alarmToast.link}에서 알림이 왔습니다</div>
+        <small>{alarmToast.url}</small>
       </CToastHeader>
-      <CToastBody>{content}</CToastBody>
+      <CToastBody>{alarmToast.content}</CToastBody>
     </CToast>
   )
 
   useEffect(() => {
-    SetLink(alarmToast.link)
-    SetContent(alarmToast.content)
-    SetURL(alarmToast.url)
-    addToast(Toast)
+
+    if(alarmToast.content != ""){
+      console.log('================================')
+      addToast(Toast)
+    }
+    console.log("2222222222222222222222222222")
+      
+      
   }, [alarmToast])
 
   return (
