@@ -193,7 +193,7 @@ const Boardlist = () => {
                         style={cardStyle}
                         onClick={() => {
                           navigate(`/ws/${params.url}/boardcontent/${data.idx}`)
-                          checked()
+                          checked(data.idx)
                         }}
                       >
                         <div className="col-md-12">

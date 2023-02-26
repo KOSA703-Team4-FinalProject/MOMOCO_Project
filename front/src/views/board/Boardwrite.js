@@ -3,7 +3,7 @@ import { CBadge, CCard, CForm, CModal, CModalHeader, CModalBody, CModalTitle } f
 import { CRow, CFormLabel, CCol, CFormInput, CInputGroup, CInputGroupText } from '@coreui/react'
 import { CCardBody } from '@coreui/react'
 import { CButton } from '@coreui/react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { CFormCheck } from '@coreui/react'
 import { CAvatar } from '@coreui/react'
 import { PRIMARY_KEY } from '../../oauth'
@@ -193,7 +193,7 @@ const Boardwirte = () => {
 
   return (
     <CCard className="draggable px-4 py-3" draggable="true">
-      <CForm onSubmit={SubmitHandler}>
+      <CForm>
         <CRow className="mb-3">
           <CFormLabel className="col-sm-2 col-form-label">
             <strong>라벨 선택 </strong>
@@ -273,12 +273,11 @@ const Boardwirte = () => {
         <CCardBody>
           <Editor
             onEditorChange={EditorHandler}
-            value={content.content}
-            initialValue={content}
+            value={content}
             id="tinyEditor"
             apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
             init={{
-              height: 400,
+              height: 500,
               menubar: false,
               plugins: [
                 'advlist autolink lists link image charmap print preview anchor',
@@ -291,12 +290,15 @@ const Boardwirte = () => {
                 'alignright alignjustify | bullist numlist outdent indent | ' +
                 'removeformat | help',
               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-              forced_root_block: false,
             }}
           />
           <br></br>
           <div align="right">
-            <CButton type="submit">등록</CButton>
+            <Link to={`/ws/${params.url}/boardlist`}>
+              <CButton type="submit" onClick={SubmitHandler}>
+                등록
+              </CButton>
+            </Link>
           </div>
         </CCardBody>
       </CForm>

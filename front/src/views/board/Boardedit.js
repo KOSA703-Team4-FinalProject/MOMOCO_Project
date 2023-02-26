@@ -11,6 +11,10 @@ import {
   CFormLabel,
   CFormSelect,
   CFormTextarea,
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalTitle,
   CRow,
 } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
@@ -20,8 +24,11 @@ import styled from 'styled-components'
 import CryptoJS from 'crypto-js'
 import { useEffect } from 'react'
 import { PRIMARY_KEY } from 'src/oauth'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
-
+import { Octokit } from 'octokit'
+import Label from 'src/components/Label'
+import $ from 'jquery'
 const Boardedit = () => {
   const labelselect = {
     width: '300px',
@@ -39,12 +46,17 @@ const Boardedit = () => {
   const [newTitle, setNewTitle] = useState('') // 제목수정
   const [u_idxlist, SetU_idxlist] = useState([]) //알림
   const [alarmList, setAlarmList] = useState('') //알람 보낼 u_idx 리스트
+  const [label, SetLabel] = useState('　')
+  const [style, SetStyle] = useState('')
+  const [commitsList, setCommitsList] = useState([])
+  const [listview, setListView] = useState(false)
+  const chooseLabel = useSelector((state) => state.chooseLabel)
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
-
+  console.log(boardcontent)
   const handleTitleChange = (e) => {
     setNewTitle(e.target.value)
   }
@@ -109,7 +121,10 @@ const Boardedit = () => {
     const files = event.target.files
     setNewFile(files[0])
   }
-
+  useEffect(() => {
+    SetLabel(chooseLabel.label)
+    SetStyle(chooseLabel.style)
+  }, [chooseLabel])
   //수정 글작성
   const editcontent = () => {
     const edit = {
@@ -117,29 +132,83 @@ const Boardedit = () => {
       idx: params.idx,
       content: content,
       title: newTitle,
-      label: '.',
+      label: label,
       u_idxList: alarmList,
     }
     console.log(edit)
     const fd = new FormData()
     fd.append('file', newFile)
     fd.append('edit', JSON.stringify(edit))
+    if (newTitle != '' && content != '' && label != '' && alarmList != '') {
+      axios({
+        method: 'POST',
+        url: '/board/boardmodify',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': `multipart/form-data; `,
+        },
+        data: fd,
+      }).then((res) => {
+        console.log(res.data)
+      })
+    } else {
+      alert('입력하지 않은 항목이 있습니다. ex.제목/내용/라벨/알림')
+    }
+  }
+  //github에서 이슈 불러오기
+  const loadIssue = () => {
     axios({
-      method: 'POST',
-      url: '/board/boardmodify',
+      method: 'GET',
+      url: '/api/workspaceowner',
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': `multipart/form-data; `,
       },
-      data: fd,
+      params: { url: params.url },
     }).then((res) => {
-      console.log(res.data)
+      getIssue(res.data)
     })
   }
 
+  const octokit = new Octokit({
+    auth: `Bearer ${accessToken}`,
+  })
+
+  const getIssue = (data) => {
+    //레파지토리 이름
+    const repos = data.linked_repo
+    //레포지토리 주인
+    const owner = data.owner
+
+    octokit
+      .request('GET /repos/{owner}/{repo}/issues', {
+        owner: owner,
+        repo: repos,
+      })
+      .then((res) => {
+        console.log(res.data)
+        setCommitsList(() => [])
+        res.data.map((d) => {
+          setCommitsList((commitsList) => [...commitsList, d])
+        })
+        setListView(true)
+      })
+  }
+
+  //이슈 클릭시 content에 추가
+  const clickIssue = (e) => {
+    const tar = e.target
+    const targ = $(tar).closest('.issue').attr('issueSrc')
+    const title = $(tar).closest('.issue').attr('title')
+    const num = $(tar).closest('.issue').attr('num')
+
+    $('#title').val('#' + num + ' ' + title)
+    setContent((content) => content + targ)
+
+    setListView(false)
+  }
   return (
     <>
-      <CCard className="mb-4">
+      <CCard className="draggable px-4 py-3" draggable="true">
         <CCardBody>
           <CRow>
             <CCol sm={5}></CCol>
@@ -150,25 +219,38 @@ const Boardedit = () => {
               <CRow className="row">
                 <CCol className="col-md-12">
                   <CCol className="row">
-                    <CCol className="col-md-3">
-                      <label>
-                        <strong>라벨</strong>
-                      </label>
-                      <br></br>
-                      <CFormSelect
-                        style={labelselect}
-                        aria-label="라벨"
-                        options={[
-                          'Open this select menu',
-                          { label: 'One', value: '1' },
-                          { label: 'Two', value: '2' },
-                          { label: 'Three', value: '3', disabled: true },
-                        ]}
-                      />
-                    </CCol>
+                    <CRow className="mb-3">
+                      <CFormLabel className="col-sm-2 col-form-label">
+                        <strong>라벨 선택 </strong>
+                        {chooseLabel.label != '' ? (
+                          <CButton color={chooseLabel.style} shape="rounded-pill" size="sm">
+                            {chooseLabel.label}
+                          </CButton>
+                        ) : (
+                          <strong>하세요</strong>
+                        )}
+                      </CFormLabel>
+                      <CCol sm={8}>
+                        <CCol className="mb-3">
+                          <Label />
+                        </CCol>
+                      </CCol>
+                      <CCol sm={2}>
+                        <CCol align="left">
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            className="mt-1"
+                            onClick={loadIssue}
+                          >
+                            Issue 불러오기
+                          </CButton>
+                        </CCol>
+                      </CCol>
+                    </CRow>
                     <CCol className="col-md-9" align="left">
                       <label>
-                        <strong>제목</strong>
+                        <strong>글 제목</strong>
                       </label>
                       <br></br>
                       <CFormInput
@@ -200,37 +282,33 @@ const Boardedit = () => {
                       </CCol>
                     </CCol>
                   </CRow>
-                  <CCol className="row">
-                    <CCol className="col-md-12">
-                      <CRow>
-                        <CFormLabel className="col-sm-2 col-form-label">
-                          <strong>알림</strong>
-                        </CFormLabel>
-                        <CCol sm={10}>
-                          <CRow>
-                            {u_idxlist.map((data, key) => (
-                              <div className="col" key={data.u_idx}>
-                                <CFormCheck
-                                  onChange={checkAList}
-                                  inline
-                                  name="u_idx"
-                                  value={data.u_idx}
-                                  label={
-                                    <div>
-                                      <CAvatar className="ms-2" src={data.profilephoto} />
-                                      {data.nickname}
-                                    </div>
-                                  }
-                                />
-                              </div>
-                            ))}
-                          </CRow>
-                        </CCol>
-                      </CRow>
+
+                  <CRow>
+                    <CFormLabel className="col-sm-2 col-form-label">
+                      <strong>알림 전송</strong>
+                    </CFormLabel>
+                    <CCol sm={10}>
+                      {u_idxlist.map((data) => {
+                        return (
+                          <>
+                            <CBadge color="light" textColor="black" className="ms-6 m-1">
+                              <CFormCheck
+                                inline
+                                name="u_idx"
+                                value={data.u_idx}
+                                onChange={checkAList}
+                              />
+                              <CAvatar size="sm" className="me-1" src={data.profilephoto} />
+                              <strong>{data.nickname}</strong>
+                            </CBadge>
+                          </>
+                        )
+                      })}
                     </CCol>
-                    <CCol className="col-md-4"></CCol>
-                    <CCol className="col-md-4"></CCol>
-                  </CCol>
+                  </CRow>
+
+                  <CCol className="col-md-4"></CCol>
+                  <CCol className="col-md-4"></CCol>
 
                   <br></br>
                   <CRow className="row">
@@ -263,7 +341,7 @@ const Boardedit = () => {
                         <Link to={`/ws/${params.url}/boardlist`}>
                           <CButton variant="outline" onClick={editcontent}>
                             수정하기
-                          </CButton>{' '}
+                          </CButton>
                         </Link>
                         &nbsp;
                         <Link to={`/ws/${params.url}/boardlist`}>
@@ -279,6 +357,45 @@ const Boardedit = () => {
               </CRow>
             </CCol>
           </CCol>
+          {/* 이슈 불러오기 목록 */}
+          <CModal
+            alignment="center"
+            scrollable
+            backdrop="static"
+            visible={listview}
+            onClose={() => setListView(false)}
+          >
+            <CModalHeader onClose={() => setListView(false)}>
+              <CModalTitle>Issue List</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              {commitsList.map((data) => {
+                return (
+                  <CCard
+                    key={data.id}
+                    className="my-3 p-3 issue"
+                    issueSrc={data.html_url}
+                    title={data.title}
+                    num={data.number}
+                    onClick={clickIssue}
+                  >
+                    <CCard className="p-2 mt-2">
+                      <h5>
+                        <strong>{data.title}</strong>
+                      </h5>
+                    </CCard>
+
+                    <div align="end" className="m-2">
+                      <CAvatar src={data.user.avatar_url} className="me-2" />
+                      {data.user.login}
+                    </div>
+
+                    {data.body}
+                  </CCard>
+                )
+              })}
+            </CModalBody>
+          </CModal>
         </CCardBody>
       </CCard>
     </>
