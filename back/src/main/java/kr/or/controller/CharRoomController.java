@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.service.ChatRoomService;
 import kr.or.service.ChatService;
+import kr.or.service.ChatUserService;
 import kr.or.vo.Chat;
 import kr.or.vo.ChatRoom;
+import kr.or.vo.ChatUser;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,8 +33,15 @@ public class CharRoomController {
 	private ChatService chatservice;
 
 	@Autowired
-	public void setCharService(ChatService chatservice) {
+	public void setChatService(ChatService chatservice) {
 		this.chatservice = chatservice;
+	}
+	
+	private ChatUserService chatuserservice;
+
+	@Autowired
+	public void setCharUserService(ChatUserService chatuserservice) {
+		this.chatuserservice = chatuserservice;
 	}
 
 	// 특정 Broker로 메세지를 전달
@@ -44,10 +53,6 @@ public class CharRoomController {
 		List<ChatRoom> chatroomlist = new ArrayList<ChatRoom>();
 
 		chatroomlist = chatroomservice.getChatRoom(chatroom);
-		
-		Chat chat = new Chat();
-		chat.setContent("yes_sys");
-		template.convertAndSend("/sub/chat/isread/" + chatroom.getU_idx(), chat);
 
 		return chatroomlist;
 	}
@@ -77,6 +82,15 @@ public class CharRoomController {
 		//2인 채팅 생성
 		int result = chatroomservice.pairRoomCreate(chatroom);
 		
+		return result;
+	}
+	
+	//채팅방 초대
+	@RequestMapping(value="/invite", method=RequestMethod.POST)
+	public int inviteRoom(@RequestBody ChatUser chatuser) {
+		
+		int result = chatuserservice.addChatUser(chatuser);
+	
 		return result;
 	}
 
