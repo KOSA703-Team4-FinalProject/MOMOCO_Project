@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 글수정하기commonboard 테이블 -->
 	<update id="updateCommonBoard" parameterType="kr.or.vo.CommonBoard">
 	  UPDATE common_board_${url}
-        SET ori_filename = #{ori_filename},  volume = #{volume}, filetype = #{filetype}
+        SET ori_filename = #{ori_filename},  volume = #{volume}, filetype = #{filetype}, code = #{code}
         WHERE idx = #{idx}
 	</update>
 	 

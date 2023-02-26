@@ -324,7 +324,7 @@ const Boardwirte = () => {
           ) : (
             <AceEditor
               mode="java"
-              theme="monokai"
+              theme="github"
               name="codeEditor"
               editorProps={{ $blockScrolling: true }}
               setOptions={{

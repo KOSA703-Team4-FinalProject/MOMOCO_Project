@@ -19,7 +19,7 @@ import {
 } from '@coreui/react'
 import { Editor } from '@tinymce/tinymce-react'
 import React, { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import CryptoJS from 'crypto-js'
 import { useEffect } from 'react'
@@ -29,12 +29,22 @@ import axios from 'axios'
 import { Octokit } from 'octokit'
 import Label from 'src/components/Label'
 import $ from 'jquery'
+import AceEditor from 'react-ace'
+
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/theme-github'
+import 'ace-builds/src-noconflict/ext-language_tools'
+
 const Boardedit = () => {
+
   const labelselect = {
     width: '300px',
   }
 
+  const navigate = useNavigate()
   const params = useParams()
+  const login = JSON.parse(localStorage.getItem('login'))
+
   const myparams = {
     url: params.url,
     idx: params.idx,
@@ -42,6 +52,7 @@ const Boardedit = () => {
 
   const [boardcontent, setBoardcontent] = useState({}) //비동기로 불러온 기존
   const [content, setContent] = useState('') //수정에 들어갈 글 내용
+  const [codeContent, setCodeContent] = useState('') //수정에 들어갈 코드 내용
   const [newFile, setNewFile] = useState('') // 파일 수정
   const [newTitle, setNewTitle] = useState('') // 제목수정
   const [u_idxlist, SetU_idxlist] = useState([]) //알림
@@ -51,12 +62,13 @@ const Boardedit = () => {
   const [commitsList, setCommitsList] = useState([])
   const [listview, setListView] = useState(false)
   const chooseLabel = useSelector((state) => state.chooseLabel)
+
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
   const accessToken = decrypted.token
-  console.log(boardcontent)
+
   const handleTitleChange = (e) => {
     setNewTitle(e.target.value)
   }
@@ -78,6 +90,7 @@ const Boardedit = () => {
       })
     }
   }
+
   useEffect(() => {
     axios({
       method: 'POST',
@@ -87,6 +100,7 @@ const Boardedit = () => {
       },
       data: myparams,
     }).then((res) => {
+      setCodeContent(res.data.code)
       setBoardcontent(res.data)
       setNewTitle(res.data.title)
       setContent(res.data.content)
@@ -121,10 +135,12 @@ const Boardedit = () => {
     const files = event.target.files
     setNewFile(files[0])
   }
+
   useEffect(() => {
     SetLabel(chooseLabel.label)
     SetStyle(chooseLabel.style)
   }, [chooseLabel])
+
   //수정 글작성
   const editcontent = () => {
     const edit = {
@@ -134,6 +150,12 @@ const Boardedit = () => {
       title: newTitle,
       label: label,
       u_idxList: alarmList,
+      code: codeContent,
+      b_code: 5,
+      u_idx: login.u_idx,
+      nickname: boardcontent.nickname,
+      step: boardcontent.step,
+      depth: boardcontent.depth,
     }
     console.log(edit)
     const fd = new FormData()
@@ -150,6 +172,7 @@ const Boardedit = () => {
         data: fd,
       }).then((res) => {
         console.log(res.data)
+        navigate(`/ws/${params.url}/boardlist`)
       })
     } else {
       alert('입력하지 않은 항목이 있습니다. ex.제목/내용/라벨/알림')
@@ -206,6 +229,13 @@ const Boardedit = () => {
 
     setListView(false)
   }
+
+  //코드 에디터에 코드가 변할 경우
+  const codewrite = (arg1) => {
+    console.log(arg1)
+    setCodeContent(arg1)
+  }
+
   return (
     <>
       <CCard className="draggable px-4 py-3" draggable="true">
@@ -336,13 +366,30 @@ const Boardedit = () => {
                           forced_root_block: false,
                         }}
                       />
+                      {codeContent == null || codeContent == '' ? (
+                        <></>
+                      ) : (
+                        <AceEditor
+                          mode="java"
+                          theme="github"
+                          name="codeEditor"
+                          editorProps={{ $blockScrolling: true }}
+                          setOptions={{
+                            enableBasicAutocompletion: true,
+                            enableLiveAutocompletion: true,
+                            enableSnippets: true,
+                          }}
+                          value={codeContent}
+                          width="100%"
+                          fontSize={20}
+                          onChange={codewrite}
+                        />
+                      )}
                       <br></br>
                       <CCol align="right">
-                        <Link to={`/ws/${params.url}/boardlist`}>
-                          <CButton variant="outline" onClick={editcontent}>
-                            수정하기
-                          </CButton>
-                        </Link>
+                        <CButton variant="outline" onClick={editcontent}>
+                          수정하기
+                        </CButton>
                         &nbsp;
                         <Link to={`/ws/${params.url}/boardlist`}>
                           <CButton variant="outline">목록으로</CButton>

@@ -156,8 +156,6 @@ public class CommonBoardService {
 			board.setU_idx(all.getU_idx());
 			board.setTitle(all.getTitle());
 
-			System.out.println("이거뭐임" + board.toString());
-
 			CommonBoardDao commboard = sqlsession.getMapper(CommonBoardDao.class);
 			result = commboard.updateCommonBoard(all);
 			result = commboard.updateBoard(all);
