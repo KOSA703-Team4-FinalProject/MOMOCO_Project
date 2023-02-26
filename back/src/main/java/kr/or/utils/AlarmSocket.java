@@ -48,7 +48,10 @@ public class AlarmSocket {
 		System.out.println("reboard : ---" + reboard);
 		Alarm alarm = new Alarm();
 		alarm.setIdx(reboard.getIdx());
-		alarm.setContent("(WS: " + board.getUrl() + ") " + reboard.getNickname() + "님께서 " + reboard.getTitle() + " 글을 "
+		alarm.setNickname(reboard.getNickname());
+		alarm.setB_name(reboard.getB_name());
+		alarm.setW_date(reboard.getW_date());
+		alarm.setContent(reboard.getNickname() + "님께서 " + reboard.getTitle() + " 글을 "
 				+ reboard.getB_name() + "에 등록했어요.");
 		alarm.setCheck_alarm(0);
 		alarm.setUrl(board.getUrl());

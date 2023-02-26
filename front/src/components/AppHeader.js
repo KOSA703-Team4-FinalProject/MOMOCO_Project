@@ -58,7 +58,7 @@ const AppHeader = () => {
   const login = JSON.parse(localStorage.getItem('login'))
 
   //웹 소켓 연결
-  const websocket = new WebSocket('ws://192.168.0.30:8090/controller/chat')
+  const websocket = new WebSocket('ws://192.168.0.32:8090/controller/chat')
   const stomp = StompJs.over(websocket)
 
   useEffect(() => {
@@ -70,9 +70,6 @@ const AppHeader = () => {
       expires: date.setHours(date.getHours + 8),
       sameSite: 'strict',
     })
-
-    
-
   }, [])
 
   //토스트
@@ -92,22 +89,24 @@ const AppHeader = () => {
         >
           <rect width="100%" height="100%" fill="#007aff"></rect>
         </svg>
-        <div className="fw-bold me-auto">{alarmToast.link}에서 알림이 왔습니다</div>
-        <small>{alarmToast.url}</small>
+        <div className="fw-bold me-auto">
+          <strong>{alarmToast.nickname}</strong>님의 알람
+        </div>
+        <small>{alarmToast.w_date}</small>
       </CToastHeader>
-      <CToastBody>{alarmToast.content}</CToastBody>
+      <CToastBody>
+        <strong>{alarmToast.content}</strong>
+        <i className="text-medium-emphasis"> {alarmToast.url}에서...</i>
+      </CToastBody>
     </CToast>
   )
 
   useEffect(() => {
-
-    if(alarmToast.content != ""){
+    if (alarmToast.content != '') {
       console.log('================================')
       addToast(Toast)
     }
-    console.log("2222222222222222222222222222")
-      
-      
+    console.log('2222222222222222222222222222')
   }, [alarmToast])
 
   return (
