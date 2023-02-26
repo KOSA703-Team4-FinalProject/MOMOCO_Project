@@ -14,6 +14,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -309,6 +310,28 @@ public class ChatController {
 		chatservice.sendChat(chat);
 
 		template.convertAndSend("/sub/chat/room/" + chat.getR_idx(), chat);
+	}
+	
+	@RequestMapping(value = "/api/chat/chatList", method = RequestMethod.GET)
+	public List<Object> getChatList(@RequestParam(value="url") String url, @RequestParam(value="r_idx") int r_idx){
+		
+		//채팅 기록
+		Chat chat = new Chat();
+		chat.setUrl(url);
+		chat.setR_idx(r_idx);
+		List<Chat> chatLsit = chatservice.getChat(chat);
+		
+		//채팅방 정보
+		ChatRoom chatroom = new ChatRoom();
+		chatroom.setUrl(url);
+		chatroom.setR_idx(r_idx);
+		ChatRoom room = chatroomservice.selectRoom(chatroom);
+		
+		List<Object> result = new ArrayList<Object>();
+		result.add(chatLsit);
+		result.add(room);
+		
+		return result;
 	}
 
 }
