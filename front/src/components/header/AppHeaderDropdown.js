@@ -103,7 +103,7 @@ const AppHeaderDropdown = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       url: '/api/sendEmailMem',
-      params: { email: sendMail, admin: login.nickname, url: url },
+      params: { email: sendMail, admin: login.nickname, url: params.url },
     })
       .then(() => {
         Swal.fire('', '메일 전송이 완료되었습니다.', 'success')
@@ -236,7 +236,7 @@ const AppHeaderDropdown = () => {
         <hr />
         <CModalBody>
           <div className="row justify-content-evenly">
-            <div className="col-8">초대 멤버 : </div>
+            <div className="col-8">초대 멤버 : {mailMember}</div>
             <div className="col-3">
               <CButton color="primary" variant="outline" onClick={clickMail}>
                 확인

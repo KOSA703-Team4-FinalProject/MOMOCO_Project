@@ -148,7 +148,7 @@ public class WorkSpaceController {
 				+ "<form class='form'><input type='email' class='form__field' placeholder='http://localhost:3000/joinWorkSpace/"
 				+ url + "/" + admin
 				+ "' readonly style='width: 360px; background: #fff; color: #a3a3a3; font: inherit; box-shadow: 0 6px 10px 0 rgba(0, 0, 0 , .1);border: 0;outline: 0;padding: 22px 18px;' />"
-				+ "<a href='http://192.168.0.30:3000/joinWorkSpace/" + url + "/" + admin
+				+ "<a href='http://localhost:3000/joinWorkSpace/" + url + "/" + admin
 				+ "' type='button' class='btn btn--primary btn--inside uppercase' style='text-transform: uppercase; display: inline-block; background: transparent; color: white; font: inherit; border: 0; outline: 0; padding: 0; transition: all 200ms ease-in; cursor: pointer; background: #7f8ff4; box-shadow: 0 0 10px 2px rgba(0, 0, 0, .1); border-radius: 2px; padding: 12px 36px; margin-left: -96px;'>Go!</a>"
 				+ "</form></div></div>";
 

@@ -1,23 +1,22 @@
 import { CButton, CCard, CCardBody, CCardGroup, CCol, CRow } from '@coreui/react'
 import { useParams } from 'react-router-dom'
-import { useEffect } from 'react'
 
 import { CALLBACK_URL, CLIENT_ID, GITHUB_AUTH_CODE_SERVER } from '../../oauth.js'
 import momocologo from 'src/assets/images/momocologo.png'
-
-
-
+import { useEffect } from 'react'
+import { Cookies } from 'react-cookie'
 
 const JoinWorkSpace = () => {
   // 로그인
   const AUTHORIZATION_CODE_URL = `${GITHUB_AUTH_CODE_SERVER}?scope=repo read:org gist user user:email project&client_id=${CLIENT_ID}&redirect_url=${CALLBACK_URL}`
 
   const params = useParams()
+  const cookies = new Cookies()
 
   useEffect(() => {
-
     localStorage.setItem('workName', params.workspaceName)
 
+    
   }, [])
 
   //참여 버튼 클릭

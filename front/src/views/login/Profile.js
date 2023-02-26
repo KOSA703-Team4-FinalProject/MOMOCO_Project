@@ -14,8 +14,6 @@ const Profile = () => {
   const navigate = useNavigate()
   const cookies = new Cookies()
 
-  const workname = localStorage.getItem('workName')
-
   useEffect(() => {
     const fetchGithubUser = () => {
       // AES알고리즘 사용 복호화 
@@ -39,9 +37,11 @@ const Profile = () => {
       .then( (response) => {
         const data = {
           u_idx: response.data.id,
-          nickname: response.data.login,
-          profilephoto: response.data.avatar_url
+          nickname: response.data.login
         }
+
+        const workname = localStorage.getItem('workName')
+
 
         //cookie저장
         cookies.remove('u_idx', { sameSite: 'strict', path: '/' })
@@ -55,11 +55,8 @@ const Profile = () => {
 
         localStorage.setItem("login", JSON.stringify(data)) //로컬 스토리지에 저장
 
-        console.log("----------------------------------------")
-        console.log(workname)
-
         //백서버에 회원 정보 전달
-        if(workname == '' || workname == null){
+        if(workname == ''){
           loginaxios(response.data, 'admin', '')
         }else{
           loginaxios(response.data, 'user', workname)

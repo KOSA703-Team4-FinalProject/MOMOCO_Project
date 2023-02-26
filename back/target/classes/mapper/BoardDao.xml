@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       board_type_${url} t
       on b.b_code = t.b_code
       where title = #{title} and
-      u_idx = #{u_idx} and content = #{content} and label = #{label}
+      u_idx = #{u_idx} and content = #{content}
    </select>
 
 
