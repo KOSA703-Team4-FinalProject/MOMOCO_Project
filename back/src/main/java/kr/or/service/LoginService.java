@@ -53,16 +53,7 @@ public class LoginService {
 			result = memberdao.addUserDetail(userDetail);
 			
 			System.out.println("result: " + result);
-			
-			//기본 채팅방에 추가
-			ChatUser chatuser = new ChatUser();
-			chatuser.setU_idx(member.getU_idx());
-			chatuser.setR_idx(1);
-			chatuser.setNickname(member.getNickname());
-			
-			ChatUserDao chatuserdao = sqlsession.getMapper(ChatUserDao.class);
-			result = chatuserdao.addChatUser(chatuser);
-			
+						
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

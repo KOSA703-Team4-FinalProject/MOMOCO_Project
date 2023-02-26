@@ -68,33 +68,6 @@ const RegAndLoginHeader = () => {
                   </h5>
                 </CDropdown>
               </CNavItem>
-              <CNavItem className="px-4">
-                <CDropdown variant="nav-item" popper={false}>
-                  <h5>
-                    <CDropdownToggle color="secondary">
-                      <strong> About 모모코</strong>
-                    </CDropdownToggle>
-                    <CDropdownMenu>
-                      <CDropdownItem>
-                        <CNavLink to="/aboutus" component={NavLink}>
-                          모모코란?
-                        </CNavLink>
-                      </CDropdownItem>
-                      <CDropdownItem>
-                        <CNavLink to="/aboutus" component={NavLink}>
-                          프로젝트 소개
-                        </CNavLink>
-                      </CDropdownItem>
-                      <CDropdownDivider />
-                      <CDropdownItem href="#">
-                        <CNavLink to="/aboutus" component={NavLink}>
-                          모모코 팀
-                        </CNavLink>
-                      </CDropdownItem>
-                    </CDropdownMenu>
-                  </h5>
-                </CDropdown>
-              </CNavItem>
             </CNavbarNav>
           </CCollapse>
         </CContainer>
