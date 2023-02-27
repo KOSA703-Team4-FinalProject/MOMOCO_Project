@@ -125,7 +125,7 @@ const Boardwirte = () => {
       b_code: 5,
       u_idx: login.u_idx,
       u_idxList: alarmList,
-      label: '.',
+      label: label,
       step: prevStep + 1,
       ref: ref,
       depth: prevDepth + 1,
