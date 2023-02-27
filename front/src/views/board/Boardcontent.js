@@ -167,7 +167,7 @@ const Boardcontent = (props) => {
           Swal.fire('Error', '잘못된 접근입니다.', 'error')
         } else {
           const url =
-            'http://localhost:8090/controller/board/fileDown?url=' + params.url + '&content=' + name
+            'http://130.162.132.156:8090/controller/board/fileDown?url=' + params.url + '&content=' + name
 
           const download = document.createElement('a')
           download.href = url

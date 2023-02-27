@@ -154,7 +154,7 @@ const docStorage = (props) => {
           Swal.fire('Error', '잘못된 접근입니다.', 'error')
         } else {
           const url =
-            'http://localhost:8090/controller/doc/fileDown?url=' + params.url + '&content=' + file
+            'http://130.162.132.156:8090/controller/doc/fileDown?url=' + params.url + '&content=' + file
 
           const link = document.createElement('a')
           link.href = url

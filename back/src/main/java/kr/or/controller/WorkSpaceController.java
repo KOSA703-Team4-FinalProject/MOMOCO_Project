@@ -145,7 +145,7 @@ public class WorkSpaceController {
 		String text = "<div class='container' style='color: #9c9c9c;height: 100%;display: flex;flex-direction: column;align-items: center;justify-content: center;'>"
 				+ "<div class='container__item container__item--bottom'><h1 align='center'>MoMoCo</h1><p align='center'>"
 				+ admin + "으로 부터의 초대입니다.</p><p>" + url + "의 워크스페이스에 참여하세요</p></div><div class='container__item'>"
-				+ "<form class='form'><input type='email' class='form__field' placeholder='http://localhost:3000/joinWorkSpace/"
+				+ "<form class='form'><input type='email' class='form__field' placeholder='http://130.162.132.156:3000/joinWorkSpace/"
 				+ url + "/" + admin
 				+ "' readonly style='width: 360px; background: #fff; color: #a3a3a3; font: inherit; box-shadow: 0 6px 10px 0 rgba(0, 0, 0 , .1);border: 0;outline: 0;padding: 22px 18px;' />"
 				+ "<a href='http://localhost:3000/joinWorkSpace/" + url + "/" + admin

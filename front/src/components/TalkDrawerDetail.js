@@ -105,7 +105,7 @@ const TalkDrawerDetail = (props) => {
           Swal.fire('Error', '잘못된 접근입니다.', 'error')
         } else {
           const url =
-            'http://localhost:8090/controller/api/chat/fileDown?url=' +
+            'http://130.162.132.156:8090/controller/api/chat/fileDown?url=' +
             params.url +
             '&content=' +
             file_name

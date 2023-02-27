@@ -21,31 +21,31 @@ module.exports = function (app) {
   )
   app.use(
     createProxyMiddleware('/backlogin', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )
   app.use(
     createProxyMiddleware('/api', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )
   app.use(
     createProxyMiddleware('/cal', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )
   app.use(
     createProxyMiddleware('/board', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )
   app.use(
     createProxyMiddleware('/doc', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )
@@ -57,19 +57,19 @@ module.exports = function (app) {
   )
   app.use(
     createProxyMiddleware('/comment', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )
   app.use(
     createProxyMiddleware('/label', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )
   app.use(
     createProxyMiddleware('/allboard', {
-      target: 'http://localhost:8090/controller',
+      target: 'http://130.162.132.156:8090/controller',
       changeOrigin: true,
     }),
   )

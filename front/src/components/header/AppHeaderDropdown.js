@@ -112,7 +112,7 @@ const AppHeaderDropdown = () => {
       .catch(() => {
         Swal.fire(
           'Error',
-          '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/' +
+          '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://130.162.132.156:3000/joinWorkSpace/' +
             url +
             '/' +
             login.nickname,
@@ -127,7 +127,7 @@ const AppHeaderDropdown = () => {
       .catch(() => {
         Swal.fire(
           'Error',
-          '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://localhost:3000/joinWorkSpace/' +
+          '메일 전송이 실패하였습니다.<br /> 해당 메일을 복사해 전달하세요<br /> http://130.162.132.156:3000/joinWorkSpace/' +
             space_Name +
             '/' +
             login.nickname,
