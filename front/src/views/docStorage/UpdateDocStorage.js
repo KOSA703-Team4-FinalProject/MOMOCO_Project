@@ -137,8 +137,6 @@ const UpdateDocStorage = (props) => {
           label: label,
           u_idx: u_idx,
           url: url,
-          depth: 0,
-          step: 0,
           upload_type: upload_type,
           ori_filename: link,
           save_filename: link,
@@ -178,8 +176,6 @@ const UpdateDocStorage = (props) => {
           label: label,
           u_idx: u_idx,
           url: url,
-          depth: 0,
-          step: 0,
           upload_type: upload_type,
           u_idxList: alarmlist,
         }
