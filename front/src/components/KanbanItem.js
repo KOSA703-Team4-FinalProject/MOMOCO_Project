@@ -59,7 +59,7 @@ const KanbanItem = (props) => {
     fontSize: '1rem',
   }
 
-  // AES알고리즘 사용 복호화
+  // AES알고리즘 사용 복호화 합니다
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
   const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
