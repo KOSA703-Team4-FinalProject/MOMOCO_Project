@@ -124,6 +124,7 @@ const UpdateDocStorage = (props) => {
   }, [chooseLabel])
 
   const SubmitHandler = (e) => {
+    console.log('axios 발동')
     e.preventDefault()
     if (title != '' && content != '' && label != '' && alarmlist != '') {
       if (upload_type === 'link' && upload_type === 'none') {
@@ -179,6 +180,7 @@ const UpdateDocStorage = (props) => {
           upload_type: upload_type,
           u_idxList: alarmlist,
         }
+        console.log(doc)
         formData.append('file', orifile)
         formData.append('doc', JSON.stringify(doc))
         try {
@@ -276,7 +278,8 @@ const UpdateDocStorage = (props) => {
                 <CCol sm={10}>
                   <CCol className="mb-3">
                     <CFormInput
-                      defaultValue={props.doc.title}
+                      value={title}
+                      placeholder={props.doc.title}
                       onChange={titleHandler}
                       aria-describedby="exampleFormControlInputHelpInline"
                       required
@@ -308,7 +311,8 @@ const UpdateDocStorage = (props) => {
                       <CFormInput
                         type="text"
                         onChange={LinkHandler}
-                        defaultValue={props.doc.ori_filename}
+                        value={link}
+                        placeholder={props.doc.ori_filename}
                       ></CFormInput>
                     ) : upload_type === 'none' ? null : (
                       <CFormInput
@@ -349,12 +353,11 @@ const UpdateDocStorage = (props) => {
               <CCardBody>
                 <Editor
                   onEditorChange={EditorHandler}
-                  initialValue={props.doc.content}
                   value={content}
-                  id="tinyEditor"
+                  initialValue={props.doc.content}
                   apiKey="avqk22ebgv68f2q9uzprdbapxmxjwdbke8xixhbo24x2iyvp"
                   init={{
-                    height: 500,
+                    height: 400,
                     menubar: false,
                     plugins: [
                       'advlist autolink lists link image charmap print preview anchor',
@@ -368,7 +371,6 @@ const UpdateDocStorage = (props) => {
                       'removeformat | help',
                     content_style:
                       'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                    forced_root_block: false,
                   }}
                 />
                 <br></br>
