@@ -6,8 +6,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 알람 리스트 불러오기 public List<Alarm> getAlarmList(Alarm alarm) -->
 	<select id="getAlarmList" parameterType="int" resultType="kr.or.vo.Alarm" >
-		select a_idx, idx, content, check_alarm, url, a.u_idx, link, m.profilephoto 
-		from alarm a join member m on a.u_idx = m.u_idx where a.u_idx = ${u_idx} order by a_idx desc
+		select a_idx, a.idx, content, check_alarm, url, a.u_idx, link, profilephoto 
+		from alarm a join (select idx, profilephoto from board_${url} b 
+        join member m on b.u_idx = m.u_idx) c
+        on a.idx = c.idx
+        where a.u_idx = ${u_idx} order by a_idx desc
 	</select>
 	
 	<!-- 알람 추가 public int addDoc(Doc doc, MultipartFile file) -->

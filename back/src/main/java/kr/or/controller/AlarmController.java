@@ -35,7 +35,7 @@ public class AlarmController {
 	public List<Alarm> getAlarmList(@RequestBody Alarm alarm){
 		System.out.println(alarm.getU_idx());
 		List<Alarm> alarmList = new ArrayList<Alarm>();
-		alarmList = alarmservice.getAlarmList(alarm.getU_idx());
+		alarmList = alarmservice.getAlarmList(alarm);
 		System.out.println(alarmList);
 		return alarmList;
 	}

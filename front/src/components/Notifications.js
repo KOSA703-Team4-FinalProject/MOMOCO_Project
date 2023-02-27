@@ -75,6 +75,7 @@ const Notifications = (props) => {
 
   const myparams = {
     u_idx: u_idx,
+    url: url,
   }
 
   //기존 알람 내용 불러오기
@@ -88,6 +89,7 @@ const Notifications = (props) => {
       data: myparams,
     }).then((res) => {
       SetList(res.data)
+      console.log(res.data)
     })
   }
 
