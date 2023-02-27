@@ -12,7 +12,7 @@ public class Alarm {
 	private String url;			//워크스페이스 주소
 	private int u_idx;			//유저 식별 번호
 	private String link;		//알림 근원지 가기
-	
+	private String who;
 	private String title;
 	private String b_name;
 	private String b_code;

@@ -47,14 +47,14 @@ public class AlarmService {
 	}
 	
 	//알림 불러오기
-	public List<Alarm> getAlarmList(int u_idx) {
+	public List<Alarm> getAlarmList(Alarm alarm) {
 		
 		List<Alarm> alarmList = new ArrayList<Alarm>();
 		
 		try {
 
 			AlarmDao alarmdao = sqlsession.getMapper(AlarmDao.class);
-			alarmList = alarmdao.getAlarmList(u_idx);
+			alarmList = alarmdao.getAlarmList(alarm);
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

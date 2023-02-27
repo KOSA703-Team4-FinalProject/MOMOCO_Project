@@ -55,6 +55,7 @@ public class AlarmSocket {
 				+ reboard.getB_name() + "에 등록했어요.");
 		alarm.setCheck_alarm(0);
 		alarm.setUrl(board.getUrl());
+		alarm.setProfilephoto(reboard.getProfilephoto());
 		if (reboard.getB_name().equals("kanban") || reboard.getB_name().equals("calendar")) {
 			alarm.setLink("/ws/" + board.getUrl() + "/" + reboard.getB_name());
 		} else {

@@ -11,7 +11,7 @@ public interface AlarmDao {
 	public int addAlarm(Alarm alarm) throws ClassNotFoundException, SQLException;
 	
 	//알림 내용 불러오기
-	public List<Alarm> getAlarmList(int u_idx) throws ClassNotFoundException, SQLException;
+	public List<Alarm> getAlarmList(Alarm alarm) throws ClassNotFoundException, SQLException;
 	
 	//알림 체크하기 기능
 	public int checkAlarm(int a_idx) throws ClassNotFoundException, SQLException;
