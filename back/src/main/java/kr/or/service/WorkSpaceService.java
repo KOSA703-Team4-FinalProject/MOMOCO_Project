@@ -50,6 +50,7 @@ public class WorkSpaceService {
 			WorkSpaceDao workspacedao = sqlsession.getMapper(WorkSpaceDao.class);
 			System.out.println(workspace.toString());
 			result = workspacedao.makeWorkSpace(workspace);
+			
 			workspacedao.createTable(workspace.getUrl());
 			result = workspacedao.isDomain(workspace.getUrl());
 			
