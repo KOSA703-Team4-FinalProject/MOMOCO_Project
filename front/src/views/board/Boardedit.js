@@ -36,7 +36,6 @@ import 'ace-builds/src-noconflict/theme-github'
 import 'ace-builds/src-noconflict/ext-language_tools'
 
 const Boardedit = () => {
-
   const labelselect = {
     width: '300px',
   }
@@ -62,7 +61,8 @@ const Boardedit = () => {
   const [commitsList, setCommitsList] = useState([])
   const [listview, setListView] = useState(false)
   const chooseLabel = useSelector((state) => state.chooseLabel)
-
+  const [codevalue, setCodeValue] = useState('')
+  const [codeLost, setCodeLost] = useState(false) //code editor view
   // AES알고리즘 사용 복호화
   const bytes = CryptoJS.AES.decrypt(localStorage.getItem('token'), PRIMARY_KEY)
   //인코딩, 문자열로 변환, JSON 변환
@@ -156,6 +156,7 @@ const Boardedit = () => {
       nickname: boardcontent.nickname,
       step: boardcontent.step,
       depth: boardcontent.depth,
+      code: codevalue,
     }
     console.log(edit)
     const fd = new FormData()
@@ -230,10 +231,14 @@ const Boardedit = () => {
     setListView(false)
   }
 
+  //코드 추가 클릭시 코드 추가 가능한 view 로드
+  const loadCode = () => {
+    setCodeLost(!codeLost)
+  }
+
   //코드 에디터에 코드가 변할 경우
   const codewrite = (arg1) => {
-    console.log(arg1)
-    setCodeContent(arg1)
+    setCodeValue(arg1)
   }
 
   return (
@@ -260,13 +265,23 @@ const Boardedit = () => {
                           <strong>하세요</strong>
                         )}
                       </CFormLabel>
-                      <CCol sm={8}>
+                      <CCol md={7} sm={12}>
                         <CCol className="mb-3">
                           <Label />
                         </CCol>
                       </CCol>
-                      <CCol sm={2}>
+                      <CCol>
+                        <CCol align="left"></CCol>
                         <CCol align="left">
+                          <CButton
+                            color="primary"
+                            variant="outline"
+                            className="mt-1"
+                            onClick={loadCode}
+                          >
+                            Code 추가
+                          </CButton>
+                          &nbsp;
                           <CButton
                             color="primary"
                             variant="outline"
@@ -445,6 +460,44 @@ const Boardedit = () => {
           </CModal>
         </CCardBody>
       </CCard>
+      <CModal
+        alignment="center"
+        scrollable
+        backdrop="static"
+        visible={listview}
+        onClose={() => setListView(false)}
+      >
+        <CModalHeader onClose={() => setListView(false)}>
+          <CModalTitle>Issue List</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          {commitsList.map((data) => {
+            return (
+              <CCard
+                key={data.id}
+                className="my-3 p-3 issue"
+                issueSrc={data.html_url}
+                title={data.title}
+                num={data.number}
+                onClick={clickIssue}
+              >
+                <CCard className="p-2 mt-2">
+                  <h5>
+                    <strong>{data.title}</strong>
+                  </h5>
+                </CCard>
+
+                <div align="end" className="m-2">
+                  <CAvatar src={data.user.avatar_url} className="me-2" />
+                  {data.user.login}
+                </div>
+
+                {data.body}
+              </CCard>
+            )
+          })}
+        </CModalBody>
+      </CModal>
     </>
   )
 }

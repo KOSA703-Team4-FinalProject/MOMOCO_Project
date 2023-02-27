@@ -58,7 +58,7 @@ const AppHeader = () => {
   const login = JSON.parse(localStorage.getItem('login'))
 
   //웹 소켓 연결
-  const websocket = new WebSocket('ws://192.168.0.32:8090/controller/chat')
+  const websocket = new WebSocket('ws://192.168.0.34:8090/controller/chat')
   const stomp = StompJs.over(websocket)
 
   useEffect(() => {
